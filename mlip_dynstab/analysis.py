@@ -62,7 +62,7 @@ def h2_harmonic_predictiveness(df: pd.DataFrame) -> pd.DataFrame:
     the phi correlation. H2 expects LOW correlation (harmonic accuracy not predictive)."""
     harm = df[df["method"] == "harmonic"][["system", "model", "pred_stable", "gt_stable"]]
     harm = harm.rename(columns={"pred_stable": "harm_pred", "gt_stable": "harm_gt"})
-    ft = df[df["method"].isin(["tdep", "sscha"])][["system", "model", "pred_stable", "gt_stable", "temperature_K"]]
+    ft = df[df["method"].isin(["hiphive", "tdep", "sscha"])][["system", "model", "pred_stable", "gt_stable", "temperature_K"]]
     ft = ft.rename(columns={"pred_stable": "ft_pred", "gt_stable": "ft_gt"})
     m = harm.merge(ft, on=["system", "model"], how="inner")
     if m.empty:

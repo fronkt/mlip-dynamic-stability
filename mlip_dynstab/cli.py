@@ -59,6 +59,13 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
         res = compute_harmonic(atoms, handle.calc, supercell=supercell)
         base.update(res.as_row())
         base["gt_stable"] = spec.harmonic_stable
+    elif method == "hiphive":
+        from .finite_t import compute_finite_t_hiphive
+        cache = f"results/cache/md_{system}_{model}_{int(temperature_K)}_sc{''.join(map(str,supercell))}.extxyz"
+        res = compute_finite_t_hiphive(atoms, handle.calc, temperature_K,
+                                       supercell=supercell, cache_path=cache)
+        base.update(res.as_row())
+        base["gt_stable"] = _finite_t_gt(spec, temperature_K)
     elif method == "tdep":
         from .finite_t import compute_finite_t_tdep
         res = compute_finite_t_tdep(atoms, handle.calc, temperature_K, supercell=supercell)
@@ -93,7 +100,7 @@ def main(argv=None):
     p.add_argument("--system", required=True)
     p.add_argument("--model", required=True)
     p.add_argument("--method", default="harmonic",
-                   choices=["harmonic", "tdep", "md_distort", "sscha"])
+                   choices=["harmonic", "hiphive", "tdep", "md_distort", "sscha"])
     p.add_argument("--T", type=float, default=0.0, dest="temperature_K")
     p.add_argument("--device", default="cuda")
     p.add_argument("--supercell", type=int, nargs=3, default=[2, 2, 2])

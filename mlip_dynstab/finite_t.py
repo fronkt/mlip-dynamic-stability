@@ -160,6 +160,108 @@ def md_symmetry_breaking(atoms, calc, temperature_K, supercell=(2, 2, 2),
     )
 
 
+# ----------------------------------------------- hiPhive (TDEP-style) ----
+
+def _phonopy_supercell_ase(prim_ase, supercell):
+    """Return (Phonopy object, ideal supercell as ASE Atoms) with consistent atom ordering."""
+    import ase
+    import numpy as np
+    from phonopy import Phonopy
+    from phonopy.structure.atoms import PhonopyAtoms
+    pa = PhonopyAtoms(symbols=prim_ase.get_chemical_symbols(),
+                      scaled_positions=prim_ase.get_scaled_positions(),
+                      cell=prim_ase.get_cell().array)
+    phonon = Phonopy(pa, supercell_matrix=np.diag(supercell), primitive_matrix="auto")
+    sc = phonon.supercell
+    ideal = ase.Atoms(symbols=sc.symbols, scaled_positions=sc.scaled_positions,
+                      cell=sc.cell, pbc=True)
+    return phonon, ideal
+
+
+def _md_collect(ideal_sc, calc, temperature_K, n_steps, timestep_fs, equil_steps,
+                sample_every, seed=0, cache_path=None):
+    """NVT MD on the ideal supercell; return list of ASE Atoms snapshots carrying forces.
+    Snapshots are cached to ``cache_path`` (extxyz) so method iteration never re-runs MD."""
+    import os
+    import numpy as np
+    from ase.io import read, write
+    if cache_path and os.path.exists(cache_path):
+        snaps = read(cache_path, index=":")
+        if len(snaps) > 0:
+            return snaps
+
+    from ase.md.langevin import Langevin
+    from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
+    from ase import units
+
+    sc = ideal_sc.copy()
+    sc.calc = calc
+    MaxwellBoltzmannDistribution(sc, temperature_K=temperature_K, rng=np.random.default_rng(seed))
+    dyn = Langevin(sc, timestep_fs * units.fs, temperature_K=temperature_K,
+                   friction=0.02, rng=np.random.default_rng(seed))
+    snaps = []
+    dyn.run(equil_steps)
+    for i in range(n_steps):
+        dyn.run(1)
+        if i % sample_every == 0:
+            s = sc.copy()
+            s.arrays["forces"] = sc.get_forces()   # store forces for hiphive
+            snaps.append(s)
+    if cache_path:
+        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+        write(cache_path, snaps)
+    return snaps
+
+
+def compute_finite_t_hiphive(atoms, calc, temperature_K, supercell=(2, 2, 2),
+                             cutoff: float = 5.0, n_steps=3000, timestep_fs=2.0,
+                             equil_steps=2000, sample_every=30,
+                             imag_tol_thz=DEFAULT_IMAG_TOL_THZ, seed=0,
+                             cache_path=None, relax=True, fmax=1e-3) -> FiniteTResult:
+    """Temperature-dependent effective harmonic phonons via hiPhive (symmetry-reduced TDEP).
+
+    Relax -> NVT MD at T -> fit symmetry-constrained 2nd-order force constants from the
+    snapshots -> phonopy frequencies. Minimum effective frequency gives the finite-T
+    dynamical-stability call. Symmetry reduction makes the fit well-determined (unlike the
+    deprecated full-matrix tdep route).
+    """
+    import numpy as np
+    from hiphive import ClusterSpace, StructureContainer, ForceConstantPotential
+    from hiphive.utilities import prepare_structures
+    from trainstation import Optimizer
+
+    prim = atoms.copy()
+    prim.calc = calc
+    if relax:
+        from .harmonic import _relax
+        prim = _relax(prim, fmax=fmax)
+
+    phonon, ideal_sc = _phonopy_supercell_ase(prim, supercell)
+    snaps = _md_collect(ideal_sc, calc, temperature_K, n_steps, timestep_fs,
+                        equil_steps, sample_every, seed, cache_path)
+
+    cs = ClusterSpace(prim, [cutoff])                 # pairs only -> 2nd-order FCs
+    prepared = prepare_structures(snaps, ideal_sc)    # displacements + forces vs ideal
+    sc_cont = StructureContainer(cs)
+    for s in prepared:
+        sc_cont.add_structure(s)
+    opt = Optimizer(sc_cont.get_fit_data(), train_size=1.0)
+    opt.train()
+    fcp = ForceConstantPotential(cs, opt.parameters)
+
+    fcs = fcp.get_force_constants(ideal_sc)
+    phonon.force_constants = fcs.get_fc_array(order=2)
+    phonon.run_mesh([12, 12, 12], is_gamma_center=True)
+    freqs = phonon.get_mesh_dict()["frequencies"]
+    min_freq = float(np.min(freqs))
+    return FiniteTResult(
+        temperature_K=float(temperature_K), method="hiphive", min_eff_freq_thz=min_freq,
+        dynamically_stable=bool(min_freq >= imag_tol_thz), imag_tol_thz=imag_tol_thz,
+        supercell=list(supercell), n_samples=len(snaps),
+        extra={"cutoff": cutoff, "rmse_fit": float(opt.rmse_train)},
+    )
+
+
 # ----------------------------------------------------- SSCHA hook ----
 
 def compute_finite_t_sscha(atoms, calc, temperature_K, supercell=(2, 2, 2),

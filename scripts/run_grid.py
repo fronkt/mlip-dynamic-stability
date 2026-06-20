@@ -20,7 +20,7 @@ def main():
     p.add_argument("--model", required=True)
     p.add_argument("--layer", choices=["harmonic", "finite_t"], required=True)
     p.add_argument("--method", default=None,
-                   help="finite_t method: tdep (default) or md_distort")
+                   help="finite_t method: hiphive (default) or md_distort")
     p.add_argument("--temps", type=float, nargs="+", default=[100, 300, 600, 900])
     p.add_argument("--device", default="cuda")
     p.add_argument("--only-class", default=None,
@@ -36,7 +36,7 @@ def main():
             if args.layer == "harmonic":
                 run_unit(s.id, args.model, "harmonic", 0.0, args.device)
             else:
-                method = args.method or ("md_distort" if s.klass == "superionic" else "tdep")
+                method = args.method or ("md_distort" if s.klass == "superionic" else "hiphive")
                 for T in args.temps:
                     run_unit(s.id, args.model, method, T, args.device)
         except Exception as e:  # one bad unit must not kill the grid
