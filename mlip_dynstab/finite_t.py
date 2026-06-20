@@ -255,13 +255,20 @@ def compute_finite_t_hiphive(atoms, calc, temperature_K, supercell=(2, 2, 2),
     fcs = fcp.get_force_constants(ideal_sc)
     phonon.force_constants = fcs.get_fc_array(order=2)
     phonon.run_mesh([12, 12, 12], is_gamma_center=True)
-    freqs = phonon.get_mesh_dict()["frequencies"]
-    min_freq = float(np.min(freqs))
+    md = phonon.get_mesh_dict()
+    freqs, qpts = md["frequencies"], md["qpoints"]
+    min_freq = float(np.min(freqs))                       # full min (acoustic ~0 at Gamma)
+    # Soft-mode tracker: min frequency away from Gamma, where acoustic branches are non-zero,
+    # so a softening optical/zone-boundary mode (e.g. SrTiO3 R-point) is visible and its
+    # hardening with T is measurable. The dynamical-stability CALL still uses the full min.
+    non_gamma = np.linalg.norm(qpts, axis=1) > 1e-6
+    soft = float(np.min(freqs[non_gamma])) if non_gamma.any() else min_freq
     return FiniteTResult(
         temperature_K=float(temperature_K), method="hiphive", min_eff_freq_thz=min_freq,
-        dynamically_stable=bool(min_freq >= imag_tol_thz), imag_tol_thz=imag_tol_thz,
+        dynamically_stable=bool(min(min_freq, soft) >= imag_tol_thz), imag_tol_thz=imag_tol_thz,
         supercell=list(supercell), n_samples=len(snaps),
-        extra={"cutoff": eff_cutoff, "rmse_fit": float(opt.rmse_train)},
+        extra={"cutoff": eff_cutoff, "rmse_fit": float(opt.rmse_train),
+               "soft_mode_freq_thz": soft},
     )
 
 
