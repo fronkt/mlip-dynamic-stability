@@ -16,3 +16,13 @@
   not a raw matrix fit. The 5 bad SrTiO3 tdep rows were purged; do not report them.
   Verification gate before trusting any finite-T number: on SrTiO3, the method must show the
   soft mode HARDENING with T (negative→positive across the ~105 K transition).
+
+- 2026-06-20 — hiPhive (symmetry-constrained TDEP) fits cleanly (rmse 0.05-0.30 eV/Å), but
+  **one-shot TDEP-from-MD starting at the perfect cubic cell does NOT resolve SrTiO3's
+  soft-mode instability**: the soft optical mode reads +0.81 THz at 50 K and stays ~flat to
+  600 K (harmonic 0 K was -1.83). Trajectory check: thermal RMS 0.068 Å @50K (no persistent
+  distortion) — the short MD never leaves the cubic basin, so the cubic-symmetric fit reports
+  "stable" at all T. Rule: for soft-mode dynamic stability use **SSCHA** (self-consistent) OR
+  symmetry-broken / rattled-start sampling; plain one-shot TDEP under-detects instabilities.
+  IMPLICATION: the cross-model HARMONIC comparison is the solid near-term deliverable; the
+  finite-T core needs the SSCHA upgrade before its numbers are trustworthy.
