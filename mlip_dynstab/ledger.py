@@ -40,15 +40,21 @@ def has_unit(uhash: str, path: Path | str = _DEFAULT) -> bool:
     return (not df.empty) and (uhash in set(df.get("uhash", [])))
 
 
-def record(row: dict[str, Any], path: Path | str = _DEFAULT) -> str:
-    """Append ``row`` (must contain a 'uhash'); idempotent on uhash. Returns the uhash."""
+def record(row: dict[str, Any], path: Path | str = _DEFAULT, overwrite: bool = False) -> str:
+    """Append ``row`` (must contain a 'uhash'); idempotent on uhash. Returns the uhash.
+
+    If ``overwrite`` is True and the uhash already exists, the existing row is replaced
+    (used by the CLI ``--force`` path to recompute a unit).
+    """
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     if "uhash" not in row:
         raise KeyError("row must contain 'uhash' (use unit_hash(...))")
     df = _load(path)
     if not df.empty and row["uhash"] in set(df["uhash"]):
-        return row["uhash"]  # already present; do not duplicate
+        if not overwrite:
+            return row["uhash"]  # already present; do not duplicate
+        df = df[df["uhash"] != row["uhash"]]  # drop stale row, fall through to re-append
     df = pd.concat([df, pd.DataFrame([row])], ignore_index=True)
     df.to_parquet(path, index=False)
     with open(path.with_suffix(".jsonl"), "a", encoding="utf-8") as fh:

@@ -20,6 +20,19 @@ from .calculators import get_calculator
 from .systems import get_spec, build_atoms
 
 
+def _finite_t_gt(spec, temperature_K: float) -> bool:
+    """Temperature-resolved finite-T dynamical-stability ground truth.
+
+    A system with a known transition temperature is the high-symmetry phase (stable) only at
+    or above it; below it the soft mode has condensed (unstable). Systems with no transition
+    (controls, quantum paraelectrics) take their constant ``finite_T_stable`` label.
+    """
+    Tc = spec.transition_T_K
+    if Tc is None:
+        return spec.finite_T_stable
+    return float(temperature_K) >= float(Tc)
+
+
 def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
              device: str = "cuda", supercell=(2, 2, 2), force: bool = False,
              ledger_path=None) -> dict:
@@ -50,17 +63,17 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
         from .finite_t import compute_finite_t_tdep
         res = compute_finite_t_tdep(atoms, handle.calc, temperature_K, supercell=supercell)
         base.update(res.as_row())
-        base["gt_stable"] = spec.finite_T_stable
+        base["gt_stable"] = _finite_t_gt(spec, temperature_K)
     elif method == "md_distort":
         from .finite_t import md_symmetry_breaking
         res = md_symmetry_breaking(atoms, handle.calc, temperature_K, supercell=supercell)
         base.update(res.as_row())
-        base["gt_stable"] = spec.finite_T_stable
+        base["gt_stable"] = _finite_t_gt(spec, temperature_K)
     elif method == "sscha":
         from .finite_t import compute_finite_t_sscha
         res = compute_finite_t_sscha(atoms, handle.calc, temperature_K, supercell=supercell)
         base.update(res.as_row())
-        base["gt_stable"] = spec.finite_T_stable
+        base["gt_stable"] = _finite_t_gt(spec, temperature_K)
     else:
         raise ValueError(f"unknown method '{method}'")
 
@@ -68,7 +81,7 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
     base["pred_stable"] = bool(base["dynamically_stable"])
     base["false_stable"] = bool(base["pred_stable"] and not base["gt_stable"])
     base["false_unstable"] = bool((not base["pred_stable"]) and base["gt_stable"])
-    ledger.record(base, lp)
+    ledger.record(base, lp, overwrite=force)
     print(f"[done] {uhash} {system}/{model}/{method}/T={temperature_K} "
           f"min_freq={base.get('min_freq_thz', base.get('min_eff_freq_thz')):.3f} THz "
           f"pred_stable={base['pred_stable']} gt={base['gt_stable']} ({base['wall_s']}s)")
