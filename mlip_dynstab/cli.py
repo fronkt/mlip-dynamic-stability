@@ -37,6 +37,10 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
              device: str = "cuda", supercell=(2, 2, 2), force: bool = False,
              ledger_path=None) -> dict:
     spec = get_spec(system)
+    # Finite-T (hiPhive) needs a larger supercell so the pair cutoff can exceed nearest
+    # neighbors while staying < L/2; harmonic finite-displacement is fine at 2x2x2.
+    if method == "hiphive" and tuple(supercell) == (2, 2, 2):
+        supercell = (3, 3, 3)
     settings = {"supercell": list(supercell)}
 
     # We need the model version for the hash, so load the calculator first.

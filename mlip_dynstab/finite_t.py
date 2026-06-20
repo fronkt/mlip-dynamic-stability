@@ -240,7 +240,10 @@ def compute_finite_t_hiphive(atoms, calc, temperature_K, supercell=(2, 2, 2),
     snaps = _md_collect(ideal_sc, calc, temperature_K, n_steps, timestep_fs,
                         equil_steps, sample_every, seed, cache_path)
 
-    cs = ClusterSpace(prim, [cutoff])                 # pairs only -> 2nd-order FCs
+    # hiPhive requires the pair cutoff < L/2 of the supercell (minimum-image uniqueness).
+    cell_len = float(np.linalg.norm(ideal_sc.get_cell().array, axis=1).min())
+    eff_cutoff = min(cutoff, 0.49 * cell_len)
+    cs = ClusterSpace(prim, [eff_cutoff])             # pairs only -> 2nd-order FCs
     prepared = prepare_structures(snaps, ideal_sc)    # displacements + forces vs ideal
     sc_cont = StructureContainer(cs)
     for s in prepared:
@@ -258,7 +261,7 @@ def compute_finite_t_hiphive(atoms, calc, temperature_K, supercell=(2, 2, 2),
         temperature_K=float(temperature_K), method="hiphive", min_eff_freq_thz=min_freq,
         dynamically_stable=bool(min_freq >= imag_tol_thz), imag_tol_thz=imag_tol_thz,
         supercell=list(supercell), n_samples=len(snaps),
-        extra={"cutoff": cutoff, "rmse_fit": float(opt.rmse_train)},
+        extra={"cutoff": eff_cutoff, "rmse_fit": float(opt.rmse_train)},
     )
 
 
