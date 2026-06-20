@@ -9,12 +9,14 @@ dist/
 venv*/
 env-*/
 
-# Results: keep schema + small summaries, ignore bulk artifacts
+# Results: keep the canonical ledger (small, the deliverable), ignore bulk artifacts
 results/**/*.parquet
 results/**/*.h5
 results/**/*.npy
 results/runs/
 results/cache/
+!results/ledger.parquet
+!results/ledger.jsonl
 *.traj
 phonopy_disp.yaml
 FORCE_SETS
