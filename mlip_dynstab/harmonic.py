@@ -69,7 +69,9 @@ def compute_harmonic(atoms, calc, supercell=(2, 2, 2), mesh=(12, 12, 12),
     ph.produce_force_constants()
     ph.symmetrize_force_constants()
 
-    ph.run_mesh(mesh, with_eigenvectors=False)
+    # Gamma-centered mesh: includes Gamma (acoustic modes -> ~0) and preserves full
+    # point-group symmetry, so the min-frequency stability call is clean.
+    ph.run_mesh(mesh, with_eigenvectors=False, is_gamma_center=True)
     freqs = ph.get_mesh_dict()["frequencies"]  # (nq, nbands) THz
     min_freq = float(np.min(freqs))
     n_imag = int(np.sum(freqs < imag_tol_thz))
