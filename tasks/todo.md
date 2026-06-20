@@ -26,9 +26,16 @@
 - [x] MACE-MP-0 harmonic grid, 20 systems: acc 0.85, false-stable rate 0.154
       KEY FINDING: false-stable on bcc Zr & Hf (MACE misses beta-Zr/Hf instability,
       catches beta-Ti); false-unstable on KTaO3 (borderline quantum-paraelectric label).
-- [ ] Other models (CHGNet/ORB/SevenNet/MatterSim) harmonic grid
+- [~] Other models harmonic grid: per-model venv with --system-site-packages (reuse working
+      torch 2.12/cu130 so Blackwell sm_120 kernels are present). CHGNet env built + running.
+      Next: ORB, SevenNet, MatterSim (same pattern).
 - [ ] Optional: JARVIS reference cross-check (npj-style rates on shared materials)
-- CHECKPOINT: first results landed + pushed (dd4516a)
+- CHECKPOINT: MACE harmonic landed + pushed (dd4516a); cross-model in progress
+
+## DECISION NEEDED (finite-T core)
+- one-shot TDEP (hiPhive) under-detects soft modes -> needs SSCHA or symmetry-broken sampling.
+- Options for next session: (A) implement SSCHA finite-T, (B) rattled-start MD symmetry-
+  breaking probe, (C) ship harmonic cross-model paper first, finite-T as follow-up.
 
 ## NOTE — ground-truth label review
 - [ ] Reclassify KTaO3 as "borderline" (incipient ferroelectric; DFT mode ~0/marginally soft);
