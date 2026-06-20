@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv*/
+venv*/
+env-*/
+
+# Results: keep schema + small summaries, ignore bulk artifacts
+results/**/*.parquet
+results/**/*.h5
+results/**/*.npy
+results/runs/
+results/cache/
+*.traj
+phonopy_disp.yaml
+FORCE_SETS
+SPOSCAR
+POSCAR-*
+
+# SSCHA / TDEP scratch
+sscha_ensembles/
+*.tdep
+infile.*
+outfile.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+
+# Secrets / keys
+*.env
+.env
+mp_api_key.txt

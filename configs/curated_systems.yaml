@@ -1,0 +1,290 @@
+# Curated finite-T dynamic-stability stress-test set.
+#
+# Each entry describes a high-symmetry reference phase whose *harmonic* (0 K) and
+# *finite-temperature* dynamic stability are documented in the DFT/experimental literature.
+# The benchmark asks whether each MLIP reproduces the documented behavior.
+#
+# Fields:
+#   id              short slug
+#   formula         chemical formula of the reference cell
+#   prototype       structure prototype / phase label
+#   space_group     international symbol of the high-symmetry reference phase
+#   mp_id           Materials Project id for fetching the relaxed cell (null => build prototype)
+#   klass           perovskite | bcc-metal | fluorite | superionic | control | reverse
+#   harmonic_stable expected 0 K harmonic call from DFT/lit (true = no imaginary modes)
+#   finite_T_stable expected high-T dynamic call (true = stabilized at/above transition_T_K)
+#   transition_T_K  approx order-disorder/displacive transition temperature (K), null if n/a
+#   soft_mode_q     q-point of the dominant soft mode (label), null if none
+#   ref             short literature pointer (DOIs finalized in docs/bibliography during Stage 1)
+#   notes           one line
+#
+# IMPORTANT: harmonic_stable / finite_T_stable encode the *literature ground truth*, not an
+# MLIP output. Transition temperatures are approximate and used only for qualitative scoring.
+
+systems:
+
+  # ---- Oxide perovskites: harmonic-imaginary, high-T cubic stabilized ----
+  - id: srtio3_cubic
+    formula: SrTiO3
+    prototype: cubic-perovskite
+    space_group: Pm-3m
+    mp_id: mp-5229
+    klass: perovskite
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 105
+    soft_mode_q: R
+    ref: antiferrodistortive R-point soft mode; cubic->I4/mcm at ~105 K
+    notes: textbook displacive/AFD soft-mode case; also incipient ferroelectric Gamma mode
+
+  - id: batio3_cubic
+    formula: BaTiO3
+    prototype: cubic-perovskite
+    space_group: Pm-3m
+    mp_id: mp-2998
+    klass: perovskite
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 393
+    soft_mode_q: Gamma
+    ref: ferroelectric Gamma TO soft mode; cubic stable above ~393 K
+    notes: order-disorder + displacive character
+
+  - id: knbo3_cubic
+    formula: KNbO3
+    prototype: cubic-perovskite
+    space_group: Pm-3m
+    mp_id: mp-7375
+    klass: perovskite
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 708
+    soft_mode_q: Gamma
+    ref: ferroelectric soft mode; cubic above ~708 K
+    notes: strong anharmonicity
+
+  - id: pbtio3_cubic
+    formula: PbTiO3
+    prototype: cubic-perovskite
+    space_group: Pm-3m
+    mp_id: mp-20459
+    klass: perovskite
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 763
+    soft_mode_q: Gamma
+    ref: ferroelectric cubic->tetragonal at ~763 K
+    notes: large tetragonal distortion
+
+  - id: ktao3_cubic
+    formula: KTaO3
+    prototype: cubic-perovskite
+    space_group: Pm-3m
+    mp_id: mp-3614
+    klass: perovskite
+    harmonic_stable: true
+    finite_T_stable: true
+    transition_T_K: null
+    soft_mode_q: null
+    ref: incipient ferroelectric; remains cubic (quantum paraelectric) - near-control
+    notes: low-frequency but non-imaginary soft mode; sensitivity probe
+
+  # ---- Halide perovskites: high-T cubic, low-T distorted ----
+  - id: cspbi3_cubic
+    formula: CsPbI3
+    prototype: cubic-perovskite
+    space_group: Pm-3m
+    mp_id: mp-1069538
+    klass: perovskite
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 600
+    soft_mode_q: M-R
+    ref: alpha cubic stabilized at high T; octahedral-tilt soft modes at M and R
+    notes: photovoltaic; strong dynamic disorder
+
+  - id: cssni3_cubic
+    formula: CsSnI3
+    prototype: cubic-perovskite
+    space_group: Pm-3m
+    mp_id: mp-568570
+    klass: perovskite
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 426
+    soft_mode_q: M-R
+    ref: tilt instabilities; cubic at high T
+    notes: lead-free analog
+
+  - id: cssnbr3_cubic
+    formula: CsSnBr3
+    prototype: cubic-perovskite
+    space_group: Pm-3m
+    mp_id: mp-1078009
+    klass: perovskite
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 292
+    soft_mode_q: M-R
+    ref: tilt soft modes; cubic near/above RT
+    notes: near-room-T transition
+
+  # ---- bcc refractory metals: harmonic-unstable bcc, entropically stabilized high-T ----
+  - id: ti_bcc
+    formula: Ti
+    prototype: bcc
+    space_group: Im-3m
+    mp_id: null
+    klass: bcc-metal
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 1155
+    soft_mode_q: N
+    ref: beta-Ti bcc imaginary at 0 K, stabilized above hcp->bcc at ~1155 K
+    notes: classic phonon entropy stabilization
+
+  - id: zr_bcc
+    formula: Zr
+    prototype: bcc
+    space_group: Im-3m
+    mp_id: null
+    klass: bcc-metal
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 1136
+    soft_mode_q: N
+    ref: beta-Zr bcc anharmonically stabilized; omega-related soft modes
+    notes: omega instability also present
+
+  - id: hf_bcc
+    formula: Hf
+    prototype: bcc
+    space_group: Im-3m
+    mp_id: null
+    klass: bcc-metal
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 2013
+    soft_mode_q: N
+    ref: beta-Hf high-T bcc
+    notes: heavy element; SOC negligible for phonons here
+
+  # ---- Fluorite oxides: high-T cubic, low-T tetragonal/monoclinic ----
+  - id: zro2_cubic
+    formula: ZrO2
+    prototype: fluorite
+    space_group: Fm-3m
+    mp_id: mp-1565
+    klass: fluorite
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 2570
+    soft_mode_q: X
+    ref: cubic zirconia stabilized at very high T; X-point soft mode to tetragonal
+    notes: technologically central (TBCs); usually yttria-stabilized
+
+  - id: hfo2_cubic
+    formula: HfO2
+    prototype: fluorite
+    space_group: Fm-3m
+    mp_id: mp-550893
+    klass: fluorite
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 2800
+    soft_mode_q: X
+    ref: cubic hafnia high-T phase
+    notes: analog to ZrO2
+
+  - id: ceo2_cubic
+    formula: CeO2
+    prototype: fluorite
+    space_group: Fm-3m
+    mp_id: mp-20194
+    klass: control
+    harmonic_stable: true
+    finite_T_stable: true
+    transition_T_K: null
+    soft_mode_q: null
+    ref: ceria stable fluorite at all T (control)
+    notes: control within fluorite family
+
+  # ---- Superionic ----
+  - id: agi_bcc
+    formula: AgI
+    prototype: alpha-AgI
+    space_group: Im-3m
+    mp_id: null
+    klass: superionic
+    harmonic_stable: false
+    finite_T_stable: true
+    transition_T_K: 420
+    soft_mode_q: null
+    ref: alpha-AgI superionic above ~420 K; Ag sublattice molten, bcc I framework
+    notes: extreme anharmonicity / diffusion; MD-distortion probe more apt than SSCHA
+
+  # ---- Harmonically-stable controls (should be stable at all T for a correct model) ----
+  - id: si_diamond
+    formula: Si
+    prototype: diamond
+    space_group: Fd-3m
+    mp_id: mp-149
+    klass: control
+    harmonic_stable: true
+    finite_T_stable: true
+    transition_T_K: null
+    soft_mode_q: null
+    ref: stable semiconductor (control)
+    notes: standard phonon reference
+
+  - id: mgo_rocksalt
+    formula: MgO
+    prototype: rocksalt
+    space_group: Fm-3m
+    mp_id: mp-1265
+    klass: control
+    harmonic_stable: true
+    finite_T_stable: true
+    transition_T_K: null
+    soft_mode_q: null
+    ref: stable rocksalt (control)
+    notes: hard, harmonic
+
+  - id: nacl_rocksalt
+    formula: NaCl
+    prototype: rocksalt
+    space_group: Fm-3m
+    mp_id: mp-22862
+    klass: control
+    harmonic_stable: true
+    finite_T_stable: true
+    transition_T_K: null
+    soft_mode_q: null
+    ref: stable ionic control
+    notes: softer ionic control
+
+  - id: cu_fcc
+    formula: Cu
+    prototype: fcc
+    space_group: Fm-3m
+    mp_id: mp-30
+    klass: control
+    harmonic_stable: true
+    finite_T_stable: true
+    transition_T_K: null
+    soft_mode_q: null
+    ref: stable fcc metal (control)
+    notes: metallic control
+
+  - id: c_diamond
+    formula: C
+    prototype: diamond
+    space_group: Fd-3m
+    mp_id: mp-66
+    klass: control
+    harmonic_stable: true
+    finite_T_stable: true
+    transition_T_K: null
+    soft_mode_q: null
+    ref: stable diamond (control)
+    notes: stiff harmonic control
