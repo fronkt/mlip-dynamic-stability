@@ -82,8 +82,13 @@ def compute_harmonic(atoms, calc, supercell=(2, 2, 2), mesh=(12, 12, 12),
 
 
 def _relax(atoms, fmax: float = 1e-3, steps: int = 300):
-    from ase.constraints import ExpCellFilter
     from ase.optimize import FIRE
-    ecf = ExpCellFilter(atoms)
-    FIRE(ecf, logfile=None).run(fmax=fmax, steps=steps)
+    try:                                            # modern ASE (recommended filter)
+        from ase.filters import FrechetCellFilter as CellFilter
+    except ImportError:                             # older ASE fallbacks
+        try:
+            from ase.filters import ExpCellFilter as CellFilter
+        except ImportError:
+            from ase.constraints import ExpCellFilter as CellFilter
+    FIRE(CellFilter(atoms), logfile=None).run(fmax=fmax, steps=steps)
     return atoms
