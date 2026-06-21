@@ -65,10 +65,11 @@ def _chgnet(device: str, **kw) -> CalcHandle:
 
 def _orb(name: str, device: str, **kw) -> CalcHandle:
     from orb_models.forcefield import pretrained
-    from orb_models.forcefield.calculator import ORBCalculator
+    # orb-models >=0.5 moved the calculator and made loaders return (model, atoms_adapter).
+    from orb_models.forcefield.inference.calculator import ORBCalculator
     loader = pretrained.orb_v2 if name == "orb_v2" else pretrained.orb_v3_conservative_inf_omat
-    orbff = loader(device=device)
-    calc = ORBCalculator(orbff, device=device, **kw)
+    model, atoms_adapter = loader(device=device)
+    calc = ORBCalculator(model, atoms_adapter, device=device, **kw)
     return CalcHandle(name, f"orb-models={_pkg_version('orb-models')};{name}", calc, device)
 
 
