@@ -26,11 +26,15 @@
 - [x] MACE-MP-0 harmonic grid, 20 systems: acc 0.85, false-stable rate 0.154
       KEY FINDING: false-stable on bcc Zr & Hf (MACE misses beta-Zr/Hf instability,
       catches beta-Ti); false-unstable on KTaO3 (borderline quantum-paraelectric label).
-- [~] Other models harmonic grid: per-model venv with --system-site-packages (reuse working
-      torch 2.12/cu130 so Blackwell sm_120 kernels are present). CHGNet env built + running.
-      Next: ORB, SevenNet, MatterSim (same pattern).
+- [x] Other models harmonic grid — ALL 5 DONE (mace, chgnet, orb_v2, sevennet0, mattersim),
+      20 systems each, 0 errors. Per-model venv via `uv venv --system-site-packages` reusing
+      /venv/main torch 2.12+cu130; torch constraint file prevents downgrade.
+      HEADLINE (KTaO3 excluded, 19 systems): MatterSim & SevenNet acc=1.00 (0 false-stable);
+      MACE 0.895, ORB 0.842, CHGNet 0.789 — all three carry 15.4% false-stable rate from
+      softening bcc Zr/Hf soft modes to ~0. ORB also uniquely misses SrTiO3 (float32, reads
+      -0.0) and falsely calls MgO unstable (-2.8). MatterSim reproduces every soft mode large.
 - [ ] Optional: JARVIS reference cross-check (npj-style rates on shared materials)
-- CHECKPOINT: MACE harmonic landed + pushed (dd4516a); cross-model in progress
+- CHECKPOINT: 5-model harmonic landed + pushed (32e67b7); KTaO3 integrity fix (2cd4cb6)
 
 ## DECISION NEEDED (finite-T core)
 - one-shot TDEP (hiPhive) under-detects soft modes -> needs SSCHA or symmetry-broken sampling.
@@ -38,8 +42,10 @@
   breaking probe, (C) ship harmonic cross-model paper first, finite-T as follow-up.
 
 ## NOTE — ground-truth label review
-- [ ] Reclassify KTaO3 as "borderline" (incipient ferroelectric; DFT mode ~0/marginally soft);
-      do not score as a clean control. Integrity item for the paper.
+- [x] Reclassified KTaO3 as borderline=true in registry; analysis excludes borderline from
+      headline rates (reported as sensitivity probe). 4/5 MLIPs call it imaginary, confirming
+      the "stable" label was the questionable one. CeO2/NaCl KEPT as scored controls — they
+      are genuinely stable and only CHGNet marginally trips them (-0.24, just past -0.1 tol).
 
 ## P3 — Layer 2 finite-T core  (needs GPU)  ← METHOD PIVOT
 - [x] First attempt: hand-rolled TDEP-lite — FAILED (ill-conditioned, -32..-40 THz). Purged.

@@ -26,3 +26,25 @@
   symmetry-broken / rattled-start sampling; plain one-shot TDEP under-detects instabilities.
   IMPLICATION: the cross-model HARMONIC comparison is the solid near-term deliverable; the
   finite-T core needs the SSCHA upgrade before its numbers are trustworthy.
+
+- 2026-06-21 — orb-models 0.7.0 broke the calculator API the code was written against:
+  `ORBCalculator` moved to `orb_models.forcefield.inference.calculator`, and the pretrained
+  loaders (`orb_v2`, `orb_v3_conservative_inf_omat`) now return a `(model, atoms_adapter)`
+  TUPLE that must both be passed: `ORBCalculator(model, atoms_adapter, device=...)`. Rule:
+  smoke-test every new backend on si_diamond before launching the grid; pin/record the pkg
+  version in the ledger (already done via model_version).
+
+- 2026-06-21 — Per-model env recipe that WORKS on the Blackwell box: `uv venv
+  --system-site-packages --python /venv/main/bin/python /root/env-<model>`, then
+  `pip install -e . <model-pkg> -c /root/torch_constraint.txt` where torch_constraint.txt
+  pins `torch==2.12.0+cu130`. The constraint + --system-site-packages stops the model pkg
+  (sevenn/orb/mattersim) from pulling a non-Blackwell torch off PyPI. Verify
+  `torch.__version__` and `torch.cuda.is_available()` after each install.
+
+- 2026-06-21 — 5-model harmonic result (the real Layer-1 finding): models DISAGREE on which
+  instabilities they capture, architecture-dependently. MatterSim & SevenNet reproduce every
+  soft mode with large imaginary freqs (acc 1.00, 0 false-stable on 19 systems). MACE-MP-0 &
+  CHGNet SOFTEN the bcc Zr/Hf soft modes to ~0 -> false-stable. ORB-v2 (direct, float32-only)
+  softens broadly: SrTiO3 reads -0.0 (uniquely missed) and it falsely calls MgO unstable
+  (-2.8). Rule: report per-system min_freq across models, not just binary rates — the
+  "softening toward zero" is the physics, and float32-only direct models (ORB) need a caveat.
