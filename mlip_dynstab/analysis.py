@@ -42,10 +42,27 @@ def rates(c: dict[str, int]) -> dict[str, float]:
     }
 
 
-def per_model_table(df: pd.DataFrame, method: Optional[str] = None) -> pd.DataFrame:
-    """Headline table: per-model confusion + rates for a given method (harmonic/tdep/...)."""
+def borderline_systems() -> set[str]:
+    """System ids whose ground-truth label is genuinely ambiguous (e.g. KTaO3, an incipient
+    ferroelectric whose DFT soft mode is marginally soft). These are excluded from headline
+    scoring so models are not penalised on an ill-defined label; the registry is the single
+    source of truth for the flag."""
+    try:
+        from .systems import load_specs
+        return {s.id for s in load_specs() if s.borderline}
+    except Exception:
+        return set()
+
+
+def per_model_table(df: pd.DataFrame, method: Optional[str] = None,
+                    include_borderline: bool = False) -> pd.DataFrame:
+    """Headline table: per-model confusion + rates for a given method (harmonic/tdep/...).
+
+    Borderline-labelled systems are dropped by default (see ``borderline_systems``)."""
     if method:
         df = df[df["method"] == method]
+    if not include_borderline:
+        df = df[~df["system"].isin(borderline_systems())]
     rows = []
     for model, g in df.groupby("model"):
         c = confusion(g)
@@ -112,6 +129,8 @@ def summary(ledger_path=None) -> dict:
         return out
     out["methods"] = sorted(df["method"].unique())
     out["models"] = sorted(df["model"].unique())
+    bl = sorted(borderline_systems())
+    out["borderline_excluded"] = bl  # ambiguous-label systems dropped from headline rates
     for meth in out["methods"]:
         out[f"per_model_{meth}"] = per_model_table(df, meth).to_dict("records")
     return out

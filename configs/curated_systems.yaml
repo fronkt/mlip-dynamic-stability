@@ -86,8 +86,14 @@ systems:
     finite_T_stable: true
     transition_T_K: null
     soft_mode_q: null
+    borderline: true
     ref: incipient ferroelectric; remains cubic (quantum paraelectric) - near-control
-    notes: low-frequency but non-imaginary soft mode; sensitivity probe
+    notes: >-
+      DFT harmonic TO mode is only marginally soft (near zero, sign volume/functional
+      dependent), so the "stable" label is genuinely ambiguous. 4/5 foundation MLIPs call
+      it imaginary (mace -2.24, mattersim -0.43, orb -1.27, sevennet -1.43). Flagged
+      borderline and EXCLUDED from headline scoring (reported as a sensitivity probe) so
+      models are not penalised on an ill-defined ground truth. Integrity item.
 
   # ---- Halide perovskites: high-T cubic, low-T distorted ----
   - id: cspbi3_cubic

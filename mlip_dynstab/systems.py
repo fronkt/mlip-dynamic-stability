@@ -27,6 +27,7 @@ class SystemSpec:
     finite_T_stable: bool
     transition_T_K: Optional[float]
     soft_mode_q: Optional[str]
+    borderline: bool = False
     ref: str = ""
     notes: str = ""
     raw: dict = field(default_factory=dict)
@@ -42,6 +43,7 @@ def load_specs(config: os.PathLike | None = None) -> list[SystemSpec]:
             space_group=d["space_group"], mp_id=d.get("mp_id"), klass=d["klass"],
             harmonic_stable=bool(d["harmonic_stable"]), finite_T_stable=bool(d["finite_T_stable"]),
             transition_T_K=d.get("transition_T_K"), soft_mode_q=d.get("soft_mode_q"),
+            borderline=bool(d.get("borderline", False)),
             ref=d.get("ref", ""), notes=d.get("notes", ""), raw=d,
         ))
     return out
