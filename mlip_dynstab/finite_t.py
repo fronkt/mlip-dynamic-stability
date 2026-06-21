@@ -272,6 +272,176 @@ def compute_finite_t_hiphive(atoms, calc, temperature_K, supercell=(2, 2, 2),
     )
 
 
+# ------------------------------------------- rattled-start (symmetry-broken) ----
+
+def _soft_mode_pattern(ideal_sc, calc, delta: float = 0.01, zero_tol: float = 1e-4):
+    """Softest real-space eigenvector of the supercell Hessian at Gamma.
+
+    The Hessian H = -dF/du is built by central finite differences of the MLIP forces, mass-
+    weighted, and diagonalised. The most-negative eigenvalue's eigenvector is the unstable
+    distortion pattern *in the supercell* (a commensurate soft mode, e.g. SrTiO3's R-point
+    octahedral tilt, folds onto Gamma of the matching supercell — so no q-phase bookkeeping).
+    Returns a unit displacement pattern (n,3) with max atomic component 1.0, or None if the
+    supercell has no imaginary mode (harmonically stable -> nothing to seed)."""
+    import numpy as np
+    n = len(ideal_sc)
+    pos0 = ideal_sc.get_positions()
+    N = 3 * n
+    H = np.zeros((N, N))
+    base = ideal_sc.copy()
+    base.calc = calc
+    for a in range(n):
+        for i in range(3):
+            col = 3 * a + i
+            fp = base.copy(); p = pos0.copy(); p[a, i] += delta; fp.set_positions(p); fp.calc = calc
+            fm = base.copy(); p = pos0.copy(); p[a, i] -= delta; fm.set_positions(p); fm.calc = calc
+            H[:, col] = -(fp.get_forces().reshape(-1) - fm.get_forces().reshape(-1)) / (2 * delta)
+    H = 0.5 * (H + H.T)
+    m = np.repeat(ideal_sc.get_masses(), 3)
+    D = H / np.sqrt(np.outer(m, m))
+    w, V = np.linalg.eigh(D)
+    if w[0] >= -zero_tol:                       # softest eigenvalue not imaginary
+        return None
+    v = (V[:, 0] / np.sqrt(m)).reshape(n, 3)    # mass-weighted eigvec -> real displacement
+    mx = np.abs(v).max()
+    return v / mx if mx > 0 else None
+
+
+def _md_collect_rattled(ideal_sc, calc, temperature_K, n_steps, timestep_fs, equil_steps,
+                        sample_every, init_disp, seed=0, friction=0.01, cache_path=None):
+    """NVT MD STARTED FROM A SYMMETRY-BROKEN supercell (ideal + ``init_disp``) so the
+    trajectory commits to a distorted basin if the high-symmetry phase is unstable.
+    Snapshots (carrying forces) cached to extxyz; cache key encodes method+T upstream."""
+    import os
+    import numpy as np
+    from ase.io import read, write
+    if cache_path and os.path.exists(cache_path):
+        snaps = read(cache_path, index=":")
+        if len(snaps) > 0:
+            return snaps
+
+    from ase.md.langevin import Langevin
+    from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
+    from ase import units
+
+    sc = ideal_sc.copy()
+    sc.set_positions(sc.get_positions() + init_disp)
+    sc.calc = calc
+    MaxwellBoltzmannDistribution(sc, temperature_K=temperature_K, rng=np.random.default_rng(seed + 1))
+    dyn = Langevin(sc, timestep_fs * units.fs, temperature_K=temperature_K,
+                   friction=friction, rng=np.random.default_rng(seed + 2))
+    snaps = []
+    dyn.run(equil_steps)
+    for i in range(n_steps):
+        dyn.run(1)
+        if i % sample_every == 0:
+            s = sc.copy()
+            s.arrays["forces"] = sc.get_forces()
+            snaps.append(s)
+    if cache_path:
+        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+        write(cache_path, snaps)
+    return snaps
+
+
+def _order_parameter(snaps, ideal_sc) -> float:
+    """RMS of the time-averaged distortion of the trajectory from the ideal high-symmetry
+    cell (minimum-image, net translation removed). Large psi => the soft mode has condensed
+    into a low-symmetry mean structure => high-symmetry phase is dynamically unstable at T."""
+    import numpy as np
+    cell = ideal_sc.get_cell().array
+    ref = ideal_sc.get_positions()
+    disps = []
+    for s in snaps:
+        d = s.get_positions() - ref
+        frac = np.linalg.solve(cell.T, d.T).T
+        frac -= np.round(frac)
+        disps.append(frac @ cell)
+    mean_d = np.mean(disps, axis=0)            # (n,3) time-averaged distortion
+    mean_d -= mean_d.mean(axis=0, keepdims=True)  # remove rigid translation
+    return float(np.sqrt(np.mean(np.sum(mean_d ** 2, axis=1))))
+
+
+def compute_finite_t_rattled(atoms, calc, temperature_K, supercell=(3, 3, 3),
+                             cutoff: float = 5.0, n_steps=3000, timestep_fs=2.0,
+                             equil_steps=2000, sample_every=30,
+                             imag_tol_thz=DEFAULT_IMAG_TOL_THZ, seed=0, cache_path=None,
+                             relax=True, fmax=1e-3, rattle_stdev=0.30,
+                             order_tol_ang=0.15) -> FiniteTResult:
+    """Finite-T dynamic stability via rattled-start (symmetry-broken) sampling.
+
+    One-shot TDEP from the ideal cell sits at the cubic saddle and reports spurious stability;
+    here the MD STARTS from a rattled supercell so the trajectory commits to the true basin.
+    Two complementary signals at temperature T:
+      * order parameter ``psi`` = RMS time-averaged distortion from the ideal high-symmetry
+        cell. psi >= order_tol => soft mode condensed (low-symmetry mean) => cubic UNSTABLE.
+      * effective-harmonic min frequency from a symmetry-reduced hiPhive fit (referenced to
+        the ideal cell), as a corroborating curvature signal.
+    Call: stable iff psi < order_tol AND min_eff_freq >= imag_tol. T-dependence enters through
+    psi(T): above the transition, thermal hopping melts the mean distortion back to cubic.
+    """
+    import numpy as np
+    from hiphive import ClusterSpace, StructureContainer, ForceConstantPotential
+    from hiphive.utilities import prepare_structures
+    from trainstation import Optimizer
+
+    prim = atoms.copy()
+    prim.calc = calc
+    if relax:
+        from .harmonic import _relax
+        prim = _relax(prim, fmax=fmax)
+
+    phonon, ideal_sc = _phonopy_supercell_ase(prim, supercell)
+
+    # Seed the MD in ONE soft-mode well (not random directions, which excite all symmetry-
+    # equivalent domains and cancel in the time average). Pattern from the supercell Hessian;
+    # if the cell is harmonically stable there is no pattern, so use a tiny thermal rattle.
+    rng = np.random.default_rng(seed)
+    pattern = _soft_mode_pattern(ideal_sc, calc)
+    init_disp = rng.normal(0.0, 0.02, ideal_sc.get_positions().shape)
+    seeded = pattern is not None
+    if seeded:
+        init_disp = init_disp + rattle_stdev * pattern   # rattle_stdev = seed amplitude (A)
+
+    snaps = _md_collect_rattled(ideal_sc, calc, temperature_K, n_steps, timestep_fs,
+                                equil_steps, sample_every, init_disp, seed,
+                                cache_path=cache_path)
+
+    psi = _order_parameter(snaps, ideal_sc)
+
+    # Symmetry-reduced effective-FC fit (corroborating curvature signal), referenced to ideal.
+    cell_len = float(np.linalg.norm(ideal_sc.get_cell().array, axis=1).min())
+    eff_cutoff = min(cutoff, 0.49 * cell_len)
+    cs = ClusterSpace(prim, [eff_cutoff])
+    prepared = prepare_structures(snaps, ideal_sc)
+    sc_cont = StructureContainer(cs)
+    for s in prepared:
+        sc_cont.add_structure(s)
+    opt = Optimizer(sc_cont.get_fit_data(), train_size=1.0)
+    opt.train()
+    fcp = ForceConstantPotential(cs, opt.parameters)
+    phonon.force_constants = fcp.get_force_constants(ideal_sc).get_fc_array(order=2)
+    phonon.run_mesh([12, 12, 12], is_gamma_center=True)
+    md = phonon.get_mesh_dict()
+    freqs, qpts = md["frequencies"], md["qpoints"]
+    min_freq = float(np.min(freqs))
+    non_gamma = np.linalg.norm(qpts, axis=1) > 1e-6
+    soft = float(np.min(freqs[non_gamma])) if non_gamma.any() else min_freq
+
+    condensed = psi >= order_tol_ang
+    freq_unstable = min(min_freq, soft) < imag_tol_thz
+    stable = (not condensed) and (not freq_unstable)
+    return FiniteTResult(
+        temperature_K=float(temperature_K), method="rattled", min_eff_freq_thz=min_freq,
+        dynamically_stable=bool(stable), imag_tol_thz=imag_tol_thz,
+        supercell=list(supercell), n_samples=len(snaps),
+        extra={"cutoff": eff_cutoff, "rmse_fit": float(opt.rmse_train),
+               "soft_mode_freq_thz": soft, "order_param_ang": psi,
+               "order_tol_ang": order_tol_ang, "seed_amp_ang": rattle_stdev,
+               "seeded_soft_mode": bool(seeded), "condensed": bool(condensed)},
+    )
+
+
 # ----------------------------------------------------- SSCHA hook ----
 
 def compute_finite_t_sscha(atoms, calc, temperature_K, supercell=(2, 2, 2),

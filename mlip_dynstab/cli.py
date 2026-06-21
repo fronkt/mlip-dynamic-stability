@@ -39,7 +39,7 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
     spec = get_spec(system)
     # Finite-T (hiPhive) needs a larger supercell so the pair cutoff can exceed nearest
     # neighbors while staying < L/2; harmonic finite-displacement is fine at 2x2x2.
-    if method == "hiphive" and tuple(supercell) == (2, 2, 2):
+    if method in ("hiphive", "rattled") and tuple(supercell) == (2, 2, 2):
         supercell = (3, 3, 3)
     settings = {"supercell": list(supercell)}
 
@@ -65,8 +65,15 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
         base["gt_stable"] = spec.harmonic_stable
     elif method == "hiphive":
         from .finite_t import compute_finite_t_hiphive
-        cache = f"results/cache/md_{system}_{model}_{int(temperature_K)}_sc{''.join(map(str,supercell))}.extxyz"
+        cache = f"results/cache/md_{method}_{system}_{model}_{int(temperature_K)}_sc{''.join(map(str,supercell))}.extxyz"
         res = compute_finite_t_hiphive(atoms, handle.calc, temperature_K,
+                                       supercell=supercell, cache_path=cache)
+        base.update(res.as_row())
+        base["gt_stable"] = _finite_t_gt(spec, temperature_K)
+    elif method == "rattled":
+        from .finite_t import compute_finite_t_rattled
+        cache = f"results/cache/md_{method}_{system}_{model}_{int(temperature_K)}_sc{''.join(map(str,supercell))}.extxyz"
+        res = compute_finite_t_rattled(atoms, handle.calc, temperature_K,
                                        supercell=supercell, cache_path=cache)
         base.update(res.as_row())
         base["gt_stable"] = _finite_t_gt(spec, temperature_K)
@@ -104,7 +111,7 @@ def main(argv=None):
     p.add_argument("--system", required=True)
     p.add_argument("--model", required=True)
     p.add_argument("--method", default="harmonic",
-                   choices=["harmonic", "hiphive", "tdep", "md_distort", "sscha"])
+                   choices=["harmonic", "hiphive", "rattled", "tdep", "md_distort", "sscha"])
     p.add_argument("--T", type=float, default=0.0, dest="temperature_K")
     p.add_argument("--device", default="cuda")
     p.add_argument("--supercell", type=int, nargs=3, default=[2, 2, 2])

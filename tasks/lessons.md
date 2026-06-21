@@ -41,6 +41,22 @@
   (sevenn/orb/mattersim) from pulling a non-Blackwell torch off PyPI. Verify
   `torch.__version__` and `torch.cuda.is_available()` after each install.
 
+- 2026-06-21 — Rattled-start MD finite-T FAILED the SrTiO3 gate, for TWO reasons found by
+  diagnostics. (1) BUG: a hand-rolled brute finite-difference supercell Hessian to extract the
+  soft eigenvector returned a spurious "imaginary" mode whose E(Q) was steeply CONVEX
+  (+178 meV at 0.1 A) — i.e. not the physical mode. Rule: get soft-mode eigenvectors from
+  PHONOPY (run_qpoints/run_modulations at the commensurate q), which already gives the correct
+  R-point -2.09 THz; do NOT hand-roll the supercell Hessian. (2) PHYSICS: along the *correct*
+  phonopy R-mode, MACE's SrTiO3 double well is only ~3.5 meV/f.u. deep (min at Q0~0.15 A).
+  k_B*50K = 4.3 meV > barrier, so the cubic phase is thermally accessible at 50 K and MD
+  legitimately melts any single-domain seed (order parameter psi ~0.02 A, flat in T). Rule:
+  an order-parameter MD cannot resolve shallow soft-mode transitions (SrTiO3-like, Tc low,
+  meV barrier). Use the 1D soft-mode FREE ENERGY instead: map E(Q) along the phonopy
+  eigenvector (cheap, ~9 single-points), fit V=aQ^2+bQ^4(+cQ^6), then self-consistent
+  (quantum) phonon renormalization Omega_eff^2 = a + 3 b <Q^2>(T,Omega) -> stability when
+  Omega_eff^2 turns positive. GPU-light and transparent; deep-well systems (bcc Ti/Zr/Hf) are
+  easier and the same machinery handles them.
+
 - 2026-06-21 — 5-model harmonic result (the real Layer-1 finding): models DISAGREE on which
   instabilities they capture, architecture-dependently. MatterSim & SevenNet reproduce every
   soft mode with large imaginary freqs (acc 1.00, 0 false-stable on 19 systems). MACE-MP-0 &
