@@ -22,8 +22,10 @@ for S in $SYSTEMS; do
   for M in mattersim sevennet0 mace_mp0 chgnet orb_v2; do
     for T in 100 300 600 900; do
       echo "===== $M $S T=$T $(date) ====="
-      ${PY[$M]} -u -m mlip_dynstab.cli --system "$S" --model "$M" --method sscha --T "$T" \
-        || echo "[error] $M/$S/T=$T"
+      # per-run cap: 40-atom perovskite SSCHA can hit minimizer step-collapse; kill thrashers
+      # at 7 min so the queue keeps moving (skipped runs retry later, resumable).
+      timeout 420 ${PY[$M]} -u -m mlip_dynstab.cli --system "$S" --model "$M" --method sscha --T "$T" \
+        || echo "[error] $M/$S/T=$T (timeout-or-fail)"
     done
   done
 done
