@@ -116,5 +116,6 @@ the validation anchor. Target: RSC *Digital Discovery* or *npj Computational Mat
 5. TDEP — Hellman et al., Phys. Rev. B (2011, 2013).
 6. MLIP backends: MACE-MP-0, CHGNet, ORB, SevenNet, MatterSim (cite each model paper).
 7. PES-softening in uMLIPs (M3GNet/CHGNet/MACE) — to source during deep-research.
-*(Deep-research Stage 1 will verify each DOI and add the anharmonic-stabilization primary
-literature per curated system.)*
+*(DONE — deep-research pass June 2026: all DOIs verified and the per-system
+anharmonic-stabilization primary literature added. Finalized bibliography lives in
+`paper/manuscript.md` "References" [1]–[18]; this section is the Stage-1 stub it grew from.)*

@@ -141,8 +141,15 @@ Stage 2.5 INTEGRITY pass, then deep-research DOI pass, then Stage 5 FINALIZE (DO
       only, not in any parquet -> softened "all results regenerate from ledger" in manuscript +
       supplementary. Minor: ZrO2 softmode "-7 to -8"->"-6.4 to -8"; HfO2 "exactly"->"same SSCHA
       pattern"; PbTiO3 T* added ORB outlier note. Stale "Stage 2 / [PENDING]" header refreshed.
-- [ ] Deep-research DOI pass (referee m8: per-system ground-truth citations)  ← NEXT
-- [ ] Stage 5 FINALIZE (DOCX/PDF) → Stage 6 PROCESS SUMMARY
+- [x] Deep-research DOI pass (referee m8) DONE (2026-06-22). 18 web-verified references built into
+      manuscript "References": methods [1-5], 5 model papers [6-10], per-system finite-T ground-truth
+      backbone [11-18] (SrTiO3 Tadano PRB92; BaTiO3/KNbO3/PbTiO3 Zhong-Vanderbilt-Rabe PRL73;
+      CsPbI3 Marronnier ACS Nano12; CsSnI3/Br Chem Mater 2023; bcc Ti/Zr/Hf Petry+Heiming PRB43;
+      ZrO2/HfO2 Parlinski PRL78 + CGD 2023; AgI Wood-Marzari PRB76; KTaO3 Ranalli AdvQT6). Controls
+      via DFPT DB [3]. Inline cites added in intro/2.1/2.2/2.4/2.5. NO recalled DOIs - every DOI
+      confirmed via WebSearch. Also fixed PhononBench count 1.3e5->1.1e5 (actual 108,843). research_
+      brief.md sec 8 + curated_systems pointer closed out.  ← NEW INTEGRITY FIX folded in
+- [ ] Stage 5 FINALIZE (DOCX/PDF) → Stage 6 PROCESS SUMMARY  ← NEXT
 
 ## Lessons
 See tasks/lessons.md.
