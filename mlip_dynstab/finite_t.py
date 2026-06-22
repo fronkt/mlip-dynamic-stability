@@ -442,6 +442,253 @@ def compute_finite_t_rattled(atoms, calc, temperature_K, supercell=(3, 3, 3),
     )
 
 
+# ------------------------------- 1D soft-mode free energy (quantum) ----
+
+_HBAR2_OVER_2AMU = 2.09008e-3   # eV*Ang^2 = hbar^2/(2 * 1 amu); 1D kinetic operator constant
+_KB_EV = 8.617333262e-5         # eV/K
+# eV/Ang^2 per amu -> (rad/s)^2 : (1.602e-19 J/eV)/(1e-20 m^2/Ang^2)/(1.66054e-27 kg/amu)
+_W_TO_OMEGA2 = 1.602176634e-19 / 1e-20 / 1.66053907e-27
+_HBAR_EVS = 6.582119569e-16     # eV*s  (for x = hbar*omega/2kT and zero-point energy in eV)
+_HBAR_JS = 1.054571817e-34      # J*s   (for <Q^2> = hbar/2m_omega, m in kg -> m^2)
+_AMU_KG = 1.66053906660e-27     # kg/amu
+
+
+def _harmonic_phonon(prim, calc, supercell, disp=0.01):
+    """phonopy object carrying symmetrized force constants (prim already relaxed)."""
+    import ase
+    import numpy as np
+    from phonopy import Phonopy
+    from .harmonic import _ase_to_phonopy_atoms
+    ph = Phonopy(_ase_to_phonopy_atoms(prim), supercell_matrix=np.diag(supercell),
+                 primitive_matrix="auto")
+    ph.generate_displacements(distance=disp)
+    forces = []
+    for sc in ph.supercells_with_displacements:
+        a = ase.Atoms(symbols=sc.symbols, scaled_positions=sc.scaled_positions,
+                      cell=sc.cell, pbc=True)
+        a.calc = calc
+        forces.append(a.get_forces())
+    ph.forces = np.array(forces)
+    ph.produce_force_constants()
+    ph.symmetrize_force_constants()
+    return ph
+
+
+def _softest_commensurate_mode(ph, supercell):
+    """Softest mode over the q-points commensurate with ``supercell`` (so it can be frozen
+    into that cell). Returns (freq_thz, base_supercell_ase, u[n,3] unit displacement pattern,
+    M_eff[amu])."""
+    import ase
+    import numpy as np
+    n = [int(x) for x in supercell]
+    qs = [[i / n[0], j / n[1], k / n[2]]
+          for i in range(n[0]) for j in range(n[1]) for k in range(n[2])]
+    ph.run_qpoints(qs, with_eigenvectors=True)
+    freqs = np.array(ph.qpoints.frequencies)             # (nq, nband) THz
+    # Mask the three acoustic branches at Gamma: they are rigid translations and any imaginary
+    # value there is an acoustic-sum-rule artifact, not a lattice instability. (A genuine
+    # zone-centre ferroelectric soft mode is optical, band index >= 3, and stays searchable.)
+    for qi, q in enumerate(qs):
+        if max(abs(c) for c in q) < 1e-8:
+            order = np.argsort(freqs[qi])[:3]
+            freqs[qi, order] = np.inf
+    iq, ib = np.unravel_index(int(np.argmin(freqs)), freqs.shape)
+    fmin = float(freqs[iq, ib])
+    ph.run_modulations(dimension=n, phonon_modes=[[qs[iq], int(ib), 1.0, 0.0]])
+    mods, sc_ph = ph.get_modulations_and_supercell()
+    base = ase.Atoms(symbols=sc_ph.symbols, scaled_positions=sc_ph.scaled_positions,
+                     cell=sc_ph.cell, pbc=True)
+    u = np.real(mods[0])
+    mx = np.abs(u).max()
+    u = u / mx if mx > 0 else u                           # max atomic component = 1
+    m_eff = float(np.sum(base.get_masses()[:, None] * u ** 2))   # sum_i m_i |u_i|^2  (amu)
+    return fmin, base, u, m_eff
+
+
+def _sample_well(base, calc, u, q_max, n_pts):
+    """Static E(Q) along the soft pattern (symmetric, so sample Q>=0). Returns (Qs, dE[eV])."""
+    import numpy as np
+    base = base.copy(); base.calc = calc
+    E0 = base.get_potential_energy()
+    Qs = np.linspace(0.0, q_max, n_pts)
+    dE = []
+    pos0 = base.get_positions()
+    for Q in Qs:
+        a = base.copy(); a.set_positions(pos0 + Q * u); a.calc = calc
+        dE.append(a.get_potential_energy() - E0)
+    return Qs, np.array(dE)
+
+
+def _fit_double_well(Qs, dE):
+    """Fit V(Q) = a Q^2 + b Q^4 + c Q^6 (even, V(0)=0) by least squares. The potential must be
+    bounded below (b>0 with c>=0, or c>0), else the SCHA free energy diverges; if the sextic
+    fit returns c<0 we drop it and refit the quartic V=aQ^2+bQ^4 (which fits these shallow soft
+    wells to <0.1 meV). Returns (a,b,c)."""
+    import numpy as np
+    A = np.stack([Qs ** 2, Qs ** 4, Qs ** 6], axis=1)
+    coef, *_ = np.linalg.lstsq(A, dE, rcond=None)
+    if coef[2] < 0 or (coef[1] < 0 and coef[2] <= 0):
+        A2 = np.stack([Qs ** 2, Qs ** 4], axis=1)
+        c2, *_ = np.linalg.lstsq(A2, dE, rcond=None)
+        coef = np.array([c2[0], c2[1], 0.0])
+    return tuple(float(x) for x in coef)
+
+
+def _solve_1d(a, b, c, m_eff, temperature_K, q_box=0.8, ngrid=801, n_states=40):
+    """Exact 1D quantum solution for a particle of mass m_eff in V(Q)=aQ^2+bQ^4+cQ^6.
+
+    Returns (eff_freq_thz, order_param_Q, stable) where the call uses the potential of mean
+    force W(Q) = -kT ln P(Q,T): the high-symmetry phase (Q=0) is dynamically stable iff W has
+    a minimum at Q=0 (equivalently the thermal density P(Q,T) is peaked at 0, not bimodal).
+    Quantum nuclear motion is included exactly for the 1D mode (captures zero-point melting of
+    shallow wells, i.e. quantum-paraelectric behaviour)."""
+    import numpy as np
+    Q = np.linspace(-q_box, q_box, ngrid)
+    h = Q[1] - Q[0]
+    V = a * Q ** 2 + b * Q ** 4 + c * Q ** 6
+    K = _HBAR2_OVER_2AMU / m_eff                          # eV*Ang^2
+    main = V + 2.0 * K / h ** 2
+    off = -K / h ** 2 * np.ones(ngrid - 1)
+    from scipy.linalg import eigh_tridiagonal
+    E, psi = eigh_tridiagonal(main, off, select="i", select_range=(0, n_states - 1))
+    kT = max(_KB_EV * float(temperature_K), 1e-9)
+    p = np.exp(-(E - E[0]) / kT); p /= p.sum()
+    prob = (psi ** 2 * p).sum(axis=1)
+    prob /= prob.sum() * h
+    # PMF curvature at Q=0 (central grid point) via finite differences.
+    i0 = ngrid // 2
+    W = -kT * np.log(np.clip(prob, 1e-300, None))
+    w2 = (W[i0 + 1] - 2 * W[i0] + W[i0 - 1]) / h ** 2     # eV/Ang^2 = W''(0)
+    order_Q = float(np.sqrt((prob * Q ** 2).sum() * h))   # sqrt<Q^2> (Ang)
+    peak_at_zero = bool(np.argmax(prob) in (i0 - 1, i0, i0 + 1))
+    omega2 = w2 * _W_TO_OMEGA2 / m_eff                    # (rad/s)^2, signed
+    eff_freq_thz = float(np.sign(w2) * np.sqrt(abs(omega2)) / (2 * np.pi) / 1e12)
+    stable = bool(w2 > 0 and peak_at_zero)
+    return eff_freq_thz, order_Q, stable
+
+
+def _scha_branch(Q0, a, b, c, m_eff, temperature_K):
+    """Self-consistent harmonic (SCHA) trial state: a Gaussian of centroid Q0 and width sigma,
+    with the trial frequency Omega fixed by the stationarity condition m*Omega^2 = <V''>_0.
+    Quantum nuclear motion enters through <Q^2> = (hbar/2 m Omega) coth(hbar Omega / 2kT).
+
+    The self-consistency in sigma^2 is a 1D root of the monotone-decreasing residual
+    g(s2) = sigma2_sc(K(s2)) - s2 on the interval where K(s2) > 0; we bracket and solve it
+    (brentq), which avoids the spurious runaway large-sigma fixed point a damped iteration can
+    fall into. Returns (F[eV], sigma2[Ang^2], omega_rad_s, curv_K[eV/Ang^2])."""
+    import numpy as np
+    from scipy.optimize import brentq
+    kT = max(_KB_EV * float(temperature_K), 1e-12)
+    m_kg = m_eff * _AMU_KG
+
+    def curv(s2):                                          # K = <V''>_0  (eV/Ang^2)
+        q2 = Q0 ** 2 + s2
+        q4 = Q0 ** 4 + 6 * Q0 ** 2 * s2 + 3 * s2 ** 2
+        return 2 * a + 12 * b * q2 + 30 * c * q4
+
+    def sigma2_sc(s2):                                     # quantum SCHA width at this K
+        K = curv(s2)
+        omega = np.sqrt(K * _W_TO_OMEGA2 / m_eff)
+        x = _HBAR_EVS * omega / (2 * kT)
+        return (_HBAR_JS / (2 * m_kg * omega)) / np.tanh(x) * 1e20
+
+    # Lowest s2 with K>0 (above which a bound Gaussian trial exists). Scan a coarse grid up
+    # from there for the first sign change of g, then refine with brentq.
+    grid = np.geomspace(1e-6, 2.0, 240)
+    grid = grid[np.array([curv(s) for s in grid]) > 1e-8]
+    g = np.array([sigma2_sc(s) - s for s in grid])
+    s2 = float(grid[np.argmin(np.abs(g))])                 # fallback: closest to root
+    sign = np.sign(g)
+    cross = np.where(np.diff(sign) < 0)[0]
+    if len(cross):
+        i = int(cross[0])
+        s2 = float(brentq(lambda s: sigma2_sc(s) - s, grid[i], grid[i + 1], xtol=1e-10))
+    omega = float(np.sqrt(curv(s2) * _W_TO_OMEGA2 / m_eff))
+    K = curv(s2)
+    q2 = Q0 ** 2 + s2
+    q4 = Q0 ** 4 + 6 * Q0 ** 2 * s2 + 3 * s2 ** 2
+    q6 = Q0 ** 6 + 15 * Q0 ** 4 * s2 + 45 * Q0 ** 2 * s2 ** 2 + 15 * s2 ** 3
+    Vavg = a * q2 + b * q4 + c * q6
+    x = _HBAR_EVS * omega / (2 * kT)
+    # F_vib = kT ln(2 sinh x) = (hbar*omega/2) + kT ln(1 - e^{-2x}); the split form avoids
+    # sinh overflow as T -> 0 (where it reduces to the zero-point energy).
+    Fvib = 0.5 * _HBAR_EVS * omega + kT * np.log1p(-np.exp(-2 * x))
+    F = Fvib + Vavg - 0.5 * K * s2                        # Gibbs-Bogoliubov free energy
+    return float(F), s2, float(omega), float(K)
+
+
+def _solve_scha(a, b, c, m_eff, temperature_K, q_box=0.6, nq=121):
+    """Single-mode quantum SCHA. Minimise the SCHA free energy over the order-parameter
+    centroid Q0 (>=0 by symmetry); the high-symmetry phase is dynamically stable iff the global
+    minimum sits at Q0 ~ 0. Returns (eff_freq_thz, order_Q0, stable). The reported frequency is
+    the SCHA phonon at the global minimum, signed negative when the cubic phase has condensed so
+    it crosses zero through the transition."""
+    import numpy as np
+    Q0s = np.linspace(0.0, q_box, nq)
+    Fs, sig, om, Kc = [], [], [], []
+    for q0 in Q0s:
+        F, s2, omega, K = _scha_branch(q0, a, b, c, m_eff, temperature_K)
+        Fs.append(F); sig.append(s2); om.append(omega); Kc.append(K)
+    Fs = np.array(Fs)
+    i = int(np.argmin(Fs))
+    order_Q0 = float(Q0s[i])
+    # "stable" = the cubic (Q0=0) centroid is the free-energy ground state. A small tolerance
+    # absorbs grid noise; require the symmetric point be within ~kT of the global minimum too.
+    q_thresh = 1.5 * (Q0s[1] - Q0s[0])
+    stable = bool(order_Q0 <= q_thresh)
+    omega_min = om[i]
+    eff_freq_thz = float(np.sign(1 if stable else -1) * omega_min / (2 * np.pi) / 1e12)
+    return eff_freq_thz, order_Q0, stable
+
+
+def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
+                              q_max=0.45, n_pts=10, imag_tol_thz=DEFAULT_IMAG_TOL_THZ,
+                              relax=True, fmax=1e-3, disp=0.01,
+                              cache_path=None) -> FiniteTResult:
+    """Finite-T dynamic stability via the 1D soft-mode free energy with exact quantum nuclear
+    motion. Relax -> harmonic FCs -> softest commensurate mode (phonopy modulation) -> static
+    double well E(Q) along it -> exact 1D quantum thermal density -> stability from the
+    potential-of-mean-force curvature at Q=0. The expensive E(Q) map is temperature-independent
+    and cached (json), so every extra temperature is a sub-second CPU solve.
+    """
+    import json
+    import os
+    import numpy as np
+
+    cache = None
+    if cache_path and os.path.exists(cache_path):
+        cache = json.load(open(cache_path))
+
+    if cache is None:
+        prim = atoms.copy(); prim.calc = calc
+        if relax:
+            from .harmonic import _relax
+            prim = _relax(prim, fmax=fmax)
+        ph = _harmonic_phonon(prim, calc, supercell, disp)
+        f0, base, u, m_eff = _softest_commensurate_mode(ph, supercell)
+        Qs, dE = _sample_well(base, calc, u, q_max, n_pts)
+        a, b, cc = _fit_double_well(Qs, dE)
+        cache = {"harm_min_thz": f0, "m_eff": m_eff, "a": a, "b": b, "c": cc,
+                 "Qs": Qs.tolist(), "dE": dE.tolist(), "supercell": list(supercell),
+                 "well_depth_meV": float(-min(dE.min(), 0.0) * 1000)}
+        if cache_path:
+            os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+            json.dump(cache, open(cache_path, "w"))
+
+    eff_freq, order_Q, stable_fe = _solve_scha(cache["a"], cache["b"], cache["c"],
+                                               cache["m_eff"], temperature_K)
+    stable = bool(stable_fe)
+    return FiniteTResult(
+        temperature_K=float(temperature_K), method="softmode",
+        min_eff_freq_thz=eff_freq, dynamically_stable=stable, imag_tol_thz=imag_tol_thz,
+        supercell=list(cache["supercell"]), n_samples=len(cache["Qs"]),
+        extra={"soft_mode_freq_thz": eff_freq, "harm_soft_thz": cache["harm_min_thz"],
+               "order_param_Q_ang": order_Q, "m_eff_amu": cache["m_eff"],
+               "well_depth_meV": cache["well_depth_meV"],
+               "v_a": cache["a"], "v_b": cache["b"], "v_c": cache["c"]},
+    )
+
+
 # ----------------------------------------------------- SSCHA hook ----
 
 def compute_finite_t_sscha(atoms, calc, temperature_K, supercell=(2, 2, 2),

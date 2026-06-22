@@ -77,6 +77,15 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
                                        supercell=supercell, cache_path=cache)
         base.update(res.as_row())
         base["gt_stable"] = _finite_t_gt(spec, temperature_K)
+    elif method == "softmode":
+        from .finite_t import compute_finite_t_softmode
+        # The E(Q) double-well map is temperature-independent, so the cache key omits T;
+        # every extra temperature then reuses it for a sub-second 1D quantum solve.
+        cache = f"results/cache/softmode_{system}_{model}_sc{''.join(map(str,supercell))}.json"
+        res = compute_finite_t_softmode(atoms, handle.calc, temperature_K,
+                                        supercell=supercell, cache_path=cache)
+        base.update(res.as_row())
+        base["gt_stable"] = _finite_t_gt(spec, temperature_K)
     elif method == "tdep":
         from .finite_t import compute_finite_t_tdep
         res = compute_finite_t_tdep(atoms, handle.calc, temperature_K, supercell=supercell)
@@ -111,7 +120,8 @@ def main(argv=None):
     p.add_argument("--system", required=True)
     p.add_argument("--model", required=True)
     p.add_argument("--method", default="harmonic",
-                   choices=["harmonic", "hiphive", "rattled", "tdep", "md_distort", "sscha"])
+                   choices=["harmonic", "hiphive", "rattled", "softmode", "tdep",
+                            "md_distort", "sscha"])
     p.add_argument("--T", type=float, default=0.0, dest="temperature_K")
     p.add_argument("--device", default="cuda")
     p.add_argument("--supercell", type=int, nargs=3, default=[2, 2, 2])

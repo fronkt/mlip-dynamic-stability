@@ -57,6 +57,24 @@
   Omega_eff^2 turns positive. GPU-light and transparent; deep-well systems (bcc Ti/Zr/Hf) are
   easier and the same machinery handles them.
 
+- 2026-06-21 — 1D quantum SCHA finite-T method WORKS (passed the SrTiO3 gate). Three pitfalls
+  fixed along the way: (1) SOFTEST-MODE SELECTION: searching argmin over all commensurate
+  q-points grabs the spurious imaginary ACOUSTIC branch at Gamma (acoustic-sum-rule artifact,
+  -2.365 THz, convex E(Q) garbage) instead of the real R-point soft mode (-2.089, true double
+  well). Rule: mask the 3 acoustic branches at q=Gamma before argmin (a genuine zone-centre
+  FE soft mode is optical, band>=3, still found). (2) POTENTIAL FIT must be BOUNDED: the sextic
+  V=aQ^2+bQ^4+cQ^6 lstsq over Q up to 0.45 A returned c<0 (unbounded -> SCHA free energy
+  diverges to -inf, fake "stable"). Rule: if c<0 drop it and refit the quartic (fits these
+  shallow soft wells to <0.1 meV). (3) SCHA SELF-CONSISTENCY: the damped fixed-point on sigma^2
+  falls into a spurious runaway large-sigma root (sigma~0.5A, F~-22 eV). The residual
+  g(s2)=sigma2_sc(K(s2))-s2 is monotone on the K>0 interval -> bracket + brentq for the unique
+  physical root. UNITS TRAP: <Q^2>=hbar/(2 m omega) coth needs hbar in J*s (m in kg -> m^2),
+  but x=hbar*omega/2kT and the ZP energy need hbar in eV*s. Result: SrTiO3 Q0 condenses ~0.14A
+  below Tc and melts at ~150K; eff_freq hardens -2.6 -> +1.8 THz through Tc~100-150K (expt 105).
+  CAVEAT for the paper: the collective supercell mode's barrier (27.7 meV/2x2x2) scales with
+  cell size, so the predicted Tc is supercell-dependent and only order-of-magnitude — report it
+  as a qualitative stability call, not a quantitative Tc.
+
 - 2026-06-21 — 5-model harmonic result (the real Layer-1 finding): models DISAGREE on which
   instabilities they capture, architecture-dependently. MatterSim & SevenNet reproduce every
   soft mode with large imaginary freqs (acc 1.00, 0 false-stable on 19 systems). MACE-MP-0 &

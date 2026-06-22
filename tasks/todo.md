@@ -47,12 +47,20 @@
       the "stable" label was the questionable one. CeO2/NaCl KEPT as scored controls — they
       are genuinely stable and only CHGNet marginally trips them (-0.24, just past -0.1 tol).
 
-## P3 — Layer 2 finite-T core  (needs GPU)  ← METHOD PIVOT
+## P3 — Layer 2 finite-T core  (needs GPU)  ← METHOD = 1D QUANTUM SCHA  [VERIFIED]
 - [x] First attempt: hand-rolled TDEP-lite — FAILED (ill-conditioned, -32..-40 THz). Purged.
-- [ ] DECISION: finite-T method = hiPhive (TDEP-style, symmetry-reduced) vs SSCHA (gold std)
-- [ ] Implement chosen method; save MD snapshots so re-fits don't re-run MD
-- [ ] VERIFY on SrTiO3: soft mode must harden negative->positive across ~105 K transition
-- [ ] Curated set × models × T; ledger rows
+- [x] Second attempt: one-shot hiPhive TDEP-from-MD — under-detects (SrTiO3 +0.8 flat). Kept as
+      documented dead-end (compute_finite_t_hiphive).
+- [x] Third attempt: rattled-start MD order parameter — FAILED gate (shallow 3.5meV well melts).
+- [x] METHOD = `softmode` (compute_finite_t_softmode): relax -> phonopy harmonic FCs -> softest
+      COMMENSURATE mode via phonopy modulation (mask Gamma acoustic) -> static E(Q) double well
+      -> bounded quartic/sextic fit -> single-mode QUANTUM SCHA free-energy minimisation over the
+      order-parameter centroid Q0 (brentq self-consistent sigma). Stable iff cubic (Q0~0) is the
+      free-energy global min. E(Q) map is T-independent -> cached json; each T is a CPU solve.
+- [x] Wired into cli.py (method "softmode") + run_grid.py default (non-superionic).
+- [x] VERIFY on SrTiO3 PASSED (mace_mp0, 2x2x2): harm -2.089 THz; Q0 condensed ~0.14 below Tc,
+      melts to 0 at 150 K; eff_freq hardens -2.6 -> +1.8 THz through Tc~100-150 K (expt 105 K).
+- [ ] Curated set × 5 models × T-ladder (100/300/600/900); ledger rows
 - [ ] CHECKPOINT: finite-T core complete
 
 ## P4 — Analysis & figures
