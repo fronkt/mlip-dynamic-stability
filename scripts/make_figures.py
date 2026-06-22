@@ -128,9 +128,32 @@ def fig_displacive_recall():
     print(f"wrote {OUT}/fig_displacive_recall.png  ({r.to_dict('records')})")
 
 
+def fig_ensemble_guardrail():
+    """H3: cross-model disagreement as a guardrail. Consensus finite-T error rate on units where
+    the five MLIPs split on the stable/unstable call vs unanimous units; the binary vote split is
+    a useful predictor of consensus error (AUC annotated) where the continuous frequency spread
+    is not."""
+    from mlip_dynstab.analysis import h3_guardrail_summary
+    s = h3_guardrail_summary(df)
+    if not s:
+        return
+    fig, ax = plt.subplots(figsize=(4.6, 4.6))
+    labels = [f"split vote\n(n={s['n_split']})", f"unanimous\n(n={s['n_unanimous']})"]
+    vals = [s["split_vote_error_rate"], s["unanimous_error_rate"]]
+    bars = ax.bar(labels, vals, color=["#d95f0e", "#2c7fb8"], width=0.6)
+    for b, v in zip(bars, vals):
+        ax.text(b.get_x() + b.get_width() / 2, v + 0.01, f"{v:.2f}", ha="center", fontsize=10)
+    ax.set_ylim(0, max(vals) * 1.25 + 0.05); ax.set_ylabel("consensus finite-T error rate")
+    ax.set_title(f"Ensemble disagreement guardrail (H3)\nvote-split AUC {s['auc_vote_disagreement']}, "
+                 f"freq-std AUC {s['auc_freq_std']}")
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_ensemble_guardrail.png", dpi=160); plt.close(fig)
+    print(f"wrote {OUT}/fig_ensemble_guardrail.png  ({s})")
+
+
 if __name__ == "__main__":
     fig_sscha_bcc()
     fig_softmode_heat()
     fig_method_agreement()
     fig_displacive_recall()
+    fig_ensemble_guardrail()
     print("FIGURES_DONE")

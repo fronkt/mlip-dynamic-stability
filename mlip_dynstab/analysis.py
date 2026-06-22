@@ -257,6 +257,44 @@ def h3_ensemble_guardrail(df: pd.DataFrame, method: str = "tdep") -> pd.DataFram
     return pd.DataFrame(rows)
 
 
+def _auc(score, label) -> float:
+    """Rank AUC of ``score`` as a predictor of the boolean ``label`` (Mann-Whitney form)."""
+    score = np.asarray(score, float); label = np.asarray(label, bool)
+    pos, neg = score[label], score[~label]
+    if len(pos) == 0 or len(neg) == 0:
+        return float("nan")
+    return float(np.mean([(p > n) + 0.5 * (p == n) for p in pos for n in neg]))
+
+
+def h3_guardrail_summary(df: pd.DataFrame, method: str = "softmode",
+                         exclude_bcc: bool = True) -> dict:
+    """H3 quantified. Does cross-model disagreement flag that the consensus finite-T call is
+    wrong? Compares the consensus error rate on split-vote vs unanimous units, and reports the
+    rank-AUC of two disagreement signals (the binary stable/unstable vote split, and the raw
+    cross-model frequency standard deviation) as predictors of consensus error. bcc is excluded by
+    default because its thermodynamic-Tc ground truth is the wrong reference for dynamic stability
+    (see sscha_dynamic_stabilization); borderline systems are always excluded."""
+    g = h3_ensemble_guardrail(df, method=method)
+    if g.empty:
+        return {}
+    if exclude_bcc:
+        g = g[~g["system"].str.contains("bcc")]
+    g = g[~g["system"].isin(borderline_systems())]
+    if g.empty:
+        return {}
+    err = ~g["consensus_correct"].astype(bool)
+    split, unan = g[g["disagreement"] > 0], g[g["disagreement"] == 0]
+    return {
+        "n_units": int(len(g)),
+        "consensus_error_rate": round(float(err.mean()), 3),
+        "split_vote_error_rate": round(float((~split["consensus_correct"]).mean()), 3) if len(split) else float("nan"),
+        "unanimous_error_rate": round(float((~unan["consensus_correct"]).mean()), 3) if len(unan) else float("nan"),
+        "n_split": int(len(split)), "n_unanimous": int(len(unan)),
+        "auc_vote_disagreement": round(_auc(g["disagreement"], err), 3),
+        "auc_freq_std": round(_auc(g["freq_std_thz"], err), 3),
+    }
+
+
 # ------------------------------------------------------------------- report ----
 
 def summary(ledger_path=None) -> dict:
@@ -273,9 +311,13 @@ def summary(ledger_path=None) -> dict:
     if "softmode" in out["methods"]:
         out["headline_low_t_false_stable"] = low_t_false_stable(df).to_dict("records")
         out["predicted_tstar"] = predicted_tstar(df).to_dict("records")
+        out["displacive_recall"] = displacive_recall(df).to_dict("records")
+        out["h3_guardrail"] = h3_guardrail_summary(df)
     if "sscha" in out["methods"]:
         tab = sscha_dynamic_stabilization(df)
         out["sscha_zr_dynamic_stabilization"] = tab.reset_index().to_dict("records")
+        out["sscha_reliability"] = sscha_reliability(df).to_dict("records")
+        out["bcc_method_agreement"] = method_agreement_summary(df[df["system"].str.contains("bcc")])
     return out
 
 

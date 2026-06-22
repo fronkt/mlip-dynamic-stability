@@ -62,10 +62,10 @@ We pre-registered three hypotheses:
 - **H3 (practical guardrail).** Inter-model (ensemble) disagreement flags unreliable calls
   better than any single model's self-reported energetics.
 
-Our contribution is threefold: a finite-T benchmark on the anharmonic regime; a cheap,
-validated soft-mode free-energy screen; and a cautionary methodological result that the
-"gold-standard" SSCHA is itself unreliable on deep displacive instabilities when driven by an
-MLIP, which reframes how such cross-checks should be used.
+Our contributions: a finite-T benchmark on the anharmonic regime; a cheap, validated soft-mode
+free-energy screen; a cautionary methodological result that the "gold-standard" SSCHA is itself
+unreliable on deep displacive instabilities when driven by an MLIP, which reframes how such
+cross-checks should be used; and an actionable ensemble-disagreement guardrail (H3).
 
 ## 2. Methods
 
@@ -204,8 +204,22 @@ in-flight grid will resolve this.*
 
 ### 3.4 Ensemble disagreement as a guardrail (H3)
 
-`[PENDING — to be computed on the completed grid: does cross-model variance in the soft-mode
-frequency predict per-unit error better than any single model's self-reported energetics?]`
+Because no single model is reliable across the set, we test whether *cross-model disagreement*
+flags the units where the consensus (majority-vote) finite-T call is wrong. On the non-bcc,
+non-borderline soft-mode units (n = 60; bcc excluded because its thermodynamic-T_c label is the
+wrong reference for dynamic stability, §3.3), the majority-vote consensus is wrong on 16.7% of
+units. The disagreement signal separates these sharply: on the 18 units where the five models
+**split** on the stable/unstable call, the consensus error rate is **0.39**, versus **0.07** on
+the 42 unanimous units — a 5.5× enrichment. As a ranked predictor of consensus error, the
+binary stable/unstable **vote split achieves AUC 0.75**, whereas the continuous cross-model
+frequency standard deviation is uninformative (**AUC 0.52**, no better than chance;
+Fig. `fig_ensemble_guardrail`).
+
+This refines H3 into an actionable rule with a caveat: the *discrete* inter-model vote split is
+a useful, cheap guardrail — flag any candidate on which the foundation-MLIP ensemble disagrees —
+but the *continuous* frequency spread that one might naively threshold is not. The physical
+reading is that disagreement is concentrated near the stability boundary (split votes coincide
+with frequencies straddling zero), where the call is both most uncertain and most error-prone.
 
 ## 4. Discussion
 
