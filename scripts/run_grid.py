@@ -36,7 +36,10 @@ def main():
             if args.layer == "harmonic":
                 run_unit(s.id, args.model, "harmonic", 0.0, args.device)
             else:
-                method = args.method or ("md_distort" if s.klass == "superionic" else "softmode")
+                # softmode (1D quantum SCHA) is the unified finite-T method for all classes;
+                # superionic agi_bcc also has a soft framework phonon so it fits the same path
+                # (the Ag-sublattice disordering is a documented caveat, not separately modelled).
+                method = args.method or "softmode"
                 for T in args.temps:
                     run_unit(s.id, args.model, method, T, args.device)
         except Exception as e:  # one bad unit must not kill the grid
