@@ -24,7 +24,7 @@ sysid = sys.argv[2] if len(sys.argv) > 2 else "srtio3_cubic"
 n = int(sys.argv[3]) if len(sys.argv) > 3 else 2
 Ts = [float(x) for x in (sys.argv[4].split(",") if len(sys.argv) > 4 else ["100", "300", "600"])]
 sc = (n, n, n)
-N_CONF, MAX_POP = 200, 8
+N_CONF, MAX_POP, N_HESS = 300, 12, 1000
 
 calc = get_calculator(model, device="cuda").calc
 prim = build_atoms(get_spec(sysid)); prim.calc = calc
@@ -43,16 +43,25 @@ print("CC dyn ready; supercell", dyn.GetSupercell(), flush=True)
 
 RY_TO_THZ = CC.Units.RY_TO_CM * 2.99792458e-2  # Ry-freq -> cm^-1 -> THz (1 cm^-1 = 0.02998 THz)
 
-print(f"\n=== SSCHA {model} {sysid} sc={sc} ===", flush=True)
+print(f"\n=== SSCHA {model} {sysid} sc={sc} N={N_CONF}/{N_HESS} ===", flush=True)
 for T in Ts:
+    np.random.seed(0)
     ens = sscha.Ensemble.Ensemble(dyn.Copy(), T, supercell=dyn.GetSupercell())
     minim = sscha.SchaMinimizer.SSCHA_Minimizer(ens)
+    minim.meaningful_factor = 1e-3
     relax = sscha.Relax.SSCHA(minim, ase_calculator=calc, N_configs=N_CONF, max_pop=MAX_POP,
                               save_ensemble=False)
     relax.relax(get_stress=False)
-    hess = relax.minim.ensemble.get_free_energy_hessian(include_v4=False)
+    final_dyn = relax.minim.dyn
+    # dedicated large ensemble at the converged auxiliary dyn for a low-noise free-energy Hessian
+    he = sscha.Ensemble.Ensemble(final_dyn, T, supercell=final_dyn.GetSupercell())
+    he.generate(N_HESS)
+    he.get_energy_forces(calc, compute_stress=False)
+    hess = he.get_free_energy_hessian(include_v4=False)
     w, _ = hess.DiagonalizeSupercell()
-    wmin = float(np.min(w))
-    thz = np.sign(wmin) * np.sqrt(abs(wmin)) * RY_TO_THZ if False else wmin * RY_TO_THZ
-    print(f"T={T:6.0f}  min_hessian_freq={thz:+8.3f} THz  stable={wmin > -1e-9}", flush=True)
+    w = np.sort(w)
+    wmin = float(w[0])
+    low6 = ", ".join(f"{x * RY_TO_THZ:+.2f}" for x in w[:6])
+    print(f"T={T:6.0f}  min_hessian_freq={wmin * RY_TO_THZ:+8.3f} THz  stable={wmin > -1e-9}"
+          f"  | lowest6(THz): {low6}", flush=True)
 print("POC_DONE", flush=True)

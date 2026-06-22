@@ -729,17 +729,82 @@ def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
 
 # ----------------------------------------------------- SSCHA hook ----
 
-def compute_finite_t_sscha(atoms, calc, temperature_K, supercell=(2, 2, 2),
-                           population_size=200, max_iter=20,
-                           imag_tol_thz=DEFAULT_IMAG_TOL_THZ) -> FiniteTResult:
-    """Cross-check via python-sscha (stochastic self-consistent harmonic approximation).
+_RY_TO_THZ = None   # filled lazily from cellconstructor.Units
 
-    Requires `cellconstructor` + `python-sscha` in the env. Returns the SSCHA auxiliary
-    (free-energy Hessian) minimum frequency, the proper anharmonic dynamical-stability
-    criterion. Implementation is staged after the TDEP route validates on textbook cases.
+
+def compute_finite_t_sscha(atoms, calc, temperature_K, supercell=(4, 4, 4),
+                           n_configs=256, max_pop=8, n_hessian=512, disp=0.03,
+                           relax=True, fmax=1e-3, root_representation="root2",
+                           min_step_dyn=0.5, meaningful_factor=1e-4,
+                           imag_tol_thz=DEFAULT_IMAG_TOL_THZ) -> FiniteTResult:
+    """Gold-standard finite-T dynamic stability via the multi-mode stochastic SCHA
+    (python-sscha + cellconstructor), with an MLIP ASE calculator as the force engine.
+
+    Harmonic dyn (ASE finite-displacement -> cellconstructor, forced positive-definite as the
+    SCHA start) -> SCHA relaxation of the auxiliary dynamical matrix at T (auto populations) ->
+    a dedicated ensemble at the converged dyn -> the FREE-ENERGY (physical) HESSIAN. The lowest
+    Hessian frequency excluding the 3 acoustic zero modes is the anharmonic dynamic-stability
+    indicator: imaginary (<0) => the high-symmetry phase is dynamically unstable at T. Unlike
+    the single-mode ``softmode`` route this captures the full multi-mode phonon entropy, so it
+    is reliable for entropy-stabilised transitions (bcc Ti/Zr/Hf). Requires the SSCHA stack in
+    the active env.
     """
-    raise NotImplementedError(
-        "SSCHA route is stage-P3b; use compute_finite_t_tdep first. "
-        "Wiring: cellconstructor.Structure from atoms -> SSCHA Ensemble with an ASE-calc "
-        "force engine -> SSCHA_Minimizer -> free-energy Hessian min frequency."
+    global _RY_TO_THZ
+    import warnings
+    warnings.filterwarnings("ignore")
+    import numpy as np
+    from ase.phonons import Phonons as ASEPhonons
+    import cellconstructor as CC
+    import cellconstructor.Phonons
+    import sscha
+    import sscha.Ensemble
+    import sscha.SchaMinimizer
+    import sscha.Relax
+    if _RY_TO_THZ is None:
+        _RY_TO_THZ = CC.Units.RY_TO_CM * 2.99792458e-2   # Ry-freq -> cm^-1 -> THz
+
+    prim = atoms.copy(); prim.calc = calc
+    if relax:
+        from .harmonic import _relax
+        prim = _relax(prim, fmax=fmax)
+
+    # Harmonic dynamical matrix (ASE finite-displacement displaces only unit-cell atoms -> cheap)
+    aph = ASEPhonons(prim, calc, supercell=tuple(supercell), delta=disp, name="/tmp/_sscha_aseph")
+    aph.clean()
+    aph.run()
+    aph.read(acoustic=True)
+    dyn = CC.Phonons.get_dyn_from_ase_phonons(aph)
+    dyn.ForcePositiveDefinite()
+    dyn.Symmetrize()
+
+    np.random.seed(0)
+    ens = sscha.Ensemble.Ensemble(dyn.Copy(), float(temperature_K), supercell=dyn.GetSupercell())
+    # root2 representation keeps the auxiliary dyn positive-definite and well-conditioned for
+    # soft modes -> avoids the step-size collapse (200+ tiny steps) that plagues the normal rep.
+    minim = sscha.SchaMinimizer.SSCHA_Minimizer(ens, root_representation=root_representation)
+    minim.min_step_dyn = min_step_dyn
+    minim.meaningful_factor = meaningful_factor
+    relaxer = sscha.Relax.SSCHA(minim, ase_calculator=calc, N_configs=n_configs, max_pop=max_pop,
+                                save_ensemble=False)
+    relaxer.relax(get_stress=False)
+    final_dyn = relaxer.minim.dyn
+
+    he = sscha.Ensemble.Ensemble(final_dyn, float(temperature_K), supercell=final_dyn.GetSupercell())
+    he.generate(n_hessian)
+    he.get_energy_forces(calc, compute_stress=False)
+    hess = he.get_free_energy_hessian(include_v4=False)
+    w, _ = hess.DiagonalizeSupercell()
+    w = np.sort(np.asarray(w))
+    # drop the 3 acoustic (translational) zero modes at Gamma
+    nonac = w[3:] if w.size > 3 else w
+    wmin = float(nonac[0])
+    min_freq = wmin * _RY_TO_THZ
+    stable = bool(min_freq >= imag_tol_thz)
+    return FiniteTResult(
+        temperature_K=float(temperature_K), method="sscha",
+        min_eff_freq_thz=min_freq, dynamically_stable=stable, imag_tol_thz=imag_tol_thz,
+        supercell=list(supercell), n_samples=int(n_configs * max_pop + n_hessian),
+        extra={"sscha_min_freq_thz": min_freq, "n_configs": n_configs, "max_pop": max_pop,
+               "n_hessian": n_hessian,
+               "lowest6_thz": [float(x * _RY_TO_THZ) for x in w[:6]]},
     )
