@@ -71,6 +71,41 @@ def per_model_table(df: pd.DataFrame, method: Optional[str] = None,
     return pd.DataFrame(rows).sort_values("false_stable_rate")
 
 
+# ---------------------------------------------- finite-T headline (low-T) ----
+
+def low_t_false_stable(df: pd.DataFrame, method: str = "softmode", t_max: float = 300.0,
+                       include_borderline: bool = False) -> pd.DataFrame:
+    """HEADLINE finite-T metric: per-model false-stable rate restricted to the LOW-temperature
+    regime (T <= ``t_max``). Here the single-mode SCHA is reliable, so this cleanly separates
+    models that capture soft-mode instabilities from those that miss them (vs the absolute
+    transition temperature, which a single-mode treatment underestimates -- see ``predicted_tstar``)."""
+    d = df[(df["method"] == method) & (df["temperature_K"] <= t_max)]
+    if not include_borderline:
+        d = d[~d["system"].isin(borderline_systems())]
+    rows = []
+    for model, g in d.groupby("model"):
+        c = confusion(g); r = rates(c)
+        rows.append({"model": model, "t_max": t_max, **c, **{k: round(v, 3) for k, v in r.items()}})
+    return pd.DataFrame(rows).sort_values("false_stable_rate")
+
+
+def predicted_tstar(df: pd.DataFrame, method: str = "softmode") -> pd.DataFrame:
+    """Per (system, model) predicted stabilisation temperature T* = lowest ladder T at which the
+    cubic phase is called stable, compared to the experimental transition_T_K. A single-mode
+    SCHA systematically UNDER-estimates T* for entropy-stabilised transitions, so this is a
+    qualitative/ordering check, not a quantitative Tc prediction."""
+    d = df[df["method"] == method]
+    rows = []
+    for (system, model), g in d.groupby(["system", "model"]):
+        g = g.sort_values("temperature_K")
+        tc = g["transition_T_K"].iloc[0]
+        stable_T = g[g["pred_stable"].astype(bool)]["temperature_K"]
+        tstar = float(stable_T.min()) if len(stable_T) else float("inf")
+        rows.append({"system": system, "model": model, "transition_T_K": tc,
+                     "T_star_pred": tstar, "n_T": len(g)})
+    return pd.DataFrame(rows).sort_values(["system", "model"])
+
+
 # ------------------------------------------------- H2: harmonic vs finite-T ----
 
 def h2_harmonic_predictiveness(df: pd.DataFrame) -> pd.DataFrame:
@@ -79,7 +114,7 @@ def h2_harmonic_predictiveness(df: pd.DataFrame) -> pd.DataFrame:
     the phi correlation. H2 expects LOW correlation (harmonic accuracy not predictive)."""
     harm = df[df["method"] == "harmonic"][["system", "model", "pred_stable", "gt_stable"]]
     harm = harm.rename(columns={"pred_stable": "harm_pred", "gt_stable": "harm_gt"})
-    ft = df[df["method"].isin(["hiphive", "tdep", "sscha"])][["system", "model", "pred_stable", "gt_stable", "temperature_K"]]
+    ft = df[df["method"].isin(["softmode", "hiphive", "tdep", "sscha"])][["system", "model", "pred_stable", "gt_stable", "temperature_K"]]
     ft = ft.rename(columns={"pred_stable": "ft_pred", "gt_stable": "ft_gt"})
     m = harm.merge(ft, on=["system", "model"], how="inner")
     if m.empty:
@@ -101,7 +136,7 @@ def h3_ensemble_guardrail(df: pd.DataFrame, method: str = "tdep") -> pd.DataFram
     split) predict that the consensus call is wrong? H3 expects high disagreement to coincide
     with errors. Frequency column differs by layer."""
     d = df[df["method"] == method].copy()
-    freq_col = "min_eff_freq_thz" if method in ("tdep", "sscha") else "min_freq_thz"
+    freq_col = "min_eff_freq_thz" if method in ("softmode", "tdep", "sscha") else "min_freq_thz"
     if d.empty or freq_col not in d:
         return pd.DataFrame()
     rows = []
@@ -133,6 +168,9 @@ def summary(ledger_path=None) -> dict:
     out["borderline_excluded"] = bl  # ambiguous-label systems dropped from headline rates
     for meth in out["methods"]:
         out[f"per_model_{meth}"] = per_model_table(df, meth).to_dict("records")
+    if "softmode" in out["methods"]:
+        out["headline_low_t_false_stable"] = low_t_false_stable(df).to_dict("records")
+        out["predicted_tstar"] = predicted_tstar(df).to_dict("records")
     return out
 
 
