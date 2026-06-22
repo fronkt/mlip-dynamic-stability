@@ -20,21 +20,27 @@ df = pd.read_parquet(LEDGER)
 MODELS = ["mattersim", "sevennet0", "mace_mp0", "chgnet", "orb_v2"]
 
 
-def fig_sscha_zr():
-    d = df[(df["method"] == "sscha") & (df["system"] == "zr_bcc")]
-    if d.empty:
+def fig_sscha_bcc():
+    """Multi-mode SSCHA dynamic-stabilization curves for the three bcc metals, one panel each."""
+    metals = [("ti_bcc", "bcc-Ti"), ("zr_bcc", "bcc-Zr"), ("hf_bcc", "bcc-Hf")]
+    have = [(s, t) for s, t in metals if not df[(df["method"] == "sscha") & (df["system"] == s)].empty]
+    if not have:
         return
-    piv = d.pivot_table(index="temperature_K", columns="model", values="min_eff_freq_thz")
-    fig, ax = plt.subplots(figsize=(6, 4.2))
-    for m in [c for c in MODELS if c in piv.columns]:
-        ax.plot(piv.index, piv[m], "o-", label=m)
-    ax.axhline(0, color="k", lw=0.8, ls="--")
-    ax.set_xlabel("Temperature (K)")
-    ax.set_ylabel("min free-energy Hessian freq (THz)")
-    ax.set_title("bcc-Zr multi-mode SSCHA dynamic stabilization")
-    ax.legend(fontsize=8, title="MLIP")
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_sscha_zr.png", dpi=160); plt.close(fig)
-    print(f"wrote {OUT}/fig_sscha_zr.png")
+    fig, axes = plt.subplots(1, len(have), figsize=(4.0 * len(have), 4.2), sharey=True)
+    if len(have) == 1:
+        axes = [axes]
+    for ax, (s, title) in zip(axes, have):
+        piv = (df[(df["method"] == "sscha") & (df["system"] == s)]
+               .pivot_table(index="temperature_K", columns="model", values="min_eff_freq_thz"))
+        for m in [c for c in MODELS if c in piv.columns]:
+            ax.plot(piv.index, piv[m], "o-", label=m)
+        ax.axhline(0, color="k", lw=0.8, ls="--")
+        ax.set_xlabel("Temperature (K)"); ax.set_title(title)
+    axes[0].set_ylabel("min free-energy Hessian freq (THz)")
+    axes[-1].legend(fontsize=8, title="MLIP")
+    fig.suptitle("Multi-mode SSCHA dynamic stabilization of bcc Ti/Zr/Hf")
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_sscha_bcc.png", dpi=160); plt.close(fig)
+    print(f"wrote {OUT}/fig_sscha_bcc.png")
 
 
 def fig_softmode_heat():
@@ -64,6 +70,6 @@ def fig_softmode_heat():
 
 
 if __name__ == "__main__":
-    fig_sscha_zr()
+    fig_sscha_bcc()
     fig_softmode_heat()
     print("FIGURES_DONE")
