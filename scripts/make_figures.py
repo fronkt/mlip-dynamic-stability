@@ -45,8 +45,11 @@ def fig_softmode_heat():
     piv = d.pivot_table(index="system", columns="model", values="min_eff_freq_thz")
     piv = piv[[c for c in MODELS if c in piv.columns]]
     fig, ax = plt.subplots(figsize=(6.5, 7))
-    vmax = float(np.nanmax(np.abs(piv.values)))
-    im = ax.imshow(piv.values, aspect="auto", cmap="RdBu", vmin=-vmax, vmax=vmax)
+    # clip the colour scale so a few extreme (float32/direct-model) outliers don't wash out the
+    # structure; the printed cell values still report the true numbers.
+    vmax = 10.0
+    im = ax.imshow(np.clip(piv.values, -vmax, vmax), aspect="auto", cmap="RdBu",
+                   vmin=-vmax, vmax=vmax)
     ax.set_xticks(range(len(piv.columns))); ax.set_xticklabels(piv.columns, rotation=45, ha="right")
     ax.set_yticks(range(len(piv.index))); ax.set_yticklabels(piv.index, fontsize=8)
     for i in range(piv.shape[0]):
