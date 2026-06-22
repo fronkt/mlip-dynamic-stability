@@ -735,7 +735,7 @@ _RY_TO_THZ = None   # filled lazily from cellconstructor.Units
 def compute_finite_t_sscha(atoms, calc, temperature_K, supercell=(4, 4, 4),
                            n_configs=256, max_pop=8, n_hessian=512, disp=0.03,
                            relax=True, fmax=1e-3, root_representation="root2",
-                           min_step_dyn=0.5, meaningful_factor=1e-4, max_ka=20,
+                           min_step_dyn=0.5, meaningful_factor=1e-4, max_ka=20, seed=0,
                            imag_tol_thz=DEFAULT_IMAG_TOL_THZ) -> FiniteTResult:
     """Gold-standard finite-T dynamic stability via the multi-mode stochastic SCHA
     (python-sscha + cellconstructor), with an MLIP ASE calculator as the force engine.
@@ -777,7 +777,7 @@ def compute_finite_t_sscha(atoms, calc, temperature_K, supercell=(4, 4, 4),
     dyn.ForcePositiveDefinite()
     dyn.Symmetrize()
 
-    np.random.seed(0)
+    np.random.seed(seed)
     ens = sscha.Ensemble.Ensemble(dyn.Copy(), float(temperature_K), supercell=dyn.GetSupercell())
     # root2 representation keeps the auxiliary dyn positive-definite and well-conditioned for
     # soft modes -> avoids the step-size collapse (200+ tiny steps) that plagues the normal rep.
