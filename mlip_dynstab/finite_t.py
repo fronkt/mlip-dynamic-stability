@@ -735,7 +735,7 @@ _RY_TO_THZ = None   # filled lazily from cellconstructor.Units
 def compute_finite_t_sscha(atoms, calc, temperature_K, supercell=(4, 4, 4),
                            n_configs=256, max_pop=8, n_hessian=512, disp=0.03,
                            relax=True, fmax=1e-3, root_representation="root2",
-                           min_step_dyn=0.5, meaningful_factor=1e-4,
+                           min_step_dyn=0.5, meaningful_factor=1e-4, max_ka=20,
                            imag_tol_thz=DEFAULT_IMAG_TOL_THZ) -> FiniteTResult:
     """Gold-standard finite-T dynamic stability via the multi-mode stochastic SCHA
     (python-sscha + cellconstructor), with an MLIP ASE calculator as the force engine.
@@ -784,6 +784,13 @@ def compute_finite_t_sscha(atoms, calc, temperature_K, supercell=(4, 4, 4),
     minim = sscha.SchaMinimizer.SSCHA_Minimizer(ens, root_representation=root_representation)
     minim.min_step_dyn = min_step_dyn
     minim.meaningful_factor = meaningful_factor
+    # Cap reweighting steps per population: with a noisy stochastic gradient (large soft cells,
+    # e.g. 40-atom perovskites) the default uncapped minimizer chases the gradient below the
+    # noise floor for 1000+ steps within ONE population, never regenerating a fresh ensemble
+    # (CPU thrash, GPU idle -> timeout). Capping forces ensemble regeneration so new forces are
+    # sampled and the relaxation actually progresses. Small cells (8-atom bcc) converge in
+    # fewer steps than the cap, so their results are unchanged.
+    minim.max_ka = max_ka
     relaxer = sscha.Relax.SSCHA(minim, ase_calculator=calc, N_configs=n_configs, max_pop=max_pop,
                                 save_ensemble=False)
     relaxer.relax(get_stress=False)
