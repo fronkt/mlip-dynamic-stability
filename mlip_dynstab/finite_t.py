@@ -474,27 +474,37 @@ def _harmonic_phonon(prim, calc, supercell, disp=0.01):
     return ph
 
 
-def _softest_commensurate_mode(ph, supercell):
-    """Softest mode over the q-points commensurate with ``supercell`` (so it can be frozen
-    into that cell). Returns (freq_thz, base_supercell_ase, u[n,3] unit displacement pattern,
-    M_eff[amu])."""
+def _softest_mesh_mode(ph, den=6):
+    """Softest phonon over the rational q-grid with denominator ``den`` (default 6: covers the
+    physically relevant commensurate instabilities -- R=3/6 & M perovskite tilts, the bcc
+    2/3<111> omega mode=4/6, 1/3 modes, and the zone centre). Frequencies are taken from EXACT
+    run_qpoints (phonopy's symmetry-reduced run_mesh both injects the Gamma acoustic-sum-rule
+    artifact as a spurious global minimum and skips exact zone-boundary points like R). The
+    minimum q is frozen into its MINIMAL commensurate cell via phonopy modulation -- 2x2x2 for a
+    perovskite R tilt, 3x3x3 for the bcc omega mode, 1x1x1 for a zone-centre ferroelectric.
+    Returns (freq_thz, q, dim, base_ase, u[n,3] unit pattern, M_eff[amu]).
+
+    The 3 acoustic branches at Gamma are masked: imaginary values there are rigid-translation
+    artifacts, not instabilities (a real zone-centre FE soft mode is optical and stays found)."""
     import ase
     import numpy as np
-    n = [int(x) for x in supercell]
-    qs = [[i / n[0], j / n[1], k / n[2]]
-          for i in range(n[0]) for j in range(n[1]) for k in range(n[2])]
-    ph.run_qpoints(qs, with_eigenvectors=True)
-    freqs = np.array(ph.qpoints.frequencies)             # (nq, nband) THz
-    # Mask the three acoustic branches at Gamma: they are rigid translations and any imaginary
-    # value there is an acoustic-sum-rule artifact, not a lattice instability. (A genuine
-    # zone-centre ferroelectric soft mode is optical, band index >= 3, and stays searchable.)
+    from fractions import Fraction
+
+    qs = [[i / den, j / den, k / den]
+          for i in range(den) for j in range(den) for k in range(den)]
+    ph.run_qpoints(qs, with_eigenvectors=False)
+    freqs = np.array(ph.qpoints.frequencies)             # (nq, nb)
+    fr = freqs.copy()
     for qi, q in enumerate(qs):
         if max(abs(c) for c in q) < 1e-8:
-            order = np.argsort(freqs[qi])[:3]
-            freqs[qi, order] = np.inf
-    iq, ib = np.unravel_index(int(np.argmin(freqs)), freqs.shape)
+            fr[qi, np.argsort(fr[qi])[:3]] = np.inf
+    iq, ib = np.unravel_index(int(np.argmin(fr)), fr.shape)
+    qsoft = qs[iq]
     fmin = float(freqs[iq, ib])
-    ph.run_modulations(dimension=n, phonon_modes=[[qs[iq], int(ib), 1.0, 0.0]])
+    dim = [Fraction(x).limit_denominator(den).denominator if abs(x) > 1e-9 else 1
+           for x in qsoft]
+
+    ph.run_modulations(dimension=dim, phonon_modes=[[qsoft, int(ib), 1.0, 0.0]])
     mods, sc_ph = ph.get_modulations_and_supercell()
     base = ase.Atoms(symbols=sc_ph.symbols, scaled_positions=sc_ph.scaled_positions,
                      cell=sc_ph.cell, pbc=True)
@@ -502,15 +512,17 @@ def _softest_commensurate_mode(ph, supercell):
     mx = np.abs(u).max()
     u = u / mx if mx > 0 else u                           # max atomic component = 1
     m_eff = float(np.sum(base.get_masses()[:, None] * u ** 2))   # sum_i m_i |u_i|^2  (amu)
-    return fmin, base, u, m_eff
+    return fmin, qsoft, dim, base, u, m_eff
 
 
 def _sample_well(base, calc, u, q_max, n_pts):
-    """Static E(Q) along the soft pattern (symmetric, so sample Q>=0). Returns (Qs, dE[eV])."""
+    """Static E(Q) along the soft pattern (symmetric, so sample Q>=0). Quadratic spacing puts
+    most points at small Q so narrow soft wells (e.g. ferroelectric BaTiO3, min ~0.07 A) are
+    resolved instead of being swamped by the steep repulsive wall. Returns (Qs, dE[eV])."""
     import numpy as np
     base = base.copy(); base.calc = calc
     E0 = base.get_potential_energy()
-    Qs = np.linspace(0.0, q_max, n_pts)
+    Qs = q_max * np.linspace(0.0, 1.0, n_pts) ** 2
     dE = []
     pos0 = base.get_positions()
     for Q in Qs:
@@ -520,16 +532,28 @@ def _sample_well(base, calc, u, q_max, n_pts):
 
 
 def _fit_double_well(Qs, dE):
-    """Fit V(Q) = a Q^2 + b Q^4 + c Q^6 (even, V(0)=0) by least squares. The potential must be
-    bounded below (b>0 with c>=0, or c>0), else the SCHA free energy diverges; if the sextic
-    fit returns c<0 we drop it and refit the quartic V=aQ^2+bQ^4 (which fits these shallow soft
-    wells to <0.1 meV). Returns (a,b,c)."""
+    """Fit V(Q) = a Q^2 + b Q^4 + c Q^6 (even, V(0)=0) to the *well + barrier* region only.
+
+    The static E(Q) climbs orders of magnitude up the repulsive wall at large Q; including those
+    points lets least squares wash out a narrow soft well (a real -60 meV BaTiO3 well fits as
+    -16 meV). We restrict to points within an energy window above the minimum (~5x the well
+    depth captures the well and the thermally relevant barrier), keeping >=4 lowest-Q points so
+    the curvature is defined. The potential must be bounded below: if the sextic returns c<0 we
+    drop it and refit the quartic. Returns (a,b,c)."""
     import numpy as np
-    A = np.stack([Qs ** 2, Qs ** 4, Qs ** 6], axis=1)
-    coef, *_ = np.linalg.lstsq(A, dE, rcond=None)
+    Qs = np.asarray(Qs, float); dE = np.asarray(dE, float)
+    emin = float(dE.min())
+    window = max(0.06, 5.0 * abs(min(emin, 0.0)))        # eV
+    keep = dE <= emin + window
+    if keep.sum() < 4:
+        keep = np.zeros_like(dE, bool)
+        keep[np.argsort(Qs)[:4]] = True
+    Qf, Ef = Qs[keep], dE[keep]
+    A = np.stack([Qf ** 2, Qf ** 4, Qf ** 6], axis=1)
+    coef, *_ = np.linalg.lstsq(A, Ef, rcond=None)
     if coef[2] < 0 or (coef[1] < 0 and coef[2] <= 0):
-        A2 = np.stack([Qs ** 2, Qs ** 4], axis=1)
-        c2, *_ = np.linalg.lstsq(A2, dE, rcond=None)
+        A2 = np.stack([Qf ** 2, Qf ** 4], axis=1)
+        c2, *_ = np.linalg.lstsq(A2, Ef, rcond=None)
         coef = np.array([c2[0], c2[1], 0.0])
     return tuple(float(x) for x in coef)
 
@@ -596,6 +620,10 @@ def _scha_branch(Q0, a, b, c, m_eff, temperature_K):
     # from there for the first sign change of g, then refine with brentq.
     grid = np.geomspace(1e-6, 2.0, 240)
     grid = grid[np.array([curv(s) for s in grid]) > 1e-8]
+    if grid.size == 0:
+        # No bound Gaussian trial at this centroid (purely soft) -> reject it (F=+inf) so the
+        # free-energy minimisation falls to a displaced, stable centroid instead.
+        return float("inf"), float("nan"), 0.0, float(curv(0.0))
     g = np.array([sigma2_sc(s) - s for s in grid])
     s2 = float(grid[np.argmin(np.abs(g))])                 # fallback: closest to root
     sign = np.sign(g)
@@ -665,11 +693,12 @@ def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
             from .harmonic import _relax
             prim = _relax(prim, fmax=fmax)
         ph = _harmonic_phonon(prim, calc, supercell, disp)
-        f0, base, u, m_eff = _softest_commensurate_mode(ph, supercell)
+        f0, qsoft, dim, base, u, m_eff = _softest_mesh_mode(ph)
         Qs, dE = _sample_well(base, calc, u, q_max, n_pts)
         a, b, cc = _fit_double_well(Qs, dE)
         cache = {"harm_min_thz": f0, "m_eff": m_eff, "a": a, "b": b, "c": cc,
-                 "Qs": Qs.tolist(), "dE": dE.tolist(), "supercell": list(supercell),
+                 "Qs": Qs.tolist(), "dE": dE.tolist(), "supercell": list(dim),
+                 "fc_supercell": list(supercell), "q_soft": list(qsoft),
                  "well_depth_meV": float(-min(dE.min(), 0.0) * 1000)}
         if cache_path:
             os.makedirs(os.path.dirname(cache_path), exist_ok=True)

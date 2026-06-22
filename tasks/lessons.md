@@ -75,6 +75,30 @@
   cell size, so the predicted Tc is supercell-dependent and only order-of-magnitude — report it
   as a qualitative stability call, not a quantitative Tc.
 
+- 2026-06-21 — softmode method hardening pass (after the SrTiO3 gate), four more fixes from
+  validating across well shapes (SrTiO3 shallow / BaTiO3 narrow-deep / MgO control / bcc Ti-Zr-Hf):
+  (a) GET_CALCULATOR MUST CACHE: a grid calls run_unit per (system,T) and each reloaded MACE
+  from disk (~40-90s under GPU contention) -> the grid looked "hung". Module-level handle cache
+  keyed on (name,device,kw); inference models are stateless so reuse is correct.
+  (b) NARROW WELL FIT: BaTiO3's soft well is narrow (min ~0.07A) and the static E(Q) climbs to
+  +130 eV up the repulsive wall; a global poly fit over the full Q range washed a real -60 meV
+  well down to -16 meV -> SCHA false-stable. Fix: quadratic Q spacing (denser at small Q) AND
+  fit ONLY the well+barrier window (dE <= min + 5x|depth|, >=4 points). 
+  (c) SOFTEST-q SEARCH: must scan the rational q-grid with denominator 6 (R=3/6, M, bcc omega
+  2/3=4/6, 1/3, Gamma) via EXACT run_qpoints, NOT phonopy run_mesh -- run_mesh both injects the
+  Gamma acoustic-sum-rule artifact (-2.4 THz) as a spurious global min and skips exact zone-
+  boundary points (its irreducible set had R only as 5/12 at -0.63 vs exact -2.09). Freeze the
+  winning q into its MINIMAL commensurate cell (2x2x2 perovskite R, 2x2x1 bcc N, etc.).
+  (d) SCHA empty-grid guard: a purely-soft centroid (no K>0 bound Gaussian) returns F=+inf so
+  the free-energy min falls to a displaced/stable centroid instead of crashing on argmin([]).
+  RESULT: SrTiO3/BaTiO3/MgO all correct at the ladder temps; MatterSim captures bcc Ti/Zr/Hf
+  instabilities (correctly U at low T) while MACE misses them (correctly false-stable).
+  KNOWN LIMITATION (document in paper): single-mode SCHA UNDERESTIMATES absolute Tc for deep,
+  phonon-entropy-stabilised transitions (bcc metals predicted T*~300-600 K vs expt 1100-2000 K;
+  ordering preserved hf>ti~zr). So the HEADLINE metric is the LOW-T (100-300 K) false-stable
+  rate, which cleanly separates instability-capturing models (MatterSim/SevenNet) from missers
+  (MACE/CHGNet/ORB); the predicted T* vs Tc is a secondary, caveated comparison.
+
 - 2026-06-21 — 5-model harmonic result (the real Layer-1 finding): models DISAGREE on which
   instabilities they capture, architecture-dependently. MatterSim & SevenNet reproduce every
   soft mode with large imaginary freqs (acc 1.00, 0 false-stable on 19 systems). MACE-MP-0 &

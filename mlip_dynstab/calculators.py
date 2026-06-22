@@ -27,9 +27,29 @@ class CalcHandle:
     device: str
 
 
+_HANDLE_CACHE: dict = {}
+
+
 def get_calculator(name: str, device: str = "cuda", **kw) -> CalcHandle:
-    """Return a CalcHandle for ``name``. Raises ImportError if the env lacks the backend."""
+    """Return a CalcHandle for ``name``. Raises ImportError if the env lacks the backend.
+
+    Loaded handles are cached per (name, device, kw): a foundation MLIP is stateless for
+    inference, so a grid of hundreds of units reuses one in-memory model instead of reloading
+    the checkpoint from disk every unit (which dominates wall time under GPU contention)."""
     name = name.lower()
+    try:
+        key = (name, device, tuple(sorted(kw.items())))
+    except TypeError:
+        key = None
+    if key is not None and key in _HANDLE_CACHE:
+        return _HANDLE_CACHE[key]
+    handle = _load_calculator(name, device, **kw)
+    if key is not None:
+        _HANDLE_CACHE[key] = handle
+    return handle
+
+
+def _load_calculator(name: str, device: str = "cuda", **kw) -> CalcHandle:
     if name == "mace_mp0":
         return _mace_mp0(device, **kw)
     if name == "chgnet":
