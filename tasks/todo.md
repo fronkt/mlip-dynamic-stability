@@ -71,6 +71,15 @@
       differs from thermodynamic Tc -> bcc gt label (Tc) is the wrong comparison for dynamic
       stability; SSCHA dynamic-stabilization curve is the right bcc deliverable.
 - [x] CHECKPOINT: finite-T core complete (softmode primary + SSCHA bcc cross-check).
+- [x] SSCHA extended to bcc Ti/Hf (75 rows total, 0 blowups). 3-panel fig_sscha_bcc.
+- [x] SSCHA minimizer max_ka cap (fixes 40-atom perovskite step-collapse/timeout; 63c5cc1).
+- [x] CROSS-VALIDATION + REFRAME (e241213): SSCHA = bcc gold-standard (tracks softmode rho=0.78);
+      FE-perovskite SSCHA fails (false-stable, displacive recall 0.23 vs softmode 0.77; +numerical
+      blowups). Root cause diagnosed (ForcePositiveDefinite + low-T narrow Gaussian + v4=False;
+      v4=True impractical >18min/unit). User-confirmed REFRAME (option A). analysis: sscha_reliability,
+      displacive_recall, family-aware method_agreement. figs: method_agreement (bcc), displacive_recall.
+- [ ] Let grid finish (esp untested cubic FLUORITES zro2/hfo2); pull + commit final ledger;
+      check if fluorite SSCHA is clean (legit cross-check) or also false-stables; regen figures.
 
 ## P4 — Analysis & figures
 - [ ] Confusion matrices + false-stable rates

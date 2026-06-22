@@ -2,6 +2,29 @@
 
 (Updated after corrections / surprises. Each entry: pattern → rule.)
 
+- 2026-06-22 — SSCHA CANNOT adjudicate deep displacive (ferroelectric perovskite) instabilities
+  as a black box, and this is THE central methods finding. Diagnostic (scripts/sscha_v4_diag.py,
+  cubic BaTiO3/mace/100K): harmonic soft mode -5.6 THz, but ForcePositiveDefinite init erases it
+  (+2.88), the SCHA auxiliary dyn stays stuck there (+2.89 — at low T the narrow Gaussian width
+  never samples the double well), and the include_v4=False free-energy Hessian just echoes the
+  positive curvature → +2.87 = FALSE-STABLE. include_v4=True is the only term that could recover
+  the instability but ran >18 min on a SINGLE unit without finishing (≈tens of hours × 140 units)
+  and is float64-only (orb_v2 float32 blows up to -2e6 THz). Quantified: FE-perovskite displacive
+  recall (T<=300, cubic definitively unstable) softmode 0.77 vs SSCHA 0.23. Rule: SSCHA-with-MLIP
+  is a clean gold-standard ONLY where the cubic reference is a genuine local min that becomes
+  metastable (bcc martensitic: 0 blowups, tracks softmode rho=0.78). For deep displacive wells
+  the cheap single-mode softmode (a static double-well + 1D quantum SCHA) is MORE reliable AND
+  cheaper. Don't trust a converged SSCHA freq without checking the aux dyn actually moved off the
+  ForcePositiveDefinite start.
+
+- 2026-06-22 — SSCHA minimizer hang = uncapped max_ka, not a real convergence problem. A noisy
+  stochastic gradient (large soft cells e.g. 40-atom perovskites) makes one population's
+  reweighting chase the gradient below the noise floor for 1000+ steps (CPU thrash, GPU at 0%)
+  WITHOUT ever regenerating a fresh ensemble → looks hung, hits timeout. Fix: set minim.max_ka
+  (e.g. 20) so each population is bounded and the relaxer resamples forces. Small cells (8-atom
+  bcc) converge under the cap so they're unchanged. Symptom to recognise: GPU idle while a SSCHA
+  "minimization step" counter climbs into the hundreds.
+
 - 2026-06-20 — The naive "benchmark MLIPs on harmonic phonon dynamical stability" is already
   published (npj 2025; PhononBench Dec 2025). Rule: the contribution must be the
   **finite-temperature/anharmonic** wedge; the harmonic layer exists only to validate the
