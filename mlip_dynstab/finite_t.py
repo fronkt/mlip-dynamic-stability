@@ -474,15 +474,17 @@ def _harmonic_phonon(prim, calc, supercell, disp=0.01):
     return ph
 
 
-def _softest_mesh_mode(ph, den=6):
-    """Softest phonon over the rational q-grid with denominator ``den`` (default 6: covers the
-    physically relevant commensurate instabilities -- R=3/6 & M perovskite tilts, the bcc
-    2/3<111> omega mode=4/6, 1/3 modes, and the zone centre). Frequencies are taken from EXACT
-    run_qpoints (phonopy's symmetry-reduced run_mesh both injects the Gamma acoustic-sum-rule
-    artifact as a spurious global minimum and skips exact zone-boundary points like R). The
-    minimum q is frozen into its MINIMAL commensurate cell via phonopy modulation -- 2x2x2 for a
-    perovskite R tilt, 3x3x3 for the bcc omega mode, 1x1x1 for a zone-centre ferroelectric.
-    Returns (freq_thz, q, dim, base_ase, u[n,3] unit pattern, M_eff[amu]).
+def _softest_mesh_mode(ph, supercell):
+    """Softest phonon over the q-points EXACTLY commensurate with the force-constant supercell.
+
+    Finite-displacement FCs on an NxNxN supercell give EXACT frequencies only at the N^3
+    commensurate q (Gamma, X, M, R for 2x2x2); at other q phonopy merely interpolates, which can
+    invent spurious soft modes with flat (non-physical) wells. So we restrict the search to the
+    commensurate set -- this captures the zone-centre (ferroelectric) and zone-boundary tilt /
+    bcc N-point (1/2,1/2,0) instabilities. (The bcc omega mode at 2/3<111> needs a >=3x3x3 FC
+    cell and is not probed here -- a documented limitation; N-point still flags bcc instability.)
+    The winning q is frozen into its MINIMAL commensurate cell via phonopy modulation. Returns
+    (freq_thz, q, dim, base_ase, u[n,3] unit pattern, M_eff[amu]).
 
     The 3 acoustic branches at Gamma are masked: imaginary values there are rigid-translation
     artifacts, not instabilities (a real zone-centre FE soft mode is optical and stays found)."""
@@ -490,8 +492,9 @@ def _softest_mesh_mode(ph, den=6):
     import numpy as np
     from fractions import Fraction
 
-    qs = [[i / den, j / den, k / den]
-          for i in range(den) for j in range(den) for k in range(den)]
+    n = [int(x) for x in supercell]
+    qs = [[i / n[0], j / n[1], k / n[2]]
+          for i in range(n[0]) for j in range(n[1]) for k in range(n[2])]
     ph.run_qpoints(qs, with_eigenvectors=False)
     freqs = np.array(ph.qpoints.frequencies)             # (nq, nb)
     fr = freqs.copy()
@@ -501,7 +504,7 @@ def _softest_mesh_mode(ph, den=6):
     iq, ib = np.unravel_index(int(np.argmin(fr)), fr.shape)
     qsoft = qs[iq]
     fmin = float(freqs[iq, ib])
-    dim = [Fraction(x).limit_denominator(den).denominator if abs(x) > 1e-9 else 1
+    dim = [Fraction(x).limit_denominator(max(n)).denominator if abs(x) > 1e-9 else 1
            for x in qsoft]
 
     ph.run_modulations(dimension=dim, phonon_modes=[[qsoft, int(ib), 1.0, 0.0]])
@@ -620,17 +623,23 @@ def _scha_branch(Q0, a, b, c, m_eff, temperature_K):
     # from there for the first sign change of g, then refine with brentq.
     grid = np.geomspace(1e-6, 2.0, 240)
     grid = grid[np.array([curv(s) for s in grid]) > 1e-8]
+    if grid.size:
+        g = np.array([sigma2_sc(s) - s for s in grid])
+        finite = np.isfinite(g)                            # drop NaN/inf (omega->0 edge)
+        grid, g = grid[finite], g[finite]
     if grid.size == 0:
         # No bound Gaussian trial at this centroid (purely soft) -> reject it (F=+inf) so the
         # free-energy minimisation falls to a displaced, stable centroid instead.
         return float("inf"), float("nan"), 0.0, float(curv(0.0))
-    g = np.array([sigma2_sc(s) - s for s in grid])
     s2 = float(grid[np.argmin(np.abs(g))])                 # fallback: closest to root
     sign = np.sign(g)
     cross = np.where(np.diff(sign) < 0)[0]
     if len(cross):
         i = int(cross[0])
-        s2 = float(brentq(lambda s: sigma2_sc(s) - s, grid[i], grid[i + 1], xtol=1e-10))
+        try:
+            s2 = float(brentq(lambda s: sigma2_sc(s) - s, grid[i], grid[i + 1], xtol=1e-10))
+        except (ValueError, RuntimeError):
+            pass                                           # keep the grid-nearest fallback
     omega = float(np.sqrt(curv(s2) * _W_TO_OMEGA2 / m_eff))
     K = curv(s2)
     q2 = Q0 ** 2 + s2
@@ -693,7 +702,7 @@ def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
             from .harmonic import _relax
             prim = _relax(prim, fmax=fmax)
         ph = _harmonic_phonon(prim, calc, supercell, disp)
-        f0, qsoft, dim, base, u, m_eff = _softest_mesh_mode(ph)
+        f0, qsoft, dim, base, u, m_eff = _softest_mesh_mode(ph, supercell)
         Qs, dE = _sample_well(base, calc, u, q_max, n_pts)
         a, b, cc = _fit_double_well(Qs, dE)
         cache = {"harm_min_thz": f0, "m_eff": m_eff, "a": a, "b": b, "c": cc,

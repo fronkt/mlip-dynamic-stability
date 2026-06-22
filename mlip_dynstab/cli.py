@@ -41,6 +41,11 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
     # neighbors while staying < L/2; harmonic finite-displacement is fine at 2x2x2.
     if method in ("hiphive", "rattled") and tuple(supercell) == (2, 2, 2):
         supercell = (3, 3, 3)
+    # softmode on bcc metals: the omega-phase instability sits at q=2/3<111>, which is only
+    # exactly commensurate with a 6x6x6 force-constant cell (which also captures N=1/2). bcc is
+    # a 1-atom primitive with cubic symmetry, so 6x6x6 still needs only ~1 displacement.
+    if method == "softmode" and spec.klass == "bcc-metal" and tuple(supercell) == (2, 2, 2):
+        supercell = (6, 6, 6)
     settings = {"supercell": list(supercell)}
 
     # We need the model version for the hash, so load the calculator first.

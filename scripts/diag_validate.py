@@ -12,11 +12,12 @@ systems = sys.argv[2:] if len(sys.argv) > 2 else ["srtio3_cubic", "batio3_cubic"
 calc = get_calculator(model, device="cuda").calc
 for sysid in systems:
     spec = get_spec(sysid); atoms = build_atoms(spec)
-    cache = f"results/cache/softmode_{sysid}_{model}_sc222.json"
+    sc = (6, 6, 6) if spec.klass == "bcc-metal" else (2, 2, 2)
+    cache = f"results/cache/softmode_{sysid}_{model}_sc{''.join(map(str,sc))}.json"
     print(f"\n=== {sysid}  Tc={spec.transition_T_K} ft_stable={spec.finite_T_stable} ===", flush=True)
     line = []
     for T in [100, 300, 600, 900]:
-        r = compute_finite_t_softmode(atoms, calc, T, supercell=(2, 2, 2), cache_path=cache)
+        r = compute_finite_t_softmode(atoms, calc, T, supercell=sc, cache_path=cache)
         gt = spec.finite_T_stable if spec.transition_T_K is None else (T >= spec.transition_T_K)
         ok = "ok" if r.dynamically_stable == gt else "XX"
         e = r.extra

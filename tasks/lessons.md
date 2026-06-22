@@ -99,6 +99,31 @@
   rate, which cleanly separates instability-capturing models (MatterSim/SevenNet) from missers
   (MACE/CHGNet/ORB); the predicted T* vs Tc is a secondary, caveated comparison.
 
+- 2026-06-22 — SOUNDNESS BUG in the softmode q-search: searching a denominator-6 rational
+  q-grid on 2x2x2 force constants is UNSOUND. NxNxN finite-displacement FCs give EXACT
+  frequencies ONLY at the N^3 commensurate q (Gamma/X/M/R for 2x2x2); at other q phonopy merely
+  interpolates and can invent spurious soft modes with FLAT (non-physical) wells -> false-stable.
+  Symptom: mace/sevennet bcc picked q=(5/6,5/6,1/6) dim[6,6,6] harm~-2 but well=-0.0. Fix:
+  search ONLY FC-commensurate q. To capture the bcc omega mode (2/3<111>) AND N (1/2), the FC
+  cell must be 6x6x6 (den-6 exact) -- cheap for bcc (1-atom primitive, cubic -> ~1 displacement).
+  COROLLARY: the harmonic LAYER (2x2x2 FCs on a 12^3 mesh) is itself partly interpolated for
+  bcc -- sevennet's "harmonic" ti/zr instabilities (-0.9/-1.1) largely VANISH with exact 6x6x6
+  FCs (+0.5/+0.3). So bcc needs converged FCs at every layer.
+
+- 2026-06-22 — single-mode SCHA is INSUFFICIENT for bcc Ti/Zr/Hf (user chose to invest in full
+  SSCHA). bcc is stabilised by the FULL multi-mode phonon entropy at very high T (expt Tc
+  1100-2000K); the single soft mode melts by ~300K. Decision: implement multi-mode stochastic
+  SSCHA (python-sscha + cellconstructor) for quantitative finite-T dynamic stability. INSTALL
+  notes: needs apt gfortran + libblas/liblapack-dev (box had none); pip install meson
+  meson-python ninja cython, then cellconstructor then python-sscha, per model env. The "julia
+  extension not available" warning is harmless. API gotcha: CC.Phonons.load_phonopy is DISABLED
+  (raises NotImplementedError); bridge via ASE phonons instead:
+  ASEPhonons(prim,calc,supercell,delta).run()/read(acoustic=True) ->
+  CC.Phonons.get_dyn_from_ase_phonons(aph) -> ForcePositiveDefinite()+Symmetrize() ->
+  sscha.Ensemble.Ensemble(dyn,T,sc) -> Relax.SSCHA(minim, ase_calculator=calc, N_configs,
+  max_pop) -> relax() -> ensemble.get_free_energy_hessian() -> DiagonalizeSupercell(); min freq
+  <0 => dynamically unstable. (RY_TO_THZ = CC.Units.RY_TO_CM * 0.0299792.)
+
 - 2026-06-21 — 5-model harmonic result (the real Layer-1 finding): models DISAGREE on which
   instabilities they capture, architecture-dependently. MatterSim & SevenNet reproduce every
   soft mode with large imaginary freqs (acc 1.00, 0 false-stable on 19 systems). MACE-MP-0 &
