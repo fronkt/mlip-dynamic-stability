@@ -124,6 +124,21 @@
   max_pop) -> relax() -> ensemble.get_free_energy_hessian() -> DiagonalizeSupercell(); min freq
   <0 => dynamically unstable. (RY_TO_THZ = CC.Units.RY_TO_CM * 0.0299792.)
 
+- 2026-06-22 — KEY PHYSICS for the bcc benchmark: bcc->hcp/omega in Ti/Zr/Hf is a MARTENSITIC,
+  strain-coupled FIRST-ORDER transition, NOT a soft-mode condensation. So the dynamic-
+  stabilization temperature T_dyn (where the SSCHA free-energy Hessian turns positive = bcc is a
+  metastable phonon minimum) is genuinely MUCH lower than the thermodynamic Tc (1100-2000 K).
+  Therefore using transition_T_K (thermodynamic) as the ground-truth label for *dynamic*
+  stability of bcc is the WRONG comparison -- it made every method look "false-stable" on bcc.
+  The correct bcc deliverable is the SSCHA dynamic-stabilization CURVE, not a Tc classification.
+  RESULT (2x2x2 SSCHA, 5 MLIPs, bcc-Zr): ALL five anharmonically stabilize bcc-Zr down to <=50 K
+  (T_dyn < 50 K everywhere), but the margin to the boundary discriminates and tracks each model's
+  harmonic-instability depth: mattersim(-2.03 harm)~orb closest (+0.4 THz @50K), then sevennet/
+  chgnet (+1.0-1.1), mace furthest/flat (+1.8, it barely sees the instability). Caveat: 2x2x2 is
+  a small SSCHA cell (q-grid Gamma/X/M/R, finite-size) -> T_dyn values approximate, but the
+  cross-model comparison at fixed cell is valid. 4x4x4+ SSCHA is convergence-slow (>7 min,
+  step-collapse) so 2x2x2 was the tractable choice.
+
 - 2026-06-21 — 5-model harmonic result (the real Layer-1 finding): models DISAGREE on which
   instabilities they capture, architecture-dependently. MatterSim & SevenNet reproduce every
   soft mode with large imaginary freqs (acc 1.00, 0 false-stable on 19 systems). MACE-MP-0 &

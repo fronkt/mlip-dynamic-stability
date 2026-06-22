@@ -89,6 +89,19 @@ def low_t_false_stable(df: pd.DataFrame, method: str = "softmode", t_max: float 
     return pd.DataFrame(rows).sort_values("false_stable_rate")
 
 
+def sscha_dynamic_stabilization(df: pd.DataFrame, system: str = "zr_bcc") -> pd.DataFrame:
+    """Multi-mode SSCHA dynamic-stabilization curve: the free-energy (physical) Hessian minimum
+    frequency vs T for each model on ``system`` (default bcc-Zr). >0 => the high-symmetry phase
+    is a dynamically (meta)stable free-energy minimum at that T. The cross-model spread at fixed
+    T is the finding (it tracks how deep each model's harmonic instability is). Note: martensitic
+    bcc->hcp means this dynamic-stabilization T differs from the thermodynamic transition_T_K."""
+    d = df[(df["method"] == "sscha") & (df["system"] == system)]
+    if d.empty:
+        return pd.DataFrame()
+    return d.pivot_table(index="temperature_K", columns="model",
+                         values="min_eff_freq_thz").round(3)
+
+
 def predicted_tstar(df: pd.DataFrame, method: str = "softmode") -> pd.DataFrame:
     """Per (system, model) predicted stabilisation temperature T* = lowest ladder T at which the
     cubic phase is called stable, compared to the experimental transition_T_K. A single-mode
@@ -171,6 +184,9 @@ def summary(ledger_path=None) -> dict:
     if "softmode" in out["methods"]:
         out["headline_low_t_false_stable"] = low_t_false_stable(df).to_dict("records")
         out["predicted_tstar"] = predicted_tstar(df).to_dict("records")
+    if "sscha" in out["methods"]:
+        tab = sscha_dynamic_stabilization(df)
+        out["sscha_zr_dynamic_stabilization"] = tab.reset_index().to_dict("records")
     return out
 
 

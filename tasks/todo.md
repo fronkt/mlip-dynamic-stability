@@ -60,8 +60,17 @@
 - [x] Wired into cli.py (method "softmode") + run_grid.py default (non-superionic).
 - [x] VERIFY on SrTiO3 PASSED (mace_mp0, 2x2x2): harm -2.089 THz; Q0 condensed ~0.14 below Tc,
       melts to 0 at 150 K; eff_freq hardens -2.6 -> +1.8 THz through Tc~100-150 K (expt 105 K).
-- [ ] Curated set × 5 models × T-ladder (100/300/600/900); ledger rows
-- [ ] CHECKPOINT: finite-T core complete
+- [x] Curated set × 5 models × T-ladder (100/300/600/900); 400 softmode ledger rows, 0 errors.
+- [x] SOUNDNESS FIX: softmode q-search restricted to FC-commensurate q (den-6-on-2x2x2 was
+      interpolating spurious flat-well modes); bcc uses 6x6x6 FCs.
+- [x] MULTI-MODE SSCHA added (user direction) for rigorous bcc: python-sscha+cellconstructor,
+      ASE-phonons bridge, free-energy Hessian. Validated PbTiO3 (-0.65 THz imaginary). bcc-Zr
+      dynamic-stabilization curve, 5 models x 5 T (25 rows): ALL stabilize bcc-Zr by <=50 K,
+      margin tracks harmonic depth (mattersim/orb closest to boundary ~0.4 THz @50K, mace
+      firmly stable ~1.8). KEY PHYSICS: bcc->hcp is martensitic, so dynamic-stabilization T
+      differs from thermodynamic Tc -> bcc gt label (Tc) is the wrong comparison for dynamic
+      stability; SSCHA dynamic-stabilization curve is the right bcc deliverable.
+- [x] CHECKPOINT: finite-T core complete (softmode primary + SSCHA bcc cross-check).
 
 ## P4 — Analysis & figures
 - [ ] Confusion matrices + false-stable rates
