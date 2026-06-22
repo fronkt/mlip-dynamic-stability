@@ -96,8 +96,9 @@ way confirms the failure is methodological, not a numerical artifact of the deep
 
 ### S2.4 Stochastic reproducibility and finite-size convergence
 
-`scripts/sscha_repro.py`, `scripts/run_revision_compute.sh`; data in
-`results/convergence_study.parquet`.
+`scripts/sscha_repro.py`, `scripts/run_revision_compute.sh`; finite-size runs in
+`results/convergence_study.parquet` (the per-seed reproducibility frequencies print to the run
+log rather than to a ledger).
 
 - **Reproducibility.** bcc-Zr / MACE-MP-0 / 100 K SSCHA over 4 seeds: +1.798 ± 0.001 THz — the
   cross-model bcc margins (~0.4 THz) exceed the stochastic noise by ~400×.

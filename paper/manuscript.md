@@ -1,7 +1,7 @@
 # Finite-temperature dynamic stability is a blind spot of foundation machine-learning interatomic potentials
 
-*Working draft — Stage 2. Numbers are pulled from `results/ledger.parquet`; cells marked
-`[PENDING]` await the in-flight cubic-fluorite SSCHA grid. DOIs to be finalised in the
+*Post-revision draft (Stage 4, integrity-checked). All quantitative claims verified against
+`results/ledger.parquet` and `results/convergence_study.parquet`. DOIs to be finalised in the
 deep-research pass.*
 
 ## Abstract
@@ -163,10 +163,13 @@ The five models split sharply on the harmonic set (19 scored systems, KTaO₃ ex
 | CHGNet | 0.789 | 0.154 | 0.333 |
 
 MatterSim and SevenNet-0 reproduce every documented soft mode with large imaginary
-frequencies. MACE-MP-0, CHGNet and ORB-v2 each carry two false-stable calls (rate 0.154),
-driven by **softening the bcc Zr/Hf soft modes toward zero** — the PES-softening bias of the
-literature, localised to specific instabilities. ORB-v2 (direct, float32) softens broadly: it
-uniquely reads SrTiO₃ at −0.0 and falsely calls MgO unstable (−2.8 THz). CHGNet carries the
+frequencies. MACE-MP-0 and CHGNet each carry two false-stable calls (rate 0.154) on the bcc
+**Zr and Hf** soft modes, **softened toward zero** — the PES-softening bias of the literature,
+localised to specific instabilities. ORB-v2 also carries two false-stable calls (rate 0.154) but
+on a *different* pair: it correctly flags bcc-Zr unstable (−0.43 THz) yet softens Hf (−0.09 THz)
+and SrTiO₃ (−0.0 THz) just past the −0.1 THz tolerance. ORB-v2 (direct, float32) softens broadly
+in both directions — besides those two false-stables it falsely calls MgO *unstable* (−2.8 THz),
+its lone false-unstable on the oxide side. CHGNet carries the
 only non-ORB false-unstables (rate 0.333) — CeO₂ (−0.26 THz) and NaCl (−0.24 THz), both genuinely
 stable controls tripped marginally just past the −0.1 THz tolerance; both flip back to stable at
 a tolerance of ≈0.25 THz, i.e. they are finite-displacement noise, not a real instability.
@@ -192,8 +195,8 @@ gold-standard SSCHA misses.
 predicted stabilisation temperature T* (lowest ladder T at which the cubic phase is called
 stable) tracks the *ordering* of the experimental transition temperatures across four anchors:
 SrTiO₃ (T_c ≈ 105 K) is stabilised earliest, at T* ≈ 100 K for four of five models, while the
-ferroelectric perovskites stabilise later — BaTiO₃ (T_c ≈ 403 K) at T* ≈ 600 K, KNbO₃ (676 K)
-at 300–600 K, PbTiO₃ (763 K) at 300–600 K. Within the coarse 300 K T-ladder the screen brackets
+ferroelectric perovskites stabilise later — BaTiO₃ (T_c ≈ 393 K) at T* ≈ 600 K, KNbO₃ (708 K)
+at 300–600 K, PbTiO₃ (763 K) at 300–600 K (ORB-v2 the low outlier at 100 K). Within the coarse 300 K T-ladder the screen brackets
 the correct side of each transition, and the SrTiO₃ < ferroelectric-perovskite ordering is
 reproduced by every model. As expected for a single-mode treatment it does not predict the
 *absolute* T_c (it over-shoots BaTiO₃ and under-shoots PbTiO₃); T* is therefore an ordering
@@ -256,10 +259,13 @@ first-order transition — using the thermodynamic T_c to label *dynamic* stabil
 the wrong comparison and is what makes the models look "false-stable" on bcc). The margin to
 the stability boundary discriminates the models and tracks each one's harmonic-instability
 depth: MatterSim and ORB-v2 hug the boundary (~0.4 THz at 50 K), MACE-MP-0 is firmly stable
-(~1.8 THz). Critically, the cheap soft-mode screen **tracks SSCHA on bcc** (Spearman ρ = 0.78,
-sign agreement 0.64 — rising to 0.78 once ORB-v2's float32 softmode outliers near −35 THz are
-excluded; Fig. `fig_method_agreement`), validating the screen on the family where the gold
-standard is trustworthy.
+(~1.8 THz). Critically, the cheap soft-mode screen **tracks SSCHA on bcc**: across the 45 paired
+units the rank correlation of the two minimum frequencies is Spearman ρ = 0.78 with 0.64 sign
+agreement (Fig. `fig_method_agreement`). The disagreements are concentrated in ORB-v2's float32
+softmode outliers (Ti/Hf near −35 THz, where SSCHA is mildly positive); dropping ORB-v2 lifts
+the sign agreement to 0.78 (the rank correlation itself softens to 0.63 as the remaining
+frequency spread narrows). Either way the screen and the gold standard agree on the family where
+the gold standard is trustworthy.
 
 **Ferroelectric perovskites — SSCHA systematically false-stabilises.** On the same FE
 perovskites at T ≤ 300 K where the screen achieves 0.77 recall, SSCHA correctly identifies the
@@ -286,15 +292,15 @@ temperature (the SrTiO₃ gate, §2.4) as the validation for the perovskite scre
 **Cubic fluorites confirm the failure is systematic, not numerical.** Cubic ZrO₂ (the >2600 K
 phase; harmonically unstable via the X-point oxygen mode at all temperatures studied) is a
 cleaner test because its instability is shallower than the FE perovskites and does not trigger
-the float32 blow-ups. The soft-mode screen returns ≈ −7 to −8 THz for all five models at every
-temperature (100–900 K) — correctly and consistently unstable. SSCHA instead returns ≈ +3 THz
+the float32 blow-ups. The soft-mode screen returns roughly −6.4 to −8 THz for all five models at
+every temperature (100–900 K) — correctly and consistently unstable. SSCHA instead returns ≈ +3 THz
 at 100 K for all five models (**false-stable**) and then, perversely, *destabilises* with
 temperature (e.g. MACE-MP-0 −4.6 THz, ORB-v2 −10.2 THz at 900 K) — both the wrong sign at low T
 and the wrong temperature trend. That SSCHA fails the same way on a numerically well-behaved,
 shallower instability shows the false-stable behaviour is intrinsic to the fixed-reference SSCHA
-deployment (§ root cause), not an artifact of the deepest perovskite wells. HfO₂ reproduces the
-ZrO₂ pattern exactly (all models +2.0 to +2.6 THz at 100 K, then destabilising to −4.3/−7.2 THz
-for CHGNet/ORB-v2 by 900 K). Across both fluorites SSCHA produced **zero** numerical blow-ups yet
+deployment (§ root cause), not an artifact of the deepest perovskite wells. HfO₂ shows the same
+SSCHA false-stable pattern (all models +2.0 to +2.6 THz at 100 K, then destabilising to
+−4.3/−7.2 THz for CHGNet/ORB-v2 by 900 K). Across both fluorites SSCHA produced **zero** numerical blow-ups yet
 the same systematic false-stable, confirming the failure is a methodological trap, not a
 numerical one.
 
@@ -369,9 +375,12 @@ SSCHA cross-check.
 
 ## Data and code availability
 
-All results regenerate from `results/ledger.parquet` (per-unit hashed, resumable). Figures via
+The production results regenerate from `results/ledger.parquet` (per-unit hashed, resumable) and
+the finite-size runs from `results/convergence_study.parquet`. Figures via
 `scripts/make_figures.py`; analysis in `mlip_dynstab/analysis.py`; the SSCHA root-cause
-diagnostic in `scripts/sscha_v4_diag.py`. Repository: github.com/fronkt/mlip-dynamic-stability.
+diagnostic in `scripts/sscha_v4_diag.py`; the stochastic-reproducibility study (§3.5) via
+`scripts/sscha_repro.py` (its per-seed frequencies print to the run log rather than to the
+ledger). Repository: github.com/fronkt/mlip-dynamic-stability.
 
 ## Key references (to finalise)
 

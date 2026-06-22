@@ -131,8 +131,17 @@ Stage 2.5 INTEGRITY pass, then deep-research DOI pass, then Stage 5 FINALIZE (DO
 - [x] Stage 2 WRITE — manuscript.md + supplementary.md
 - [x] Stage 3 REVIEW — review.md (internal referee report, major revision)
 - [x] Stage 4 REVISE — all data-grounded items + compute items (M5/m6) addressed
-- [ ] Stage 2.5 / 4.5 INTEGRITY — full number-vs-ledger read-through  ← NEXT
-- [ ] Deep-research DOI pass (referee m8: per-system ground-truth citations)
+- [x] Stage 2.5 / 4.5 INTEGRITY — full number-vs-ledger read-through DONE (2026-06-22). Verified
+      ~30 quantitative claims against ledger.parquet + convergence_study.parquet; ~26 exact. Fixed:
+      (1) §3.1 ORB false-stable MISATTRIBUTION — ORB's 2 false-stables are Hf(-0.09)+SrTiO3(-0.0),
+      NOT "Zr/Hf"; it correctly catches Zr(-0.43). (2) §3.3 method-agreement GARBLE — "Spearman
+      rho=0.78 rising to 0.78 excl-ORB" conflated two stats: full-set Spearman=0.78/sign-agree=0.64;
+      excl-ORB the SIGN AGREEMENT rises to 0.78 while Spearman DROPS to 0.63. (3) §3.2 Tc prose
+      vs registry: BaTiO3 403->393, KNbO3 676->708. (4) seed-repro (+1.798±0.001) is print-to-log
+      only, not in any parquet -> softened "all results regenerate from ledger" in manuscript +
+      supplementary. Minor: ZrO2 softmode "-7 to -8"->"-6.4 to -8"; HfO2 "exactly"->"same SSCHA
+      pattern"; PbTiO3 T* added ORB outlier note. Stale "Stage 2 / [PENDING]" header refreshed.
+- [ ] Deep-research DOI pass (referee m8: per-system ground-truth citations)  ← NEXT
 - [ ] Stage 5 FINALIZE (DOCX/PDF) → Stage 6 PROCESS SUMMARY
 
 ## Lessons

@@ -2,6 +2,18 @@
 
 (Updated after corrections / surprises. Each entry: pattern → rule.)
 
+- 2026-06-22 — STAGE-2.5 INTEGRITY PASS catches (manuscript-vs-ledger read-through). Two recurring
+  failure modes, both from prose drifting away from the data after revisions:
+  (1) ATTRIBUTION DRIFT. §3.1 lumped "MACE, CHGNet AND ORB soften the bcc Zr/Hf modes" — true for
+  MACE/CHGNet (FS = Zr+Hf) but ORB actually catches Zr (-0.43) and its 2 false-stables are Hf +
+  SrTiO3. Rule: when a sentence attributes the SAME mechanism to a group of models, re-list each
+  model's actual failing units from the ledger — don't generalize the majority's story to all.
+  (2) STAT CONFLATION. "Spearman rho=0.78 rising to 0.78 once ORB excluded" silently swapped two
+  different statistics: full-set Spearman=0.78 / sign-agree=0.64; excl-ORB the SIGN AGREEMENT rises
+  to 0.78 while Spearman DROPS to 0.63. Rule: every "X rises to Y when Z removed" must name WHICH
+  metric and report the ones that move the wrong way too. Also: prose Tc's (403/676) had drifted off
+  the registry (393/708) — numbers in prose must match the config they're scored against. And a
+  "all results regenerate from ledger.parquet" claim was false for a print-to-log-only repro study.
 - 2026-06-22 — INTEGRITY CATCH (self-review overturned a headline). The "finite-T ranking inverts
   the harmonic ranking, Spearman rho=-0.26" claim was a DENOMINATOR ARTIFACT: it compared harmonic
   accuracy *including* bcc (where chgnet/mace/orb lose accuracy on bcc Zr/Hf softening) against
