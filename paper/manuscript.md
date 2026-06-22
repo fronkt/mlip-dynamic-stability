@@ -218,9 +218,17 @@ dynamically stable" to "what is the ground state," and so cannot serve as the be
 criterion. We therefore use SSCHA as the bcc gold standard and the experimental transition
 temperature (the SrTiO₃ gate, §2.4) as the validation for the perovskite screen.
 
-*Cubic fluorites (ZrO₂/HfO₂): SSCHA cross-check `[PENDING]` — these have a shallower X-point
-instability than the FE perovskites and may fall on the clean side of the SSCHA boundary; the
-in-flight grid will resolve this.*
+**Cubic fluorites confirm the failure is systematic, not numerical.** Cubic ZrO₂ (the >2600 K
+phase; harmonically unstable via the X-point oxygen mode at all temperatures studied) is a
+cleaner test because its instability is shallower than the FE perovskites and does not trigger
+the float32 blow-ups. The soft-mode screen returns ≈ −7 to −8 THz for all five models at every
+temperature (100–900 K) — correctly and consistently unstable. SSCHA instead returns ≈ +3 THz
+at 100 K for all five models (**false-stable**) and then, perversely, *destabilises* with
+temperature (e.g. MACE-MP-0 −4.6 THz, ORB-v2 −10.2 THz at 900 K) — both the wrong sign at low T
+and the wrong temperature trend. That SSCHA fails the same way on a numerically well-behaved,
+shallower instability shows the false-stable behaviour is intrinsic to the fixed-reference SSCHA
+deployment (§ root cause), not an artifact of the deepest perovskite wells. (HfO₂: grid
+completing; ZrO₂ pattern reported here.)
 
 ### 3.4 Ensemble disagreement as a guardrail (H3)
 
