@@ -7,6 +7,8 @@ Figures:
 """
 from __future__ import annotations
 import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -69,7 +71,66 @@ def fig_softmode_heat():
     print(f"wrote {OUT}/fig_softmode_heat.png")
 
 
+def fig_method_agreement():
+    """VALIDATION figure: on the bcc metals -- where SSCHA is numerically clean -- the cheap
+    single-mode softmode minimum frequency tracks the gold-standard multi-mode SSCHA free-energy
+    Hessian minimum (points along y=x). This is the positive cross-validation that justifies
+    softmode as the screening method. (Perovskite SSCHA is excluded here because it is unreliable
+    on deep displacive instabilities -- see fig_displacive_recall.)"""
+    from mlip_dynstab.analysis import method_agreement, method_agreement_summary
+    dfb = df[df["system"].str.contains("bcc")]
+    m = method_agreement(dfb)
+    if m.empty:
+        return
+    summ = method_agreement_summary(dfb)
+    fig, ax = plt.subplots(figsize=(6.0, 5.8))
+    for mod in [c for c in MODELS if c in set(m["model"])]:
+        g = m[m["model"] == mod]
+        ax.scatter(g["min_eff_freq_thz_softmode"], g["min_eff_freq_thz_sscha"], s=42,
+                   alpha=0.85, label=mod)
+    # readable window: most points sit in [-4,3]; orb_v2's float32 over-softening drives Ti/Hf
+    # softmode to ~-35 THz, annotated off-scale rather than allowed to squash the cluster.
+    lo, hi = -4.0, 3.5
+    ax.plot([lo, hi], [lo, hi], "k-", lw=0.7, alpha=0.5, zorder=0)
+    ax.axhline(0, color="grey", lw=0.7, ls="--"); ax.axvline(0, color="grey", lw=0.7, ls="--")
+    ax.set_xlim(lo, hi); ax.set_ylim(-0.8, 3.5)
+    n_off = int((m["min_eff_freq_thz_softmode"] < lo).sum())
+    if n_off:
+        ax.annotate(f"<- {n_off} orb_v2 Ti/Hf pts: softmode ~ -35 THz (float32)",
+                    xy=(lo + 0.1, 1.3), fontsize=7.0, color="purple")
+    ax.set_xlabel("softmode min eff. freq (THz)")
+    ax.set_ylabel("SSCHA min free-energy Hessian freq (THz)")
+    ax.set_title(f"bcc: softmode vs SSCHA  (ρ={summ.get('spearman_freq','?')}, "
+                 f"sign agree {summ.get('sign_agreement','?')}, n={summ.get('n_paired',0)})")
+    ax.legend(fontsize=8, title="MLIP", loc="lower right")
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_method_agreement.png", dpi=160); plt.close(fig)
+    print(f"wrote {OUT}/fig_method_agreement.png  (bcc {summ})")
+
+
+def fig_displacive_recall():
+    """CAUTIONARY figure: on the ferroelectric perovskites at T<=300 K (cubic phase definitively
+    unstable, far below every Tc), the fraction of model units each method correctly calls
+    unstable. Softmode catches the displacive instability; multi-mode SSCHA (v4=False) collapses
+    to the cubic minimum and reports false-stable. This is why softmode, not SSCHA, is the
+    perovskite headline method."""
+    from mlip_dynstab.analysis import displacive_recall
+    r = displacive_recall(df)
+    if r.empty:
+        return
+    fig, ax = plt.subplots(figsize=(4.6, 4.6))
+    bars = ax.bar(r["method"], r["recall_unstable"], color=["#2c7fb8", "#d95f0e"], width=0.6)
+    for b, (_, row) in zip(bars, r.iterrows()):
+        ax.text(b.get_x() + b.get_width() / 2, row["recall_unstable"] + 0.02,
+                f"{row['correct_unstable']}/{row['n_valid']}", ha="center", fontsize=9)
+    ax.set_ylim(0, 1.05); ax.set_ylabel("recall: cubic correctly called unstable")
+    ax.set_title("FE perovskites, T≤300 K\n(cubic definitively unstable)")
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_displacive_recall.png", dpi=160); plt.close(fig)
+    print(f"wrote {OUT}/fig_displacive_recall.png  ({r.to_dict('records')})")
+
+
 if __name__ == "__main__":
     fig_sscha_bcc()
     fig_softmode_heat()
+    fig_method_agreement()
+    fig_displacive_recall()
     print("FIGURES_DONE")

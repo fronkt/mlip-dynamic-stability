@@ -119,6 +119,95 @@ def predicted_tstar(df: pd.DataFrame, method: str = "softmode") -> pd.DataFrame:
     return pd.DataFrame(rows).sort_values(["system", "model"])
 
 
+def method_agreement(df: pd.DataFrame, t_max: float | None = None) -> pd.DataFrame:
+    """Cross-validate the fast single-mode ``softmode`` route against gold-standard multi-mode
+    ``sscha`` on the units where BOTH ran. Returns one row per (system, model, T) with each
+    method's minimum effective frequency and whether they agree on the dynamic-stability SIGN
+    (stable iff freq >= 0). This is the evidence that the cheap softmode screen tracks the
+    expensive SSCHA result, justifying softmode as the headline method."""
+    sm = df[df["method"] == "softmode"][["system", "model", "temperature_K", "min_eff_freq_thz"]]
+    sc = df[df["method"] == "sscha"][["system", "model", "temperature_K", "min_eff_freq_thz"]]
+    m = sm.merge(sc, on=["system", "model", "temperature_K"], suffixes=("_softmode", "_sscha"))
+    if t_max is not None:
+        m = m[m["temperature_K"] <= t_max]
+    if m.empty:
+        return m
+    m["stable_softmode"] = m["min_eff_freq_thz_softmode"] >= 0
+    m["stable_sscha"] = m["min_eff_freq_thz_sscha"] >= 0
+    m["agree"] = m["stable_softmode"] == m["stable_sscha"]
+    return m.sort_values(["system", "model", "temperature_K"]).reset_index(drop=True)
+
+
+def method_agreement_summary(df: pd.DataFrame, t_max: float | None = None) -> dict:
+    """Headline numbers for the softmode-vs-SSCHA cross-check: sign-agreement fraction, count of
+    paired units, and the Pearson/Spearman correlation of the two minimum frequencies."""
+    m = method_agreement(df, t_max=t_max)
+    if m.empty:
+        return {"n_paired": 0}
+    a, b = m["min_eff_freq_thz_softmode"], m["min_eff_freq_thz_sscha"]
+    fin = np.isfinite(a) & np.isfinite(b)
+    out = {"n_paired": int(len(m)),
+           "sign_agreement": round(float(m["agree"].mean()), 3),
+           "n_disagree": int((~m["agree"]).sum())}
+    if fin.sum() >= 3:
+        out["pearson_freq"] = round(float(np.corrcoef(a[fin], b[fin])[0, 1]), 3)
+        out["spearman_freq"] = round(float(pd.Series(a[fin].values).corr(
+            pd.Series(b[fin].values), method="spearman")), 3)
+    return out
+
+
+def _family(systems: pd.Series) -> pd.Series:
+    return np.where(systems.str.contains("bcc"), "bcc",
+                    np.where(systems.str.contains("o2_"), "fluorite", "perovskite"))
+
+
+def sscha_reliability(df: pd.DataFrame) -> pd.DataFrame:
+    """SSCHA reliability by structural family. As implemented (ForcePositiveDefinite init, root2
+    auxiliary matrix, include_v4=False) SSCHA is the clean gold-standard for bcc martensitic
+    systems but FAILS on deep displacive (ferroelectric perovskite) instabilities: the auxiliary
+    matrix collapses to the cubic minimum and the v4=False free-energy Hessian echoes its positive
+    curvature -> false-stable; float32 models additionally blow up numerically. This quantifies the
+    numerical-blowup mode and the physical range per family. (Diagnostic: on cubic BaTiO3/mace/100K
+    the harmonic soft mode is -5.6 THz but SSCHA reports +2.87 THz; include_v4=True ran >18 min on a
+    single unit without finishing, so it is not viable at grid scale.)"""
+    sc = df[df["method"] == "sscha"].copy()
+    if sc.empty:
+        return pd.DataFrame()
+    sc["family"] = _family(sc["system"])
+    rows = []
+    for fam, g in sc.groupby("family"):
+        f = g["min_eff_freq_thz"]
+        rows.append({"family": fam, "n": len(g),
+                     "n_numerical_blowup": int((f.abs() > 50).sum()),
+                     "freq_min_THz": round(float(f.min()), 2),
+                     "freq_max_THz": round(float(f.max()), 2)})
+    return pd.DataFrame(rows).sort_values("family")
+
+
+def displacive_recall(df: pd.DataFrame, t_max: float = 300.0) -> pd.DataFrame:
+    """Headline cautionary contrast. On the ferroelectric perovskites (cubic BaTiO3/KNbO3/PbTiO3)
+    at T <= t_max -- far below every Tc, so the cubic phase is DEFINITIVELY dynamically unstable --
+    the fraction of model units each method correctly calls unstable. The cheap single-mode
+    softmode catches the displacive instability; multi-mode SSCHA (v4=False) systematically misses
+    it (false-stable). SSCHA numerical blow-ups (|freq|>50 THz) are reported separately, not
+    counted as correct."""
+    fe = ["batio3_cubic", "knbo3_cubic", "pbtio3_cubic"]
+    rows = []
+    for method in ["softmode", "sscha"]:
+        d = df[(df["method"] == method) & (df["system"].isin(fe)) & (df["temperature_K"] <= t_max)]
+        d = d[np.isfinite(d["min_eff_freq_thz"])]
+        if d.empty:
+            continue
+        blow = int((d["min_eff_freq_thz"].abs() > 50).sum()) if method == "sscha" else 0
+        valid = d[d["min_eff_freq_thz"].abs() <= 50] if method == "sscha" else d
+        n = len(valid)
+        correct = int((~valid["pred_stable"].astype(bool)).sum())
+        rows.append({"method": method, "n_valid": n, "correct_unstable": correct,
+                     "recall_unstable": round(correct / n, 3) if n else float("nan"),
+                     "n_numerical_blowup": blow})
+    return pd.DataFrame(rows)
+
+
 # ------------------------------------------------- H2: harmonic vs finite-T ----
 
 def h2_harmonic_predictiveness(df: pd.DataFrame) -> pd.DataFrame:
