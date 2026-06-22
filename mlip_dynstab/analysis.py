@@ -74,14 +74,18 @@ def per_model_table(df: pd.DataFrame, method: Optional[str] = None,
 # ---------------------------------------------- finite-T headline (low-T) ----
 
 def low_t_false_stable(df: pd.DataFrame, method: str = "softmode", t_max: float = 300.0,
-                       include_borderline: bool = False) -> pd.DataFrame:
+                       include_borderline: bool = False, exclude_bcc: bool = False) -> pd.DataFrame:
     """HEADLINE finite-T metric: per-model false-stable rate restricted to the LOW-temperature
     regime (T <= ``t_max``). Here the single-mode SCHA is reliable, so this cleanly separates
     models that capture soft-mode instabilities from those that miss them (vs the absolute
-    transition temperature, which a single-mode treatment underestimates -- see ``predicted_tstar``)."""
+    transition temperature, which a single-mode treatment underestimates -- see ``predicted_tstar``).
+    Set ``exclude_bcc`` for the clean displacive headline: the bcc thermodynamic-Tc label is the
+    wrong reference for dynamic stability (those rows belong to the SSCHA analysis, not here)."""
     d = df[(df["method"] == method) & (df["temperature_K"] <= t_max)]
     if not include_borderline:
         d = d[~d["system"].isin(borderline_systems())]
+    if exclude_bcc:
+        d = d[~d["system"].str.contains("bcc")]
     rows = []
     for model, g in d.groupby("model"):
         c = confusion(g); r = rates(c)

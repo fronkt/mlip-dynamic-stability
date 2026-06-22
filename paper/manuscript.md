@@ -19,9 +19,10 @@ screen that resolves the harmonic→finite-T stabilisation, and we cross-validat
 gold-standard multi-mode stochastic SCHA (SSCHA). Three findings: (i) at the harmonic level the
 models split sharply — MatterSim and SevenNet-0 reproduce every documented soft mode (accuracy
 1.00), while MACE-MP-0, CHGNet and ORB-v2 soften the bcc Zr/Hf instabilities toward zero and
-carry a 15% false-stable rate; (ii) the finite-T behaviour is *not* certified by harmonic
-accuracy, and the soft-mode screen recovers the displacive instability of cubic ferroelectric
-perovskites that the models otherwise miss; (iii) **multi-mode SSCHA with an MLIP force engine
+carry a 15% false-stable rate; (ii) finite-T accuracy is *not* certified by
+harmonic accuracy — the ranking inverts (the worst harmonic model is the best on finite-T
+displacive stability; Spearman ρ = −0.26 between the two), and the soft-mode screen recovers the
+displacive instability of cubic ferroelectric perovskites that the models otherwise miss; (iii) **multi-mode SSCHA with an MLIP force engine
 is itself a sharp methodological trap** — it is a clean gold standard for the martensitic bcc
 metals but systematically *false-stabilises* deep displacive (ferroelectric) instabilities and
 can diverge numerically, so the cheap soft-mode screen is the more reliable finite-T indicator
@@ -151,12 +152,31 @@ picture and validates the harness.
 
 On the ferroelectric perovskites at T ≤ 300 K — far below every transition temperature, so the
 cubic phase is **definitively dynamically unstable** — the soft-mode screen correctly calls the
-cubic phase unstable in **23 of 30** model units (recall 0.77). This is the contribution: the
-screen recovers the displacive instability that harmonic accuracy does not predict and that, as
-§3.3 shows, even the gold-standard SSCHA misses. [Per-model finite-T false-stable rates over
-the full ladder are reported in Table S2; we caution that the bcc entries there compare against
-the *thermodynamic* transition temperature, which is the wrong reference for *dynamic*
-stability — see §3.3.]
+cubic phase unstable in **23 of 30** model units (recall 0.77). The screen recovers the
+displacive instability that harmonic accuracy does not predict and that, as §3.3 shows, even the
+gold-standard SSCHA misses.
+
+Per-model false-stable rates on the displacive/anharmonic set (non-bcc, non-borderline,
+T ≤ 300 K; bcc excluded because its thermodynamic-T_c label is the wrong reference for dynamic
+stability, §3.3):
+
+| Model | Finite-T false-stable rate | Finite-T accuracy | (Harmonic accuracy) |
+|---|---|---|---|
+| CHGNet | 0.062 | 0.933 | 0.789 |
+| MACE-MP-0 | 0.062 | 0.933 | 0.895 |
+| SevenNet-0 | 0.188 | 0.867 | 1.000 |
+| MatterSim | 0.250 | 0.833 | 1.000 |
+| ORB-v2 | 0.562 | 0.700 | 0.842 |
+
+**The finite-T ranking inverts the harmonic ranking** (final column). CHGNet, the *worst*
+harmonic model (0.789), is the joint-*best* on finite-T displacive stability (false-stable
+0.062); MatterSim and SevenNet-0, *perfect* harmonically (1.00), drop to the middle of the
+finite-T table. Across the five models the rank correlation between harmonic accuracy and
+finite-T accuracy is **Spearman ρ = −0.26** — i.e. harmonic accuracy carries *no* predictive
+information about finite-T accuracy, and if anything is mildly anti-correlated. This is the core
+evidence for H2: a model's standing on the npj/PhononBench harmonic benchmarks does not certify
+it for the finite-T screening those same pipelines perform. ORB-v2's poor finite-T showing
+(0.562) is consistent with its float32 direct architecture broadly over-softening the PES.
 
 ### 3.3 SSCHA — clean for bcc, a trap for perovskites (the cautionary result)
 
