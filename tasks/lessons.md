@@ -2,6 +2,17 @@
 
 (Updated after corrections / surprises. Each entry: pattern → rule.)
 
+- 2026-06-22 — INTEGRITY CATCH (self-review overturned a headline). The "finite-T ranking inverts
+  the harmonic ranking, Spearman rho=-0.26" claim was a DENOMINATOR ARTIFACT: it compared harmonic
+  accuracy *including* bcc (where chgnet/mace/orb lose accuracy on bcc Zr/Hf softening) against
+  finite-T accuracy *excluding* bcc. On the matched non-bcc set the correlation is weakly POSITIVE
+  (phi=0.11 per-unit, n.s. McNemar p=0.34; model-level rho=+0.15 to +0.65). Rule: never compare two
+  rates computed on different system subsets — match the denominator first. And never headline a
+  rank correlation across n=5 models (p~0.7, statistically void); use the per-(system,model) paired
+  test (phi/McNemar) which has dozens of points. The honest H2 is "harmonic accuracy is necessary
+  not sufficient; harmonic leaders are not finite-T leaders." Always re-derive a striking number on
+  a matched set before it becomes a headline.
+
 - 2026-06-22 — SSCHA CANNOT adjudicate deep displacive (ferroelectric perovskite) instabilities
   as a black box, and this is THE central methods finding. Diagnostic (scripts/sscha_v4_diag.py,
   cubic BaTiO3/mace/100K): harmonic soft mode -5.6 THz, but ForcePositiveDefinite init erases it
