@@ -16,13 +16,15 @@ MatterSim) on this regime using a curated set of references whose finite-T behav
 documented in the experimental/DFT literature, so no new DFT ground truth is required. We
 introduce a cheap single-mode quantum self-consistent-harmonic (SCHA) "soft-mode free energy"
 screen that resolves the harmonic→finite-T stabilisation, and we cross-validate it against the
-gold-standard multi-mode stochastic SCHA (SSCHA). Three findings: (i) at the harmonic level the
+gold-standard multi-mode stochastic SCHA (SSCHA). Three principal findings (plus an actionable
+ensemble-disagreement guardrail): (i) at the harmonic level the
 models split sharply — MatterSim and SevenNet-0 reproduce every documented soft mode (accuracy
 1.00), while MACE-MP-0, CHGNet and ORB-v2 soften the bcc Zr/Hf instabilities toward zero and
-carry a 15% false-stable rate; (ii) finite-T accuracy is *not* certified by
-harmonic accuracy — the ranking inverts (the worst harmonic model is the best on finite-T
-displacive stability; Spearman ρ = −0.26 between the two), and the soft-mode screen recovers the
-displacive instability of cubic ferroelectric perovskites that the models otherwise miss; (iii) **multi-mode SSCHA with an MLIP force engine
+carry a 15% false-stable rate; (ii) harmonic accuracy is necessary but
+not sufficient for finite-T accuracy — the two are only weakly correlated on the matched set, the
+harmonic leaders (MatterSim, SevenNet-0) are not the finite-T leaders, and the soft-mode screen
+recovers the displacive instability of cubic ferroelectric perovskites that the models otherwise
+miss; (iii) **multi-mode SSCHA with an MLIP force engine
 is itself a sharp methodological trap** — it is a clean gold standard for the martensitic bcc
 metals but systematically *false-stabilises* deep displacive (ferroelectric) instabilities and
 can diverge numerically, so the cheap soft-mode screen is the more reliable finite-T indicator
@@ -58,8 +60,11 @@ We pre-registered three hypotheses:
 - **H1 (softening → false-stable).** PES softening inflates harmonic stability: MLIPs
   over-report stable, with a measurable false-stable rate on harmonically-unstable references.
   This reproduces the npj/literature picture on our model set and anchors harness validity.
-- **H2 (finite-T blind spot — the contribution).** Harmonic accuracy is *not predictive* of
-  finite-T accuracy; harmonic benchmarks do not certify a model for finite-T screening.
+- **H2 (finite-T blind spot — the contribution).** Harmonic accuracy does not *certify* a model
+  for finite-T screening: it is necessary but not sufficient, and the harmonic leaders need not be
+  the finite-T leaders. (We test, and reject, the stronger pre-registered form "harmonic accuracy
+  is uncorrelated with finite-T accuracy" — on the matched set they are weakly positively
+  correlated; see §3.2.)
 - **H3 (practical guardrail).** Inter-model (ensemble) disagreement flags unreliable calls
   better than any single model's self-reported energetics.
 
@@ -72,15 +77,27 @@ cross-checks should be used; and an actionable ensemble-disagreement guardrail (
 
 ### 2.1 Systems and ground truth
 
-The curated set (`configs/curated_systems.yaml`) comprises references whose
+The curated set (`configs/curated_systems.yaml`, 20 systems) comprises references whose
 harmonic-imaginary / finite-T-stable behaviour is documented in the literature, so the
-ground-truth label needs no new DFT: displacive/antiferrodistortive perovskites (SrTiO₃,
-BaTiO₃, PbTiO₃, KNbO₃, CsSnI₃), bcc refractory metals (Ti, Zr, Hf; phonon-entropy
-stabilisation), cubic fluorites (ZrO₂, HfO₂), the quantum-paraelectric near-control KTaO₃, and
-harmonically-stable controls (Si, MgO, NaCl, Cu, diamond, CeO₂). Transition temperatures are
-approximate; scoring is qualitative — the correct side of the transition — not a fitted T_c.
-KTaO₃ is flagged borderline (incipient ferroelectric, DFT mode ≈0) and excluded from headline
-rates.
+ground-truth label needs no new DFT:
+
+- **Oxide displacive/antiferrodistortive perovskites** (4): SrTiO₃, BaTiO₃, PbTiO₃, KNbO₃.
+- **Halide perovskites** (3): CsPbI₃, CsSnBr₃, CsSnI₃.
+- **bcc refractory metals** (3): Ti, Zr, Hf (phonon-entropy stabilisation).
+- **Cubic fluorites** (2): ZrO₂, HfO₂.
+- **Superionic** (1): α-AgI.
+- **Quantum-paraelectric near-control** (1): KTaO₃.
+- **Harmonically-stable controls** (6): Si, MgO, NaCl, Cu, diamond, CeO₂.
+
+Transition temperatures are approximate; scoring is qualitative — the correct side of the
+transition — not a fitted T_c. KTaO₃ is flagged borderline (incipient ferroelectric, DFT mode
+≈0; four of five MLIPs call it imaginary) and excluded from headline rates, leaving **19 scored
+systems**. CeO₂ and NaCl are retained as scored stable controls (genuinely stable; only CHGNet
+marginally trips them, §3.1). The soft-mode screen and the harmonic baseline cover all 20
+systems; the SSCHA grid covers the perovskites, fluorites and bcc metals. α-AgI is the one
+system where the soft-mode screen is on shaky physical ground — a superionic with a diffusive Ag
+sublattice has no single frozen order parameter — so its screen call is reported but flagged, and
+it is the natural target for a future symmetry-breaking/MD probe.
 
 ### 2.2 Models
 
@@ -95,6 +112,12 @@ Finite-displacement harmonic phonons (phonopy, 2×2×2 force-constant supercells
 classified by the minimum phonon frequency against an imaginary tolerance (default −0.1 THz).
 Success criterion: reproduce the published harmonic stability split. This validates the harness
 and is not claimed as novel.
+
+*Metrics convention (used throughout).* A call is **false-stable** when a model predicts the
+high-symmetry phase dynamically stable where the reference is unstable (the screening-dangerous
+error — it lets an unphysical structure through a CSP filter), and **false-unstable** in the
+opposite case. **Recall (unstable)** is the fraction of genuinely-unstable reference units a
+method correctly flags as unstable. Rates exclude the borderline KTaO₃.
 
 ### 2.4 Finite-T soft-mode free energy (primary screen)
 
@@ -143,10 +166,19 @@ MatterSim and SevenNet-0 reproduce every documented soft mode with large imagina
 frequencies. MACE-MP-0, CHGNet and ORB-v2 each carry two false-stable calls (rate 0.154),
 driven by **softening the bcc Zr/Hf soft modes toward zero** — the PES-softening bias of the
 literature, localised to specific instabilities. ORB-v2 (direct, float32) softens broadly: it
-uniquely reads SrTiO₃ at −0.0 and falsely calls MgO unstable (−2.8 THz). The actionable point
-is that the "softening toward zero" is the physics; per-system minimum frequencies, not binary
-rates, are the right reporting unit (Fig. `fig_softmode_heat`). This reproduces the published
-picture and validates the harness.
+uniquely reads SrTiO₃ at −0.0 and falsely calls MgO unstable (−2.8 THz). CHGNet carries the
+only non-ORB false-unstables (rate 0.333) — CeO₂ (−0.26 THz) and NaCl (−0.24 THz), both genuinely
+stable controls tripped marginally just past the −0.1 THz tolerance; both flip back to stable at
+a tolerance of ≈0.25 THz, i.e. they are finite-displacement noise, not a real instability.
+
+Because every binary call depends on the imaginary tolerance, we sweep it (Fig.
+`fig_tolerance_sweep`): a strict tolerance (0 THz) floods false-unstables (29 calls) as
+near-Γ finite-displacement noise dominates, while a loose tolerance (0.3 THz) inflates
+false-stables (10 calls); the default −0.1 THz sits in the stable basin between them (6
+false-stable, 3 false-unstable), and the headline split is robust across 0.05–0.2 THz. The
+actionable point is that the "softening toward zero" is the physics; per-system minimum
+frequencies, not binary rates, are the right reporting unit (Fig. `fig_softmode_heat`). This
+reproduces the published picture and validates the harness.
 
 ### 3.2 Finite-T soft-mode screen — the headline (H2)
 
@@ -155,6 +187,18 @@ cubic phase is **definitively dynamically unstable** — the soft-mode screen co
 cubic phase unstable in **23 of 30** model units (recall 0.77). The screen recovers the
 displacive instability that harmonic accuracy does not predict and that, as §3.3 shows, even the
 gold-standard SSCHA misses.
+
+**Multi-anchor validation against experiment.** Beyond the SrTiO₃ gate (§2.4), the screen's
+predicted stabilisation temperature T* (lowest ladder T at which the cubic phase is called
+stable) tracks the *ordering* of the experimental transition temperatures across four anchors:
+SrTiO₃ (T_c ≈ 105 K) is stabilised earliest, at T* ≈ 100 K for four of five models, while the
+ferroelectric perovskites stabilise later — BaTiO₃ (T_c ≈ 403 K) at T* ≈ 600 K, KNbO₃ (676 K)
+at 300–600 K, PbTiO₃ (763 K) at 300–600 K. Within the coarse 300 K T-ladder the screen brackets
+the correct side of each transition, and the SrTiO₃ < ferroelectric-perovskite ordering is
+reproduced by every model. As expected for a single-mode treatment it does not predict the
+*absolute* T_c (it over-shoots BaTiO₃ and under-shoots PbTiO₃); T* is therefore an ordering
+check, not a fitted T_c (full table S3). This multi-anchor agreement — not a single gate —
+is what licenses using the screen as the reference against which the §3.3 SSCHA calls are judged.
 
 Per-model false-stable rates on the displacive/anharmonic set (non-bcc, non-borderline,
 T ≤ 300 K; bcc excluded because its thermodynamic-T_c label is the wrong reference for dynamic
@@ -168,20 +212,40 @@ stability, §3.3):
 | MatterSim | 0.250 | 0.833 | 1.000 |
 | ORB-v2 | 0.562 | 0.700 | 0.842 |
 
-**The finite-T ranking inverts the harmonic ranking** (final column). CHGNet, the *worst*
-harmonic model (0.789), is the joint-*best* on finite-T displacive stability (false-stable
-0.062); MatterSim and SevenNet-0, *perfect* harmonically (1.00), drop to the middle of the
-finite-T table. Across the five models the rank correlation between harmonic accuracy and
-finite-T accuracy is **Spearman ρ = −0.26** — i.e. harmonic accuracy carries *no* predictive
-information about finite-T accuracy, and if anything is mildly anti-correlated. This is the core
-evidence for H2: a model's standing on the npj/PhononBench harmonic benchmarks does not certify
-it for the finite-T screening those same pipelines perform. ORB-v2's poor finite-T showing
-(0.562) is consistent with its float32 direct architecture broadly over-softening the PES.
+Read against the harmonic ranking (final column), the message is *not* a clean inversion — and
+we are explicit about this because a naive comparison invites one. Comparing harmonic accuracy
+*including* bcc against finite-T accuracy *excluding* bcc produces a spurious anti-correlation
+(Spearman ρ ≈ −0.26); this is a denominator artifact, since CHGNet/MACE/ORB-v2 lose most of
+their harmonic accuracy on the bcc Zr/Hf softening that is removed from the finite-T column. On
+the **matched** non-bcc, non-borderline set the two are *positively* but imperfectly correlated:
+at the unit level (n = 75 system×model pairs) the concordance of correctness gives φ = 0.11
+(McNemar exact p = 0.34 — harmonic and finite-T error sets are not significantly different), and
+the matched per-model accuracy rank correlation is ρ = +0.15 (T ≤ 300 K) to +0.65 (T = 100 K).
+
+The defensible H2 statement is therefore the weaker one that the data support: **harmonic
+accuracy is necessary but not sufficient for finite-T accuracy.** Seven of the 71
+harmonically-correct (system, model) units are mis-called at finite-T (versus three the other
+way), and — visibly in the matched table — the *harmonic leaders are not the finite-T leaders*:
+MatterSim and SevenNet-0 are harmonically perfect yet sit behind MACE-MP-0 and CHGNet on
+finite-T displacive stability. So a top harmonic score on the npj/PhononBench benchmarks does
+not identify the best finite-T screener, but neither does it actively mislead. ORB-v2 is the one
+model that degrades sharply from harmonic to finite-T (0.867 → 0.667–0.70), consistent with its
+float32 direct architecture broadly over-softening the PES — though our design cannot separate
+the architecture from the precision. The stronger evidence that finite-T is a distinct, harder
+regime comes not from this ranking comparison but from the displacive recall above and the SSCHA
+failure in §3.3.
 
 ### 3.3 SSCHA — clean for bcc, a trap for perovskites (the cautionary result)
 
 We ran multi-mode SSCHA across both families to cross-validate the screen. The result is
-asymmetric and is itself a central finding.
+asymmetric and is itself a central finding. We stress at the outset that this is a statement
+about SSCHA *as it is realistically deployed with an MLIP force engine for a fixed high-symmetry
+reference* — `ForcePositiveDefinite` initialisation, a 2×2×2 cell, the v4=False free-energy
+Hessian, automatic stochastic relaxation — which is the recipe a practitioner escalating from a
+cheap screen would actually run. It is not a claim that the SSCHA formalism is wrong; the proper
+treatment of a structural instability (relaxing the centroids into the distorted phase, or the
+expensive v4 Hessian) answers a different question and is impractical at screening scale (§ root
+cause). The finding is that the *default escalation path* is a trap.
 
 **bcc metals — SSCHA is a clean gold standard, and the screen tracks it.** Across Ti/Zr/Hf ×
 5 models × 5 temperatures (75 runs) SSCHA produced **zero** numerical failures, with minimum
@@ -193,8 +257,9 @@ the wrong comparison and is what makes the models look "false-stable" on bcc). T
 the stability boundary discriminates the models and tracks each one's harmonic-instability
 depth: MatterSim and ORB-v2 hug the boundary (~0.4 THz at 50 K), MACE-MP-0 is firmly stable
 (~1.8 THz). Critically, the cheap soft-mode screen **tracks SSCHA on bcc** (Spearman ρ = 0.78,
-sign agreement 0.64; Fig. `fig_method_agreement`), validating the screen on the family where
-the gold standard is trustworthy.
+sign agreement 0.64 — rising to 0.78 once ORB-v2's float32 softmode outliers near −35 THz are
+excluded; Fig. `fig_method_agreement`), validating the screen on the family where the gold
+standard is trustworthy.
 
 **Ferroelectric perovskites — SSCHA systematically false-stabilises.** On the same FE
 perovskites at T ≤ 300 K where the screen achieves 0.77 recall, SSCHA correctly identifies the

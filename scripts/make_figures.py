@@ -128,6 +128,24 @@ def fig_displacive_recall():
     print(f"wrote {OUT}/fig_displacive_recall.png  ({r.to_dict('records')})")
 
 
+def fig_tolerance_sweep():
+    """Referee m5: harmonic false-stable / false-unstable counts vs the imaginary tolerance.
+    The default -0.1 THz sits between the strict regime (tol=0 floods false-unstables from
+    finite-displacement Γ noise) and the loose regime (inflated false-stables)."""
+    from mlip_dynstab.analysis import harmonic_tolerance_sweep
+    s = harmonic_tolerance_sweep(df)
+    if s.empty:
+        return
+    fig, ax = plt.subplots(figsize=(5.2, 4.2))
+    ax.plot(s["tol_THz"], s["false_stable"], "o-", color="#d95f0e", label="false-stable")
+    ax.plot(s["tol_THz"], s["false_unstable"], "s-", color="#2c7fb8", label="false-unstable")
+    ax.axvline(0.1, color="k", lw=0.8, ls="--", label="default −0.1 THz")
+    ax.set_xlabel("imaginary tolerance |tol| (THz)"); ax.set_ylabel("count (5 models × scored set)")
+    ax.set_title("Stability-call sensitivity to imaginary tolerance"); ax.legend(fontsize=8)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_tolerance_sweep.png", dpi=160); plt.close(fig)
+    print(f"wrote {OUT}/fig_tolerance_sweep.png  ({s.to_dict('records')})")
+
+
 def fig_ensemble_guardrail():
     """H3: cross-model disagreement as a guardrail. Consensus finite-T error rate on units where
     the five MLIPs split on the stable/unstable call vs unanimous units; the binary vote split is
@@ -156,4 +174,5 @@ if __name__ == "__main__":
     fig_method_agreement()
     fig_displacive_recall()
     fig_ensemble_guardrail()
+    fig_tolerance_sweep()
     print("FIGURES_DONE")

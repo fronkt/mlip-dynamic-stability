@@ -160,6 +160,26 @@ def method_agreement_summary(df: pd.DataFrame, t_max: float | None = None) -> di
     return out
 
 
+def harmonic_tolerance_sweep(df: pd.DataFrame,
+                             tols=(0.0, 0.05, 0.1, 0.2, 0.3, 0.5)) -> pd.DataFrame:
+    """Referee m5: harmonic false-stable / false-unstable counts as a function of the imaginary
+    tolerance (a call is 'stable' iff min_freq >= -tol), summed over the 5 models on the scored
+    set. Shows that the default -0.1 THz sits in the basin where finite-displacement noise near Γ
+    does not dominate (strict tol=0 floods false-unstables; loose tol inflates false-stables)."""
+    h = df[(df["method"] == "harmonic") & (~df["system"].isin(borderline_systems()))]
+    if h.empty:
+        return pd.DataFrame()
+    gt = h["gt_stable"].astype(bool)
+    rows = []
+    for tol in tols:
+        pred = h["min_freq_thz"] >= -tol
+        rows.append({"tol_THz": tol,
+                     "false_stable": int((pred & ~gt).sum()),
+                     "false_unstable": int((~pred & gt).sum()),
+                     "n_calls": int(len(h))})
+    return pd.DataFrame(rows)
+
+
 def _family(systems: pd.Series) -> pd.Series:
     return np.where(systems.str.contains("bcc"), "bcc",
                     np.where(systems.str.contains("o2_"), "fluorite", "perovskite"))
@@ -233,6 +253,44 @@ def h2_harmonic_predictiveness(df: pd.DataFrame) -> pd.DataFrame:
     phi = float(np.corrcoef(a, b)[0, 1]) if a.nunique() > 1 and b.nunique() > 1 else float("nan")
     m.attrs["phi_harm_vs_ft_correct"] = phi
     return m
+
+
+def h2_paired_summary(df: pd.DataFrame, t: float = 100.0) -> dict:
+    """H2 done correctly: pair the harmonic and finite-T (softmode at T=``t``) call for each
+    (system, model) on the MATCHED non-bcc, non-borderline set, so harmonic and finite-T accuracy
+    share the same denominator (the model-level 'inversion' seen with bcc-in-harmonic vs
+    bcc-out-of-finite-T is a denominator artifact). Reports the 2x2 concordance of correctness,
+    the phi correlation, an exact-binomial McNemar test on the discordant pairs, and the matched
+    per-model accuracies with their rank correlation. The honest finding is that harmonic accuracy
+    is a WEAK (not negative) predictor of finite-T accuracy, and that the harmonic leaders are not
+    the finite-T leaders -- not a clean inversion."""
+    from math import comb
+    bl = borderline_systems()
+    def nonbcc(d):
+        return d[(~d["system"].isin(bl)) & (~d["system"].str.contains("bcc"))]
+    h = nonbcc(df[df["method"] == "harmonic"])[["system", "model", "pred_stable", "gt_stable"]]
+    f = nonbcc(df[(df["method"] == "softmode") & (df["temperature_K"] == t)])[["system", "model", "pred_stable", "gt_stable"]]
+    m = h.rename(columns={"pred_stable": "hp", "gt_stable": "hg"}).merge(
+        f.rename(columns={"pred_stable": "fp", "gt_stable": "fg"}), on=["system", "model"])
+    if m.empty:
+        return {}
+    hok = (m["hp"] == m["hg"]); fok = (m["fp"] == m["fg"])
+    a = int((hok & fok).sum()); b = int((hok & ~fok).sum())
+    c = int((~hok & fok).sum()); d = int((~hok & ~fok).sum())
+    phi = float(np.corrcoef(hok.astype(int), fok.astype(int))[0, 1]) if hok.nunique() > 1 and fok.nunique() > 1 else float("nan")
+    nd = b + c
+    mcnemar_p = min(1.0, 2 * sum(comb(nd, k) for k in range(min(b, c) + 1)) / 2 ** nd) if nd else 1.0
+    hacc = {mod: (g["hp"] == g["hg"]).mean() for mod, g in m.groupby("model")}
+    facc = {mod: (g["fp"] == g["fg"]).mean() for mod, g in m.groupby("model")}
+    mods = sorted(hacc)
+    rho = float(pd.Series([hacc[x] for x in mods]).corr(pd.Series([facc[x] for x in mods]), method="spearman"))
+    return {
+        "n_pairs": int(len(m)),
+        "concordance": {"harm_ok_ft_ok": a, "harm_ok_ft_bad": b, "harm_bad_ft_ok": c, "harm_bad_ft_bad": d},
+        "phi": round(phi, 3), "mcnemar_exact_p": round(mcnemar_p, 3),
+        "matched_per_model": {mod: {"harm_acc": round(hacc[mod], 3), "ft_acc": round(facc[mod], 3)} for mod in mods},
+        "spearman_matched_model_acc": round(rho, 3),
+    }
 
 
 # ------------------------------------------------- H3: ensemble disagreement ----
@@ -316,6 +374,7 @@ def summary(ledger_path=None) -> dict:
         out["headline_low_t_false_stable"] = low_t_false_stable(df).to_dict("records")
         out["predicted_tstar"] = predicted_tstar(df).to_dict("records")
         out["displacive_recall"] = displacive_recall(df).to_dict("records")
+        out["h2_paired"] = h2_paired_summary(df)
         out["h3_guardrail"] = h3_guardrail_summary(df)
     if "sscha" in out["methods"]:
         tab = sscha_dynamic_stabilization(df)

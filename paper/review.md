@@ -4,6 +4,25 @@
 5dc4315. Reviewer stance: a methods-minded referee for RSC Digital Discovery / npj Computational
 Materials. Every quantitative claim was checked against `results/ledger.parquet`.*
 
+## Revision status (Stage 4, updated post-review)
+
+- **M1 — DONE (and it overturned a headline claim).** Proper per-unit paired analysis
+  (`h2_paired_summary`) shows the "−0.26 inversion" was a denominator artifact (harmonic-with-bcc
+  vs finite-T-without-bcc). Matched non-bcc set: φ = 0.11, McNemar p = 0.34, model-level ρ = +0.15
+  to +0.65 — weakly *positive*, not inverted. §3.2 and the abstract rewritten to the defensible
+  "necessary but not sufficient; harmonic leaders are not finite-T leaders."
+- **M2 — DONE.** Multi-anchor T*-vs-T_c validation (SrTiO₃/BaTiO₃/KNbO₃/PbTiO₃) promoted into §3.2.
+- **M3 — DONE.** §2.1 now lists all 20 systems (α-AgI + 3 halides added); 19-scored reconciled.
+- **M4 — DONE.** §3.3 opens with explicit deployment-scoping ("SSCHA as realistically deployed
+  with an MLIP force engine for a fixed reference"); fluorite result reinforces it.
+- **m2/m5 — DONE.** CHGNet CeO₂/NaCl explained (marginal, flip at ~0.25 THz); tolerance sweep
+  function + `fig_tolerance_sweep` added; §3.1 updated.
+- **m1, m7, m9 — DONE.** Abstract count reconciled; bcc agreement-excl-ORB (0.78) noted; metrics
+  convention defined at first use.
+- **M5 (finite-size convergence), m6 (SSCHA stochastic spread) — QUEUED on the box**
+  (`scripts/run_revision_compute.sh`, waits for the grid to clear). Pending results.
+- **m4, m8 — partial / external.** ORB confound caveat added; DOIs remain for the deep-research pass.
+
 ## Recommendation
 
 **Major revision.** The central thesis is timely, the framing is sharp, and the SSCHA cautionary
