@@ -4,6 +4,43 @@
 > checkpoint is the lowest unchecked box. Per-unit work (system, model, T, method) is
 > idempotent — re-running skips tuples already in the ledger.
 
+## CURRENT STATUS (2026-06-22, pushed)
+
+**Stage:** academic-pipeline Stages 2–4 COMPLETE (WRITE → REVIEW → REVISE). Next checkpoint =
+Stage 2.5 INTEGRITY pass, then deep-research DOI pass, then Stage 5 FINALIZE (DOCX/PDF).
+
+**Process/progress:**
+- Data COMPLETE: ledger.parquet = harmonic (100) + softmode (400, 20 sys × 5 models × 4 T) +
+  SSCHA (211: bcc 75, fluorite 40, perovskite 93). Convergence/repro runs in
+  `results/convergence_study.parquet` (kept out of the production ledger).
+- Paper drafted: `paper/manuscript.md`, `paper/supplementary.md`, `paper/review.md` (referee
+  report = major revision; all data-grounded items addressed; compute items M5/m6 done).
+- 6 figures regenerate from the ledger via `scripts/make_figures.py`.
+
+**Headline findings (final framing):**
+1. H1 — harmonic model split: MatterSim/SevenNet acc 1.00; MACE/CHGNet/ORB carry 15%
+   false-stable from softening bcc Zr/Hf. (CHGNet's CeO2/NaCl false-unstables are marginal,
+   flip at ~0.25 THz tolerance.)
+2. H2 — harmonic accuracy is NECESSARY NOT SUFFICIENT for finite-T (the earlier "inversion
+   rho=-0.26" was a denominator artifact; matched set is weakly POSITIVE phi=0.11). Harmonic
+   leaders (MatterSim/SevenNet) are NOT the finite-T leaders (MACE/CHGNet best on displacive).
+3. SSCHA cautionary result (most novel): clean gold-standard for bcc (tracks softmode rho=0.78,
+   0 blowups) but systematically FALSE-STABLES displacive instabilities (FE perovskites recall
+   0.23 vs softmode 0.77; fluorites also false-stable though numerically clean). Root cause =
+   ForcePositiveDefinite + low-T narrow Gaussian + v4=False; v4=True impractical (>18min/unit).
+   Scoped to "SSCHA as deployed with MLIP force engine for a fixed reference."
+4. H3 guardrail — ensemble vote-split flags consensus error (AUC 0.75, 5.5x enrichment);
+   continuous freq-spread does not (AUC 0.52).
+- Robustness: SSCHA repro std 0.001 THz (<< margins); bcc call cell-robust; SrTiO3 R-point
+  needs even cells (2x2x2<->3x3x3 invalid for it; 4x4x4 = future work).
+
+**NEXT STEPS (priority order):**
+1. Stage 2.5 INTEGRITY — read-through verifying every manuscript number vs the ledger.
+2. Deep-research DOI pass (referee m8) — per-system anharmonic-stabilization citations (the
+   evidentiary backbone of the ground-truth labels) are still placeholders.
+3. Stage 5 FINALIZE — render manuscript+SI to DOCX/PDF; Stage 6 process summary.
+4. Optional/future: 4x4x4 SrTiO3 SSCHA even-cell convergence; α-AgI symmetry-breaking probe.
+
 ## P0 — Stage 1 research brief
 - [x] Novelty check vs npj-2025 + PhononBench (finite-T gap confirmed)
 - [x] docs/research_brief.md: lock wedge, curated set, metric defs, references
@@ -78,17 +115,25 @@
       blowups). Root cause diagnosed (ForcePositiveDefinite + low-T narrow Gaussian + v4=False;
       v4=True impractical >18min/unit). User-confirmed REFRAME (option A). analysis: sscha_reliability,
       displacive_recall, family-aware method_agreement. figs: method_agreement (bcc), displacive_recall.
-- [ ] Let grid finish (esp untested cubic FLUORITES zro2/hfo2); pull + commit final ledger;
-      check if fluorite SSCHA is clean (legit cross-check) or also false-stables; regen figures.
+- [x] Full SSCHA grid incl. cubic FLUORITES (zro2/hfo2): numerically clean (0 blowups) but still
+      false-stable at low T -> confirms cautionary result is methodological, not numerical.
+- [x] max_ka cap fix for perovskite minimizer step-collapse; SSCHA seed param added.
 
-## P4 — Analysis & figures
-- [ ] Confusion matrices + false-stable rates
-- [ ] Harmonic-vs-finite-T error decomposition (H2)
-- [ ] Ensemble-disagreement calibration (H3)
+## P4 — Analysis & figures  [DONE]
+- [x] Confusion matrices + false-stable rates (per_model_table, low_t_false_stable ±bcc)
+- [x] Harmonic-vs-finite-T decomposition H2 (h2_paired_summary: phi/McNemar, matched denominator)
+- [x] Ensemble-disagreement calibration H3 (h3_guardrail_summary: AUC 0.75 vote-split)
+- [x] Extras: sscha_reliability, displacive_recall, harmonic_tolerance_sweep, method_agreement
+- [x] 6 figures: sscha_bcc, softmode_heat, method_agreement, displacive_recall,
+      ensemble_guardrail, tolerance_sweep
 
 ## P5–P7 — Write / review / finalize (academic-pipeline stages 2–6)
-- [ ] Stage 2 WRITE → 2.5 INTEGRITY → 3 REVIEW → 4 REVISE → 4.5 FINAL INTEGRITY
-- [ ] Stage 5 FINALIZE (PDF) → Stage 6 PROCESS SUMMARY
+- [x] Stage 2 WRITE — manuscript.md + supplementary.md
+- [x] Stage 3 REVIEW — review.md (internal referee report, major revision)
+- [x] Stage 4 REVISE — all data-grounded items + compute items (M5/m6) addressed
+- [ ] Stage 2.5 / 4.5 INTEGRITY — full number-vs-ledger read-through  ← NEXT
+- [ ] Deep-research DOI pass (referee m8: per-system ground-truth citations)
+- [ ] Stage 5 FINALIZE (DOCX/PDF) → Stage 6 PROCESS SUMMARY
 
 ## Lessons
 See tasks/lessons.md.
