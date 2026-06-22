@@ -19,8 +19,14 @@ Materials. Every quantitative claim was checked against `results/ledger.parquet`
   function + `fig_tolerance_sweep` added; §3.1 updated.
 - **m1, m7, m9 — DONE.** Abstract count reconciled; bcc agreement-excl-ORB (0.78) noted; metrics
   convention defined at first use.
-- **M5 (finite-size convergence), m6 (SSCHA stochastic spread) — QUEUED on the box**
-  (`scripts/run_revision_compute.sh`, waits for the grid to clear). Pending results.
+- **M5 (finite-size convergence) — DONE.** bcc-Zr call holds 2×2×2→3×3×3 (SSCHA +1.80→+1.56;
+  screen +0.92→+1.58); BaTiO₃ Γ-mode call holds (−8.5→−7.3). SrTiO₃ R-point needs even cells so
+  the 2×2×2↔3×3×3 test is invalid for it (4×4×4 future work); the SSCHA false-stable is shown
+  q-independent (BaTiO₃ Γ mode). Written as §3.5 + SI S2.4.
+- **m6 (SSCHA stochastic spread) — DONE.** bcc-Zr/mace/100K over 4 seeds: +1.798 ± 0.001 THz,
+  ≈400× below the cross-model margins. §3.5 + SI S2.4.
+- **Data hygiene.** The 6 convergence/repro runs were split out of the production ledger into
+  `results/convergence_study.parquet` so "all numbers regenerate from ledger.parquet" still holds.
 - **m4, m8 — partial / external.** ORB confound caveat added; DOIs remain for the deep-research pass.
 
 ## Recommendation

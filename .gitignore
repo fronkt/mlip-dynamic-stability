@@ -38,3 +38,5 @@ Thumbs.db
 *.env
 .env
 mp_api_key.txt
+
+!results/convergence_study.parquet

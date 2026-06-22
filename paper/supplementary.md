@@ -77,16 +77,35 @@ the `include_v4=False` free-energy Hessian merely reproduces the positive auxili
 → false-stable. The fourth-order term is the only route that could recover the instability but is
 not viable at grid scale (≈tens of hours per unit) and is numerically stable only in float64.
 
-### S2.3 Reliability by family
+### S2.3 Reliability by family (complete grid)
 
 | Family | n | numerical blow-ups (\|f\|>50 THz) | min freq (THz) | max freq (THz) |
 |---|---|---|---|---|
-| bcc | 75 | 0 | 0.02 | 2.12 |
-| perovskite/fluorite | `[PENDING full grid]` | (perovskites: 6 blow-ups to −2×10⁶) | | |
+| bcc (Ti/Zr/Hf) | 75 | 0 | 0.02 | 2.12 |
+| fluorite (ZrO₂/HfO₂) | 40 | 0 | −10.24 | 3.33 |
+| perovskite (oxide + halide) | 93 | 6 | −2.0×10⁶ | 3.17 |
 
-Numerical blow-ups are concentrated in the float32 ORB-v2 runs on the deepest (FE perovskite)
-wells. Cubic fluorites are numerically clean but still false-stabilised at low T by the §S2.2
-mechanism `[PENDING confirmation on the full ZrO₂/HfO₂ grid]`.
+`analysis.sscha_reliability(df)`. bcc is the clean gold standard. The six numerical blow-ups are
+all in the perovskite family and concentrated in the float32 ORB-v2 runs on the deepest FE wells.
+Cubic fluorites are numerically clean (no blow-ups) but are nonetheless **false-stabilised at low
+T** by the §S2.2 mechanism: ZrO₂ and HfO₂ both read ≈ +2 to +3 THz at 100 K (cubic is the
+>2600 K phase, so the correct call is unstable, as the soft-mode screen reports at ≈ −7 THz), and
+both then *destabilise* with temperature (the wrong trend) as the wider high-T Gaussian finally
+samples the instability. That a numerically well-behaved, shallower instability fails the same
+way confirms the failure is methodological, not a numerical artifact of the deep perovskite wells.
+
+### S2.4 Stochastic reproducibility and finite-size convergence
+
+`scripts/sscha_repro.py`, `scripts/run_revision_compute.sh`; data in
+`results/convergence_study.parquet`.
+
+- **Reproducibility.** bcc-Zr / MACE-MP-0 / 100 K SSCHA over 4 seeds: +1.798 ± 0.001 THz — the
+  cross-model bcc margins (~0.4 THz) exceed the stochastic noise by ~400×.
+- **Finite size.** bcc-Zr stability call holds 2×2×2 → 3×3×3 (SSCHA +1.80 → +1.56 THz @100 K;
+  screen +0.92 → +1.58 THz). BaTiO₃ Γ-mode screen call holds (−8.5 → −7.3 THz). SrTiO₃'s R-point
+  (½,½,½) instability is commensurate only with even cells, so the 2×2×2↔3×3×3 test is invalid for
+  it (a 4×4×4 / ~320-atom SSCHA test is future work); the §3.3 false-stable is independent of this
+  because it occurs for the always-present Γ mode of BaTiO₃.
 
 ## S3. Supplementary tables
 

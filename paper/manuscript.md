@@ -263,9 +263,9 @@ standard is trustworthy.
 
 **Ferroelectric perovskites — SSCHA systematically false-stabilises.** On the same FE
 perovskites at T ≤ 300 K where the screen achieves 0.77 recall, SSCHA correctly identifies the
-instability in only **7 of 30** units (recall 0.23), and the perovskite/fluorite SSCHA runs
-include six numerical blow-ups (minimum frequencies down to −2×10⁶ THz, concentrated in the
-float32 ORB-v2 runs). The contrast is the cautionary result: the expensive gold standard is
+instability in only **7 of 30** units (recall 0.23), and the perovskite SSCHA runs include six
+numerical blow-ups (minimum frequencies down to −2×10⁶ THz, concentrated in the float32 ORB-v2
+runs). The contrast is the cautionary result: the expensive gold standard is
 *less* reliable than the cheap screen in exactly the displacive regime that dominates
 generative-CSP outputs (Fig. `fig_displacive_recall`).
 
@@ -292,8 +292,11 @@ at 100 K for all five models (**false-stable**) and then, perversely, *destabili
 temperature (e.g. MACE-MP-0 −4.6 THz, ORB-v2 −10.2 THz at 900 K) — both the wrong sign at low T
 and the wrong temperature trend. That SSCHA fails the same way on a numerically well-behaved,
 shallower instability shows the false-stable behaviour is intrinsic to the fixed-reference SSCHA
-deployment (§ root cause), not an artifact of the deepest perovskite wells. (HfO₂: grid
-completing; ZrO₂ pattern reported here.)
+deployment (§ root cause), not an artifact of the deepest perovskite wells. HfO₂ reproduces the
+ZrO₂ pattern exactly (all models +2.0 to +2.6 THz at 100 K, then destabilising to −4.3/−7.2 THz
+for CHGNet/ORB-v2 by 900 K). Across both fluorites SSCHA produced **zero** numerical blow-ups yet
+the same systematic false-stable, confirming the failure is a methodological trap, not a
+numerical one.
 
 ### 3.4 Ensemble disagreement as a guardrail (H3)
 
@@ -313,6 +316,29 @@ a useful, cheap guardrail — flag any candidate on which the foundation-MLIP en
 but the *continuous* frequency spread that one might naively threshold is not. The physical
 reading is that disagreement is concentrated near the stability boundary (split votes coincide
 with frequencies straddling zero), where the call is both most uncertain and most error-prone.
+
+### 3.5 Robustness: stochastic noise and finite size
+
+**Stochastic reproducibility.** Repeating the bcc-Zr / MACE-MP-0 / 100 K SSCHA with four
+independent random seeds gives a minimum free-energy-Hessian frequency of +1.798 ± 0.001 THz
+(range [+1.797, +1.800]). The stochastic noise (≈0.001 THz) is two-to-three orders of magnitude
+smaller than the cross-model bcc margins (~0.4 THz spread, §3.3), so those margins are real
+signal, not sampling noise.
+
+**Finite size.** The stability *call* is robust to supercell size on the cases where the test is
+well-posed (`results/convergence_study.parquet`). For bcc-Zr the dynamic-stabilisation verdict
+holds from 2×2×2 to 3×3×3 (SSCHA +1.80 → +1.56 THz at 100 K, +1.80 → +1.55 at 300 K; soft-mode
+screen +0.92 → +1.58 THz — stable throughout, the margin shifting by ≤0.25 THz). For the
+Γ-centred ferroelectric mode of BaTiO₃ the soft-mode screen stays unstable across cell size
+(−8.5 → −7.3 THz at 100 K). One caveat is intrinsic to the physics rather than the method: the
+SrTiO₃ antiferrodistortive instability lives at the zone-boundary R point = (½,½,½), which is
+commensurate only with *even* supercells, so a 3×3×3 cell is blind to it by construction (the
+screen there reports the Γ value, +0.0 THz, not the R instability at −2.8). A 2×2×2↔3×3×3
+comparison is therefore not a valid convergence test for R-point systems; the definitive even-cell
+test (4×4×4, a ~320-atom SSCHA) is left to future work. Importantly, the §3.3 SSCHA false-stable
+is *not* a missing-q artifact: it occurs for the Γ ferroelectric mode of BaTiO₃, which is present
+in every cell including the 2×2×2 used, so the failure is the initialisation/Gaussian-width
+mechanism of the root-cause diagnostic, not finite size.
 
 ## 4. Discussion
 
