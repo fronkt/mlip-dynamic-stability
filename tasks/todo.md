@@ -160,8 +160,10 @@ Stage 2.5 INTEGRITY pass, then deep-research DOI pass, then Stage 5 FINALIZE (DO
 - [x] Digital Discovery formatting DONE (faef42e): RSC superscript citations + RSC reference list,
       author/affiliation block (placeholder), Conflicts, Data availability + Zenodo, ESI; DOCX
       regenerated; .zenodo.json added.
-- [ ] USER inputs: real author names/affiliations; enable GitHub→Zenodo + cut release to mint DOI
-      (then insert into manuscript). Then Stage 6 PROCESS SUMMARY ← NEXT
+- [x] Author set (sole: Frank Cai, Purdue, ORCID 0009-0003-0041-1459) in manuscript + .zenodo.json.
+- [x] Zenodo archive live (v1.0.0): https://doi.org/10.5281/zenodo.20805824, inserted into Data
+      availability. Figures inline Fig. 1–6. SUBMISSION-READY for Digital Discovery.
+- [ ] Optional: Stage 6 process summary; submit to Digital Discovery; 4×4×4 SrTiO3 SSCHA convergence.
 
 ## Lessons
 See tasks/lessons.md.
