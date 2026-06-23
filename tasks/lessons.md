@@ -2,6 +2,12 @@
 
 (Updated after corrections / surprises. Each entry: pattern → rule.)
 
+- 2026-06-22 — FIGURE AESTHETICS. A hand-built Excalidraw conceptual "Figure 1" overview schematic
+  was rejected by the user as "unprofessional and bad" and removed. Rule: don't hand-roll
+  diagram-tool schematics as publication figures — the sketch aesthetic doesn't pass for a journal.
+  For a real Figure 1 either use a proper vector/plotting toolchain or skip the conceptual overview
+  and let the data figures lead. Ask before investing in a bespoke schematic.
+
 - 2026-06-22 — STAGE-2.5 INTEGRITY PASS catches (manuscript-vs-ledger read-through). Two recurring
   failure modes, both from prose drifting away from the data after revisions:
   (1) ATTRIBUTION DRIFT. §3.1 lumped "MACE, CHGNet AND ORB soften the bcc Zr/Hf modes" — true for

@@ -156,8 +156,12 @@ Stage 2.5 INTEGRITY pass, then deep-research DOI pass, then Stage 5 FINALIZE (DO
       deliverable (all target journals accept Word). PDF optional later.
 - [x] Journal targeting (academic-paper-reviewer): target = Digital Discovery (RSC); prestige
       reach = npj Comput Mater. Requirements/formatting notes captured in chat + memory.
-- [ ] Pre-submission formatting for Digital Discovery (authors/affiliations, Figure 1–7 numbering
-      replacing fig_* codenames, RSC superscript refs, Zenodo DOI) → Stage 6 PROCESS SUMMARY ← NEXT
+- [x] Fig 1 schematic REMOVED (user rejected as unprofessional); data figs renumbered Fig. 1–6.
+- [x] Digital Discovery formatting DONE (faef42e): RSC superscript citations + RSC reference list,
+      author/affiliation block (placeholder), Conflicts, Data availability + Zenodo, ESI; DOCX
+      regenerated; .zenodo.json added.
+- [ ] USER inputs: real author names/affiliations; enable GitHub→Zenodo + cut release to mint DOI
+      (then insert into manuscript). Then Stage 6 PROCESS SUMMARY ← NEXT
 
 ## Lessons
 See tasks/lessons.md.
