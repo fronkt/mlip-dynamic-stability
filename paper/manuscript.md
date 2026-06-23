@@ -71,7 +71,8 @@ We pre-registered three hypotheses:
 Our contributions: a finite-T benchmark on the anharmonic regime; a cheap, validated soft-mode
 free-energy screen; a cautionary methodological result that the "gold-standard" SSCHA is itself
 unreliable on deep displacive instabilities when driven by an MLIP, which reframes how such
-cross-checks should be used; and an actionable ensemble-disagreement guardrail (H3).
+cross-checks should be used; and an actionable ensemble-disagreement guardrail (H3). Figure 1
+summarises the blind spot, the benchmark, and the principal findings.
 
 ## 2. Methods
 
@@ -260,7 +261,7 @@ first-order transition — using the thermodynamic T_c to label *dynamic* stabil
 the wrong comparison and is what makes the models look "false-stable" on bcc). The margin to
 the stability boundary discriminates the models and tracks each one's harmonic-instability
 depth: MatterSim and ORB-v2 hug the boundary (~0.4 THz at 50 K), MACE-MP-0 is firmly stable
-(~1.8 THz). Critically, the cheap soft-mode screen **tracks SSCHA on bcc**: across the 45 paired
+(~1.8 THz) (Fig. `fig_sscha_bcc`). Critically, the cheap soft-mode screen **tracks SSCHA on bcc**: across the 45 paired
 units the rank correlation of the two minimum frequencies is Spearman ρ = 0.78 with 0.64 sign
 agreement (Fig. `fig_method_agreement`). The disagreements are concentrated in ORB-v2's float32
 softmode outliers (Ti/Hf near −35 THz, where SSCHA is mildly positive); dropping ORB-v2 lifts
@@ -373,6 +374,45 @@ finite-T stabilisation that harmonic accuracy does not predict, and — unlike M
 — remains reliable on the deep displacive instabilities that dominate generative-CSP screening.
 Harmonic accuracy does not certify a model for finite-T use, and neither does an unexamined
 SSCHA cross-check.
+
+## Figures
+
+![**Figure 1 · Overview.** *Left — the finite-temperature blind spot.* Along a soft mode the
+harmonic energy E(Q) is a double well; at the high-symmetry point Q=0 its curvature is negative
+(imaginary mode), so 0 K phonon benchmarks call the phase dynamically *unstable*, whereas the
+finite-temperature free energy F(Q;T) is a single well, so the cubic phase is in fact *stable*
+above T_c — the regime current MLIP phonon benchmarks stop short of. *Middle — the benchmark.*
+Twenty literature-curated reference systems and five foundation MLIPs feed a harmonic baseline
+(Layer 1, validation anchor) and the single-mode quantum soft-mode free-energy screen (Layer 2,
+this work; cubic stable ⇔ Q₀≈0 is the global minimum of F), cross-checked against multi-mode
+SSCHA. *Right — findings.* H1–H3 plus the SSCHA trap: the gold standard false-stabilises deep
+displacive instabilities (recall 0.23 vs the screen's 0.77).](../results/figures/fig_overview.png)
+
+![**fig_tolerance_sweep** — Harmonic false-stable and false-unstable call counts versus the
+imaginary-frequency tolerance (§3.1). The default −0.1 THz sits in the stable basin between the
+false-unstable flood at strict tolerance and the false-stable inflation at loose tolerance.](../results/figures/fig_tolerance_sweep.png)
+
+![**fig_softmode_heat** — Per-system minimum effective frequency across the five models (§3.1–3.2).
+The "softening toward zero" of the harmonically-unstable systems is the physics; per-system minima,
+not binary rates, are the right reporting unit.](../results/figures/fig_softmode_heat.png)
+
+![**fig_sscha_bcc** — Multi-mode SSCHA dynamic-stabilisation curves for bcc Ti/Zr/Hf, five models,
+versus temperature (§3.3). All models stabilise the bcc phase by ≤50 K; the margin to the stability
+boundary (MatterSim/ORB-v2 hugging ~0.4 THz, MACE-MP-0 firmly stable ~1.8 THz) discriminates the
+models.](../results/figures/fig_sscha_bcc.png)
+
+![**fig_method_agreement** — Soft-mode screen vs gold-standard SSCHA minimum frequency on bcc
+(§3.3): the cheap screen tracks SSCHA on the family where the gold standard is
+trustworthy.](../results/figures/fig_method_agreement.png)
+
+![**fig_displacive_recall** — Recall of the displacive (ferroelectric-perovskite) instability at
+T ≤ 300 K: the cheap soft-mode screen (0.77) versus the expensive SSCHA (0.23) (§3.3). The
+cautionary result — the gold standard is *less* reliable than the screen in the regime that matters
+most.](../results/figures/fig_displacive_recall.png)
+
+![**fig_ensemble_guardrail** — Ensemble-disagreement guardrail (§3.4): the discrete inter-model
+vote split predicts consensus error (AUC 0.75) while the continuous cross-model frequency spread
+does not (AUC 0.52).](../results/figures/fig_ensemble_guardrail.png)
 
 ## Data and code availability
 
