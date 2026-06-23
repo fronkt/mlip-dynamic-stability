@@ -1,4 +1,4 @@
-# Supplementary Information
+# Electronic Supplementary Information (ESI)
 
 *Companion to `manuscript.md`. All tables regenerate from `results/ledger.parquet` via
 `mlip_dynstab/analysis.py`; figures via `scripts/make_figures.py`.*

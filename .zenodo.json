@@ -1,0 +1,23 @@
+{
+  "title": "mlip-dynamic-stability: a finite-temperature dynamic-stability benchmark of foundation MLIPs",
+  "upload_type": "software",
+  "description": "Code, curated reference set, and per-unit results ledger for the paper 'Finite-temperature dynamic stability is a blind spot of foundation machine-learning interatomic potentials'. Benchmarks five foundation MLIPs (MACE-MP-0, CHGNet, ORB-v2, SevenNet-0, MatterSim) on the harmonic-unstable to finite-T-stabilised regime, introduces a single-mode quantum soft-mode free-energy screen, and cross-validates against multi-mode SSCHA.",
+  "license": "cc-by-4.0",
+  "access_right": "open",
+  "creators": [
+    {"name": "[Surname, Given name]", "affiliation": "[Institution]"}
+  ],
+  "keywords": [
+    "machine-learning interatomic potentials",
+    "phonons",
+    "dynamic stability",
+    "anharmonicity",
+    "self-consistent harmonic approximation",
+    "SSCHA",
+    "crystal structure prediction",
+    "foundation models"
+  ],
+  "related_identifiers": [
+    {"relation": "isSupplementTo", "identifier": "arXiv:2512.21227", "scheme": "arxiv"}
+  ]
+}

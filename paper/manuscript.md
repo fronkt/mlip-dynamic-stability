@@ -1,8 +1,10 @@
 # Finite-temperature dynamic stability is a blind spot of foundation machine-learning interatomic potentials
 
-*Post-revision draft (Stage 4, integrity-checked). All quantitative claims verified against
-`results/ledger.parquet` and `results/convergence_study.parquet`; references finalised with
-DOIs (deep-research pass, June 2026).*
+[First Author]^a^ and [Co-author(s)]^a^
+
+^a^ [Department, Institution, Address, City, Country]. E-mail: frankyc11223@gmail.com
+
+*Author list and affiliations to be completed before submission.*
 
 ## Abstract
 
@@ -35,11 +37,11 @@ in exactly the regime that matters most for generative-CSP screening.
 Foundation MLIPs — MACE-MP, CHGNet, ORB, SevenNet, MatterSim, M3GNet — are increasingly used
 as DFT surrogates in high-throughput pipelines, including the dynamical-stability filtering of
 generative crystal-structure-prediction (CSP) outputs. Two 2025 works define the state of the
-art. "Universal MLIPs are ready for phonons" (npj Comput. Mater., 2025 [1]) benchmarks MLIPs
-against ~10⁴ DFT **harmonic** phonon calculations [3] on largely in-distribution materials and
+art. "Universal MLIPs are ready for phonons"^1^ benchmarks MLIPs
+against ~10⁴ DFT **harmonic** phonon calculations^3^ on largely in-distribution materials and
 reports a systematic potential-energy-surface (PES) softening bias (energy/force
-under-prediction → mode softening → over-estimated stability). PhononBench (arXiv:2512.21227,
-Dec 2025 [2]) scores ~1.1×10⁵ generated structures for **harmonic** dynamical stability using
+under-prediction → mode softening → over-estimated stability). PhononBench^2^
+scores ~1.1×10⁵ generated structures for **harmonic** dynamical stability using
 MatterSim itself as the oracle.
 
 Both are harmonic, i.e. 0 K. But dynamic stability is a finite-temperature property, and a
@@ -71,8 +73,7 @@ We pre-registered three hypotheses:
 Our contributions: a finite-T benchmark on the anharmonic regime; a cheap, validated soft-mode
 free-energy screen; a cautionary methodological result that the "gold-standard" SSCHA is itself
 unreliable on deep displacive instabilities when driven by an MLIP, which reframes how such
-cross-checks should be used; and an actionable ensemble-disagreement guardrail (H3). Figure 1
-summarises the blind spot, the benchmark, and the principal findings.
+cross-checks should be used; and an actionable ensemble-disagreement guardrail (H3).
 
 ## 2. Methods
 
@@ -82,14 +83,15 @@ The curated set (`configs/curated_systems.yaml`, 20 systems) comprises reference
 harmonic-imaginary / finite-T-stable behaviour is documented in the literature, so the
 ground-truth label needs no new DFT:
 
-- **Oxide displacive/antiferrodistortive perovskites** (4): SrTiO₃ [11], BaTiO₃, PbTiO₃,
-  KNbO₃ [12].
-- **Halide perovskites** (3): CsPbI₃ [13], CsSnBr₃, CsSnI₃ [14].
-- **bcc refractory metals** (3): Ti, Zr, Hf (phonon-entropy stabilisation) [15].
-- **Cubic fluorites** (2): ZrO₂, HfO₂ [16].
-- **Superionic** (1): α-AgI [17].
-- **Quantum-paraelectric near-control** (1): KTaO₃ [18].
-- **Harmonically-stable controls** (6): Si, MgO, NaCl, Cu, diamond, CeO₂ [3].
+- **Oxide displacive/antiferrodistortive perovskites** (4): SrTiO₃,^11^ BaTiO₃, PbTiO₃,
+  KNbO₃.^12^
+- **Halide perovskites** (3): CsPbI₃,^13^ CsSnBr₃, CsSnI₃.^14^
+- **bcc refractory metals** (3): Ti, Zr, Hf (phonon-entropy stabilisation).^15^
+- **Cubic fluorites** (2): ZrO₂, HfO₂.^16^
+- **Superionic** (1): α-AgI.^17^
+- **Quantum-paraelectric near-control** (1): KTaO₃.^18^
+- **Harmonically-stable controls** (6): Si, MgO, NaCl, Cu, diamond, CeO₂ (0 K harmonic
+  stability documented in the DFPT phonon database^3^).
 
 Transition temperatures are approximate; scoring is qualitative — the correct side of the
 transition — not a fitted T_c. KTaO₃ is flagged borderline (incipient ferroelectric, DFT mode
@@ -103,7 +105,7 @@ it is the natural target for a future symmetry-breaking/MD probe.
 
 ### 2.2 Models
 
-MACE-MP-0 [6], CHGNet [7], ORB-v2 [8], SevenNet-0 [9], MatterSim [10], run through a
+MACE-MP-0,^6^ CHGNet,^7^ ORB-v2,^8^ SevenNet-0,^9^ MatterSim,^10^ run through a
 backend-agnostic ASE-calculator harness (one virtual environment per model). Testing MatterSim
 directly probes PhononBench's own oracle. ORB-v2 is a direct, float32-only model; we carry this as an explicit caveat
 because it manifests in both the harmonic and finite-T results.
@@ -132,8 +134,8 @@ sampling, fit the well-plus-barrier window, and minimise a **single-mode quantum
 energy** over the order-parameter centroid (self-consistent Gaussian width via bracketed root
 finding). The high-symmetry phase is stable at T iff Q₀≈0 is the free-energy global minimum.
 The E(Q) map is temperature-independent and cached, so each temperature is a sub-second CPU
-solve. Earlier finite-T routes (hand-rolled TDEP, one-shot hiPhive, rattled-MD) were
-implemented and discarded after failing the SrTiO₃ gate (the TDEP route follows refs [5]); see SI.
+solve. Earlier finite-T routes (hand-rolled TDEP,^5^ one-shot hiPhive, rattled-MD) were
+implemented and discarded after failing the SrTiO₃ gate; see ESI.
 
 **Validation gate.** On SrTiO₃ the order parameter condenses below the transition, melts by
 ≈150 K, and the soft mode hardens from −2.6 to +1.8 THz across the transition (experiment
@@ -141,7 +143,7 @@ implemented and discarded after failing the SrTiO₃ gate (the TDEP route follow
 
 ### 2.5 Multi-mode SSCHA (gold-standard cross-check)
 
-The full stochastic SCHA (python-sscha + cellconstructor [4]) with the MLIP as force engine:
+The full stochastic SCHA (python-sscha + cellconstructor)^4^ with the MLIP as force engine:
 ASE finite-displacement harmonic dynamical matrix → `ForcePositiveDefinite` → stochastic SCHA
 relaxation of the auxiliary dynamical matrix at T (root2 representation; per-population step cap
 to force ensemble regeneration on noisy large cells) → a dedicated ensemble at the converged
@@ -176,13 +178,13 @@ only non-ORB false-unstables (rate 0.333) — CeO₂ (−0.26 THz) and NaCl (−
 stable controls tripped marginally just past the −0.1 THz tolerance; both flip back to stable at
 a tolerance of ≈0.25 THz, i.e. they are finite-displacement noise, not a real instability.
 
-Because every binary call depends on the imaginary tolerance, we sweep it (Fig.
-`fig_tolerance_sweep`): a strict tolerance (0 THz) floods false-unstables (29 calls) as
+Because every binary call depends on the imaginary tolerance, we sweep it (Fig. 1):
+a strict tolerance (0 THz) floods false-unstables (29 calls) as
 near-Γ finite-displacement noise dominates, while a loose tolerance (0.3 THz) inflates
 false-stables (10 calls); the default −0.1 THz sits in the stable basin between them (6
 false-stable, 3 false-unstable), and the headline split is robust across 0.05–0.2 THz. The
 actionable point is that the "softening toward zero" is the physics; per-system minimum
-frequencies, not binary rates, are the right reporting unit (Fig. `fig_softmode_heat`). This
+frequencies, not binary rates, are the right reporting unit (Fig. 2). This
 reproduces the published picture and validates the harness.
 
 ### 3.2 Finite-T soft-mode screen — the headline (H2)
@@ -261,9 +263,9 @@ first-order transition — using the thermodynamic T_c to label *dynamic* stabil
 the wrong comparison and is what makes the models look "false-stable" on bcc). The margin to
 the stability boundary discriminates the models and tracks each one's harmonic-instability
 depth: MatterSim and ORB-v2 hug the boundary (~0.4 THz at 50 K), MACE-MP-0 is firmly stable
-(~1.8 THz) (Fig. `fig_sscha_bcc`). Critically, the cheap soft-mode screen **tracks SSCHA on bcc**: across the 45 paired
+(~1.8 THz) (Fig. 3). Critically, the cheap soft-mode screen **tracks SSCHA on bcc**: across the 45 paired
 units the rank correlation of the two minimum frequencies is Spearman ρ = 0.78 with 0.64 sign
-agreement (Fig. `fig_method_agreement`). The disagreements are concentrated in ORB-v2's float32
+agreement (Fig. 4). The disagreements are concentrated in ORB-v2's float32
 softmode outliers (Ti/Hf near −35 THz, where SSCHA is mildly positive); dropping ORB-v2 lifts
 the sign agreement to 0.78 (the rank correlation itself softens to 0.63 as the remaining
 frequency spread narrows). Either way the screen and the gold standard agree on the family where
@@ -275,7 +277,7 @@ instability in only **7 of 30** units (recall 0.23), and the perovskite SSCHA ru
 numerical blow-ups (minimum frequencies down to −2×10⁶ THz, concentrated in the float32 ORB-v2
 runs). The contrast is the cautionary result: the expensive gold standard is
 *less* reliable than the cheap screen in exactly the displacive regime that dominates
-generative-CSP outputs (Fig. `fig_displacive_recall`).
+generative-CSP outputs (Fig. 5).
 
 **Root cause.** A controlled diagnostic on cubic BaTiO₃ (MACE-MP-0, 100 K) isolates the
 mechanism. The harmonic soft mode is −5.6 THz (correctly unstable), but `ForcePositiveDefinite`
@@ -317,7 +319,7 @@ units. The disagreement signal separates these sharply: on the 18 units where th
 the 42 unanimous units — a 5.5× enrichment. As a ranked predictor of consensus error, the
 binary stable/unstable **vote split achieves AUC 0.75**, whereas the continuous cross-model
 frequency standard deviation is uninformative (**AUC 0.52**, no better than chance;
-Fig. `fig_ensemble_guardrail`).
+Fig. 6).
 
 This refines H3 into an actionable rule with a caveat: the *discrete* inter-model vote split is
 a useful, cheap guardrail — flag any candidate on which the foundation-MLIP ensemble disagrees —
@@ -366,7 +368,7 @@ approximate though the cross-model comparison at fixed cell is valid. ORB-v2's f
 direct architecture is an outlier in both layers and is flagged throughout rather than
 excluded.
 
-## 5. Conclusion
+## 5. Conclusions
 
 Finite-temperature dynamic stability is a blind spot of foundation MLIPs and of the harmonic
 benchmarks used to certify them. A cheap quantum soft-mode free-energy screen recovers the
@@ -375,123 +377,71 @@ finite-T stabilisation that harmonic accuracy does not predict, and — unlike M
 Harmonic accuracy does not certify a model for finite-T use, and neither does an unexamined
 SSCHA cross-check.
 
+## Conflicts of interest
+
+There are no conflicts to declare.
+
+## Data availability
+
+The code supporting this article, together with the per-unit results ledger, is openly available
+in the repository at https://github.com/fronkt/mlip-dynamic-stability and archived at Zenodo at
+DOI: 10.5281/zenodo.XXXXXXX *(DOI reserved on release; to be inserted on acceptance)*. The
+production results regenerate from `results/ledger.parquet` (per-unit hashed, resumable) and the
+finite-size runs from `results/convergence_study.parquet`; figures via `scripts/make_figures.py`,
+analysis in `mlip_dynstab/analysis.py`, the SSCHA root-cause diagnostic in
+`scripts/sscha_v4_diag.py`, and the stochastic-reproducibility study (§3.5) via
+`scripts/sscha_repro.py` (its per-seed frequencies print to the run log rather than to the
+ledger).
+
+## Acknowledgements
+
+*Funding sources and computational resources to be acknowledged before submission.*
+
+## References
+
+1. A. Loew, D. Sun, H.-C. Wang, S. Botti and M. A. L. Marques, *npj Comput. Mater.*, 2025, **11**, 178.
+2. X.-Q. Han, P.-J. Guo, Z.-F. Gao, W.-K. Li and Z.-Y. Lu, *arXiv*, 2025, arXiv:2512.21227.
+3. G. Petretto, S. Dwaraknath, H. P. C. Miranda, D. Winston, M. Giantomassi, M. J. van Setten, X. Gonze, K. A. Persson, G. Hautier and G.-M. Rignanese, *Sci. Data*, 2018, **5**, 180065.
+4. L. Monacelli, R. Bianco, M. Cherubini, M. Calandra, I. Errea and F. Mauri, *J. Phys.: Condens. Matter*, 2021, **33**, 363001.
+5. O. Hellman, I. A. Abrikosov and S. I. Simak, *Phys. Rev. B*, 2011, **84**, 180301(R); O. Hellman, P. Steneteg, I. A. Abrikosov and S. I. Simak, *Phys. Rev. B*, 2013, **87**, 104111.
+6. I. Batatia, P. Benner, Y. Chiang, A. M. Elena, D. P. Kovács, J. Riebesell *et al.*, *arXiv*, 2023, arXiv:2401.00096.
+7. B. Deng, P. Zhong, K. Jun *et al.*, *Nat. Mach. Intell.*, 2023, **5**, 1031.
+8. M. Neumann, J. Gin, B. Rhodes, S. Bennett, Z. Li, H. Choubisa, A. Hussey and J. Godwin, *arXiv*, 2024, arXiv:2410.22570.
+9. Y. Park, J. Kim, S. Hwang and S. Han, *J. Chem. Theory Comput.*, 2024, **20**, 4857.
+10. H. Yang, C. Hu, Y. Zhou *et al.*, *arXiv*, 2024, arXiv:2405.04967.
+11. T. Tadano and S. Tsuneyuki, *Phys. Rev. B*, 2015, **92**, 054301.
+12. W. Zhong, D. Vanderbilt and K. M. Rabe, *Phys. Rev. Lett.*, 1994, **73**, 1861.
+13. A. Marronnier *et al.*, *ACS Nano*, 2018, **12**, 3477.
+14. L. Monacelli and N. Marzari, *Chem. Mater.*, 2023, DOI: 10.1021/acs.chemmater.2c03475.
+15. W. Petry *et al.*, *Phys. Rev. B*, 1991, **43**, 10933; A. Heiming *et al.*, *Phys. Rev. B*, 1991, **43**, 10948.
+16. K. Parlinski, Z. Q. Li and Y. Kawazoe, *Phys. Rev. Lett.*, 1997, **78**, 4063.
+17. D. A. Wood and N. Marzari, *Phys. Rev. B*, 2007, **76**, 134301.
+18. A. Ranalli *et al.*, *Adv. Quantum Technol.*, 2023, **6**, 2200131.
+
 ## Figures
 
-![**Figure 1 · Overview.** *Left — the finite-temperature blind spot.* Along a soft mode the
-harmonic energy E(Q) is a double well; at the high-symmetry point Q=0 its curvature is negative
-(imaginary mode), so 0 K phonon benchmarks call the phase dynamically *unstable*, whereas the
-finite-temperature free energy F(Q;T) is a single well, so the cubic phase is in fact *stable*
-above T_c — the regime current MLIP phonon benchmarks stop short of. *Middle — the benchmark.*
-Twenty literature-curated reference systems and five foundation MLIPs feed a harmonic baseline
-(Layer 1, validation anchor) and the single-mode quantum soft-mode free-energy screen (Layer 2,
-this work; cubic stable ⇔ Q₀≈0 is the global minimum of F), cross-checked against multi-mode
-SSCHA. *Right — findings.* H1–H3 plus the SSCHA trap: the gold standard false-stabilises deep
-displacive instabilities (recall 0.23 vs the screen's 0.77).](../results/figures/fig_overview.png)
-
-![**fig_tolerance_sweep** — Harmonic false-stable and false-unstable call counts versus the
+![**Fig. 1** Harmonic false-stable and false-unstable call counts versus the
 imaginary-frequency tolerance (§3.1). The default −0.1 THz sits in the stable basin between the
 false-unstable flood at strict tolerance and the false-stable inflation at loose tolerance.](../results/figures/fig_tolerance_sweep.png)
 
-![**fig_softmode_heat** — Per-system minimum effective frequency across the five models (§3.1–3.2).
+![**Fig. 2** Per-system minimum effective frequency across the five models (§3.1–3.2).
 The "softening toward zero" of the harmonically-unstable systems is the physics; per-system minima,
 not binary rates, are the right reporting unit.](../results/figures/fig_softmode_heat.png)
 
-![**fig_sscha_bcc** — Multi-mode SSCHA dynamic-stabilisation curves for bcc Ti/Zr/Hf, five models,
+![**Fig. 3** Multi-mode SSCHA dynamic-stabilisation curves for bcc Ti/Zr/Hf, five models,
 versus temperature (§3.3). All models stabilise the bcc phase by ≤50 K; the margin to the stability
 boundary (MatterSim/ORB-v2 hugging ~0.4 THz, MACE-MP-0 firmly stable ~1.8 THz) discriminates the
 models.](../results/figures/fig_sscha_bcc.png)
 
-![**fig_method_agreement** — Soft-mode screen vs gold-standard SSCHA minimum frequency on bcc
+![**Fig. 4** Soft-mode screen vs gold-standard SSCHA minimum frequency on bcc
 (§3.3): the cheap screen tracks SSCHA on the family where the gold standard is
 trustworthy.](../results/figures/fig_method_agreement.png)
 
-![**fig_displacive_recall** — Recall of the displacive (ferroelectric-perovskite) instability at
+![**Fig. 5** Recall of the displacive (ferroelectric-perovskite) instability at
 T ≤ 300 K: the cheap soft-mode screen (0.77) versus the expensive SSCHA (0.23) (§3.3). The
 cautionary result — the gold standard is *less* reliable than the screen in the regime that matters
 most.](../results/figures/fig_displacive_recall.png)
 
-![**fig_ensemble_guardrail** — Ensemble-disagreement guardrail (§3.4): the discrete inter-model
+![**Fig. 6** Ensemble-disagreement guardrail (§3.4): the discrete inter-model
 vote split predicts consensus error (AUC 0.75) while the continuous cross-model frequency spread
 does not (AUC 0.52).](../results/figures/fig_ensemble_guardrail.png)
-
-## Data and code availability
-
-The production results regenerate from `results/ledger.parquet` (per-unit hashed, resumable) and
-the finite-size runs from `results/convergence_study.parquet`. Figures via
-`scripts/make_figures.py`; analysis in `mlip_dynstab/analysis.py`; the SSCHA root-cause
-diagnostic in `scripts/sscha_v4_diag.py`; the stochastic-reproducibility study (§3.5) via
-`scripts/sscha_repro.py` (its per-seed frequencies print to the run log rather than to the
-ledger). Repository: github.com/fronkt/mlip-dynamic-stability.
-
-## References
-
-*Benchmarks and methods*
-
-1. A. Loew, D. Sun, H.-C. Wang, S. Botti, M. A. L. Marques. Universal machine learning
-   interatomic potentials are ready for phonons. *npj Comput. Mater.* **11**, 178 (2025).
-   doi:10.1038/s41524-025-01650-1. (arXiv:2412.16551)
-2. PhononBench: A Large-Scale Phonon-Based Benchmark for Dynamical Stability in Crystal
-   Generation. arXiv:2512.21227 (2025).
-3. G. Petretto, S. Dwaraknath, H. P. C. Miranda, D. Winston, M. Giantomassi, M. J. van Setten,
-   X. Gonze, K. A. Persson, G. Hautier, G.-M. Rignanese. High-throughput density-functional
-   perturbation theory phonons for inorganic materials. *Sci. Data* **5**, 180065 (2018).
-   doi:10.1038/sdata.2018.65.
-4. L. Monacelli, R. Bianco, M. Cherubini, M. Calandra, I. Errea, F. Mauri. The stochastic
-   self-consistent harmonic approximation: calculating vibrational properties of materials with
-   full quantum and anharmonic effects. *J. Phys.: Condens. Matter* **33**, 363001 (2021).
-   doi:10.1088/1361-648X/ac066b.
-5. O. Hellman, I. A. Abrikosov, S. I. Simak. Lattice dynamics of anharmonic solids from first
-   principles. *Phys. Rev. B* **84**, 180301(R) (2011). doi:10.1103/PhysRevB.84.180301;
-   O. Hellman, P. Steneteg, I. A. Abrikosov, S. I. Simak. *Phys. Rev. B* **87**, 104111 (2013).
-   doi:10.1103/PhysRevB.87.104111.
-
-*Foundation MLIPs benchmarked*
-
-6. I. Batatia et al. A foundation model for atomistic materials chemistry (MACE-MP-0).
-   arXiv:2401.00096 (2023).
-7. B. Deng, P. Zhong, K. Jun, et al. CHGNet as a pretrained universal neural network potential
-   for charge-informed atomistic modelling. *Nat. Mach. Intell.* **5**, 1031–1041 (2023).
-   doi:10.1038/s42256-023-00716-3.
-8. M. Neumann, J. Gin, B. Rhodes, et al. Orb: A Fast, Scalable Neural Network Potential.
-   arXiv:2410.22570 (2024).
-9. Y. Park, J. Kim, S. Hwang, S. Han. Scalable Parallel Algorithm for Graph Neural Network
-   Interatomic Potentials in Molecular Dynamics Simulations (SevenNet). *J. Chem. Theory Comput.*
-   **20**, 4857–4868 (2024). doi:10.1021/acs.jctc.4c00190.
-10. H. Yang et al. MatterSim: A Deep Learning Atomistic Model Across Elements, Temperatures and
-    Pressures. arXiv:2405.04967 (2024).
-
-*Per-system finite-T ground truth (the harmonic-unstable → thermally-stabilised labels)*
-
-11. **SrTiO₃** (antiferrodistortive R-point soft mode; cubic→I4/mcm at ≈105 K): T. Tadano,
-    S. Tsuneyuki. Self-consistent phonon calculations of lattice dynamical properties in cubic
-    SrTiO₃ with first-principles anharmonic force constants. *Phys. Rev. B* **92**, 054301 (2015).
-    doi:10.1103/PhysRevB.92.054301.
-12. **BaTiO₃, KNbO₃, PbTiO₃** (Γ ferroelectric soft mode; displacive + order-disorder): W. Zhong,
-    D. Vanderbilt, K. M. Rabe. Phase transitions in BaTiO₃ from first principles. *Phys. Rev.
-    Lett.* **73**, 1861 (1994). doi:10.1103/PhysRevLett.73.1861.
-13. **CsPbI₃** (zone-boundary octahedral-tilt double wells; anharmonic cubic stabilisation):
-    A. Marronnier et al. Anharmonicity and Disorder in the Black Phases of Cesium Lead Iodide.
-    *ACS Nano* **12**, 3477–3486 (2018). doi:10.1021/acsnano.8b00267.
-14. **CsSnI₃, CsSnBr₃** (tilt transitions; quantum + anharmonic fluctuations stabilise the cubic
-    phase): First-Principles Thermodynamics of CsSnI₃. *Chem. Mater.* (2023).
-    doi:10.1021/acs.chemmater.2c03475. (arXiv:2301.10071)
-15. **bcc Ti/Zr/Hf** (phonon-entropy stabilisation; overdamped N and ⅔⟨111⟩ ω-precursor modes):
-    W. Petry et al. Phonon dispersion of the bcc phase of group-IV metals. I. bcc titanium.
-    *Phys. Rev. B* **43**, 10933 (1991), doi:10.1103/PhysRevB.43.10933; A. Heiming et al. II. bcc
-    zirconium. *Phys. Rev. B* **43**, 10948 (1991), doi:10.1103/PhysRevB.43.10948.
-16. **Cubic ZrO₂ / HfO₂** (X-point oxygen soft mode; anharmonic + entropic high-T stabilisation):
-    K. Parlinski, Z. Q. Li, Y. Kawazoe. First-Principles Determination of the Soft Mode in Cubic
-    ZrO₂. *Phys. Rev. Lett.* **78**, 4063 (1997), doi:10.1103/PhysRevLett.78.4063; Exploring the
-    High-Temperature Stabilization of Cubic Zirconia from Anharmonic Lattice Dynamics. *Cryst.
-    Growth Des.* (2023), doi:10.1021/acs.cgd.2c01458.
-17. **α-AgI** (superionic; bcc iodine framework with molten Ag sublattice above ≈420 K, strong
-    host anharmonicity): D. A. Wood, N. Marzari. Dynamical structure, bonding, and thermodynamics
-    of the superionic sublattice in α-AgI. *Phys. Rev. B* **76**, 134301 (2007).
-    (arXiv:cond-mat/0603670)
-18. **KTaO₃** (quantum paraelectric / incipient ferroelectric; soft TO mode held up by quantum
-    fluctuations — basis for the borderline label): A. Ranalli et al. Temperature-Dependent
-    Anharmonic Phonons in Quantum Paraelectric KTaO₃ by First Principles and Machine-Learned
-    Force Fields. *Adv. Quantum Technol.* **6**, 2200131 (2023). doi:10.1002/qute.202200131.
-
-The harmonically-stable controls (Si, C, Cu, MgO, NaCl, CeO₂) have no imaginary modes at any
-temperature; their 0 K harmonic stability is documented in the DFPT phonon database [3].
