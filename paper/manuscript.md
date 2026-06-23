@@ -1,10 +1,9 @@
 # Finite-temperature dynamic stability is a blind spot of foundation machine-learning interatomic potentials
 
-[First Author]^a^ and [Co-author(s)]^a^
+Frank Cai^a^
 
-^a^ [Department, Institution, Address, City, Country]. E-mail: frankyc11223@gmail.com
-
-*Author list and affiliations to be completed before submission.*
+^a^ Purdue University, West Lafayette, Indiana, USA. E-mail: frankyc11223@gmail.com.
+ORCID: 0009-0003-0041-1459
 
 ## Abstract
 
