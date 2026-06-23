@@ -57,6 +57,3 @@ Sincerely,
 
 Frank Cai
 Purdue University
-
-*Suggested reviewers (optional — to complete if desired): researchers in anharmonic lattice
-dynamics / SSCHA and in foundation-MLIP benchmarking.*
