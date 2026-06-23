@@ -5,7 +5,7 @@
   "license": "cc-by-4.0",
   "access_right": "open",
   "creators": [
-    {"name": "[Surname, Given name]", "affiliation": "[Institution]"}
+    {"name": "Cai, Frank", "affiliation": "Purdue University", "orcid": "0009-0003-0041-1459"}
   ],
   "keywords": [
     "machine-learning interatomic potentials",
