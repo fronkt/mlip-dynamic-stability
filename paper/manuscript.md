@@ -410,7 +410,7 @@ There are no conflicts to declare.
 
 The code supporting this article, together with the per-unit results ledger, is openly available
 in the repository at https://github.com/fronkt/mlip-dynamic-stability and archived at Zenodo at
-DOI: 10.5281/zenodo.XXXXXXX *(DOI reserved on release; to be inserted on acceptance)*. The
+https://doi.org/10.5281/zenodo.20805824. The
 production results regenerate from `results/ledger.parquet` (per-unit hashed, resumable) and the
 finite-size runs from `results/convergence_study.parquet`; figures via `scripts/make_figures.py`,
 analysis in `mlip_dynstab/analysis.py`, the SSCHA root-cause diagnostic in
