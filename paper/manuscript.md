@@ -420,7 +420,13 @@ ledger).
 
 ## Acknowledgements
 
-*Funding sources and computational resources to be acknowledged before submission.*
+The author thanks the developers of the foundation interatomic-potential packages benchmarked
+here — MACE-MP-0, CHGNet, ORB, SevenNet and MatterSim — and of phonopy, python-sscha /
+cellconstructor, ASE and pymatgen, for making their codes and pre-trained models openly
+available; this benchmark would not have been possible otherwise. Reference structures were
+obtained from the Materials Project. Computational resources were provided by commercial cloud
+GPU providers. This research received no specific grant from any funding agency in the public,
+commercial, or not-for-profit sectors.
 
 ## References
 
