@@ -187,6 +187,14 @@ actionable point is that the "softening toward zero" is the physics; per-system 
 frequencies, not binary rates, are the right reporting unit (Fig. 2). This
 reproduces the published picture and validates the harness.
 
+![**Fig. 1** Harmonic false-stable and false-unstable call counts versus the
+imaginary-frequency tolerance (§3.1). The default −0.1 THz sits in the stable basin between the
+false-unstable flood at strict tolerance and the false-stable inflation at loose tolerance.](../results/figures/fig_tolerance_sweep.png)
+
+![**Fig. 2** Per-system minimum effective frequency across the five models (§3.1–3.2).
+The "softening toward zero" of the harmonically-unstable systems is the physics; per-system minima,
+not binary rates, are the right reporting unit.](../results/figures/fig_softmode_heat.png)
+
 ### 3.2 Finite-T soft-mode screen — the headline (H2)
 
 On the ferroelectric perovskites at T ≤ 300 K — far below every transition temperature, so the
@@ -271,6 +279,15 @@ the sign agreement to 0.78 (the rank correlation itself softens to 0.63 as the r
 frequency spread narrows). Either way the screen and the gold standard agree on the family where
 the gold standard is trustworthy.
 
+![**Fig. 3** Multi-mode SSCHA dynamic-stabilisation curves for bcc Ti/Zr/Hf, five models,
+versus temperature (§3.3). All models stabilise the bcc phase by ≤50 K; the margin to the stability
+boundary (MatterSim/ORB-v2 hugging ~0.4 THz, MACE-MP-0 firmly stable ~1.8 THz) discriminates the
+models.](../results/figures/fig_sscha_bcc.png)
+
+![**Fig. 4** Soft-mode screen vs gold-standard SSCHA minimum frequency on bcc
+(§3.3): the cheap screen tracks SSCHA on the family where the gold standard is
+trustworthy.](../results/figures/fig_method_agreement.png)
+
 **Ferroelectric perovskites — SSCHA systematically false-stabilises.** On the same FE
 perovskites at T ≤ 300 K where the screen achieves 0.77 recall, SSCHA correctly identifies the
 instability in only **7 of 30** units (recall 0.23), and the perovskite SSCHA runs include six
@@ -278,6 +295,11 @@ numerical blow-ups (minimum frequencies down to −2×10⁶ THz, concentrated in
 runs). The contrast is the cautionary result: the expensive gold standard is
 *less* reliable than the cheap screen in exactly the displacive regime that dominates
 generative-CSP outputs (Fig. 5).
+
+![**Fig. 5** Recall of the displacive (ferroelectric-perovskite) instability at
+T ≤ 300 K: the cheap soft-mode screen (0.77) versus the expensive SSCHA (0.23) (§3.3). The
+cautionary result — the gold standard is *less* reliable than the screen in the regime that matters
+most.](../results/figures/fig_displacive_recall.png)
 
 **Root cause.** A controlled diagnostic on cubic BaTiO₃ (MACE-MP-0, 100 K) isolates the
 mechanism. The harmonic soft mode is −5.6 THz (correctly unstable), but `ForcePositiveDefinite`
@@ -320,6 +342,10 @@ the 42 unanimous units — a 5.5× enrichment. As a ranked predictor of consensu
 binary stable/unstable **vote split achieves AUC 0.75**, whereas the continuous cross-model
 frequency standard deviation is uninformative (**AUC 0.52**, no better than chance;
 Fig. 6).
+
+![**Fig. 6** Ensemble-disagreement guardrail (§3.4): the discrete inter-model
+vote split predicts consensus error (AUC 0.75) while the continuous cross-model frequency spread
+does not (AUC 0.52).](../results/figures/fig_ensemble_guardrail.png)
 
 This refines H3 into an actionable rule with a caveat: the *discrete* inter-model vote split is
 a useful, cheap guardrail — flag any candidate on which the foundation-MLIP ensemble disagrees —
@@ -417,31 +443,3 @@ ledger).
 16. K. Parlinski, Z. Q. Li and Y. Kawazoe, *Phys. Rev. Lett.*, 1997, **78**, 4063.
 17. D. A. Wood and N. Marzari, *Phys. Rev. B*, 2007, **76**, 134301.
 18. A. Ranalli *et al.*, *Adv. Quantum Technol.*, 2023, **6**, 2200131.
-
-## Figures
-
-![**Fig. 1** Harmonic false-stable and false-unstable call counts versus the
-imaginary-frequency tolerance (§3.1). The default −0.1 THz sits in the stable basin between the
-false-unstable flood at strict tolerance and the false-stable inflation at loose tolerance.](../results/figures/fig_tolerance_sweep.png)
-
-![**Fig. 2** Per-system minimum effective frequency across the five models (§3.1–3.2).
-The "softening toward zero" of the harmonically-unstable systems is the physics; per-system minima,
-not binary rates, are the right reporting unit.](../results/figures/fig_softmode_heat.png)
-
-![**Fig. 3** Multi-mode SSCHA dynamic-stabilisation curves for bcc Ti/Zr/Hf, five models,
-versus temperature (§3.3). All models stabilise the bcc phase by ≤50 K; the margin to the stability
-boundary (MatterSim/ORB-v2 hugging ~0.4 THz, MACE-MP-0 firmly stable ~1.8 THz) discriminates the
-models.](../results/figures/fig_sscha_bcc.png)
-
-![**Fig. 4** Soft-mode screen vs gold-standard SSCHA minimum frequency on bcc
-(§3.3): the cheap screen tracks SSCHA on the family where the gold standard is
-trustworthy.](../results/figures/fig_method_agreement.png)
-
-![**Fig. 5** Recall of the displacive (ferroelectric-perovskite) instability at
-T ≤ 300 K: the cheap soft-mode screen (0.77) versus the expensive SSCHA (0.23) (§3.3). The
-cautionary result — the gold standard is *less* reliable than the screen in the regime that matters
-most.](../results/figures/fig_displacive_recall.png)
-
-![**Fig. 6** Ensemble-disagreement guardrail (§3.4): the discrete inter-model
-vote split predicts consensus error (AUC 0.75) while the continuous cross-model frequency spread
-does not (AUC 0.52).](../results/figures/fig_ensemble_guardrail.png)
