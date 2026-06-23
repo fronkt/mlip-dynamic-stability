@@ -149,7 +149,15 @@ Stage 2.5 INTEGRITY pass, then deep-research DOI pass, then Stage 5 FINALIZE (DO
       via DFPT DB [3]. Inline cites added in intro/2.1/2.2/2.4/2.5. NO recalled DOIs - every DOI
       confirmed via WebSearch. Also fixed PhononBench count 1.3e5->1.1e5 (actual 108,843). research_
       brief.md sec 8 + curated_systems pointer closed out.  ← NEW INTEGRITY FIX folded in
-- [ ] Stage 5 FINALIZE (DOCX/PDF) → Stage 6 PROCESS SUMMARY  ← NEXT
+- [x] Figure 1 conceptual overview schematic (4cf542a) — excalidraw-diagram skill, src in
+      paper/fig1_src/; embedded as lead figure + referenced from intro.
+- [~] Stage 5 FINALIZE — DOCX DONE (manuscript.docx + supplementary.docx via pandoc, figures
+      embedded). PDF-via-Word COM hangs against the user's open Word session; DOCX is the
+      deliverable (all target journals accept Word). PDF optional later.
+- [x] Journal targeting (academic-paper-reviewer): target = Digital Discovery (RSC); prestige
+      reach = npj Comput Mater. Requirements/formatting notes captured in chat + memory.
+- [ ] Pre-submission formatting for Digital Discovery (authors/affiliations, Figure 1–7 numbering
+      replacing fig_* codenames, RSC superscript refs, Zenodo DOI) → Stage 6 PROCESS SUMMARY ← NEXT
 
 ## Lessons
 See tasks/lessons.md.
