@@ -1,0 +1,1 @@
+Five foundation MLIPs that pass harmonic phonon benchmarks disagree sharply at finite temperature; a cheap soft-mode free-energy screen recovers instabilities that both harmonic checks and costly multi-mode SSCHA miss or falsely stabilise.
