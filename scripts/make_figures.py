@@ -41,7 +41,9 @@ def fig_sscha_bcc():
     axes[0].set_ylabel("min free-energy Hessian freq (THz)")
     axes[-1].legend(fontsize=8, title="MLIP")
     fig.suptitle("Multi-mode SSCHA dynamic stabilization of bcc Ti/Zr/Hf")
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_sscha_bcc.png", dpi=160); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_sscha_bcc.png", dpi=300)
+    fig.savefig(f"{OUT}/fig_sscha_bcc.tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
+    plt.close(fig)
     print(f"wrote {OUT}/fig_sscha_bcc.png")
 
 
@@ -67,7 +69,9 @@ def fig_softmode_heat():
                 ax.text(j, i, f"{v:.1f}", ha="center", va="center", fontsize=6.5)
     ax.set_title(f"softmode min eff. freq (THz) @ {int(d['temperature_K'].iloc[0])} K")
     fig.colorbar(im, ax=ax, label="THz (blue<0 unstable)")
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_softmode_heat.png", dpi=160); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_softmode_heat.png", dpi=300)
+    fig.savefig(f"{OUT}/fig_softmode_heat.tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
+    plt.close(fig)
     print(f"wrote {OUT}/fig_softmode_heat.png")
 
 
@@ -103,7 +107,9 @@ def fig_method_agreement():
     ax.set_title(f"bcc: softmode vs SSCHA  (ρ={summ.get('spearman_freq','?')}, "
                  f"sign agree {summ.get('sign_agreement','?')}, n={summ.get('n_paired',0)})")
     ax.legend(fontsize=8, title="MLIP", loc="lower right")
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_method_agreement.png", dpi=160); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_method_agreement.png", dpi=300)
+    fig.savefig(f"{OUT}/fig_method_agreement.tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
+    plt.close(fig)
     print(f"wrote {OUT}/fig_method_agreement.png  (bcc {summ})")
 
 
@@ -124,7 +130,9 @@ def fig_displacive_recall():
                 f"{row['correct_unstable']}/{row['n_valid']}", ha="center", fontsize=9)
     ax.set_ylim(0, 1.05); ax.set_ylabel("recall: cubic correctly called unstable")
     ax.set_title("FE perovskites, T≤300 K\n(cubic definitively unstable)")
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_displacive_recall.png", dpi=160); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_displacive_recall.png", dpi=300)
+    fig.savefig(f"{OUT}/fig_displacive_recall.tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
+    plt.close(fig)
     print(f"wrote {OUT}/fig_displacive_recall.png  ({r.to_dict('records')})")
 
 
@@ -142,7 +150,9 @@ def fig_tolerance_sweep():
     ax.axvline(0.1, color="k", lw=0.8, ls="--", label="default −0.1 THz")
     ax.set_xlabel("imaginary tolerance |tol| (THz)"); ax.set_ylabel("count (5 models × scored set)")
     ax.set_title("Stability-call sensitivity to imaginary tolerance"); ax.legend(fontsize=8)
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_tolerance_sweep.png", dpi=160); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_tolerance_sweep.png", dpi=300)
+    fig.savefig(f"{OUT}/fig_tolerance_sweep.tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
+    plt.close(fig)
     print(f"wrote {OUT}/fig_tolerance_sweep.png  ({s.to_dict('records')})")
 
 
@@ -164,7 +174,9 @@ def fig_ensemble_guardrail():
     ax.set_ylim(0, max(vals) * 1.25 + 0.05); ax.set_ylabel("consensus finite-T error rate")
     ax.set_title(f"Ensemble disagreement guardrail (H3)\nvote-split AUC {s['auc_vote_disagreement']}, "
                  f"freq-std AUC {s['auc_freq_std']}")
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_ensemble_guardrail.png", dpi=160); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{OUT}/fig_ensemble_guardrail.png", dpi=300)
+    fig.savefig(f"{OUT}/fig_ensemble_guardrail.tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
+    plt.close(fig)
     print(f"wrote {OUT}/fig_ensemble_guardrail.png  ({s})")
 
 
