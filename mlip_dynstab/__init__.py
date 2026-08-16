@@ -21,7 +21,8 @@ DEFAULT_IMAG_TOL_THZ = -0.1
 # was unchanged -- so every stale row was skipped as "already present" instead of recomputed.
 METHOD_VERSION = {
     "harmonic": 1,
-    "softmode": 2,    # v2 = FC-commensurate q-search + acoustic mask by |omega| (was: 3 lowest)
+    "softmode": 3,    # v3 = screen EVERY imaginary commensurate mode; unstable if ANY condenses
+                      # v2 = FC-commensurate q-search + acoustic mask by |omega| (was: 3 lowest)
     "sscha": 2,       # v2 = acoustic modes identified by |omega|, not by sort order
     "hiphive": 1,
     "rattled": 1,

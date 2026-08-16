@@ -528,6 +528,79 @@ def _softest_mesh_mode(ph, supercell):
     return fmin, qsoft, dim, base, u, m_eff
 
 
+def _mode_pattern(ph, q, band, max_den):
+    """Freeze one (q, branch) into its minimal commensurate cell via phonopy modulation.
+
+    Returns (dim, base_ase, u[n,3] unit pattern, M_eff[amu])."""
+    import ase
+    import numpy as np
+    from fractions import Fraction
+
+    dim = [Fraction(x).limit_denominator(max_den).denominator if abs(x) > 1e-9 else 1
+           for x in q]
+    ph.run_modulations(dimension=dim, phonon_modes=[[list(q), int(band), 1.0, 0.0]])
+    mods, sc_ph = ph.get_modulations_and_supercell()
+    base = ase.Atoms(symbols=sc_ph.symbols, scaled_positions=sc_ph.scaled_positions,
+                     cell=sc_ph.cell, pbc=True)
+    u = np.real(mods[0])
+    mx = np.abs(u).max()
+    u = u / mx if mx > 0 else u                           # max atomic component = 1
+    m_eff = float(np.sum(base.get_masses()[:, None] * u ** 2))
+    return dim, base, u, m_eff
+
+
+def _imaginary_commensurate_modes(ph, supercell, imag_tol_thz=DEFAULT_IMAG_TOL_THZ,
+                                  max_modes=6):
+    """Every DISTINCT imaginary mode on the force-constant-commensurate q grid.
+
+    Dynamical stability is a property of the PHASE, not of one mode: the high-symmetry
+    structure is unstable at T if ANY soft mode condenses. Screening only the globally softest
+    mode conflates physically distinct instabilities. In SrTiO3 the Gamma ferroelectric mode is
+    deeper than the R-point antiferrodistortive tilt, yet the Gamma mode is quantum-suppressed
+    and never condenses while the R tilt is what drives the 105 K transition -- so a
+    single-mode screen answers the wrong question and calls the cubic phase stable.
+
+    The three acoustic branches at Gamma are masked by |omega| (they are the branches nearest
+    zero, not the lowest; see ``_softest_mesh_mode``). Modes are deduplicated over degenerate
+    branches and over symmetry-equivalent q, keyed on the sorted magnitudes of the q components
+    together with the frequency, so a triply degenerate T1u triplet and the three arms of a
+    <100> star each cost one E(Q) map rather than three.
+
+    Returns (modes, n_imag_total) with ``modes`` most-imaginary first and at most ``max_modes``
+    entries; ``n_imag_total`` is the count of distinct imaginary modes BEFORE the cap, so
+    truncation is never silent.
+    """
+    import numpy as np
+
+    n = [int(x) for x in supercell]
+    qs = [[i / n[0], j / n[1], k / n[2]]
+          for i in range(n[0]) for j in range(n[1]) for k in range(n[2])]
+    ph.run_qpoints(qs, with_eigenvectors=False)
+    freqs = np.array(ph.qpoints.frequencies)             # (nq, nb)
+    fr = freqs.copy()
+    for qi, q in enumerate(qs):
+        if max(abs(c) for c in q) < 1e-8:
+            fr[qi, np.argsort(np.abs(fr[qi]))[:3]] = np.inf   # acoustic at Gamma
+
+    cand = []
+    for qi in range(fr.shape[0]):
+        for ib in range(fr.shape[1]):
+            f = float(fr[qi, ib])
+            if np.isfinite(f) and f < imag_tol_thz:
+                cand.append((f, qs[qi], ib))
+    cand.sort(key=lambda t: t[0])                        # most imaginary first
+
+    seen, uniq = set(), []
+    for f, q, ib in cand:
+        key = (tuple(sorted(round(abs(c), 6) for c in q)), round(f, 4))
+        if key in seen:
+            continue
+        seen.add(key)
+        uniq.append({"harm_thz": f, "q": list(q), "band": int(ib)})
+
+    return uniq[:max_modes], len(uniq)
+
+
 def _sample_well(base, calc, u, q_max, n_pts):
     """Static E(Q) along the soft pattern (symmetric, so sample Q>=0). Quadratic spacing puts
     most points at small Q so narrow soft wells (e.g. ferroelectric BaTiO3, min ~0.07 A) are
@@ -690,13 +763,20 @@ def _solve_scha(a, b, c, m_eff, temperature_K, q_box=0.6, nq=121):
 
 def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
                               q_max=0.45, n_pts=10, imag_tol_thz=DEFAULT_IMAG_TOL_THZ,
-                              relax=True, fmax=1e-3, disp=0.01,
+                              relax=True, fmax=1e-3, disp=0.01, max_modes=6,
                               cache_path=None) -> FiniteTResult:
-    """Finite-T dynamic stability via the 1D soft-mode free energy with exact quantum nuclear
-    motion. Relax -> harmonic FCs -> softest commensurate mode (phonopy modulation) -> static
-    double well E(Q) along it -> exact 1D quantum thermal density -> stability from the
-    potential-of-mean-force curvature at Q=0. The expensive E(Q) map is temperature-independent
-    and cached (json), so every extra temperature is a sub-second CPU solve.
+    """Finite-T dynamic stability from the single-mode quantum SCHA free energy, evaluated over
+    EVERY imaginary force-constant-commensurate mode rather than only the softest one.
+
+    Relax -> harmonic FCs -> enumerate all distinct imaginary commensurate modes -> for each,
+    freeze it into its minimal commensurate cell (phonopy modulation) and map the static double
+    well E(Q) -> minimise the single-mode quantum SCHA free energy over the order-parameter
+    centroid. **The high-symmetry phase is dynamically unstable at T if ANY of those modes
+    condenses**, which is what dynamical stability means; screening only the globally softest
+    mode conflates distinct instabilities and, for a quantum paraelectric such as SrTiO3, reports
+    the (non-condensing) Gamma ferroelectric mode instead of the R-point tilt that drives the
+    transition. The E(Q) maps are temperature-independent and cached, so every extra temperature
+    is a sub-second CPU solve over all modes.
     """
     import json
     import os
@@ -712,28 +792,72 @@ def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
             from .harmonic import _relax
             prim = _relax(prim, fmax=fmax)
         ph = _harmonic_phonon(prim, calc, supercell, disp)
-        f0, qsoft, dim, base, u, m_eff = _softest_mesh_mode(ph, supercell)
-        Qs, dE = _sample_well(base, calc, u, q_max, n_pts)
-        a, b, cc = _fit_double_well(Qs, dE)
-        cache = {"harm_min_thz": f0, "m_eff": m_eff, "a": a, "b": b, "c": cc,
-                 "Qs": Qs.tolist(), "dE": dE.tolist(), "supercell": list(dim),
-                 "fc_supercell": list(supercell), "q_soft": list(qsoft),
-                 "well_depth_meV": float(-min(dE.min(), 0.0) * 1000)}
+        modes, n_imag_total = _imaginary_commensurate_modes(
+            ph, supercell, imag_tol_thz, max_modes)
+        max_den = max(int(x) for x in supercell)
+        entries = []
+        for md in modes:
+            dim, base, u, m_eff = _mode_pattern(ph, md["q"], md["band"], max_den)
+            Qs, dE = _sample_well(base, calc, u, q_max, n_pts)
+            a, b, cc = _fit_double_well(Qs, dE)
+            entries.append({"harm_thz": md["harm_thz"], "q": md["q"], "band": md["band"],
+                            "dim": list(dim), "m_eff": m_eff, "a": a, "b": b, "c": cc,
+                            "Qs": Qs.tolist(), "dE": dE.tolist(),
+                            "well_depth_meV": float(-min(dE.min(), 0.0) * 1000)})
+        if not entries:
+            # Harmonically stable on the commensurate grid: nothing to condense. Record the
+            # softest commensurate frequency so the row still carries a curvature number.
+            f0, qsoft, dim, base, u, m_eff = _softest_mesh_mode(ph, supercell)
+            entries.append({"harm_thz": f0, "q": list(qsoft), "band": -1, "dim": list(dim),
+                            "m_eff": m_eff, "a": 0.0, "b": 0.0, "c": 0.0, "Qs": [0.0],
+                            "dE": [0.0], "well_depth_meV": 0.0})
+        cache = {"modes": entries, "n_imag_total": n_imag_total,
+                 "n_screened": len(entries), "fc_supercell": list(supercell)}
         if cache_path:
             os.makedirs(os.path.dirname(cache_path), exist_ok=True)
             json.dump(cache, open(cache_path, "w"))
 
-    eff_freq, order_Q, stable_fe = _solve_scha(cache["a"], cache["b"], cache["c"],
-                                               cache["m_eff"], temperature_K)
-    stable = bool(stable_fe)
+    # Solve every mode at this temperature; the phase is unstable if ANY condenses.
+    solved = []
+    for e in cache["modes"]:
+        if e["band"] < 0:                       # harmonically-stable placeholder
+            solved.append({"eff": float(e["harm_thz"]), "Q0": 0.0, "stable": True, **e})
+            continue
+        eff, Q0, st = _solve_scha(e["a"], e["b"], e["c"], e["m_eff"], temperature_K)
+        solved.append({"eff": eff, "Q0": Q0, "stable": bool(st), **e})
+
+    condensed = [s for s in solved if not s["stable"]]
+    stable = len(condensed) == 0
+    # The deciding mode: the condensing one with the largest order parameter if unstable,
+    # otherwise the least-stable (lowest effective frequency) mode.
+    decide = (max(condensed, key=lambda s: s["Q0"]) if condensed
+              else min(solved, key=lambda s: s["eff"]))
+    eff_freq, order_Q = decide["eff"], decide["Q0"]
+    cache_compat = {"supercell": decide["dim"], "Qs": decide["Qs"],
+                    "m_eff": decide["m_eff"], "well_depth_meV": decide["well_depth_meV"],
+                    "harm_min_thz": decide["harm_thz"], "a": decide["a"],
+                    "b": decide["b"], "c": decide["c"]}
     return FiniteTResult(
         temperature_K=float(temperature_K), method="softmode",
         min_eff_freq_thz=eff_freq, dynamically_stable=stable, imag_tol_thz=imag_tol_thz,
-        supercell=list(cache["supercell"]), n_samples=len(cache["Qs"]),
-        extra={"soft_mode_freq_thz": eff_freq, "harm_soft_thz": cache["harm_min_thz"],
-               "order_param_Q_ang": order_Q, "m_eff_amu": cache["m_eff"],
-               "well_depth_meV": cache["well_depth_meV"],
-               "v_a": cache["a"], "v_b": cache["b"], "v_c": cache["c"]},
+        supercell=list(cache_compat["supercell"]), n_samples=len(cache_compat["Qs"]),
+        extra={"soft_mode_freq_thz": eff_freq,
+               "harm_soft_thz": cache_compat["harm_min_thz"],
+               "order_param_Q_ang": order_Q, "m_eff_amu": cache_compat["m_eff"],
+               "well_depth_meV": cache_compat["well_depth_meV"],
+               "v_a": cache_compat["a"], "v_b": cache_compat["b"], "v_c": cache_compat["c"],
+               # Multi-mode bookkeeping: which mode decided the call, how many were screened,
+               # and how many distinct imaginary modes existed before the max_modes cap.
+               "n_imag_screened": int(cache["n_screened"]),
+               "n_imag_total": int(cache["n_imag_total"]),
+               "n_condensed": len(condensed),
+               "decide_q": ",".join(f"{x:.4f}" for x in decide["q"]),
+               "decide_dim": "x".join(str(int(x)) for x in decide["dim"]),
+               "decide_harm_thz": float(decide["harm_thz"]),
+               "modes_q": ";".join(",".join(f"{x:.3f}" for x in s["q"]) for s in solved),
+               "modes_harm_thz": ";".join(f"{s['harm_thz']:.3f}" for s in solved),
+               "modes_Q0_ang": ";".join(f"{s['Q0']:.4f}" for s in solved),
+               "modes_stable": ";".join("1" if s["stable"] else "0" for s in solved)},
     )
 
 
