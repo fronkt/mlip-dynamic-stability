@@ -18,6 +18,6 @@
     "foundation models"
   ],
   "related_identifiers": [
-    {"relation": "isSupplementTo", "identifier": "arXiv:2512.21227", "scheme": "arxiv"}
+    {"relation": "cites", "identifier": "arXiv:2512.21227", "scheme": "arxiv"}
   ]
 }
