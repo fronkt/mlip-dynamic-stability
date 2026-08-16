@@ -36,7 +36,7 @@ def _finite_t_gt(spec, temperature_K: float) -> bool:
 
 def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
              device: str = "cuda", supercell=(2, 2, 2), force: bool = False,
-             ledger_path=None) -> dict:
+             ledger_path=None, max_modes: int = 24) -> dict:
     spec = get_spec(system)
     # Finite-T (hiPhive) needs a larger supercell so the pair cutoff can exceed nearest
     # neighbors while staying < L/2; harmonic finite-displacement is fine at 2x2x2.
@@ -52,6 +52,11 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
     # q-search fix (e592e86): the hash was unchanged, so `has_unit` skipped every stale unit as
     # "already present" and the deposited ledger kept data the deposited code cannot reproduce.
     settings = {"supercell": list(supercell), "mv": METHOD_VERSION.get(method, 1)}
+    # Any parameter that can change the RESULT belongs in the hash, not just in the code. The
+    # mode cap bounds how many imaginary modes the screen examines, so a unit computed under a
+    # tighter cap is not the same measurement as one computed under a looser one.
+    if method == "softmode":
+        settings["max_modes"] = int(max_modes)
 
     # We need the model version for the hash, so load the calculator first.
     handle = get_calculator(model, device=device)
@@ -93,10 +98,11 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
         # every extra temperature then reuses it for a sub-second 1D quantum solve.
         # The cache key carries the method version too: a v1 E(Q) map was built along a mode
         # chosen by the old q-search, so reusing it under v2 would silently re-import the bug.
-        cache = (f"results/cache/softmode_v{METHOD_VERSION['softmode']}_{system}_{model}"
-                 f"_sc{''.join(map(str,supercell))}.json")
+        cache = (f"results/cache/softmode_v{METHOD_VERSION['softmode']}m{max_modes}_{system}"
+                 f"_{model}_sc{''.join(map(str,supercell))}.json")
         res = compute_finite_t_softmode(atoms, handle.calc, temperature_K,
-                                        supercell=supercell, cache_path=cache)
+                                        supercell=supercell, max_modes=max_modes,
+                                        cache_path=cache)
         base.update(res.as_row())
         base["gt_stable"] = _finite_t_gt(spec, temperature_K)
     elif method == "tdep":

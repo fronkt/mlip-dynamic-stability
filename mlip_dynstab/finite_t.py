@@ -763,7 +763,7 @@ def _solve_scha(a, b, c, m_eff, temperature_K, q_box=0.6, nq=121):
 
 def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
                               q_max=0.45, n_pts=10, imag_tol_thz=DEFAULT_IMAG_TOL_THZ,
-                              relax=True, fmax=1e-3, disp=0.01, max_modes=6,
+                              relax=True, fmax=1e-3, disp=0.01, max_modes=24,
                               cache_path=None) -> FiniteTResult:
     """Finite-T dynamic stability from the single-mode quantum SCHA free energy, evaluated over
     EVERY imaginary force-constant-commensurate mode rather than only the softest one.
