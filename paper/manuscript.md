@@ -25,10 +25,13 @@ Harmonic accuracy is necessary but not sufficient for finite-temperature accurac
 weakly correlated on the matched set, the harmonic leaders (MatterSim, SevenNet-0) are not the
 finite-temperature leaders, and the soft-mode screen recovers the displacive instability of cubic
 ferroelectric perovskites that the models otherwise miss. (iii) Multi-mode SSCHA with an MLIP force
-engine is itself a methodological trap: it is a clean gold standard for the martensitic bcc metals
-but systematically false-stabilises deep displacive (ferroelectric) instabilities and can diverge
-numerically, so the cheap soft-mode screen is the more reliable finite-temperature indicator for
-the displacive instabilities that dominate generative crystal-structure-prediction (CSP) screening.
+engine is a clean gold standard for the martensitic bcc metals, but in its default deployment, with
+the free-energy Hessian truncated at the bubble, it systematically false-stabilises deep displacive
+(ferroelectric) instabilities and can diverge numerically. Theory predicts this truncation to fail
+for cubic metal halide perovskites; we measure the failure at benchmark scale and show it extends to
+oxide perovskites and, free of stochastic blow-ups, to cubic fluorites. The cheap soft-mode screen
+is therefore the more reliable finite-temperature indicator for the displacive instabilities that
+dominate generative crystal-structure-prediction (CSP) screening.
 
 ## 1. Introduction
 
@@ -45,10 +48,17 @@ Both are harmonic, that is, 0 K. Dynamic stability is a finite-temperature prope
 technologically central materials class is harmonically unstable yet thermally stabilised by
 anharmonicity: cubic perovskites (SrTiO₃, BaTiO₃, halide perovskites), bcc refractory metals
 (β-Ti/Zr/Hf), and cubic fluorites (ZrO₂/HfO₂). Harmonic phonons assign these imaginary modes, yet
-the high-symmetry phase is the equilibrium phase above a transition temperature. Whether foundation
-MLIPs reproduce this harmonic-to-finite-temperature stabilisation is essentially un-benchmarked,
-even though the harmonic-only oracle that PhononBench and CSP screening rely on is what this regime
-breaks.
+the high-symmetry phase is the equilibrium phase above a transition temperature, and the
+harmonic-only oracle that PhononBench and CSP screening rely on is what this regime breaks. Two 2025
+studies probe finite-temperature reliability directly: four MACE foundation variants were
+benchmarked for the dynamic stability of halide double perovskites,^19^ and the
+ferroelectric-to-paraelectric transition of PbTiO₃ was used to expose a disconnect between static
+accuracy and dynamic reliability.^20^ Both are confined to a single model family or a single
+system. What remains untested is whether the effect is architecture-general and chemistry-general:
+no study has classified finite-temperature dynamic stability across several independent MLIP
+architectures and across the distinct anharmonic families, that is displacive and
+antiferrodistortive oxide perovskites, halide perovskites, entropy-stabilised bcc refractory metals
+and cubic fluorites, under a common free-energy criterion and a temperature ladder.
 
 Research question: do foundation MLIPs reproduce finite-temperature dynamic stability,
 specifically the harmonic-unstable to thermally-stabilised transition, or does PES softening make
@@ -245,17 +255,17 @@ separate the architecture from the precision. The stronger evidence that finite 
 distinct, harder regime comes not from this ranking comparison but from the displacive recall above
 and the SSCHA failure in §3.3.
 
-### 3.3 SSCHA: clean for bcc, a trap for perovskites (the cautionary result)
+### 3.3 SSCHA: clean for bcc, false-stable for perovskites at the default truncation (the cautionary result)
 
 We ran multi-mode SSCHA across both families to cross-validate the screen. The result is asymmetric
 and is itself a central finding. We state at the outset that this concerns SSCHA as it is
 realistically deployed with an MLIP force engine for a fixed high-symmetry reference, namely
 `ForcePositiveDefinite` initialisation, a 2×2×2 cell, the v4=False free-energy Hessian, and
 automatic stochastic relaxation, which is the recipe a practitioner escalating from a cheap screen
-would actually run. It is not a claim that the SSCHA formalism is wrong; the proper treatment of a
-structural instability (relaxing the centroids into the distorted phase, or the expensive v4
-Hessian) answers a different question and is impractical at screening scale (see the root cause
-below). The finding is that the default escalation path is a trap.
+would actually run. It is not a claim that the SSCHA formalism is wrong; the formalism anticipates
+this failure, and the expensive v4 Hessian is its own prescribed remedy, but that remedy is
+impractical at screening scale (see the root cause below). The finding is that the default
+escalation path, at the truncation its implementation ships with, is unsafe in this regime.
 
 bcc metals: SSCHA is a clean gold standard, and the screen tracks it. Across Ti/Zr/Hf × 5 models ×
 5 temperatures (75 runs) SSCHA produced zero numerical failures, with minimum free-energy-Hessian
@@ -275,7 +285,7 @@ standard is trustworthy.
 
 Ferroelectric perovskites: SSCHA systematically false-stabilises. On the same FE perovskites at
 T ≤ 300 K where the screen reaches 0.77 recall, SSCHA correctly identifies the instability in only
-7 of 30 units (recall 0.23), and the perovskite SSCHA runs include six numerical blow-ups (minimum
+9 of 30 units (recall 0.30), and the perovskite SSCHA runs include six numerical blow-ups (minimum
 frequencies down to −2×10⁶ THz, concentrated in the float32 ORB-v2 runs). This is the cautionary
 result: the expensive gold standard is less reliable than the cheap screen in the displacive regime
 that dominates generative-CSP outputs (Fig. 5).
@@ -289,19 +299,29 @@ models.](../results/figures/fig_sscha_bcc.png)
 (§3.3): the cheap screen tracks SSCHA on the family where the gold standard is
 trustworthy.](../results/figures/fig_method_agreement.png)
 
-Root cause. A controlled diagnostic on cubic BaTiO₃ (MACE-MP-0, 100 K) isolates the mechanism. The
-harmonic soft mode is −5.6 THz (correctly unstable), but `ForcePositiveDefinite` at initialisation
-erases it (+2.88 THz); the SCHA auxiliary matrix then stays at +2.89 THz because at low temperature
-its narrow Gaussian width never samples the anharmonic double well; and the free-energy Hessian
-without the fourth-order term reproduces that positive curvature (+2.87 THz), giving a false-stable
-call. Enabling the fourth-order term (`include_v4=True`) is the only route that could recover the
-instability, but it ran for more than 18 min on a single unit without finishing (tens of hours per
-unit at grid scale) and is numerically viable only in float64. The physically correct SSCHA
-treatment of a deep displacive instability is to relax the structure into the distorted phase,
-which changes the question from "is the cubic phase dynamically stable" to "what is the ground
-state," and so cannot serve as the benchmark criterion. We therefore use SSCHA as the bcc gold
-standard and the experimental transition temperature (the SrTiO₃ gate, §2.4) as the validation for
-the perovskite screen.
+Root cause: the fourth-order truncation, not the reference structure. A controlled diagnostic on
+cubic BaTiO₃ (MACE-MP-0, 100 K) isolates the mechanism, and the SCHA literature identifies it
+precisely. The auxiliary SCHA matrix **Φ** is positive-definite by construction, since a
+normalisable Gaussian trial state requires it, so it can never soften and searching its eigenvalues
+for an instability is meaningless.^21,22^ The object that *can* detect a displacive transition from
+a fixed high-symmetry reference is the free-energy Hessian,
+∂²F/∂**R**∂**R** = **Φ** + **Φ**⁽³⁾**Λ**[**1** − **Φ**⁽⁴⁾**Λ**]⁻¹**Φ**⁽³⁾, which was derived for
+exactly that purpose and demonstrated on the ferroelectric transitions of SnTe and GeTe.^21^ Our
+diagnostic shows the failure enters at the truncation: the harmonic soft mode is −5.6 THz
+(correctly unstable), yet with the fourth-order term dropped, which is the bubble approximation and
+the `python-sscha` default, the Hessian returns +2.87 THz and the call is false-stable. That is the
+regime in which the bubble is known to fail, since it breaks down for the cubic phase of metal
+halide perovskites and produces qualitatively incorrect results there, and **Φ**⁽⁴⁾ plays a
+significant role around the transition so that the complete RPA-like resummation is needed to
+determine phase stability.^22^ Our contribution is to measure that breakdown at benchmark scale and
+to show it is not confined to halides: it holds for oxide perovskites, and for cubic fluorites it
+holds in a numerically clean form with zero stochastic blow-ups (above), which separates a
+methodological limit from a numerical one. Enabling the fourth-order term (`include_v4=True`) is
+therefore the physically correct escalation, consistent with that RPA requirement, but it ran for
+more than 18 min on a single unit without finishing (tens of hours per unit at grid scale) and is
+numerically viable only in float64, which is the practical barrier at screening scale. We therefore
+use SSCHA as the bcc gold standard and the experimental transition temperature (the SrTiO₃ gate,
+§2.4) as the validation for the perovskite screen.
 
 Cubic fluorites confirm the failure is systematic, not numerical. Cubic ZrO₂ (the >2600 K phase,
 harmonically unstable via the X-point oxygen mode at all temperatures studied) is a cleaner test
@@ -341,7 +361,7 @@ concentrates near the stability boundary, where split votes coincide with freque
 zero and the call is both most uncertain and most error-prone.
 
 ![**Fig. 5** Recall of the displacive (ferroelectric-perovskite) instability at
-T ≤ 300 K: the cheap soft-mode screen (0.77) versus the expensive SSCHA (0.23) (§3.3). The
+T ≤ 300 K: the cheap soft-mode screen (0.77) versus the expensive SSCHA (0.30) (§3.3). The
 cautionary result is that the gold standard is less reliable than the screen in the regime that
 matters most.](../results/figures/fig_displacive_recall.png)
 
@@ -374,11 +394,12 @@ The harmonic layer (§3.1) reproduces the literature and confirms H1: PES soften
 false-stable rate, localised to specific instabilities (bcc Zr/Hf) rather than uniform. The
 finite-temperature results confirm H2 in a strong form. Harmonic accuracy is non-predictive of
 finite-temperature accuracy, and the standard escalation ("if in doubt, run SSCHA") fails on the
-displacive regime, because SSCHA driven by an MLIP false-stabilises deep double wells. The
-practical recommendation inverts the usual cost/accuracy intuition: for screening
+displacive regime, because MLIP-driven SSCHA at its default bubble truncation false-stabilises deep
+double wells. The practical recommendation inverts the usual cost/accuracy intuition: for screening
 harmonically-unstable displacive candidates, the cheap single-mode soft-mode free energy is the
-more reliable indicator, and SSCHA should be reserved for martensitic and entropy-stabilised cases
-where its ansatz is sound.
+more reliable indicator, and a default-truncation SSCHA escalation should be reserved for
+martensitic and entropy-stabilised cases, or else run with the fourth-order resummation its own
+theory prescribes.
 
 Limitations. Ground-truth transition temperatures are approximate and scoring is qualitative. SSCHA
 cells are 2×2×2 (finite size), so dynamic-stabilisation temperatures are approximate, though the
@@ -403,7 +424,14 @@ https://doi.org/10.5281/zenodo.20805824. The production results regenerate from
 `results/convergence_study.parquet`; figures via `scripts/make_figures.py`, analysis in
 `mlip_dynstab/analysis.py`, the SSCHA root-cause diagnostic in `scripts/sscha_v4_diag.py`, and the
 stochastic-reproducibility study (§3.5) via `scripts/sscha_repro.py` (its per-seed frequencies
-print to the run log rather than to the ledger).
+print to the run log rather than to the ledger). The SSCHA stability calls reported here were
+corrected after an acoustic-mode identification defect was found in the analysis path: the three
+translational modes were selected by lowest frequency rather than by smallest magnitude, which for
+an unstable phase discards the soft mode itself. The correction is applied by
+`scripts/fix_sscha_acoustic.py`, is derived from the per-unit spectra stored in the ledger rather
+than from a re-run, changes 13 of 208 SSCHA rows (all from stable to unstable) and leaves all 75
+bcc rows unchanged; the pre-correction values are retained in the `*_v1` ledger columns and the
+uncorrected ledger in `results/ledger.parquet.pre-d1-fix`.
 
 ## Author contributions
 
@@ -444,3 +472,7 @@ not-for-profit sectors.
 16. K. Parlinski, Z. Q. Li and Y. Kawazoe, *Phys. Rev. Lett.*, 1997, **78**, 4063.
 17. D. A. Wood and N. Marzari, *Phys. Rev. B*, 2007, **76**, 134301.
 18. A. Ranalli *et al.*, *Adv. Quantum Technol.*, 2023, **6**, 2200131.
+19. J. Yang, Z. Yin, L. Ao and S. Li, *Phys. Chem. Chem. Phys.*, 2026, **28**, 4459–4469.
+20. *Are Foundational Atomistic Models Reliable for Finite-Temperature Molecular Dynamics?*, *J. Phys. Chem. C*, 2025, DOI: 10.1021/acs.jpcc.5c07541.
+21. R. Bianco, I. Errea, L. Paulatto, M. Calandra and F. Mauri, *Phys. Rev. B*, 2017, **96**, 014111.
+22. L. Monacelli, *Phys. Rev. B*, 2025, **112**, 014109.
