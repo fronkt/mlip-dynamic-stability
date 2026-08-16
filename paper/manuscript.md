@@ -394,10 +394,6 @@ SSCHA, it remains reliable on the deep displacive instabilities that dominate ge
 screening. Harmonic accuracy does not certify a model for finite-temperature use, and neither does
 an unexamined SSCHA cross-check.
 
-## Conflicts of interest
-
-There are no conflicts to declare.
-
 ## Data availability
 
 The code supporting this article, together with the per-unit results ledger, is openly available
@@ -408,6 +404,15 @@ https://doi.org/10.5281/zenodo.20805824. The production results regenerate from
 `mlip_dynstab/analysis.py`, the SSCHA root-cause diagnostic in `scripts/sscha_v4_diag.py`, and the
 stochastic-reproducibility study (§3.5) via `scripts/sscha_repro.py` (its per-seed frequencies
 print to the run log rather than to the ledger).
+
+## Author contributions
+
+F.C. conceived the study, implemented the benchmark harness and analysis, performed all
+computations, and wrote the manuscript.
+
+## Conflicts of interest
+
+There are no conflicts of interest to declare.
 
 ## Acknowledgements
 
