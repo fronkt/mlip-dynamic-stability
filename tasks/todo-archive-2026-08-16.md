@@ -1,41 +1,18 @@
+> ARCHIVED 2026-08-16. Superseded snapshot of tasks/todo.md, taken before the pre-submission
+> audit rewrote the status block. Preserved because it records the project state as believed at the
+> time -- specifically the claim ''SUBMISSION-READY for Digital Discovery'', which the audit
+> falsified. See tasks/audit-2026-08-16.md for what was found and why this snapshot is wrong.
+
 # mlip-dynamic-stability — phase checklist & resume state
 
 > Resume protocol: on a new session, read this file + `results/ledger.parquet`. The current
 > checkpoint is the lowest unchecked box. Per-unit work (system, model, T, method) is
 > idempotent — re-running skips tuples already in the ledger.
 
-## CURRENT STATUS (2026-08-16) — NOT SUBMITTABLE, primary-screen layer must be re-run
+## CURRENT STATUS (2026-06-22, pushed)
 
-**Stage:** pre-submission audit FAILED. See `tasks/audit-2026-08-16.md` for the full record and
-`tasks/todo-archive-2026-08-16.md` for the superseded "SUBMISSION-READY" snapshot.
-
-Three defects verified from the ledger and the source (all fixed in code at `87a9183`; the DATA is
-not fixed):
-- **D1** SSCHA dropped the 3 *lowest* modes as "acoustic" instead of the 3 nearest zero, deleting
-  the instability. 13/208 rows, all manufactured false-stables. FE recall 0.23 → **0.30**, fluorite
-  0.17 → **0.23**, **bcc unchanged (0/75)** — the §3.3 headline survives, restated.
-- **D2** The same inversion at Γ in `_softest_mesh_mode` masked the T1u ferroelectric triplet, so Γ
-  could never win the q-search. §3.5's "Γ ferroelectric mode of BaTiO₃" claim is false.
-- **D3** **220/340 non-bcc softmode rows carry q-denominators the deposited code cannot produce.**
-  The v1 grid was built by the "D6-on-2×2×2" search that `e592e86` fixed as unsound; because
-  `settings` carried only the supercell, the unit hash never changed and every stale unit was
-  skipped as "already present". Now fixed by folding `METHOD_VERSION` into the hash + cache key.
-
-**Novelty framing is also dead as written.** "Essentially un-benchmarked" / "blind spot" are
-falsified by two verified 2025 papers: PCCP 28, 4459 (arXiv:2510.18178, MACE variants on halide
-double perovskites) and J. Phys. Chem. C doi:10.1021/acs.jpcc.5c07541 ("Are Foundational Atomistic
-Models Reliable for Finite-Temperature MD?", on PbTiO₃ — one of our own systems). Surviving claim:
-cross-FAMILY finite-T dynamic-stability classification across five architectures and four chemistry
-families with a free-energy criterion and a T-ladder.
-
-**NEXT (blocking, in order):**
-1. Re-run the 400-unit softmode grid at `METHOD_VERSION['softmode']=2` (~100 E(Q) rebuilds, GPU).
-   §3.2/§3.4/§3.5 and the screen side of §3.3 are provisional until it lands.
-2. Restate the SSCHA numbers from D1 (no compute; corrected values in the audit).
-3. Read Bianco et al. PRB 96, 014111 (2017) — if the SCHA Φ is positive-definite *by construction*,
-   the §3.3 root-cause paragraph is a restatement of the method's design and must be rewritten.
-4. Retitle + rewrite the novelty framing.
-5. Only then the §2.4 derivation (equations for a q-search that is about to change = wasted work).
+**Stage:** academic-pipeline Stages 2–4 COMPLETE (WRITE → REVIEW → REVISE). Next checkpoint =
+Stage 2.5 INTEGRITY pass, then deep-research DOI pass, then Stage 5 FINALIZE (DOCX/PDF).
 
 **Process/progress:**
 - Data COMPLETE: ledger.parquet = harmonic (100) + softmode (400, 20 sys × 5 models × 4 T) +
