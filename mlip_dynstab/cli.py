@@ -16,6 +16,7 @@ import sys
 import time
 
 from . import ledger
+from . import METHOD_VERSION
 from .calculators import get_calculator
 from .systems import get_spec, build_atoms
 
@@ -46,7 +47,11 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
     # a 1-atom primitive with cubic symmetry, so 6x6x6 still needs only ~1 displacement.
     if method == "softmode" and spec.klass == "bcc-metal" and tuple(supercell) == (2, 2, 2):
         supercell = (6, 6, 6)
-    settings = {"supercell": list(supercell)}
+    # The unit hash must change whenever the ALGORITHM changes, not just its inputs. Carrying
+    # only the supercell here is what let the v1 softmode rows survive the FC-commensurate
+    # q-search fix (e592e86): the hash was unchanged, so `has_unit` skipped every stale unit as
+    # "already present" and the deposited ledger kept data the deposited code cannot reproduce.
+    settings = {"supercell": list(supercell), "mv": METHOD_VERSION.get(method, 1)}
 
     # We need the model version for the hash, so load the calculator first.
     handle = get_calculator(model, device=device)
@@ -86,7 +91,10 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
         from .finite_t import compute_finite_t_softmode
         # The E(Q) double-well map is temperature-independent, so the cache key omits T;
         # every extra temperature then reuses it for a sub-second 1D quantum solve.
-        cache = f"results/cache/softmode_{system}_{model}_sc{''.join(map(str,supercell))}.json"
+        # The cache key carries the method version too: a v1 E(Q) map was built along a mode
+        # chosen by the old q-search, so reusing it under v2 would silently re-import the bug.
+        cache = (f"results/cache/softmode_v{METHOD_VERSION['softmode']}_{system}_{model}"
+                 f"_sc{''.join(map(str,supercell))}.json")
         res = compute_finite_t_softmode(atoms, handle.calc, temperature_K,
                                         supercell=supercell, cache_path=cache)
         base.update(res.as_row())

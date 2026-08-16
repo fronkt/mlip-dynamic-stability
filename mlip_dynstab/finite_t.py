@@ -486,8 +486,18 @@ def _softest_mesh_mode(ph, supercell):
     The winning q is frozen into its MINIMAL commensurate cell via phonopy modulation. Returns
     (freq_thz, q, dim, base_ase, u[n,3] unit pattern, M_eff[amu]).
 
-    The 3 acoustic branches at Gamma are masked: imaginary values there are rigid-translation
-    artifacts, not instabilities (a real zone-centre FE soft mode is optical and stays found)."""
+    The 3 acoustic branches at Gamma are masked, because imaginary values there are
+    rigid-translation artifacts rather than instabilities. They are identified as the three
+    branches NEAREST ZERO IN MAGNITUDE, not the three lowest: when the high-symmetry phase is
+    unstable the soft mode is MORE negative than the acoustic zeros, so masking `argsort(f)[:3]`
+    deletes the very instability being searched for. For cubic BaTiO3 the three lowest branches
+    at Gamma are the triply degenerate T1u ferroelectric mode near -6.9 THz and the acoustic
+    branches sit at ~0, so the old ordering masked the ferroelectric mode and Gamma could never
+    win the q-search -- no perovskite unit in the v1 grid ever selected Gamma. Masking by
+    |omega| keeps a genuine zone-centre soft mode and removes the translations.
+    (Caveat: if acoustic-sum-rule noise pushes the translations further from zero than a very
+    shallow optical soft mode, this mask can still take the wrong three; `harm_min_thz` is
+    recorded so such cases are auditable.)"""
     import ase
     import numpy as np
     from fractions import Fraction
@@ -500,7 +510,7 @@ def _softest_mesh_mode(ph, supercell):
     fr = freqs.copy()
     for qi, q in enumerate(qs):
         if max(abs(c) for c in q) < 1e-8:
-            fr[qi, np.argsort(fr[qi])[:3]] = np.inf
+            fr[qi, np.argsort(np.abs(fr[qi]))[:3]] = np.inf
     iq, ib = np.unravel_index(int(np.argmin(fr)), fr.shape)
     qsoft = qs[iq]
     fmin = float(freqs[iq, ib])
@@ -801,11 +811,19 @@ def compute_finite_t_sscha(atoms, calc, temperature_K, supercell=(4, 4, 4),
     he.get_energy_forces(calc, compute_stress=False)
     hess = he.get_free_energy_hessian(include_v4=False)
     w, _ = hess.DiagonalizeSupercell()
-    w = np.sort(np.asarray(w))
-    # drop the 3 acoustic (translational) zero modes at Gamma
-    nonac = w[3:] if w.size > 3 else w
-    wmin = float(nonac[0])
+    w = np.asarray(w)
+    # Drop the 3 acoustic (translational) zero modes at Gamma. They are the 3 frequencies
+    # NEAREST ZERO IN MAGNITUDE, not the 3 smallest: cellconstructor returns imaginary modes as
+    # negative, so for an unstable high-symmetry phase the soft mode is more negative than the
+    # acoustic zeros and `np.sort(w)[3:]` discards the instability while keeping the exact
+    # zeros -- reporting min_freq ~ 1e-7 THz and calling the phase STABLE. That defect produced
+    # 13 spurious false-stable calls in the v1 grid, e.g. SrTiO3/MACE-MP-0/100 K whose stored
+    # lowest-6 is [-0.962, -0.962, -0.962, 0.0, 0.0, 0.0] yet was recorded as +1.1e-7 THz.
+    order = np.argsort(np.abs(w))
+    nonac = np.delete(w, order[:3]) if w.size > 3 else w
+    wmin = float(nonac.min())
     min_freq = wmin * _RY_TO_THZ
+    w = np.sort(w)                    # sorted copy, for the audit trail recorded below
     stable = bool(min_freq >= imag_tol_thz)
     return FiniteTResult(
         temperature_K=float(temperature_K), method="sscha",
