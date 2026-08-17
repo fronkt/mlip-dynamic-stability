@@ -18,8 +18,15 @@ import matplotlib.pyplot as plt
 LEDGER = os.environ.get("LEDGER", "results/ledger.parquet")
 OUT = os.environ.get("FIGDIR", "results/figures")
 os.makedirs(OUT, exist_ok=True)
-df = pd.read_parquet(LEDGER)
+from mlip_dynstab.analysis import canonical
+# The ledger is append-only and holds BOTH the legacy single-mode softmode grid and the current
+# multi-mode one. `canonical` keeps only the current generation; reading the parquet directly
+# would double-count every softmode unit and blend two different measurements in one figure.
+df = canonical(pd.read_parquet(LEDGER))
 MODELS = ["mattersim", "sevennet0", "mace_mp0", "chgnet", "orb_v2"]
+_sm = df[df["method"] == "softmode"]
+print(f"[figures] canonical ledger: {len(df)} rows, {len(_sm)} softmode "
+      f"({'multi-mode' if _sm.get('ft_n_imag_total') is not None and _sm['ft_n_imag_total'].notna().any() else 'legacy'})")
 
 
 def fig_sscha_bcc():

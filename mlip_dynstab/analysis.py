@@ -13,6 +13,40 @@ import pandas as pd
 from .ledger import load as load_ledger
 
 
+# ------------------------------------------------------------ generations ----
+
+def canonical(df: pd.DataFrame) -> pd.DataFrame:
+    """Keep exactly one generation of each method's rows: the current one.
+
+    The ledger is append-only and the unit hash now carries the method version, so a re-run
+    under a changed algorithm ADDS rows rather than replacing them. Every downstream selector
+    is written as ``df[df.method == "softmode"]``, which would silently match both the legacy
+    single-mode grid and the current multi-mode grid and count each unit twice -- inflating n,
+    corrupting every rate, and blending two different measurements in one figure.
+
+    Current-generation softmode rows are identified by a non-null ``ft_n_imag_total`` (the
+    multi-mode screen records how many distinct imaginary commensurate modes it found). If no
+    multi-mode rows are present the legacy rows are returned unchanged, so this is safe on an
+    old ledger. Other methods are passed through untouched.
+
+    Call this ONCE at load. Anything that reads the ledger directly is a bug.
+    """
+    if "method" not in df.columns or "ft_n_imag_total" not in df.columns:
+        return df
+    sm = df["method"] == "softmode"
+    if not sm.any():
+        return df
+    current = sm & df["ft_n_imag_total"].notna()
+    if not current.any():
+        return df                      # legacy-only ledger: nothing to disambiguate
+    return df[~sm | current].copy()
+
+
+def load_canonical(path=None) -> pd.DataFrame:
+    """Load the ledger and drop superseded method generations."""
+    return canonical(load_ledger(path) if path else load_ledger())
+
+
 # --------------------------------------------------------------- confusion ----
 
 def confusion(df: pd.DataFrame) -> dict[str, int]:
