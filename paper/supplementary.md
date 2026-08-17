@@ -76,28 +76,40 @@ bcc) converge under the cap and are unchanged.
 | free-energy Hessian, `include_v4=False` (production) | +2.872 |
 | free-energy Hessian, `include_v4=True` | did not finish in >18 min (single unit) |
 
-`ForcePositiveDefinite` at initialisation removes the soft mode; at low temperature the
-converged auxiliary matrix's narrow Gaussian width never samples the anharmonic double well, so
-the `include_v4=False` free-energy Hessian merely reproduces the positive auxiliary curvature
-→ false-stable. The fourth-order term is the only route that could recover the instability but is
-not viable at grid scale (≈tens of hours per unit) and is numerically stable only in float64.
+The auxiliary SCHA matrix is positive-definite by construction (a normalisable Gaussian trial
+state requires it), so the +2.88 THz after `ForcePositiveDefinite` and the +2.89 THz at
+convergence are not diagnostics of anything -- the auxiliary matrix cannot soften (main text,
+refs 21, 22). The object that can detect the instability is the free-energy Hessian, and the
+table shows the failure enters at its truncation: with the fourth-order term dropped (the bubble
+approximation, the `python-sscha` default) the Hessian merely reproduces the positive auxiliary
+curvature → false-stable. The fourth-order resummation is the theoretically prescribed remedy in
+exactly this regime (ref 22) but is not viable at grid scale (≈tens of hours per unit) and is
+numerically stable only in float64.
 
 ### S2.3 Reliability by family (complete grid)
 
-| Family | n | numerical blow-ups (\|f\|>50 THz) | min freq (THz) | max freq (THz) |
-|---|---|---|---|---|
-| bcc (Ti/Zr/Hf) | 75 | 0 | 0.02 | 2.12 |
-| fluorite (ZrO₂/HfO₂) | 40 | 0 | −10.24 | 3.33 |
-| perovskite (oxide + halide) | 93 | 6 | −2.0×10⁶ | 3.17 |
+| Family | n measured | failed units | numerical blow-ups (\|f\|>50 THz) | min freq (THz) | max freq (THz) |
+|---|---|---|---|---|---|
+| bcc (Ti/Zr/Hf) | 75 | 0 | 0 | 0.06 | 2.10 |
+| fluorite (ZrO₂/HfO₂) | 40 | 0 | 0 | −24.8 | 3.33 |
+| perovskite (oxide + halide) | 86 | 7 | 8 | −914 | 3.72 |
 
-`analysis.sscha_reliability(df)`. bcc is the clean gold standard. The six numerical blow-ups are
-all in the perovskite family and concentrated in the float32 ORB-v2 runs on the deepest FE wells.
-Cubic fluorites are numerically clean (no blow-ups) but are nonetheless **false-stabilised at low
-T** by the §S2.2 mechanism: ZrO₂ and HfO₂ both read ≈ +2 to +3 THz at 100 K (cubic is the
->2600 K phase, so the correct call is unstable, as the soft-mode screen reports at ≈ −7 THz), and
-both then *destabilise* with temperature (the wrong trend) as the wider high-T Gaussian finally
-samples the instability. That a numerically well-behaved, shallower instability fails the same
-way confirms the failure is methodological, not a numerical artifact of the deep perovskite wells.
+`analysis.sscha_reliability(df)`. bcc is the clean gold standard. All failures sit in the
+perovskite family, on the deepest wells: seven units die at cellconstructor symmetry or ensemble
+assertions before returning a number (six on PbTiO₃: ORB-v2 at every temperature, MatterSim at
+600 and 900 K; one on CsSnI₃/SevenNet-0), and the eight numerical blow-ups span float32 (ORB-v2)
+and float64 (SrTiO₃ high-T rows) alike, so precision alone does not account for them. In the
+original unpinned measurement the same units blew up silently to −2×10⁶ THz instead of failing
+loudly.
+Cubic fluorites are numerically clean (no blow-ups, no failed units) but are nonetheless
+**false-stabilised at low T** by the §S2.2 truncation: ZrO₂ and HfO₂ read ≈ +2 to +3.3 THz at
+100 K in every model (cubic is the >2600 K phase, so the correct call is unstable — the screen's
+condensation criterion calls all 20 fluorite units unstable, while its symmetric-point curvature
+spans −7 to +27 THz, i.e. many of these condensations are of the first-order-like kind a
+fixed-reference curvature cannot see, §2.4), and three of five models then *destabilise* with
+temperature, the wrong trend. That a numerically well-behaved, shallower instability fails the
+same way confirms the failure is methodological, not a numerical artifact of the deep perovskite
+wells.
 
 ### S2.4 Stochastic reproducibility and finite-size convergence
 
@@ -106,9 +118,12 @@ way confirms the failure is methodological, not a numerical artifact of the deep
 log rather than to a ledger).
 
 - **Reproducibility.** bcc-Zr / MACE-MP-0 / 100 K SSCHA over 4 seeds: +1.798 ± 0.001 THz — the
-  cross-model bcc margins (~0.4 THz) exceed the stochastic noise by ~400×.
-- **Finite size.** bcc-Zr stability call holds 2×2×2 → 3×3×3 (SSCHA +1.80 → +1.56 THz @100 K;
-  screen +0.92 → +1.58 THz). BaTiO₃ Γ-mode screen call holds (−8.5 → −7.3 THz). SrTiO₃'s R-point
+  cross-model bcc margins exceed the stochastic noise by orders of magnitude. The same unit
+  re-measured in the pinned environment with the phonopy-built initialiser returns +1.80 THz at
+  every ladder temperature, so the number also survives an independent environment.
+- **Finite size.** bcc-Zr SSCHA stability call holds 2×2×2 → 3×3×3 (+1.80 → +1.56 THz @100 K).
+  The soft-mode rows of the convergence study are superseded (single-mode selection, pre-§2.4
+  correction) and are retained for audit only. SrTiO₃'s R-point
   (½,½,½) instability is commensurate only with even cells, so the 2×2×2↔3×3×3 test is invalid for
   it (a 4×4×4 / ~320-atom SSCHA test is future work); the §3.3 false-stable is independent of this
   because it occurs for the always-present Γ mode of BaTiO₃.
