@@ -356,30 +356,34 @@ this failure, and the expensive v4 Hessian is its own prescribed remedy, but tha
 impractical at screening scale (see the root cause below). The finding is that the default
 escalation path, at the truncation its implementation ships with, is unsafe in this regime.
 
-bcc metals: SSCHA is a clean gold standard, and the screen tracks it. Across Ti/Zr/Hf × 5 models ×
-5 temperatures (75 runs) SSCHA produced zero numerical failures, with minimum free-energy-Hessian
-frequencies in a physical [0.0, 2.1] THz range. All five models anharmonically stabilise the bcc
-phase by ≤50 K (the dynamic-stabilisation temperature, which is far below the thermodynamic
-transition because bcc-to-hcp/ω is a martensitic, strain-coupled first-order transition; using the
-thermodynamic T_c to label dynamic stability is the wrong comparison and is what makes the models
-look false-stable on bcc). The margin to the stability boundary discriminates the models and tracks
-each model's harmonic-instability depth: MatterSim and ORB-v2 hug the boundary (~0.4 THz at 50 K),
-while MACE-MP-0 is firmly stable (~1.8 THz) (Fig. 3). The cheap soft-mode screen tracks SSCHA on
-bcc: across the 45 paired units the rank correlation of the two minimum frequencies is Spearman
-ρ = 0.74 with 0.62 sign agreement (Fig. 4). The disagreements are concentrated in ORB-v2's float32
-softmode outliers; dropping ORB-v2 (36 paired units) raises the sign agreement to 0.69 and leaves
-the rank correlation essentially unchanged at ρ = 0.74. Either way the screen and the gold standard
-agree on the family where the gold standard is trustworthy.
+bcc metals: SSCHA is a clean gold standard, and the screen agrees with it where it counts. Across
+Ti/Zr/Hf × 5 models × 5 temperatures (75 runs) SSCHA produced zero numerical failures, with minimum
+free-energy-Hessian frequencies in a physical [0.06, 2.1] THz range. All five models anharmonically
+stabilise the bcc phase by ≤50 K (the dynamic-stabilisation temperature, which is far below the
+thermodynamic transition because bcc-to-hcp/ω is a martensitic, strain-coupled first-order
+transition; using the thermodynamic T_c to label dynamic stability is the wrong comparison and is
+what makes the models look false-stable on bcc). The margin to the stability boundary discriminates
+the models: ORB-v2 hugs it (0.06–0.28 THz on Ti/Hf), SevenNet-0's Hf sits at ~0.3 THz, while
+MatterSim and MACE-MP-0 are firmly stable (1.2–2.1 THz) (Fig. 3). Against the screen, the two
+methods agree on the stability call in 35 of 45 paired bcc units (sign agreement 0.78; 30 of 36,
+0.83, excluding ORB-v2), while the magnitudes are not rank-correlated (Spearman ρ = 0.11): a
+single-mode symmetric-point curvature and a multi-mode free-energy Hessian are different
+observables away from the sign change, so the cross-validation statistic we report is the call
+agreement, not a magnitude correlation (Fig. 4).
 
-Ferroelectric perovskites: SSCHA systematically false-stabilises. On the same FE perovskites at
-T ≤ 300 K where the screen reaches 0.53 recall, SSCHA correctly identifies the instability in only
-9 of 30 units (recall 0.30), and the perovskite SSCHA runs include six numerical blow-ups (minimum
-frequencies down to −2×10⁶ THz). Those blow-ups are not exclusively a float32 effect: four occur in
-ORB-v2 runs on SrTiO₃ and two in MatterSim runs on PbTiO₃, so precision alone does not account for
-them. This is the cautionary result: the expensive gold standard is less reliable than the cheap
-screen in the displacive regime that dominates generative-CSP outputs (Fig. 5). We note that the
-margin is narrower than the earlier single-mode analysis suggested — 0.53 against 0.30, a factor of 1.8 —
-and that both methods miss a substantial fraction of these instabilities.
+Ferroelectric perovskites: SSCHA systematically false-stabilises, and its deepest wells do not run
+at all. On the same FE perovskites at T ≤ 300 K where the screen reaches 0.53 recall, SSCHA
+correctly identifies the instability in only 5 of the 27 units that return a physical number
+(recall 0.19). Of the 30 attempted units, one blows up numerically and two fail outright; across
+the full FE grid seven units die at cellconstructor symmetry or ensemble assertions, six of them
+on PbTiO₃ — the deepest wells in the set (ORB-v2 at every temperature, MatterSim at 600 and
+900 K). In the earlier, unpinned measurement these same units produced silent numerical blow-ups
+to −2×10⁶ THz; in the pinned re-measurement they fail loudly instead, which is the better
+behaviour but the same verdict: the method does not return usable answers where the instability is
+deepest, and precision alone does not account for it (the failures span float32 and float64
+models). This is the cautionary result: the expensive gold standard is less reliable than the
+cheap screen in the displacive regime that dominates generative-CSP outputs — recall 0.19 against
+0.53, with the deepest-well units unable to complete (Fig. 5).
 
 ![**Fig. 3** Multi-mode SSCHA dynamic-stabilisation curves for bcc Ti/Zr/Hf, five models,
 versus temperature (§3.3). All models stabilise the bcc phase by ≤50 K; the margin to the stability
@@ -424,17 +428,17 @@ Cubic fluorites confirm the failure is systematic, not numerical. Cubic ZrO₂ (
 harmonically unstable via the X-point oxygen mode at all temperatures studied) is a cleaner test
 because its instability is shallower than the FE perovskites and does not trigger the float32
 blow-ups. The soft-mode screen calls both fluorites unstable at every temperature and for every model
-(recall 1.00), correctly and consistently. SSCHA instead returns +2.4 to +3.3 THz at 100 K for all
+(recall 1.00), correctly and consistently. SSCHA instead returns +2.0 to +3.3 THz at 100 K for all
 five models on ZrO₂ (false-stable) and then destabilises with temperature for three of them
-(MACE-MP-0 −4.6 THz and ORB-v2 −11.3 THz at 900 K), which is both the wrong sign at low T and the
-wrong temperature trend; MatterSim and SevenNet-0 instead remain positive at 900 K (+2.4 and +0.5
-THz), so they are false-stable across the whole ladder. Because SSCHA fails the same way on a
-numerically well-behaved, shallower instability, the false-stable behaviour is intrinsic to the
-truncated fixed-reference deployment (see the root cause above) rather than an artifact of the
-deepest perovskite wells. HfO₂ shows the same pattern (all models +2.0 to +2.6 THz at 100 K, then
-destabilising to −4.3/−8.3 THz for CHGNet/ORB-v2 by 900 K). Across both fluorites SSCHA produced
-zero numerical blow-ups yet the same systematic false-stable, which confirms that the failure is
-methodological, not numerical.
+(MACE-MP-0 −2.7 THz, SevenNet-0 −1.3 THz and ORB-v2 −24.8 THz at 900 K), which is both the wrong
+sign at low T and the wrong temperature trend; CHGNet and MatterSim instead remain positive at
+900 K (+1.2 and +2.3 THz), so they are false-stable across the whole ladder. Because SSCHA fails
+the same way on a numerically well-behaved, shallower instability, the false-stable behaviour is
+intrinsic to the truncated fixed-reference deployment (see the root cause above) rather than an
+artifact of the deepest perovskite wells. HfO₂ shows the same pattern (all models +1.9 to +2.6 THz
+at 100 K, then destabilising to −4.6/−10.0 THz for MACE-MP-0/ORB-v2 by 900 K). Across both
+fluorites SSCHA produced zero numerical blow-ups and zero failed units, yet the same systematic
+false-stable, which confirms that the failure is methodological, not numerical.
 
 ### 3.4 Ensemble disagreement as a guardrail (H3)
 
@@ -445,12 +449,12 @@ wrong reference for dynamic stability, §3.3), the majority-vote consensus is wr
 units. The disagreement signal separates these: on the 14 units where the five models split on the
 stable/unstable call, the consensus error rate is 0.57, against 0.09 on the 46 unanimous units, a
 6.6× enrichment. As a ranked predictor of consensus error, the binary stable/unstable vote split
-reaches AUC 0.76, whereas the continuous cross-model frequency standard deviation is uninformative
-(AUC 0.55, no better than chance; Fig. 6).
+reaches AUC 0.76, whereas the continuous cross-model frequency standard deviation carries no
+usable signal (AUC 0.36, below chance on this set; Fig. 6).
 
 ![**Fig. 6** Ensemble-disagreement guardrail (§3.4): the discrete inter-model
 vote split predicts consensus error (AUC 0.76) while the continuous cross-model frequency spread
-does not (AUC 0.55).](../results/figures/fig_ensemble_guardrail.png)
+does not (AUC 0.36, below chance).](../results/figures/fig_ensemble_guardrail.png)
 
 This refines H3 into a rule with a caveat: the discrete inter-model vote split is a useful, cheap
 guardrail (flag any candidate on which the foundation-MLIP ensemble disagrees), but the continuous
@@ -459,7 +463,7 @@ concentrates near the stability boundary, where split votes coincide with freque
 zero and the call is both most uncertain and most error-prone.
 
 ![**Fig. 5** Recall of the displacive (ferroelectric-perovskite) instability at
-T ≤ 300 K: the cheap multi-mode soft-mode screen (0.53) versus the expensive SSCHA (0.30) (§3.3). The
+T ≤ 300 K: the cheap multi-mode soft-mode screen (0.53) versus the expensive SSCHA (0.19) (§3.3). The
 cautionary result is that the gold standard is less reliable than the screen in the regime that
 matters most.](../results/figures/fig_displacive_recall.png)
 
@@ -468,8 +472,10 @@ matters most.](../results/figures/fig_displacive_recall.png)
 Stochastic reproducibility. Repeating the bcc-Zr / MACE-MP-0 / 100 K SSCHA with four independent
 random seeds gives a minimum free-energy-Hessian frequency of +1.798 ± 0.001 THz (range [+1.797,
 +1.800]). The stochastic noise (≈0.001 THz) is two-to-three orders of magnitude smaller than the
-cross-model bcc margins (~0.4 THz spread, §3.3), so those margins are real signal rather than
-sampling noise.
+cross-model bcc margins (§3.3), so those margins are real signal rather than sampling noise. The
+same unit re-measured in the pinned environment, with the SSCHA initialiser rebuilt from phonopy
+force constants, returns +1.80 THz at every temperature on the ladder, so the number also survives
+an independent environment and initialiser.
 
 Finite size. The SSCHA stability call is insensitive to supercell size on the cases where the test
 is well-posed (`results/convergence_study.parquet`): for bcc-Zr the dynamic-stabilisation verdict
@@ -505,7 +511,7 @@ cross-model comparison at fixed cell is valid. ORB-v2's float32-only direct arch
 outlier in both layers and is flagged throughout rather than excluded. The screen is a
 single-mode treatment applied mode-by-mode: it captures each instability independently but not
 their coupling, which is the most likely reason the predicted stabilisation temperature fails to
-order PbTiO₃ correctly (§3.2). Both the screen (0.53) and SSCHA (0.30) miss a substantial fraction
+order PbTiO₃ correctly (§3.2). Both the screen (0.53) and SSCHA (0.19) miss a substantial fraction
 of the ferroelectric-oxide instabilities, so the comparison identifies the better of two imperfect
 methods rather than a solved problem. Finally, α-AgI is modelled as an ordered CsCl-type
 approximant of the bcc iodine sublattice; that is not the disordered superionic α phase, and its
@@ -531,14 +537,15 @@ https://doi.org/10.5281/zenodo.20805799 (concept DOI, resolving to the latest ve
 `results/convergence_study.parquet`; figures via `scripts/make_figures.py`, analysis in
 `mlip_dynstab/analysis.py`, the SSCHA root-cause diagnostic in `scripts/sscha_v4_diag.py`, and the
 stochastic-reproducibility study (§3.5) via `scripts/sscha_repro.py` (its per-seed frequencies
-print to the run log rather than to the ledger). The SSCHA stability calls reported here were
-corrected after an acoustic-mode identification defect was found in the analysis path: the three
-translational modes were selected by lowest frequency rather than by smallest magnitude, which for
-an unstable phase discards the soft mode itself. The correction is applied by
-`scripts/fix_sscha_acoustic.py`, is derived from the per-unit spectra stored in the ledger rather
-than from a re-run, changes 13 of 208 SSCHA rows (all from stable to unstable) and leaves all 75
-bcc rows unchanged; the pre-correction values are retained in the `*_v1` ledger columns and the
-uncorrected ledger in `results/ledger.parquet.pre-d1-fix`.
+print to the run log rather than to the ledger). The SSCHA results reported here are a full
+re-measurement (`scripts/run_sscha_v2.py`, method version 3) of the original 208-unit grid in the
+pinned environments, after two defects were found in the original analysis path: an acoustic-mode
+identification inversion (the three translational modes were selected by lowest frequency rather
+than smallest magnitude, which for an unstable phase discards the soft mode itself), and an
+unrecorded software environment. The superseded generations are retained in the append-only ledger
+— `mlip_dynstab.analysis.canonical` selects the current one — together with the in-place derived
+correction (`scripts/fix_sscha_acoustic.py`, `*_v1` columns) and the uncorrected snapshot
+(`results/ledger.parquet.pre-d1-fix`), so every stage of the correction is auditable.
 
 The finite-temperature screen results reported here are the multi-mode grid described in §2.4
 (5 models × 20 systems × 4 temperatures = 400 units). The ledger is append-only and also retains
