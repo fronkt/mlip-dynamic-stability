@@ -27,7 +27,9 @@ METHOD_VERSION = {
                       #      free-energy Hessian); the stability CALL is unchanged (argmin)
                       # v3 = screen EVERY imaginary commensurate mode; unstable if ANY condenses
                       # v2 = FC-commensurate q-search + acoustic mask by |omega| (was: 3 lowest)
-    "sscha": 2,       # v2 = acoustic modes identified by |omega|, not by sort order
+    "sscha": 3,       # v3 = harmonic initialiser from phonopy full FCs (ase>=3.23 removed the
+                      #      API cellconstructor's ASE bridge consumed); measured in pinned envs
+                      # v2 = acoustic modes identified by |omega|, not by sort order
     "hiphive": 1,
     "rattled": 1,
     "tdep": 1,

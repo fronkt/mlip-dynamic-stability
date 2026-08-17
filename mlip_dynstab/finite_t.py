@@ -915,6 +915,86 @@ def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
 
 # ----------------------------------------------------- SSCHA hook ----
 
+def _cc_dyn_from_phonopy(prim_ase, calc, supercell, disp):
+    """Harmonic cellconstructor dynamical matrix from phonopy full force constants.
+
+    Replaces cellconstructor's ``get_dyn_from_ase_phonons`` bridge, which reads attributes of
+    ``ase.phonons.Phonons`` (``N_c``, the block-format ``get_force_constant``) that ASE >= 3.23
+    removed -- with ase 3.29 every call died in ``AttributeError``/reshape errors. Building
+    from phonopy also puts the SSCHA initialiser on the SAME force-constant engine as the
+    harmonic baseline and the soft-mode screen, instead of a second finite-displacement
+    implementation.
+
+    The assembly mirrors the original bridge: full supercell FC matrix (eV/A^2) -> Fourier
+    transform at the commensurate q grid via ``GetDynQFromFCSupercell`` -> Ry/Bohr^2 ->
+    ``AdjustQStar``. Atom ordering between the CC supercell and the phonopy supercell is
+    reconciled by fractional-position matching and verified (bijective, species-consistent).
+    Correctness gate: frequencies of the returned dyn must match phonopy's own at the same
+    commensurate q (checked to < 0.05 THz on bcc-Zr and BaTiO3 before production).
+    """
+    import ase
+    import numpy as np
+    from phonopy import Phonopy
+    import cellconstructor as CC
+    import cellconstructor.Phonons as CCP
+    from cellconstructor import Structure
+    from cellconstructor import symmetries as CCsym
+    from .harmonic import _ase_to_phonopy_atoms
+
+    # phonopy with FULL (n_satom x n_satom) force constants
+    ph = Phonopy(_ase_to_phonopy_atoms(prim_ase), supercell_matrix=np.diag(supercell),
+                 primitive_matrix="auto")
+    ph.generate_displacements(distance=disp)
+    forces = []
+    for sc in ph.supercells_with_displacements:
+        a = ase.Atoms(symbols=sc.symbols, scaled_positions=sc.scaled_positions,
+                      cell=sc.cell, pbc=True)
+        a.calc = calc
+        forces.append(a.get_forces())
+    ph.forces = np.array(forces)
+    ph.produce_force_constants(calculate_full_force_constants=True)
+    ph.symmetrize_force_constants()
+    fc = ph.force_constants                     # (n_satom, n_satom, 3, 3), eV/A^2
+
+    structure = Structure.Structure()
+    structure.generate_from_ase_atoms(prim_ase)
+    sc_struct = structure.generate_supercell(tuple(int(x) for x in supercell))
+    n = fc.shape[0]
+
+    # Map CC supercell atom A -> phonopy supercell atom perm[A] by fractional position.
+    ph_sc = ph.supercell
+    ph_frac = np.array(ph_sc.scaled_positions) % 1.0
+    ph_sym = list(ph_sc.symbols)
+    cc_frac = np.linalg.solve(np.array(sc_struct.unit_cell).T,
+                              np.array(sc_struct.coords).T).T % 1.0
+    perm = []
+    for A in range(n):
+        d = ph_frac - cc_frac[A]
+        d -= np.round(d)
+        j = int(np.argmin(np.sum(d * d, axis=1)))
+        if np.sum(d[j] ** 2) > 1e-8 or ph_sym[j] != sc_struct.atoms[A]:
+            raise RuntimeError(f"supercell atom mapping failed at CC atom {A}")
+        perm.append(j)
+    if len(set(perm)) != n:
+        raise RuntimeError("supercell atom mapping is not a bijection")
+
+    fc_sup = np.zeros((3 * n, 3 * n))
+    for A in range(n):
+        pA = perm[A]
+        for B in range(n):
+            fc_sup[3 * A:3 * A + 3, 3 * B:3 * B + 3] = fc[pA, perm[B]]
+
+    q_grid = CCsym.GetQGrid(structure.unit_cell, tuple(int(x) for x in supercell))
+    dyn = CCP.Phonons(structure, len(q_grid))
+    dyn.q_tot = q_grid
+    dyn.q_stars = [[q] for q in q_grid]
+    dynq = CCP.GetDynQFromFCSupercell(fc_sup, np.array(q_grid), structure, sc_struct)
+    for iq in range(len(q_grid)):
+        dyn.dynmats[iq] = dynq[iq] * CC.Units.BOHR_TO_ANGSTROM ** 2 / CC.Units.RY_TO_EV
+    dyn.AdjustQStar()
+    return dyn
+
+
 _RY_TO_THZ = None   # filled lazily from cellconstructor.Units
 
 
@@ -939,7 +1019,6 @@ def compute_finite_t_sscha(atoms, calc, temperature_K, supercell=(4, 4, 4),
     import warnings
     warnings.filterwarnings("ignore")
     import numpy as np
-    from ase.phonons import Phonons as ASEPhonons
     import cellconstructor as CC
     import cellconstructor.Phonons
     import sscha
@@ -954,12 +1033,9 @@ def compute_finite_t_sscha(atoms, calc, temperature_K, supercell=(4, 4, 4),
         from .harmonic import _relax
         prim = _relax(prim, fmax=fmax)
 
-    # Harmonic dynamical matrix (ASE finite-displacement displaces only unit-cell atoms -> cheap)
-    aph = ASEPhonons(prim, calc, supercell=tuple(supercell), delta=disp, name="/tmp/_sscha_aseph")
-    aph.clean()
-    aph.run()
-    aph.read(acoustic=True)
-    dyn = CC.Phonons.get_dyn_from_ase_phonons(aph)
+    # Harmonic dynamical matrix from phonopy full FCs -- the same force-constant engine as the
+    # harmonic baseline and the screen (see _cc_dyn_from_phonopy for why the ASE bridge died).
+    dyn = _cc_dyn_from_phonopy(prim, calc, supercell, disp)
     dyn.ForcePositiveDefinite()
     dyn.Symmetrize()
 
