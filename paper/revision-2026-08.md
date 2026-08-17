@@ -152,6 +152,85 @@ SSCHA') fails" all need the same treatment — the failure is the *default trunc
 
 ---
 
+## 3a. RESULTS OF THE MULTI-MODE RE-RUN (2026-08-16, complete)
+
+The screen's criterion changed from "the globally softest commensurate mode" to **"every distinct
+imaginary commensurate mode; the phase is unstable if ANY condenses."** Full grid re-run: 5 models
+× 20 systems × 4 T = 400 units, 0 errors, in one pinned environment per model with `pip freeze`
+locks committed (`envs/lock-*-2026-08-16.txt`). Reproduce with `scripts/analyze_v4.py`.
+
+Recall on genuinely-unstable units, scored against the temperature-resolved ground truth:
+
+| family | legacy | multi-mode | n |
+|---|---|---|---|
+| FE oxide perovskite | 0.77 | **0.53** | 30 |
+| AFD (SrTiO₃) | 0.20 | **0.60** | 5 |
+| halide perovskite | 0.72 | **0.92** | 25 |
+| cubic fluorite | 1.00 | 1.00 | 20 |
+| controls (correct-stable) | 1.000 | **1.000** | 120 |
+| **overall accuracy, all 20 systems, all T** | 0.740 | **0.728** | 400 |
+
+Read this correctly. Overall accuracy is **unchanged** (0.740 → 0.728); what changed is its
+*composition*. The screen got substantially better on the antiferrodistortive and halide
+instabilities and worse on the FE oxides, because it is now looking at the modes that actually
+drive those transitions instead of whichever mode happened to survive an inverted mask. The
+headline is not "the fix improved the screen" — it is **"the fix moved the screen's accuracy onto
+the physically correct modes."**
+
+Controls remain perfect: **zero** imaginary commensurate modes are found for any of the six
+controls under any of the five models, so the screen never invents an instability.
+
+**The screen-vs-SSCHA contrast survives but narrows sharply: 0.53 vs 0.30 on the FE-oxide set,**
+where the published claim was 0.77 vs 0.23. It is still a real inversion — the cheap screen beats
+the expensive default-truncation SSCHA in the displacive regime — but it is now a factor of 1.8,
+not 3.3, and the abstract must say so.
+
+### The new SrTiO₃ validation gate is a genuine physics test
+
+The screen now resolves three distinct imaginary modes in cubic SrTiO₃ and reports which condenses:
+
+```
+MACE-MP-0, T=100 K   q =  Γ    ; R(½½½) ; (0,½,½)
+                  harm = -2.365 ; -2.089 ; -0.817  THz
+                    Q₀ =  0.000 ;  0.140 ;  0.000  Å      -> only R condenses -> UNSTABLE
+MACE-MP-0, T=300 K  Q₀ =  0.000 ;  0.000 ;  0.000  Å      -> STABLE
+```
+
+The Γ ferroelectric mode correctly refuses to condense — that is quantum paraelectricity, and it is
+the physically right answer — while the R-point antiferrodistortive tilt does, bracketing the
+experimental T_c = 105 K. **3 of 5 models (MACE-MP-0, MatterSim, SevenNet-0) reproduce this; CHGNet
+never condenses the tilt, and ORB-v2 does not even select R.** That is a per-model gate carrying far
+more information than the old single-model "hardens −2.6 → +1.8 THz" sentence, which was an artefact
+of the inverted mask forcing the screen off Γ.
+
+### H2's supporting statement is now falsified and must be rewritten
+
+Per-model recall on the genuinely-unstable non-bcc set, T ≤ 300 K:
+
+| model | recall | control acc |
+|---|---|---|
+| SevenNet-0 | **0.875** | 1.0 |
+| CHGNet | 0.812 | 1.0 |
+| MACE-MP-0 | 0.750 | 1.0 |
+| MatterSim | 0.750 | 1.0 |
+| ORB-v2 | 0.688 | 1.0 |
+
+§3.2 currently asserts *"MatterSim and SevenNet-0 are harmonically perfect yet sit behind MACE-MP-0
+and CHGNet on finite-temperature displacive stability."* On the corrected data **SevenNet-0 is the
+finite-temperature leader** while also being a harmonic leader, so that sentence is false as
+written. H2's weaker form ("necessary but not sufficient") still stands on ORB-v2 and MatterSim, but
+the specific inversion claim goes.
+
+### The mode cap cannot change any conclusion
+
+`max_modes = 24` binds on 20 of 400 rows (MatterSim bcc-Zr/Hf find 41 imaginary modes, ORB bcc-Ti
+32, CHGNet CsSnBr₃ 29). **All 20 capped rows are already called UNSTABLE, and the minimum number of
+condensing modes among them is 3.** Since one condensing mode suffices for an unstable call, the cap
+could only ever create a false-*stable*, which requires all 24 screened modes to be non-condensing.
+No capped row is anywhere near that boundary, so the truncation is provably inconsequential here.
+`max_modes` is now part of the unit hash and the cache key, so a tighter-cap unit can never be
+silently reused as a looser-cap one.
+
 ## 4. Blocked on the softmode re-run
 
 These cannot be written until the v2 grid lands, because every number changes:
