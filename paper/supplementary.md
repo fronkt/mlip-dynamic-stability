@@ -43,7 +43,11 @@ the SrTiO₃ gate.
   is commensurate.
 - **Unbounded fits.** Sextic E(Q) fits occasionally returned a negative leading coefficient
   (unbounded potential); the fit drops to a bounded quartic in that case, and only the
-  well-plus-barrier window is fitted so a steep repulsive wall does not wash out a shallow well
+  well-plus-barrier window is fitted so a steep repulsive wall does not wash out a shallow well.
+  **Window sensitivity (Table 1, A3 of the main text).** The production window is 5× the well
+  depth (floor 60 meV). Refitting every cached E(Q) with the multiplier at 3× and 8× and
+  re-solving the SCHA condensation call at 100 K and 300 K changes 4 of 756 mode-level calls
+  (0.5%) at 3× and 10 of 756 (1.3%) at 8×, so no headline number depends on the window choice
   (e.g. BaTiO₃).
 - **SCHA self-consistency.** The width is solved with a bracketed root finder to avoid a runaway
   large-σ spurious root.
