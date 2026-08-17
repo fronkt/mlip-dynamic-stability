@@ -28,14 +28,31 @@ Models Reliable for Finite-Temperature MD?", on PbTiO₃ — one of our own syst
 cross-FAMILY finite-T dynamic-stability classification across five architectures and four chemistry
 families with a free-energy criterion and a T-ladder.
 
-**NEXT (blocking, in order):**
-1. Re-run the 400-unit softmode grid at `METHOD_VERSION['softmode']=2` (~100 E(Q) rebuilds, GPU).
-   §3.2/§3.4/§3.5 and the screen side of §3.3 are provisional until it lands.
-2. Restate the SSCHA numbers from D1 (no compute; corrected values in the audit).
-3. Read Bianco et al. PRB 96, 014111 (2017) — if the SCHA Φ is positive-definite *by construction*,
-   the §3.3 root-cause paragraph is a restatement of the method's design and must be rewritten.
-4. Retitle + rewrite the novelty framing.
-5. Only then the §2.4 derivation (equations for a q-search that is about to change = wasted work).
+**DONE since the audit (all pushed):**
+1. ✅ Screen redefined: evaluates EVERY imaginary commensurate mode; phase unstable if ANY
+   condenses (`METHOD_VERSION['softmode']=3`, cap 24 folded into the unit hash). The old
+   softest-mode criterion inspected the Γ FE mode in SrTiO₃, which is quantum-suppressed, instead
+   of the R-point tilt that drives the 105 K transition.
+2. ✅ Full re-run: 5 models × 20 systems × 4 T = 400 units, 0 errors, one pinned env per model,
+   `pip freeze` locks in `envs/lock-*-2026-08-16.txt`, 220 cached E(Q) maps committed.
+3. ✅ SSCHA D1 correction applied to the ledger (`scripts/fix_sscha_acoustic.py`).
+4. ✅ Bianco PRB 96, 014111 and Monacelli PRB 112, 014109 read and quoted; §3.3 reframed around the
+   bubble truncation. Φ is positive-definite *by construction*, so its positivity was never a
+   finding.
+5. ✅ Retitled; novelty framing rewritten against the two verified 2025 papers.
+6. ✅ All 6 figures regenerated; every dependent number propagated through manuscript,
+   supplementary, cover letter, `.zenodo.json`; DOCX rebuilt. `analysis.canonical` added so a
+   figure can never mix method generations.
+
+**NEXT:**
+1. §2.4 derivation — now unblocked, since the method definition is final. Gibbs–Bogoliubov
+   statement, F(Q₀,σ;T), the coth width self-consistency, and an approximation ledger.
+2. Re-run the 208 SSCHA units in the pinned environment. They currently carry only the *derived*
+   D1 correction (recomputed from stored spectra, not re-measured) — the remaining measurement gap.
+3. Optional but valuable: one `include_v4=True` run driven to completion on a single BaTiO₃ unit,
+   to convert the root-cause claim from literature-supported inference to direct measurement.
+4. Re-run the 3×3×3 soft-mode convergence study, currently marked superseded in §3.5.
+5. Mint a new Zenodo version once the above settle (the live record still describes the v1 screen).
 
 **Process/progress:**
 - Data COMPLETE: ledger.parquet = harmonic (100) + softmode (400, 20 sys × 5 models × 4 T) +

@@ -5,7 +5,7 @@
 
 ## S1. Finite-T method development and discarded routes
 
-The single-mode quantum-SCHA soft-mode screen (§2.4) was the fourth finite-T route we
+The quantum-SCHA soft-mode screen (§2.4) was the fourth finite-T route we
 implemented. The earlier three were built, tested against the SrTiO₃ validation gate, and
 discarded; we document them because the failures are instructive for anyone building MLIP-driven
 finite-T stability screens.
@@ -26,8 +26,9 @@ finite-T stability screens.
   the answer, so it could not provide a calibrated stability call.
 
 The surviving route replaces noisy MD-fitted effective force constants with a **static** double
-well E(Q) along the softest commensurate mode plus an analytic single-mode quantum SCHA free
-energy. Moving the anharmonicity into a clean static map (cached, T-independent) and the thermal
+well E(Q) along each imaginary commensurate mode plus an analytic single-mode quantum SCHA free
+energy per mode, with the phase called unstable if any mode condenses (see §2.4; the original
+implementation screened only the softest mode, which inspects the wrong instability in SrTiO₃). Moving the anharmonicity into a clean static map (cached, T-independent) and the thermal
 physics into a 1-D self-consistent solve removed the trajectory/cutoff sensitivity and passed
 the SrTiO₃ gate.
 
@@ -115,9 +116,10 @@ log rather than to a ledger).
 - **Table S2** — per-model finite-T (softmode) false-stable rates over the full T-ladder, with
   and without bcc. `analysis.low_t_false_stable(df, exclude_bcc=...)`.
 - **Table S3** — per-(system, model) predicted stabilisation temperature T* vs experimental
-  transition temperature. `analysis.predicted_tstar(df)`. Note: the single-mode screen
-  systematically *under*-estimates the absolute T* for entropy-stabilised bcc, so T* is reported
-  as a qualitative ordering check, not a quantitative T_c prediction.
+  transition temperature. `analysis.predicted_tstar(df)`. Note: the screen
+  systematically *under*-estimates the absolute T* for entropy-stabilised bcc, and it fails to
+  order PbTiO₃ against the other perovskite anchors (§3.2), so T* is reported as a diagnostic
+  rather than a quantitative or ordinal T_c prediction.
 - **Table S4** — per-(system, T) ensemble-disagreement guardrail table (H3).
   `analysis.h3_ensemble_guardrail(df, "softmode")`.
 

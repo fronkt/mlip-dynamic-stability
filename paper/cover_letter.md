@@ -8,8 +8,8 @@ To the Editors, *Digital Discovery* (Editor-in-Chief: Prof. Alán Aspuru-Guzik)
 
 Dear Editors,
 
-I am pleased to submit the manuscript **"Finite-temperature dynamic stability is a blind spot of
-foundation machine-learning interatomic potentials"** for consideration as a Paper in *Digital
+I am pleased to submit the manuscript **"Finite-temperature dynamic stability separates foundation
+machine-learning interatomic potentials that harmonic benchmarks rank equally"** for consideration as a Paper in *Digital
 Discovery*.
 
 Foundation (universal) machine-learning interatomic potentials (MLIPs) — MACE-MP-0, CHGNet, ORB,
@@ -20,23 +20,28 @@ dynamic stability is physically a **finite-temperature** property. An entire tec
 central class of materials — cubic perovskites, bcc refractory metals, cubic fluorites — is
 *harmonically unstable but thermally stabilised by anharmonicity*, exactly the regime the
 harmonic-only oracle (used by recent benchmarks such as PhononBench and by CSP screening) gets
-wrong. Whether foundation MLIPs reproduce this harmonic → finite-temperature stabilisation has
-been essentially un-benchmarked. This work closes that gap.
+wrong. Two 2025 studies have probed finite-temperature reliability directly, but each is confined
+to a single model family or a single system; whether the effect is architecture-general and
+chemistry-general is untested. This work closes that gap.
 
 Our contributions, and why they should interest the *Digital Discovery* readership:
 
 - **A finite-temperature dynamic-stability benchmark** of five foundation MLIPs on a curated,
   literature-grounded set (no new DFT required), with a fully reproducible, resumable per-unit
   results ledger and open code.
-- **A cheap, validated screen.** We introduce a single-mode quantum self-consistent-harmonic
-  ("soft-mode free energy") screen that resolves the harmonic → finite-T stabilisation at
-  sub-second CPU cost per temperature, validated against experimental transition temperatures.
+- **A cheap, validated screen.** We introduce a quantum self-consistent-harmonic ("soft-mode free
+  energy") screen that evaluates *every* imaginary commensurate mode and calls the phase unstable
+  if any condenses, at sub-second CPU cost per temperature. The criterion matters: in SrTiO₃ the
+  Γ ferroelectric mode is deeper than the R-point tilt yet is quantum-suppressed, so a
+  softest-mode screen inspects the wrong instability.
 - **A cautionary methodological result of direct practical value.** The "gold-standard"
   multi-mode stochastic SCHA, when driven by an MLIP in the way a practitioner would realistically
-  deploy it, is itself a trap: it is clean for martensitic bcc metals but *systematically
-  false-stabilises* deep displacive (ferroelectric) instabilities — the regime that dominates
-  generative-CSP outputs — so the cheap screen is the more reliable indicator there. This inverts
-  the usual cost/accuracy intuition and reframes how such cross-checks should be used.
+  deploy it, is clean for martensitic bcc metals but *systematically false-stabilises* deep
+  displacive (ferroelectric) instabilities at its default fourth-order truncation — the regime that
+  dominates generative-CSP outputs. Theory predicts this truncation to fail for cubic metal halide
+  perovskites; we measure it at benchmark scale and show it extends to oxide perovskites and,
+  blow-up-free, to cubic fluorites. The cheap screen is the more reliable indicator there,
+  inverting the usual cost/accuracy intuition.
 - **An actionable guardrail.** Inter-model (ensemble) vote disagreement flags unreliable calls
   (AUC 0.75), whereas the continuous frequency spread does not — a cheap, deployable rule.
 

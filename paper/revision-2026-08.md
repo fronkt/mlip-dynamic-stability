@@ -231,18 +231,44 @@ No capped row is anywhere near that boundary, so the truncation is provably inco
 `max_modes` is now part of the unit hash and the cache key, so a tighter-cap unit can never be
 silently reused as a looser-cap one.
 
-## 4. Blocked on the softmode re-run
+## 4. Propagation — DONE
 
-These cannot be written until the v2 grid lands, because every number changes:
+All six figures regenerated from the corrected ledger and every dependent number updated in the
+manuscript, supplementary, cover letter and `.zenodo.json`. Summary of what moved:
 
-- screen recall on the FE set (was 0.77), the screen-vs-SSCHA contrast, and Fig. 5
-- the method-agreement ρ and sign agreement on bcc (was 0.78 / 0.64), and Fig. 4
-- all T* multi-anchor values, §3.2's per-model finite-T table, and Fig. 2
-- H3's AUC and enrichment, and Fig. 6
-- §3.5's finite-size claims for BaTiO₃ and SrTiO₃
+| quantity | published | now |
+|---|---|---|
+| screen recall, FE oxides, T ≤ 300 K | 0.77 | **0.53** |
+| SSCHA recall, same set | 0.23 | **0.30** |
+| bcc method agreement, Spearman ρ | 0.78 | **0.74** |
+| bcc sign agreement | 0.64 | **0.62** |
+| " excl. ORB-v2 | 0.78 / ρ 0.63 | **0.69 / ρ 0.74** |
+| H3 consensus error rate | 0.167 | **0.200** |
+| H3 split-vote / unanimous error | 0.39 / 0.07 | **0.57 / 0.09** |
+| H3 enrichment | 5.5× | **6.6×** |
+| H3 AUC (vote split / freq σ) | 0.75 / 0.52 | **0.76 / 0.55** |
+| finite-T leader | CHGNet, MACE (0.933) | **SevenNet-0 (0.900)** |
+| finite-T worst | ORB-v2 (0.700) | **ORB-v2 (0.800)** |
 
-The corrected **SSCHA-side** numbers from audit D1 are stable and can be written now:
-FE-perovskite recall 0.23 → **0.30**, fluorite 0.17 → **0.23**, bcc unchanged (0 of 75 rows).
+A guard was added so this class of error cannot recur silently: `mlip_dynstab.analysis.canonical`
+selects one generation of each method's rows, and `scripts/make_figures.py` routes through it.
+Without it, `df[df.method == "softmode"]` matches both the legacy and multi-mode grids and
+double-counts every unit — 800 rows where there are 400 measurements.
+
+Two claims did **not** survive propagation and were rewritten rather than re-fitted:
+- **H2's supporting example.** "The harmonic leaders are not the finite-temperature leaders" is
+  false now that SevenNet-0 leads both. The replacement uses CHGNet, which is worst harmonically
+  (0.789) and second best at finite temperature (0.867) — a cleaner demonstration of the same
+  point, and one that does not depend on which model happens to lead.
+- **The T\* multi-anchor ordering.** SrTiO₃ < BaTiO₃/KNbO₃ still holds, but PbTiO₃ — the highest
+  T_c of the four — is predicted to stabilise at 100 K by three of five models. That is an ordering
+  failure, not a scale error, so T* is demoted from "validation" to "diagnostic" and the SrTiO₃
+  gate plus control performance carries the licensing argument instead.
+
+Also corrected: the six SSCHA numerical blow-ups are **not** all float32 — four are ORB-v2 on
+SrTiO₃ and two are MatterSim on PbTiO₃, so the precision attribution in the published text was
+wrong. And the §3.5 soft-mode convergence runs are now marked **superseded**, since they were
+produced by the pre-correction single-mode selection and have not been repeated at 3×3×3.
 
 ## 5. Added to the compute queue by this reading
 
