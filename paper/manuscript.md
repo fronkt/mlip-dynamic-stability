@@ -150,29 +150,85 @@ map the static double well E(Q) with quadratic Q sampling, fit the well-plus-bar
 minimise a single-mode quantum SCHA free energy over the order-parameter centroid (self-consistent
 Gaussian width via bracketed root finding).
 
-The stability criterion is a property of the **phase**, not of one mode: the high-symmetry structure
-is dynamically unstable at T if **any** screened mode condenses (Q₀ > 0), and stable only when none
-does. Screening a single mode — even the globally softest — conflates physically distinct
+Variational free energy per mode. Each frozen mode defines a one-dimensional subsystem with
+coordinate Q along the unit displacement pattern **u**, effective mass
+M = Σᵢ mᵢ|**u**ᵢ|², and potential V(Q) = aQ² + bQ⁴ + cQ⁶ from the fit above; the Hamiltonian is
+H = P²/2M + V(Q). We treat it with the self-consistent harmonic approximation in its original
+single-mode form,^23,24^ built on the Peierls variational bound^25,26^
+
+$$F \le \mathcal{F}(Q_0,\Omega;T) = F_0(\Omega,T) + \langle V \rangle_{Q_0,\sigma} - \tfrac{1}{2} M\Omega^2\sigma^2,$$
+
+where the trial state is the thermal density of a harmonic oscillator of frequency Ω displaced to
+centroid Q₀, F₀(Ω,T) = k_BT ln[2 sinh(ħΩ/2k_BT)] is its free energy, and the last term removes the
+trial potential counted in F₀. The trial density is a Gaussian of mean Q₀ and quantum width
+
+$$\sigma^2 = \frac{\hbar}{2M\Omega}\coth\!\left(\frac{\hbar\Omega}{2k_BT}\right),$$
+
+which carries the nuclear quantum effects: at high T it recovers the classical k_BT/MΩ², and at
+T → 0 it retains the zero-point width that suppresses condensation in shallow wells (quantum
+paraelectricity). The Gaussian expectation of the even sextic follows from the moments
+⟨Q²⟩ = Q₀² + σ², ⟨Q⁴⟩ = Q₀⁴ + 6Q₀²σ² + 3σ⁴, ⟨Q⁶⟩ = Q₀⁶ + 15Q₀⁴σ² + 45Q₀²σ⁴ + 15σ⁶. Stationarity
+of 𝓕 with respect to Ω at fixed Q₀ gives the self-consistency condition
+
+$$M\Omega^2 = \langle V''\rangle_{Q_0,\sigma} = 2a + 12b\,\langle Q^2\rangle + 30c\,\langle Q^4\rangle,$$
+
+which we solve by bracketed root finding on σ² (avoiding the runaway large-σ fixed point a damped
+iteration can reach), and 𝓕 is then minimised over the centroid on a Q₀ grid.
+
+Criterion and observable. Two distinct quantities come out of 𝓕, and we keep them separate. The
+**stability call** is the variational one: the mode has condensed at T if the global minimum of
+𝓕(Q₀; T) sits at Q₀ > 0 — by the bound above, the displaced state then has the lower free energy.
+The high-symmetry structure is dynamically unstable at T if **any** screened mode condenses, and
+stable only when none does; dynamical stability is a property of the phase, not of one mode.
+The **reported frequency** is the curvature of the free energy at the symmetric point,
+ω_eff = sign(𝓕″(0)) · [|𝓕″(0)|/M]^½, the single-mode analogue of the SSCHA free-energy Hessian^21^
+and a genuine signed observable (𝓕 is even in Q₀, so the curvature is evaluated by a symmetric
+finite difference). The two can disagree, and the disagreement is physics rather than noise: for a
+deep double well the variational transition is first-order-like, so 𝓕(0) remains a *local* minimum
+(positive curvature) while a displaced minimum drops below it. A curvature criterion is blind to
+that condensation by construction — the same blindness that afflicts any free-energy Hessian
+evaluated at a fixed high-symmetry reference — and we record every such mode (`n_curv_blind` in
+the ledger) rather than folding it into either number.
+
+Screening only a single mode — even the globally softest — conflates physically distinct
 instabilities. Cubic SrTiO₃ is the decisive case: its Γ ferroelectric mode is *deeper* than the
-R-point antiferrodistortive tilt, yet the Γ mode is quantum-suppressed and never condenses while the
-R tilt is what drives the 105 K transition, so a softest-mode screen inspects the wrong mode and
-calls the cubic phase stable. The E(Q) maps are temperature-independent and cached, so each
-temperature is a sub-second CPU solve over all modes. A cap of 24 modes per unit bounds the cost; it
-binds on 20 of the 400 units, every one of which is already called unstable with at least three
+R-point antiferrodistortive tilt, yet the Γ mode is quantum-suppressed and never condenses while
+the R tilt is what drives the 105 K transition, so a softest-mode screen inspects the wrong mode
+and calls the cubic phase stable. The E(Q) maps are temperature-independent and cached, so each
+temperature is a sub-second CPU solve over all modes. A cap of 24 modes per unit bounds the cost;
+it binds on 20 of the 400 units, every one of which is already called unstable with at least three
 condensing modes, so it cannot affect any call (a cap can only ever create a false-*stable*, which
 would require all 24 screened modes to be non-condensing). Three earlier finite-temperature routes
 (hand-rolled TDEP,^5^ one-shot hiPhive, and rattled-MD) were implemented and discarded after they
 failed the SrTiO₃ gate; see the ESI.
 
+Approximations, declared. Table 1 states what the screen neglects, the expected direction of the
+bias, and where the consequence is visible in our own data.
+
+**Table 1** The screen's approximation ledger.
+
+| # | Approximation | What it excludes | Expected bias | Where it shows |
+|---|---|---|---|---|
+| A1 | One mode at a time | Mode–mode coupling and cooperative condensation | Either sign; absolute T* unreliable | PbTiO₃ T* ordering failure (§3.2) |
+| A2 | Commensurate **q** only | Instabilities at incommensurate or finer-grid **q** | False-stable if the true soft mode is missed | R point needs even cells (§3.5); bcc ω needs 6×6×6 FCs |
+| A3 | Sextic fit on a well+barrier window | Steep-wall anharmonicity beyond Q⁶ | Barrier-shape error at large Q | Fit window sensitivity (ESI) |
+| A4 | Gaussian (SCHA) trial state | Tunnelling, non-Gaussian density; renders deep-well transitions first-order-like | Curvature misses condensation | `n_curv_blind` rows; §3.3 mechanism |
+| A5 | Static E(Q) in a clamped cell | Thermal expansion and strain coupling | Under-stabilises martensitic systems | bcc labelled via SSCHA instead (§3.3) |
+| A6 | Mode cap (24) | Modes beyond the 24 most imaginary | Could only create false-stables | Binds on 20/400 units, all already unstable (§2.4) |
+
 Validation gate. Cubic SrTiO₃ resolves three distinct imaginary commensurate modes, and the screen
 reports which of them condenses. At 100 K the Γ ferroelectric mode does **not** condense (Q₀ = 0),
 which is the physically correct quantum-paraelectric result, while the R = (½,½,½) tilt does
 (Q₀ = 0.14 Å); by 300 K neither condenses. The phase is therefore called unstable at 100 K and
-stable at 300 K, bracketing the experimental transition at 105 K, and the effective frequency of the
-deciding mode hardens from −2.68 to +1.43 THz across it. Three of the five models (MACE-MP-0,
-MatterSim, SevenNet-0) reproduce this; CHGNet never condenses the tilt and ORB-v2 does not select
-the R point at all. Because the gate identifies *which* instability each model captures rather than
-returning a single number, it is a per-model test rather than a single-model demonstration.
+stable at 300 K, bracketing the experimental transition at 105 K. The gate also exercises the
+criterion/observable distinction above: at 100 K the condensing tilt still has a *positive*
+symmetric-point curvature (+0.92 THz, hardening to +1.43 THz at 300 K), so this is a
+first-order-like condensation that the free energy's argmin detects and its curvature does not —
+the same mechanism, inside the cheap screen, that defeats the fixed-reference SSCHA Hessian in
+§3.3. Three of the five models (MACE-MP-0, MatterSim, SevenNet-0) reproduce the R-tilt
+condensation; CHGNet never condenses the tilt and ORB-v2 does not select the R point at all.
+Because the gate identifies *which* instability each model captures rather than returning a single
+number, it is a per-model test rather than a single-model demonstration.
 
 ### 2.5 Multi-mode SSCHA (gold-standard cross-check)
 
@@ -357,7 +413,13 @@ therefore the physically correct escalation, consistent with that RPA requiremen
 more than 18 min on a single unit without finishing (tens of hours per unit at grid scale) and is
 numerically viable only in float64, which is the practical barrier at screening scale. We therefore
 use SSCHA as the bcc gold standard and the experimental transition temperature (the SrTiO₃ gate,
-§2.4) as the validation for the perovskite screen.
+§2.4) as the validation for the perovskite screen. We add one structural observation from our own
+data: even within the single-mode screen, deep wells condense first-order-like — the free energy
+develops a lower displaced minimum while its curvature at the symmetric point stays positive
+(§2.4, `n_curv_blind`) — and a fixed-reference Hessian criterion of any order is blind to a
+condensation of that character. The screen survives it because it minimises over the centroid
+rather than reading a curvature; a fixed-reference SSCHA deployment has no analogous escape short
+of relaxing the centroids, which changes the question being asked.
 
 Cubic fluorites confirm the failure is systematic, not numerical. Cubic ZrO₂ (the >2600 K phase,
 harmonically unstable via the X-point oxygen mode at all temperatures studied) is a cleaner test
@@ -531,3 +593,7 @@ not-for-profit sectors.
 20. *Are Foundational Atomistic Models Reliable for Finite-Temperature Molecular Dynamics?*, *J. Phys. Chem. C*, 2025, DOI: 10.1021/acs.jpcc.5c07541.
 21. R. Bianco, I. Errea, L. Paulatto, M. Calandra and F. Mauri, *Phys. Rev. B*, 2017, **96**, 014111.
 22. L. Monacelli, *Phys. Rev. B*, 2025, **112**, 014109.
+23. D. J. Hooton, *Philos. Mag.*, 1955, **46**, 422.
+24. N. R. Werthamer, *Phys. Rev. B*, 1970, **1**, 572.
+25. R. Peierls, *Phys. Rev.*, 1938, **54**, 918.
+26. R. P. Feynman, *Statistical Mechanics: A Set of Lectures*, W. A. Benjamin, Reading, MA, 1972.
