@@ -20,8 +20,8 @@ commensurate mode and calls the high-symmetry phase unstable if any of them cond
 cross-validate it against the gold-standard multi-mode stochastic SCHA (SSCHA). We report three
 findings together with a practical ensemble-disagreement guardrail. (i) At the harmonic level the
 models divide: MatterSim and SevenNet-0 reproduce every documented soft mode (accuracy 1.00),
-whereas MACE-MP-0, CHGNet and ORB-v2 soften the bcc Zr/Hf instabilities toward zero and carry a 15%
-false-stable rate. (ii) Harmonic accuracy does not predict finite-temperature accuracy in either
+whereas MACE-MP-0 and CHGNet soften the bcc Zr/Hf instabilities to zero (15% false-stable rate)
+and ORB-v2 misses the SrTiO₃ soft mode (8%). (ii) Harmonic accuracy does not predict finite-temperature accuracy in either
 direction: CHGNet is the worst model harmonically yet the second best at finite temperature, while
 MatterSim is harmonically perfect and only mid-table, and on the matched set the two are
 non-significantly concordant at 100 K and significantly anti-associated at 300 K. Screening every
@@ -253,25 +253,24 @@ The five models divide on the harmonic set (19 scored systems, KTaO₃ excluded)
 | MatterSim | 1.000 | 0.000 | 0.000 |
 | SevenNet-0 | 1.000 | 0.000 | 0.000 |
 | MACE-MP-0 | 0.895 | 0.154 | 0.000 |
-| ORB-v2 | 0.842 | 0.154 | 0.167 |
+| ORB-v2 | 0.895 | 0.077 | 0.167 |
 | CHGNet | 0.789 | 0.154 | 0.333 |
 
 MatterSim and SevenNet-0 reproduce every documented soft mode with large imaginary frequencies.
 MACE-MP-0 and CHGNet each carry two false-stable calls (rate 0.154) on the bcc Zr and Hf soft
-modes, softened toward zero; this is the PES-softening bias of the literature, localised to
-specific instabilities. ORB-v2 also carries two false-stable calls (rate 0.154) but on a different
-pair: it correctly flags bcc-Zr unstable (−0.43 THz) yet softens Hf (−0.09 THz) and SrTiO₃
-(−0.0 THz) just past the −0.1 THz tolerance. ORB-v2 (direct, float32) softens in both directions;
-besides those two false-stables it falsely calls MgO unstable (−2.8 THz), its one false-unstable on
-the oxide side. CHGNet carries the only non-ORB false-unstables (rate 0.333), CeO₂ (−0.26 THz) and
+modes, softened to −0.00 THz; this is the PES-softening bias of the literature, localised to
+specific instabilities. ORB-v2 carries one false-stable (rate 0.077): it correctly flags bcc-Zr
+(−0.43 THz) and bcc-Hf (−0.19 THz) unstable but reads SrTiO₃ at +0.00 THz. ORB-v2 (a direct-force
+model, run in its default float32 precision) softens in both directions; besides that false-stable
+it falsely calls MgO unstable (−1.07 THz), its one false-unstable on the oxide side. CHGNet carries the only non-ORB false-unstables (rate 0.333), CeO₂ (−0.27 THz) and
 NaCl (−0.24 THz), both genuinely stable controls tripped just past the −0.1 THz tolerance; both
 flip back to stable at a tolerance of ≈0.25 THz, so they are finite-displacement noise rather than
 a real instability.
 
 Because every binary call depends on the imaginary tolerance, we sweep it (Fig. 1). A strict
 tolerance (0 THz) floods false-unstables (29 calls) as near-Γ finite-displacement noise dominates,
-while a loose tolerance (0.3 THz) inflates false-stables (10 calls); the default −0.1 THz sits in
-the stable basin between them (6 false-stable, 3 false-unstable), and the split holds across
+while a loose tolerance (0.3 THz) inflates false-stables (7 calls); the default −0.1 THz sits in
+the stable basin between them (5 false-stable, 3 false-unstable), and the split holds across
 0.05–0.2 THz. The useful point is that the softening toward zero is the physics: per-system minimum
 frequencies, not binary rates, are the right reporting unit (Fig. 2). This reproduces the published
 picture and validates the harness.
@@ -318,7 +317,7 @@ bcc excluded because its thermodynamic-T_c label is the wrong reference for dyna
 | CHGNet | 0.188 | 0.867 | 0.789 |
 | MatterSim | 0.250 | 0.833 | 1.000 |
 | MACE-MP-0 | 0.250 | 0.833 | 0.895 |
-| ORB-v2 | 0.312 | 0.800 | 0.842 |
+| ORB-v2 | 0.312 | 0.800 | 0.895 |
 
 Read against the harmonic ranking (final column), the ordering is not preserved but neither is it
 inverted, and we are explicit about this because a naive comparison invites a cleaner story than the
