@@ -26,8 +26,26 @@ BCC = ["ti_bcc", "zr_bcc", "hf_bcc"]
 CONTROL = ["si_diamond", "mgo_rocksalt", "nacl_rocksalt", "cu_fcc", "c_diamond", "ceo2_cubic"]
 
 
-def _unstable_frac(x: pd.DataFrame) -> float:
-    return float((~x.dynamically_stable.astype(bool)).mean()) if len(x) else float("nan")
+def _recall(x: pd.DataFrame) -> float:
+    """Fraction of GENUINELY-UNSTABLE units correctly called unstable.
+
+    Scored against the temperature-resolved ground truth ``gt_stable``, not against the family
+    label. This matters wherever a transition falls inside the temperature window: SrTiO3 has
+    T_c = 105 K, so at 300 K the cubic phase really is stable and calling it stable is correct,
+    not a miss. Counting raw "fraction called unstable" over T <= 300 would penalise the right
+    answer.
+    """
+    u = x[~x.gt_stable.astype(bool)]
+    return float((~u.dynamically_stable.astype(bool)).mean()) if len(u) else float("nan")
+
+
+def _accuracy(x: pd.DataFrame) -> float:
+    return (float((x.dynamically_stable.astype(bool) == x.gt_stable.astype(bool)).mean())
+            if len(x) else float("nan"))
+
+
+def _n_unstable(x: pd.DataFrame) -> int:
+    return int((~x.gt_stable.astype(bool)).sum())
 
 
 def main(path: str) -> int:
@@ -44,14 +62,18 @@ def main(path: str) -> int:
     print(f"multi-mode rows: {len(v_new)}   legacy rows: {len(v_old)}")
     print()
 
-    print("=== recall on genuinely-unstable families (truth = UNSTABLE), T <= 300 K ===")
-    print(f"{'family':<22}{'legacy':>10}{'multi-mode':>14}{'n':>6}")
+    print("=== recall on genuinely-unstable units (gt_stable == False), T <= 300 K ===")
+    print(f"{'family':<22}{'legacy':>10}{'multi-mode':>14}{'n_unstable':>12}")
     fams = [("FE oxide perovskite", FE_OXIDE), ("AFD (SrTiO3)", AFD),
             ("halide perovskite", HALIDE), ("cubic fluorite", FLUORITE)]
     for name, sysl in fams:
         a = v_old[v_old.system.isin(sysl) & (v_old.temperature_K <= 300)]
         b = v_new[v_new.system.isin(sysl) & (v_new.temperature_K <= 300)]
-        print(f"{name:<22}{_unstable_frac(a):>10.2f}{_unstable_frac(b):>14.2f}{len(b):>6}")
+        print(f"{name:<22}{_recall(a):>10.2f}{_recall(b):>14.2f}{_n_unstable(b):>12}")
+    print()
+    print("=== ACCURACY vs temperature-resolved ground truth, ALL T, all 20 systems ===")
+    for nm, v in (("legacy", v_old), ("multi-mode", v_new)):
+        print(f"  {nm:<12} {_accuracy(v):.3f}   (n={len(v)})")
 
     print()
     print("=== controls (truth = STABLE): fraction correctly called stable ===")
@@ -66,7 +88,7 @@ def main(path: str) -> int:
     rows = []
     for m, g in v_new[v_new.system.isin(uns) & (v_new.temperature_K <= 300)].groupby("model"):
         ctl = v_new[(v_new.model == m) & v_new.system.isin(CONTROL)]
-        rows.append({"model": m, "n": len(g), "recall": _unstable_frac(g),
+        rows.append({"model": m, "n_unstable": _n_unstable(g), "recall": _recall(g),
                      "control_acc": float(ctl.dynamically_stable.astype(bool).mean())})
     print(pd.DataFrame(rows).sort_values("recall", ascending=False).round(3).to_string(index=False))
 
@@ -74,8 +96,8 @@ def main(path: str) -> int:
     print("=== screen vs SSCHA on the FE-oxide set, T <= 300 K ===")
     ss = d[(d.method == "sscha") & d.system.isin(FE_OXIDE) & (d.temperature_K <= 300)]
     scr = v_new[v_new.system.isin(FE_OXIDE) & (v_new.temperature_K <= 300)]
-    print(f"  multi-mode screen recall : {_unstable_frac(scr):.2f}  (n={len(scr)})")
-    print(f"  SSCHA recall             : {_unstable_frac(ss):.2f}  (n={len(ss)})")
+    print(f"  multi-mode screen recall : {_recall(scr):.2f}  (n={_n_unstable(scr)})")
+    print(f"  SSCHA recall             : {_recall(ss):.2f}  (n={_n_unstable(ss)})")
 
     print()
     print("=== mode census: distinct imaginary commensurate modes per system ===")
