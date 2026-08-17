@@ -20,8 +20,12 @@ DEFAULT_IMAG_TOL_THZ = -0.1
 # FC-commensurate one in e592e86, and because `settings` carried only the supercell the hash
 # was unchanged -- so every stale row was skipped as "already present" instead of recomputed.
 METHOD_VERSION = {
-    "harmonic": 1,
-    "softmode": 3,    # v3 = screen EVERY imaginary commensurate mode; unstable if ANY condenses
+    "harmonic": 2,    # v2 = re-measured in pinned, deposited environments (the v1 environment
+                      #      was never recorded and is not reproducible)
+    "softmode": 4,    # v4 = reported frequency is the symmetric-point free-energy CURVATURE
+                      #      (a real signed observable, the single-mode analog of the SSCHA
+                      #      free-energy Hessian); the stability CALL is unchanged (argmin)
+                      # v3 = screen EVERY imaginary commensurate mode; unstable if ANY condenses
                       # v2 = FC-commensurate q-search + acoustic mask by |omega| (was: 3 lowest)
     "sscha": 2,       # v2 = acoustic modes identified by |omega|, not by sort order
     "hiphive": 1,
@@ -29,6 +33,12 @@ METHOD_VERSION = {
     "tdep": 1,
     "md_distort": 1,
 }
+
+# Version of the softmode E(Q)-MAP layer only: relax + FCs + q-search + modulation + well
+# sampling + fit. This is what the cache files contain, so it is what the cache key encodes.
+# The solve layer above it (METHOD_VERSION["softmode"]) can advance without invalidating the
+# maps -- v4 changed only which scalar is reported from the same cached (a, b, c, m_eff).
+SOFTMODE_EQMAP_VERSION = 3
 
 SUPPORTED_MODELS = (
     "mace_mp0",

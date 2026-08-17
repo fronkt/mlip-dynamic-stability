@@ -16,7 +16,7 @@ import sys
 import time
 
 from . import ledger
-from . import METHOD_VERSION
+from . import METHOD_VERSION, SOFTMODE_EQMAP_VERSION
 from .calculators import get_calculator
 from .systems import get_spec, build_atoms
 
@@ -69,7 +69,8 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
     atoms = build_atoms(spec)
     t0 = time.time()
     base = dict(uhash=uhash, system=system, klass=spec.klass, model=model,
-                model_version=handle.version, method=method, temperature_K=temperature_K,
+                model_version=handle.version, method=method,
+                method_version=settings["mv"], temperature_K=temperature_K,
                 gt_harmonic_stable=spec.harmonic_stable, gt_finite_T_stable=spec.finite_T_stable,
                 transition_T_K=spec.transition_T_K)
 
@@ -96,9 +97,11 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
         from .finite_t import compute_finite_t_softmode
         # The E(Q) double-well map is temperature-independent, so the cache key omits T;
         # every extra temperature then reuses it for a sub-second 1D quantum solve.
-        # The cache key carries the method version too: a v1 E(Q) map was built along a mode
-        # chosen by the old q-search, so reusing it under v2 would silently re-import the bug.
-        cache = (f"results/cache/softmode_v{METHOD_VERSION['softmode']}m{max_modes}_{system}"
+        # The cache key carries the E(Q)-MAP version (not METHOD_VERSION): the cache holds the
+        # map layer only -- relax, FCs, q-search, modulation, well sampling, fit -- so it stays
+        # valid when the solve layer changes (v4 changed only the reported scalar). A map-layer
+        # change MUST bump SOFTMODE_EQMAP_VERSION or a stale map is silently reused.
+        cache = (f"results/cache/softmode_v{SOFTMODE_EQMAP_VERSION}m{max_modes}_{system}"
                  f"_{model}_sc{''.join(map(str,supercell))}.json")
         res = compute_finite_t_softmode(atoms, handle.calc, temperature_K,
                                         supercell=supercell, max_modes=max_modes,

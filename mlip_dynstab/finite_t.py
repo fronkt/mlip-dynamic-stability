@@ -761,6 +761,38 @@ def _solve_scha(a, b, c, m_eff, temperature_K, q_box=0.6, nq=121):
     return eff_freq_thz, order_Q0, stable
 
 
+def _sym_curvature_freq(a, b, c, m_eff, temperature_K, dQ=0.005):
+    """Signed effective frequency from the free-energy curvature at the symmetric point,
+    omega_eff = sign(F'') sqrt(|F''(0)| / M_eff): the single-mode analog of the SSCHA
+    free-energy Hessian (Bianco et al., PRB 96, 014111), and a REAL observable whose sign is
+    physics rather than a stability boolean.
+
+    F(Q0) is even in Q0, so F'(0) = 0 exactly and a one-sided stencil is central:
+    F''(0) = (16[F(h)-F(0)] - [F(2h)-F(0)]) / (6 h^2) + O(h^4).
+
+    Note the curvature and the argmin-based stability call CAN disagree, and the disagreement
+    is information, not noise: for a deep double well the variational transition is
+    first-order-like, F(0) stays a local minimum (positive curvature) while a displaced
+    minimum drops below it. A curvature criterion is blind to that condensation by
+    construction -- the same blindness that afflicts the SSCHA free-energy Hessian evaluated
+    at a fixed high-symmetry reference. Returns None if no bound Gaussian exists at Q0=0
+    (not observed on the production set; guarded anyway)."""
+    import numpy as np
+    F0, _, _, _ = _scha_branch(0.0, a, b, c, m_eff, temperature_K)
+    if not np.isfinite(F0):
+        return None
+    F1, _, _, _ = _scha_branch(dQ, a, b, c, m_eff, temperature_K)
+    F2, _, _, _ = _scha_branch(2 * dQ, a, b, c, m_eff, temperature_K)
+    if np.isfinite(F1) and np.isfinite(F2):
+        K = (16 * (F1 - F0) - (F2 - F0)) / (6 * dQ ** 2)
+    elif np.isfinite(F1):
+        K = 2 * (F1 - F0) / dQ ** 2
+    else:
+        return None
+    om2 = K * _W_TO_OMEGA2 / m_eff
+    return float(np.sign(K) * np.sqrt(abs(om2)) / (2 * np.pi) / 1e12)
+
+
 def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
                               q_max=0.45, n_pts=10, imag_tol_thz=DEFAULT_IMAG_TOL_THZ,
                               relax=True, fmax=1e-3, disp=0.01, max_modes=24,
@@ -777,6 +809,12 @@ def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
     the (non-condensing) Gamma ferroelectric mode instead of the R-point tilt that drives the
     transition. The E(Q) maps are temperature-independent and cached, so every extra temperature
     is a sub-second CPU solve over all modes.
+
+    Reported observable vs call: ``min_eff_freq_thz`` is the minimum over screened modes of the
+    symmetric-point free-energy curvature frequency (see ``_sym_curvature_freq``), a genuine
+    signed observable directly comparable to the SSCHA free-energy Hessian. The stability CALL
+    is the argmin criterion (any condensing mode), which detects first-order-like condensation
+    the curvature cannot; ``n_curv_blind`` counts the modes where the two disagree.
     """
     import json
     import os
@@ -817,22 +855,30 @@ def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
             os.makedirs(os.path.dirname(cache_path), exist_ok=True)
             json.dump(cache, open(cache_path, "w"))
 
-    # Solve every mode at this temperature; the phase is unstable if ANY condenses.
+    # Solve every mode at this temperature; the phase is unstable if ANY condenses. Each mode
+    # yields two observables: the argmin-based condensation call (the stability criterion,
+    # Gibbs-Bogoliubov: the lowest free energy wins) and the symmetric-point curvature
+    # frequency (the signed observable reported to the ledger; see _sym_curvature_freq for why
+    # the two can honestly disagree on deep wells).
     solved = []
     for e in cache["modes"]:
         if e["band"] < 0:                       # harmonically-stable placeholder
-            solved.append({"eff": float(e["harm_thz"]), "Q0": 0.0, "stable": True, **e})
+            solved.append({"eff": float(e["harm_thz"]), "curv": float(e["harm_thz"]),
+                           "Q0": 0.0, "stable": True, **e})
             continue
         eff, Q0, st = _solve_scha(e["a"], e["b"], e["c"], e["m_eff"], temperature_K)
-        solved.append({"eff": eff, "Q0": Q0, "stable": bool(st), **e})
+        curv = _sym_curvature_freq(e["a"], e["b"], e["c"], e["m_eff"], temperature_K)
+        solved.append({"eff": eff, "curv": (eff if curv is None else curv),
+                       "Q0": Q0, "stable": bool(st), **e})
 
     condensed = [s for s in solved if not s["stable"]]
     stable = len(condensed) == 0
     # The deciding mode: the condensing one with the largest order parameter if unstable,
-    # otherwise the least-stable (lowest effective frequency) mode.
+    # otherwise the mode with the lowest curvature frequency.
     decide = (max(condensed, key=lambda s: s["Q0"]) if condensed
-              else min(solved, key=lambda s: s["eff"]))
-    eff_freq, order_Q = decide["eff"], decide["Q0"]
+              else min(solved, key=lambda s: s["curv"]))
+    eff_freq = float(min(s["curv"] for s in solved))     # min curvature over screened modes
+    order_Q = decide["Q0"]
     cache_compat = {"supercell": decide["dim"], "Qs": decide["Qs"],
                     "m_eff": decide["m_eff"], "well_depth_meV": decide["well_depth_meV"],
                     "harm_min_thz": decide["harm_thz"], "a": decide["a"],
@@ -841,7 +887,7 @@ def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
         temperature_K=float(temperature_K), method="softmode",
         min_eff_freq_thz=eff_freq, dynamically_stable=stable, imag_tol_thz=imag_tol_thz,
         supercell=list(cache_compat["supercell"]), n_samples=len(cache_compat["Qs"]),
-        extra={"soft_mode_freq_thz": eff_freq,
+        extra={"soft_mode_freq_thz": float(decide["curv"]),
                "harm_soft_thz": cache_compat["harm_min_thz"],
                "order_param_Q_ang": order_Q, "m_eff_amu": cache_compat["m_eff"],
                "well_depth_meV": cache_compat["well_depth_meV"],
@@ -856,8 +902,14 @@ def compute_finite_t_softmode(atoms, calc, temperature_K, supercell=(2, 2, 2),
                "decide_harm_thz": float(decide["harm_thz"]),
                "modes_q": ";".join(",".join(f"{x:.3f}" for x in s["q"]) for s in solved),
                "modes_harm_thz": ";".join(f"{s['harm_thz']:.3f}" for s in solved),
+               "modes_curv_thz": ";".join(f"{s['curv']:.3f}" for s in solved),
                "modes_Q0_ang": ";".join(f"{s['Q0']:.4f}" for s in solved),
-               "modes_stable": ";".join("1" if s["stable"] else "0" for s in solved)},
+               "modes_stable": ";".join("1" if s["stable"] else "0" for s in solved),
+               # Rows where the curvature is positive yet the mode condenses: first-order-like
+               # condensation that any fixed-reference curvature criterion (incl. the SSCHA
+               # free-energy Hessian) is blind to. Recorded, not hidden.
+               "n_curv_blind": sum(1 for s in solved
+                                   if (not s["stable"]) and s["curv"] > 0)},
     )
 
 

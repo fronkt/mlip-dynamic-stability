@@ -24,22 +24,27 @@ def canonical(df: pd.DataFrame) -> pd.DataFrame:
     single-mode grid and the current multi-mode grid and count each unit twice -- inflating n,
     corrupting every rate, and blending two different measurements in one figure.
 
-    Current-generation softmode rows are identified by a non-null ``ft_n_imag_total`` (the
-    multi-mode screen records how many distinct imaginary commensurate modes it found). If no
-    multi-mode rows are present the legacy rows are returned unchanged, so this is safe on an
-    old ledger. Other methods are passed through untouched.
+    Rows written since 2026-08 carry an explicit ``method_version`` column; for each method the
+    highest version present wins. Rows written before the column existed are inferred: softmode
+    rows with a non-null ``ft_n_imag_total`` are the multi-mode generation (3), everything else
+    is generation 1. If a method has only one generation, its rows pass through unchanged, so
+    this is safe on an old ledger.
 
     Call this ONCE at load. Anything that reads the ledger directly is a bug.
     """
-    if "method" not in df.columns or "ft_n_imag_total" not in df.columns:
+    if "method" not in df.columns:
         return df
-    sm = df["method"] == "softmode"
-    if not sm.any():
-        return df
-    current = sm & df["ft_n_imag_total"].notna()
-    if not current.any():
-        return df                      # legacy-only ledger: nothing to disambiguate
-    return df[~sm | current].copy()
+    inferred = pd.Series(1.0, index=df.index)
+    if "ft_n_imag_total" in df.columns:
+        inferred[(df["method"] == "softmode") & df["ft_n_imag_total"].notna()] = 3.0
+    if "method_version" in df.columns:
+        mv = pd.to_numeric(df["method_version"], errors="coerce").fillna(inferred)
+    else:
+        mv = inferred
+    keep = pd.Series(False, index=df.index)
+    for _, g in df.groupby("method"):
+        keep[g.index[mv[g.index] == mv[g.index].max()]] = True
+    return df[keep].copy()
 
 
 def load_canonical(path=None) -> pd.DataFrame:
