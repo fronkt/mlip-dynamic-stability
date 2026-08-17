@@ -44,15 +44,28 @@ families with a free-energy criterion and a T-ladder.
    supplementary, cover letter, `.zenodo.json`; DOCX rebuilt. `analysis.canonical` added so a
    figure can never mix method generations.
 
-**NEXT:**
-1. §2.4 derivation — now unblocked, since the method definition is final. Gibbs–Bogoliubov
-   statement, F(Q₀,σ;T), the coth width self-consistency, and an approximation ledger.
-2. Re-run the 208 SSCHA units in the pinned environment. They currently carry only the *derived*
-   D1 correction (recomputed from stored spectra, not re-measured) — the remaining measurement gap.
-3. Optional but valuable: one `include_v4=True` run driven to completion on a single BaTiO₃ unit,
-   to convert the root-cause claim from literature-supported inference to direct measurement.
-4. Re-run the 3×3×3 soft-mode convergence study, currently marked superseded in §3.5.
-5. Mint a new Zenodo version once the above settle (the live record still describes the v1 screen).
+**COMPLETED 2026-08-17 (the five submission blockers, all pushed):**
+1. ✅ §2.4 derivation written: Peierls bound → displaced Gaussian trial state → coth width →
+   moment identities → self-consistency, each equation matching the code; Table 1 = six-row
+   approximation ledger with measured pointers (fit-window sweep in ESI: 0.5–1.3% of 756 calls).
+2. ✅ Sign convention fixed FOR REAL: reported frequency = symmetric-point free-energy curvature
+   (softmode v4), the honest analog of the SSCHA Hessian; argmin call unchanged; `n_curv_blind`
+   records first-order-like condensations the curvature cannot see (SrTiO₃ R-tilt: +0.92 THz
+   while condensing at 100 K — the same blindness that afflicts fixed-reference SSCHA).
+3. ✅ Harmonic v2 re-measured in pinned envs (gate: MACE/BaTiO₃ = deposited −6.4113 exactly).
+   Four models reproduce v1; ORB-v2 0.842→0.895. §3.1+abstract updated.
+4. ✅ SSCHA v3 re-measured: 201/208 units, phonopy-built initialiser (ase 3.29 killed the
+   cellconstructor ASE bridge; conversion validated to 0.0003 THz), pinned envs. FE recall 0.19
+   vs screen 0.53; 7 deepest-well units fail loudly (v1: silent −2×10⁶ blow-ups); bcc 75/75
+   clean, call agreement 0.78/0.83; zr/MACE +1.80 reproduces the v1 seed study.
+5. ✅ Zenodo v2.0.0 minted: 10.5281/zenodo.21978533; concept DOI 10.5281/zenodo.20805799 (cited
+   in the manuscript) resolves to it. verify_claims.py: 27 assertions, all pass.
+
+**REMAINING (non-blocking, future work):**
+- One `include_v4=True` run to completion on a BaTiO₃ unit (inference → direct measurement).
+- 3×3×3 soft-mode convergence re-run (marked superseded in §3.5); 4×4×4 SrTiO₃ SSCHA.
+- SUBMIT to Digital Discovery. For Yau: research video + 500–1500 word acknowledgments with AI
+  disclosure still owed (see chat log for the FAQ requirements).
 
 **Process/progress:**
 - Data COMPLETE: ledger.parquet = harmonic (100) + softmode (400, 20 sys × 5 models × 4 T) +
