@@ -53,7 +53,7 @@ I confirm that this manuscript is original, has not been published previously, a
 consideration for publication elsewhere. It has a single author with no conflicts of interest to
 declare. All code and the per-unit results ledger are openly available
 (https://github.com/fronkt/mlip-dynamic-stability; archived at Zenodo,
-https://doi.org/10.5281/zenodo.20805824), so every reported number regenerates from the deposited
+https://doi.org/10.5281/zenodo.20805799), so every reported number regenerates from the deposited
 artifacts.
 
 Thank you for considering this work.
