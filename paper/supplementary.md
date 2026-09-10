@@ -52,6 +52,39 @@ the SrTiO₃ gate.
 - **SCHA self-consistency.** The width is solved with a bracketed root finder to avoid a runaway
   large-σ spurious root.
 
+### S1.2 Harmonic estimator reproducibility: the v1/v2 paired replicate
+
+The harmonic layer was measured twice. Generations v1 and v2 run the *same algorithm at the same
+settings* — 0.01 Å displacements, 2×2×2 supercells, 12×12×12 meshes — in independently pinned
+software environments (`mlip_dynstab/__init__.py`), so the pair is a genuine replicate of the
+estimator rather than a re-run of a cached result. That gives 100 paired (system, model)
+measurements of the softest-mode frequency. Reproduced by `scripts/estimator_noise.py` from the
+deposited ledger; no new computation is involved.
+
+| model | n | median \|Δ\| (THz) | p95 \|Δ\| | max \|Δ\| | stability-call flips |
+|---|---|---|---|---|---|
+| CHGNet | 20 | 5.7 × 10⁻⁵ | 3.6 × 10⁻³ | 0.0076 | 0 |
+| MatterSim | 20 | 5.4 × 10⁻⁵ | 5.4 × 10⁻⁴ | 0.00057 | 0 |
+| SevenNet-0 | 20 | 1.7 × 10⁻⁵ | 4.8 × 10⁻⁴ | 0.0010 | 0 |
+| MACE-MP-0 | 20 | 1.5 × 10⁻¹² | 4.2 × 10⁻¹ | 0.536 | 0 |
+| ORB-v2 | 20 | 4.3 × 10⁻² | 1.9 | 2.011 | 2 |
+
+**The spread must not be pooled.** The pooled max of 2.01 THz is entirely an ORB-v2 artifact and
+overstates CHGNet and MatterSim — the two models that carry the §3.2 reordering — by roughly two
+orders of magnitude. ORB-v2's two flipped calls are `ktao3_cubic`, which is already excluded from
+the matched set as borderline, and `hf_bcc`, which moves from −0.0891 to −0.1937 THz (the same call
+either way at the production tolerance, but a flip at tol = 0). This is consistent with ORB-v2's
+float32 direct-force architecture, identified as the weakest model in §3.1 on independent grounds.
+
+**This is a lower bound, not a full characterisation.** v1 and v2 share a code path, a displacement
+amplitude and a seedless algorithm, so the pair probes environment and library nondeterminism only.
+It does *not* probe sensitivity to the finite displacement amplitude itself, which is the axis a
+reader familiar with κ_SRME's estimator noise will ask about. Closing that would require re-running
+the 95 scored units on a displacement grid (0.005 / 0.01 / 0.02 / 0.03 Å). Note for anyone
+attempting it: `disp` is hardcoded in `harmonic.py` and is *not* part of the unit hash, so it must
+be added to the settings dict with a `METHOD_VERSION` bump or `has_unit()` will silently skip every
+re-run unit.
+
 ## S2. SSCHA harness and the displacive-instability failure
 
 ### S2.1 Minimizer step cap

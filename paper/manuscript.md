@@ -23,8 +23,10 @@ models divide: MatterSim and SevenNet-0 reproduce every documented soft mode (ac
 whereas MACE-MP-0 and CHGNet soften the bcc Zr/Hf instabilities to zero (15% false-stable rate)
 and ORB-v2 misses the SrTiO₃ soft mode (8%). (ii) Harmonic accuracy does not predict finite-temperature accuracy in either
 direction: CHGNet is the worst model harmonically yet the second best at finite temperature, while
-MatterSim is harmonically perfect and only mid-table, and on the matched set the two are
-non-significantly concordant at 100 K and significantly anti-associated at 300 K. Screening every
+MatterSim is harmonically perfect and only mid-table; on the matched set harmonic correctness does
+not transfer — 17 harmonically-correct units are mis-called at 300 K against only 4 the other way
+(McNemar exact p = 0.007) — although the residual negative association is not itself significant
+once pairs are clustered by system. Screening every
 imaginary mode rather than the softest one is essential, because the deepest mode need not be the
 one that condenses: in SrTiO₃ the Γ ferroelectric mode is deeper than the R-point tilt yet is
 quantum-suppressed, and only the tilt drives the 105 K transition. (iii) Multi-mode SSCHA with an MLIP force
@@ -75,9 +77,10 @@ We pre-registered three hypotheses.
 - H2 (the finite-temperature gap, the contribution). Harmonic accuracy does not certify a model
   for finite-temperature screening, and the harmonic ranking need not carry over. (The
   pre-registered form was "harmonic accuracy is uncorrelated with finite-temperature accuracy". The
-  matched-set outcome is temperature-dependent — non-significantly concordant at 100 K, and
-  significantly anti-associated at 300 K — so the pre-registered form is neither cleanly confirmed
-  nor cleanly rejected; see §3.2.)
+  matched-set outcome is that harmonic correctness does not transfer — significantly so at 300 K, as
+  a difference in layer difficulty — while the direction of any residual association is unresolved
+  at this sample size, so the pre-registered form is neither cleanly confirmed nor cleanly rejected;
+  see §3.2.)
 - H3 (practical guardrail). Inter-model (ensemble) disagreement flags unreliable calls better than
   any single model's self-reported energetics.
 
@@ -321,13 +324,38 @@ bcc excluded because its thermodynamic-T_c label is the wrong reference for dyna
 
 Read against the harmonic ranking (final column), the ordering is not preserved but neither is it
 inverted, and we are explicit about this because a naive comparison invites a cleaner story than the
-data support. The matched non-bcc, non-borderline comparison (n = 75 system×model pairs) is
-temperature-dependent. At T = 100 K the two are weakly and non-significantly concordant: φ = 0.149
-with McNemar exact p = 0.73, and a matched per-model accuracy rank correlation of ρ = +0.65. At
-T = 300 K the relationship reverses and becomes significant: φ = −0.129 with McNemar exact
-p = 0.007, driven by 17 harmonically-correct units that are mis-called at finite temperature against
-only 4 the other way. Harmonic correctness therefore does not transfer, and at the higher
-temperature it is significantly *anti*-associated with finite-temperature correctness on this set.
+data support. The matched non-bcc, non-borderline comparison (n = 75 system×model pairs, clustered as five
+models over fifteen systems) is temperature-dependent, and we separate two questions that a single
+2×2 table invites conflating. The first is whether the two layers are equally hard, a question of
+marginal homogeneity that McNemar's exact test addresses. At T = 300 K they are not: 17
+harmonically-correct units are mis-called at finite temperature against only 4 the other way,
+McNemar exact p = 0.007. Harmonic correctness therefore does not transfer, and this is the
+significant result. The second question is whether harmonic and finite-temperature correctness are
+*associated*, which McNemar does not test. There the effect is negative but not significant:
+φ = −0.129 at 300 K, with a system-clustered permutation p = 0.31 over 10,000 permutations of whole
+systems' finite-temperature rows, and a system-clustered bootstrap 95% interval of [−0.195, −0.057]
+— an interval that reflects the precision of the point estimate rather than a test of the null, and
+whose sign rides on a structurally empty both-incorrect cell. At T = 100 K the association is weakly
+positive and likewise not significant (φ = +0.149, clustered permutation p = 0.12, McNemar exact
+p = 0.73, matched per-model rank correlation ρ = +0.65). With five models and fifteen systems this
+design cannot resolve the sign of the association, and we do not claim it. The transferable finding
+is the failure of transfer itself. (The matched set excludes systems whose name carries the bcc
+tag, which also removes the superionic AgI unit; the denominator is therefore fifteen systems, not
+sixteen.)
+
+Because the reordering rests on harmonic calls, we bound the harmonic estimator's own
+reproducibility noise directly rather than assuming it is small. The v1 and v2 harmonic generations
+(§2.3) are the same algorithm at the same settings — 0.01 Å displacements, 2×2×2 supercells,
+12×12×12 meshes — re-measured in independently pinned environments, giving 100 paired (system,
+model) re-measurements. The spread is strongly model-dependent and must not be pooled: CHGNet's
+largest deviation is 0.0076 THz and MatterSim's is 0.00057 THz, with zero stability-call flips
+across all forty of their re-measurements, whereas ORB-v2's reaches 2.01 THz and flips two calls,
+one of them the KTaO₃ unit already excluded as borderline. The two models carrying the reordering
+are therefore separated by two to four orders of magnitude more than the estimator's own noise, and
+what noise exists is localised to the float32 direct-force model that §3.1 already identifies as the
+weakest. This bounds environment and library nondeterminism at fixed displacement amplitude; it does
+not probe sensitivity to the amplitude itself, which would require re-measurement on a displacement
+grid (ESI §S1.2).
 
 The defensible H2 statement is that harmonic accuracy does not predict finite-temperature accuracy,
 in either direction. The clearest single demonstration is CHGNet: it is the **worst** model
@@ -343,6 +371,14 @@ fails to select the correct instability in SrTiO₃ (§2.4), consistent with its
 architecture over-softening the PES, though our design cannot separate the architecture from the
 precision. The strongest evidence that finite temperature is a distinct, harder regime comes not
 from this ranking comparison but from the per-family recall above and the SSCHA failure in §3.3.
+
+CHGNet's harmonic accuracy is tolerance-dependent: 0.789 across the plateau tol ∈ [0.05, 0.20] used
+throughout, rising to 0.895 at tol = 0.30, where two marginal false-unstables (CeO₂ at −0.267 THz
+and NaCl at −0.238 THz) flip back and ORB-v2 becomes the uniquely worst model. We therefore state
+the ordering rather than the number as the claim: CHGNet sits strictly below MatterSim harmonically
+at every tolerance in [0.05, 0.50] and above it at finite temperature. At tol = 0 all five models
+collapse to 0.63–0.74 as the Γ acoustic numerical zeros flood the false-unstable count, and the
+comparison is degenerate.
 
 ### 3.3 SSCHA: clean for bcc, false-stable for perovskites at the default truncation (the cautionary result)
 

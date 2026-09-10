@@ -399,7 +399,7 @@ def h3_guardrail_summary(df: pd.DataFrame, method: str = "softmode",
 # ------------------------------------------------------------------- report ----
 
 def summary(ledger_path=None) -> dict:
-    df = load_ledger(ledger_path) if ledger_path else load_ledger()
+    df = load_canonical(ledger_path) if ledger_path else load_canonical()
     out = {"n_rows": len(df)}
     if df.empty:
         return out

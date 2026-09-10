@@ -1,6 +1,12 @@
 # Revision 2026-09-10 — estimator-noise treatment and the association restatement
 
-Status: **DRAFT for Frank's review. Nothing in `manuscript.md` has been edited.**
+Status: **APPLIED 2026-09-10.** All three changes are now in `manuscript.md`; the ESI
+addition is `paper/supplementary.md` §S1.2; both incidental bugs are addressed (the
+`analysis.summary()` fix is committed, the `agi_bcc` exclusion is now stated explicitly in
+§3.2 rather than silently applied). DOCX rebuilt. `scripts/verify_claims.py` still passes
+27/27 — the revision withdrew an *interpretation*, not any measured number.
+
+Retained as the rationale record for the changes; see the git history for the diffs.
 
 Source of numbers: `scripts/estimator_noise.py` → `results/estimator_noise.json`
 (zero compute; re-reads the deposited ledger; numpy/pandas only, no scipy added).
