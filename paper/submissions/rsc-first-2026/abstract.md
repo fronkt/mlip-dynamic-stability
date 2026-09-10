@@ -16,7 +16,7 @@ potentials that harmonic benchmarks rank equally
 ## Author
 
 Frank Cai
-Purdue University, West Lafayette, Indiana, USA
+Purdue University, West Lafayette, Indiana 47907, USA
 frankyc11223@gmail.com
 ORCID 0009-0003-0041-1459
 
@@ -40,11 +40,23 @@ Three results follow. First, harmonic accuracy does not predict finite-temperatu
 either direction: the worst model harmonically is the second best at finite temperature, and a
 harmonically perfect model is only mid-table. Second, screening every imaginary mode rather than
 the softest one is essential, because the deepest mode need not be the one that condenses — in
-SrTiO3 the Γ ferroelectric mode is deeper than the R-point tilt yet is quantum-suppressed, and
+SrTiO₃ the Γ ferroelectric mode is deeper than the R-point tilt yet is quantum-suppressed, and
 only the tilt drives the 105 K transition. Third, MLIP-driven SSCHA at its default bubble
 truncation systematically false-stabilises deep displacive instabilities and can diverge
 numerically; we measure this predicted failure at benchmark scale. Cross-model disagreement
 supplies a cheap, practical guardrail for flagging the resulting unreliable calls.
+
+## Keywords
+
+machine-learning interatomic potentials; dynamic stability; anharmonicity; stochastic
+self-consistent harmonic approximation; high-throughput screening
+
+## References
+
+1. A. Loew, D. Sun, H.-C. Wang, S. Botti and M. A. L. Marques, *npj Comput. Mater.*, 2025, **11**, 178.
+2. L. Monacelli, R. Bianco, M. Cherubini, M. Calandra, I. Errea and F. Mauri, *J. Phys.: Condens. Matter*, 2021, **33**, 363001.
+3. T. Tadano and S. Tsuneyuki, *Phys. Rev. B*, 2015, **92**, 054301.
+4. L. Monacelli, *Phys. Rev. B*, 2025, **112**, 014109.
 
 ## Notes
 
@@ -57,8 +69,22 @@ supplies a cheap, practical guardrail for flagging the resulting unreliable call
   matching the author block actually used in the Digital Discovery manuscript
   (`paper/manuscript.md:5`) and the ORCID record. (An earlier draft of this file used a
   `@purdue.edu` address and claimed it matched the DD submission; it does not.)
-- No abstract word limit is published on the conference site; 269 words is comfortably inside what is conventional for an
-  RSC conference abstract. Trim candidates if a limit turns out to be lower: the SrTiO3 clause
-  in result two, then the final guardrail sentence.
-- The official template must be downloaded from the Abstract Submission page and this text pasted
-  into it; the conference requires the template, not free-form text.
+- **Word limit RESOLVED (2026-09-10): the official template states "300 words maximum."** An
+  earlier note in this file said no limit was published; that was wrong — the limit lives in the
+  template, not on the web page. At 269 words the abstract fits with 31 words of headroom. Trim
+  candidates if it ever needs to shrink: the SrTiO₃ clause in result two, then the final guardrail
+  sentence.
+- **Template obtained.** The Abstract Submission page links it via a redirect
+  (`/en/web/jump/36624?mid=3190186&nid=148374` →
+  `https://files.sciconf.cn/public/2117/54869/202604/2026042208335886319410752.docx`). It requires:
+  Times New Roman throughout, a **Keywords** line and a **References** list in RSC style
+  (`A. Name, B. Name and C. Name, Journal Title, 2000, 35, 3523`) — both of which this draft
+  originally lacked and which are now supplied above. Figures/images are permitted.
+- **Submission-ready file: `abstract-rsc-first-2026.docx`** in this directory, generated into the
+  official template by `build_abstract_docx.py` (re-runnable; it reads this file as the single
+  source of truth, so edit the Markdown and rebuild rather than editing the DOCX).
+- Submission route: Conference Personal Dashboard at https://www.rscfirst.org.cn/en/user/login/ →
+  Submit. Requires Frank's login; presentation type selected in the portal, not in the file.
+- Affiliation carries postal code 47907 (Purdue West Lafayette main campus), which the manuscript's
+  author block omits; the template asks for a postal address. No department is named, matching
+  `paper/manuscript.md:5`. Change if you would rather list Engineering Technology.
