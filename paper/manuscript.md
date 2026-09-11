@@ -205,7 +205,12 @@ it binds on 20 of the 400 units, every one of which is already called unstable w
 condensing modes, so it cannot affect any call (a cap can only ever create a false-*stable*, which
 would require all 24 screened modes to be non-condensing). Three earlier finite-temperature routes
 (hand-rolled TDEP,^5^ one-shot hiPhive, and rattled-MD) were implemented and discarded after they
-failed the SrTiO₃ gate; see the ESI.
+failed the SrTiO₃ gate; see the ESI. The variational criterion is not interchangeable with a
+direct thermal-density criterion, and ESI §S1.4 makes the distinction concrete by solving the
+same fitted potentials exactly: an isolated mode's thermal density stays bimodal at every
+temperature, because it tends to exp(−V/k_BT), so the temperature dependence the screen needs
+comes from the self-consistency rather than from the shape of the well. That comparison also
+shows the screen never condenses a mode whose exact density is unimodal (0 of 228).
 
 Approximations, declared. Table 1 states what the screen neglects, the expected direction of the
 bias, and where the consequence is visible in our own data.
@@ -565,14 +570,29 @@ is well-posed (`results/convergence_study.parquet`): for bcc-Zr the dynamic-stab
 holds from 2×2×2 to 3×3×3 (+1.80 to +1.56 THz at 100 K, +1.80 to +1.55 at 300 K). We report the
 soft-mode side of that study as superseded rather than as evidence: those runs were produced by the
 earlier single-mode selection, before the correction described in §2.4, and have not been repeated
-at 3×3×3. One caveat is intrinsic to the physics rather than the method, and it is now the central
-reason the multi-mode criterion is necessary: the SrTiO₃ antiferrodistortive instability lives at
-the zone-boundary R point = (½,½,½), which is commensurate only with even supercells, so a 3×3×3
-cell is blind to it by construction. A 2×2×2-versus-3×3×3 comparison is therefore not a valid
-convergence test for R-point systems, and the definitive even-cell test (4×4×4, a ~320-atom SSCHA)
-is left to future work. The §3.3 SSCHA false-stable is not a missing-q artifact: it occurs for the
-Γ ferroelectric mode of BaTiO₃, which is present in every cell including the 2×2×2 used, so the
-failure is the fourth-order truncation identified in the root-cause diagnostic, not finite size.
+at 3×3×3.
+
+We now state the limits of that test rather than letting the bcc result stand for the set. The
+SrTiO₃ antiferrodistortive instability lives at the zone-boundary R point = (½,½,½), which is
+commensurate only with even supercells, so a 3×3×3 cell is blind to it by construction and a
+2×2×2-versus-3×3×3 comparison is not a valid convergence test for it. The same objection applies
+to the fluorite X-point mode: X is commensurate with the 2×2×2 cell, so the mode is present, but
+3×3×3 does not contain it either, so no cell-size comparison is available there. **The
+zone-boundary systems therefore have no supercell-convergence test in this work, and we make no
+convergence claim for them.** The definitive even-cell test (4×4×4, a ~320-atom SSCHA) remains
+future work. The claim we do make is the narrower one the data support: the SSCHA verdict is
+cell-robust where we were able to test it, which is bcc.
+
+Separately, the §3.3 SSCHA false-stable is not a missing-**q** artifact, and this can be
+established without a convergence test by comparing methods within a fixed cell. For BaTiO₃ the
+instability is the Γ ferroelectric mode, present in every cell including the 2×2×2 used. That
+argument covers one system, so we extend it to the fluorites by the stronger route: in the same
+2×2×2 cell and with the same force engine, the harmonic calculation finds every one of the ten
+fluorite units unstable, from −3.8 to −10.6 THz, while SSCHA finds every one of them stable, from
++1.9 to +3.3 THz. The cell demonstrably resolves the instability, because the harmonic
+calculation resolves it there; what loses it is the free-energy Hessian's truncation, exactly as
+the root-cause diagnostic finds. A finite-size explanation would have to account for an
+instability that is visible to one method and invisible to another in the same supercell.
 
 ## 4. Discussion
 

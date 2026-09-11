@@ -98,6 +98,23 @@ def main() -> int:
     ma = A.method_agreement_summary(d[d.system.isin(BCC)])
     check(ma["n_paired"] == 45 and abs(ma["sign_agreement"] - 0.778) < 0.005,
           f"[3.3] bcc call agreement {ma['sign_agreement']:.3f} over 45 pairs")
+    # [3.5] within-cell control: the same 2x2x2 cell that SSCHA calls stable is a cell in
+    # which the harmonic calculation sees the fluorite instability. Pins the argument that the
+    # fluorite false-stable is the truncation and not finite size (R3 item 2).
+    FLUOR = ["zro2_cubic", "hfo2_cubic"]
+    fh = d[(d.method == "harmonic") & d.system.isin(FLUOR)]
+    fq = d[(d.method == "sscha") & d.system.isin(FLUOR) & (d.temperature_K == 100)]
+    check(len(fh) == 10 and (~fh.pred_stable.astype(bool)).all()
+          and abs(fh.min_freq_thz.max() - (-3.788)) < 0.01
+          and abs(fh.min_freq_thz.min() - (-10.595)) < 0.01,
+          f"[3.5] harmonic calls all 10 fluorite units unstable in the 2x2x2 cell "
+          f"({fh.min_freq_thz.min():.1f} to {fh.min_freq_thz.max():.1f} THz)")
+    check(len(fq) == 10 and (fq.pred_stable.astype(bool)).all()
+          and abs(fq.min_eff_freq_thz.min() - 1.903) < 0.01
+          and abs(fq.min_eff_freq_thz.max() - 3.331) < 0.01,
+          f"[3.5] SSCHA calls all 10 fluorite units stable in the SAME cell "
+          f"(+{fq.min_eff_freq_thz.min():.1f} to +{fq.min_eff_freq_thz.max():.1f} THz)")
+
     ma2 = A.method_agreement_summary(d[d.system.isin(BCC) & (d.model != "orb_v2")])
     check(abs(ma2["sign_agreement"] - 0.833) < 0.005,
           f"[3.3] bcc call agreement excl ORB {ma2['sign_agreement']:.3f}")
