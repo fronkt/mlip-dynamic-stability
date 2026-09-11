@@ -15,10 +15,13 @@ machinery that resamples whole *systems* rather than units. The clustering unit 
 throughout -- that is the level at which the physics, the ground-truth label and the error
 structure are shared.
 
-scipy is deliberately absent from this repo's pinned environments, so the normal quantile and
-every test here is hand-rolled on numpy. The permutation code follows the pattern already
-established in ``scripts/estimator_noise.py`` for the phi coefficient; that script now imports
-from here rather than carrying a second copy.
+Everything here is hand-rolled on numpy, including the normal quantile. scipy *is* importable in
+the analysis environment (``finite_t`` uses ``scipy.optimize.brentq`` and
+``scipy.linalg.eigh_tridiagonal``), so this is a consistency choice rather than a necessity: it
+matches ``scripts/estimator_noise.py``, which is already scipy-free, and it keeps every
+statistic in the paper readable in one place without a version-dependent library between the
+ledger and the number. The permutation code follows the pattern that script established for the
+phi coefficient.
 """
 
 from __future__ import annotations
