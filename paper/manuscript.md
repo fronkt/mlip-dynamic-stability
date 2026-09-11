@@ -1,4 +1,4 @@
-# Finite-temperature dynamic stability separates foundation machine-learning interatomic potentials that harmonic benchmarks rank equally
+# Neither harmonic benchmarks nor a default SSCHA cross-check certifies a foundation machine-learning interatomic potential for finite-temperature dynamic stability
 
 Frank Cai^a^
 
@@ -21,12 +21,14 @@ cross-validate it against the gold-standard multi-mode stochastic SCHA (SSCHA). 
 findings together with a practical ensemble-disagreement guardrail. (i) At the harmonic level the
 models divide: MatterSim and SevenNet-0 reproduce every documented soft mode (accuracy 1.00),
 whereas MACE-MP-0 and CHGNet soften the bcc Zr/Hf instabilities to zero (15% false-stable rate)
-and ORB-v2 misses the SrTiO₃ soft mode (8%). (ii) Harmonic accuracy does not predict finite-temperature accuracy in either
-direction: CHGNet is the worst model harmonically yet the second best at finite temperature, while
-MatterSim is harmonically perfect and only mid-table; on the matched set harmonic correctness does
-not transfer — 17 harmonically-correct units are mis-called at 300 K against only 4 the other way
-(McNemar exact p = 0.007) — although the residual negative association is not itself significant
-once pairs are clustered by system. Screening every
+and ORB-v2 misses the SrTiO₃ soft mode (8%). (ii) Harmonic correctness does not transfer to the finite-temperature layer: on the matched set,
+17 harmonically-correct units are mis-called at 300 K against only 4 the other way (McNemar exact
+p = 0.007). CHGNet illustrates it, being the worst model harmonically yet second best at finite
+temperature while MatterSim is harmonically perfect and only mid-table, though with fifteen
+systems the per-model intervals overlap and we treat the finite-temperature ranking as suggestive
+rather than established. We do not claim the stronger reading that harmonic accuracy is
+uncorrelated with finite-temperature accuracy: once pairs are clustered by system no association
+is significant at any temperature, and failing to reject that null is not evidence for it. Screening every
 imaginary mode rather than the softest one is essential, because the deepest mode need not be the
 one that condenses: in SrTiO₃ the Γ ferroelectric mode is deeper than the R-point tilt yet is
 quantum-suppressed, and only the tilt drives the 105 K transition. (iii) Multi-mode SSCHA with an MLIP force
@@ -253,11 +255,16 @@ The five models divide on the harmonic set (19 scored systems, KTaO₃ excluded)
 
 | Model | Accuracy | False-stable rate | False-unstable rate |
 |---|---|---|---|
-| MatterSim | 1.000 | 0.000 | 0.000 |
-| SevenNet-0 | 1.000 | 0.000 | 0.000 |
-| MACE-MP-0 | 0.895 | 0.154 | 0.000 |
-| ORB-v2 | 0.895 | 0.077 | 0.167 |
-| CHGNet | 0.789 | 0.154 | 0.333 |
+| MatterSim | 19/19 = 1.000 [0.832, 1.000] | 0/13 = 0.000 [0.000, 0.228] | 0/6 = 0.000 [0.000, 0.390] |
+| SevenNet-0 | 19/19 = 1.000 [0.832, 1.000] | 0/13 = 0.000 [0.000, 0.228] | 0/6 = 0.000 [0.000, 0.390] |
+| MACE-MP-0 | 17/19 = 0.895 [0.686, 0.971] | 2/13 = 0.154 [0.043, 0.422] | 0/6 = 0.000 [0.000, 0.390] |
+| ORB-v2 | 17/19 = 0.895 [0.686, 0.971] | 1/13 = 0.077 [0.014, 0.333] | 1/6 = 0.167 [0.030, 0.564] |
+| CHGNet | 15/19 = 0.789 [0.567, 0.915] | 2/13 = 0.154 [0.043, 0.422] | 2/6 = 0.333 [0.097, 0.700] |
+
+Rates are given as the count over its denominator with a Wilson score interval, here and
+throughout. On nineteen systems those intervals are wide and they overlap heavily, so the
+harmonic *ordering* below is the reportable finding and the individual accuracies are not
+separated by this design. Per-model confusion matrices are in Table S4.
 
 MatterSim and SevenNet-0 reproduce every documented soft mode with large imaginary frequencies.
 MACE-MP-0 and CHGNet each carry two false-stable calls (rate 0.154) on the bcc Zr and Hf soft
@@ -290,12 +297,15 @@ not binary rates, are the right reporting unit.](../results/figures/fig_softmode
 
 On the ferroelectric perovskites at T ≤ 300 K, far below every transition temperature, the cubic
 phase is definitively dynamically unstable, and the multi-mode screen correctly calls it unstable in
-16 of 30 model units (recall 0.53). The screen recovers displacive instability that harmonic
-accuracy does not predict and that, as §3.3 shows, the gold-standard SSCHA misses more often still.
-Across the other anharmonic families the screen is stronger: it reaches recall 0.92 on the halide
-perovskites and 1.00 on the cubic fluorites, and on the antiferrodistortive SrTiO₃ tilt it reaches
-0.60. On the six harmonically-stable controls it is correct on all 120 model units, and finds
-**zero** imaginary commensurate modes in every case, so it never manufactures an instability.
+16 of 30 model units (recall 0.533 [0.361, 0.698]). The screen recovers displacive instability
+that harmonic accuracy does not anticipate and that, as §3.3 shows, the gold-standard SSCHA
+misses more often still.
+Across the other anharmonic families the screen is stronger: 23/25 = 0.920 [0.750, 0.978] on the
+halide perovskites and 20/20 = 1.000 [0.839, 1.000] on the cubic fluorites, while on the
+antiferrodistortive SrTiO₃ tilt it reaches 3/5 = 0.600 [0.231, 0.882] on a denominator too small
+to support any comparison. On the six harmonically-stable controls it is correct on all 120 model
+units, and finds **zero** imaginary commensurate modes in every case, so it never manufactures an
+instability.
 
 Multi-anchor comparison against experiment. Beyond the SrTiO₃ gate (§2.4) we compare the screen's
 predicted stabilisation temperature T* (the lowest ladder T at which the cubic phase is called
@@ -316,11 +326,17 @@ bcc excluded because its thermodynamic-T_c label is the wrong reference for dyna
 
 | Model | Finite-T false-stable rate | Finite-T accuracy | (Harmonic accuracy) |
 |---|---|---|---|
-| SevenNet-0 | 0.125 | 0.900 | 1.000 |
-| CHGNet | 0.188 | 0.867 | 0.789 |
-| MatterSim | 0.250 | 0.833 | 1.000 |
-| MACE-MP-0 | 0.250 | 0.833 | 0.895 |
-| ORB-v2 | 0.312 | 0.800 | 0.895 |
+| SevenNet-0 | 2/16 = 0.125 [0.035, 0.360] | 27/30 = 0.900 [0.744, 0.965] | 1.000 |
+| CHGNet | 3/16 = 0.188 [0.066, 0.430] | 26/30 = 0.867 [0.703, 0.947] | 0.789 |
+| MatterSim | 4/16 = 0.250 [0.102, 0.495] | 25/30 = 0.833 [0.664, 0.927] | 1.000 |
+| MACE-MP-0 | 4/16 = 0.250 [0.102, 0.495] | 25/30 = 0.833 [0.664, 0.927] | 0.895 |
+| ORB-v2 | 5/16 = 0.312 [0.142, 0.556] | 24/30 = 0.800 [0.627, 0.905] | 0.895 |
+
+**These five accuracies are not separated by this design.** Every interval overlaps every
+other, the whole spread is six units wide on a denominator of thirty, and we therefore treat
+the finite-temperature ranking as suggestive rather than established. What the table is used
+for below is the *joint* pattern with the harmonic column — a model can be strong in one layer
+and unremarkable in the other — and not the position of any model within either column.
 
 Read against the harmonic ranking (final column), the ordering is not preserved but neither is it
 inverted, and we are explicit about this because a naive comparison invites a cleaner story than the
@@ -357,12 +373,19 @@ weakest. This bounds environment and library nondeterminism at fixed displacemen
 not probe sensitivity to the amplitude itself, which would require re-measurement on a displacement
 grid (ESI §S1.2).
 
-The defensible H2 statement is that harmonic accuracy does not predict finite-temperature accuracy,
-in either direction. The clearest single demonstration is CHGNet: it is the **worst** model
-harmonically (0.789) yet the second **best** at finite temperature (0.867), while MatterSim is
-harmonically perfect (1.000) and only mid-table at finite temperature (0.833). A top harmonic score
-on the npj/PhononBench benchmarks therefore does not identify the best finite-temperature screener,
-and a poor one does not disqualify a model. We note explicitly that SevenNet-0 leads *both* layers,
+The defensible H2 statement is therefore about transfer, not about correlation: **harmonic
+correctness does not carry over to the finite-temperature layer**, demonstrated by the 17-versus-4
+asymmetry above. We deliberately do not upgrade this to "harmonic accuracy is non-predictive of
+finite-temperature accuracy". That phrasing asserts a null, and the tests above fail to reject a
+null rather than establishing one; with fifteen systems and five models the design cannot resolve
+whether a weak association exists, still less its sign.
+The clearest single illustration of the transfer failure is CHGNet: it is the **worst** model
+harmonically (0.789) yet second **best** at finite temperature (0.867), while MatterSim is
+harmonically perfect (1.000) and only mid-table at finite temperature (0.833). Because the
+intervals in the table above overlap, this is an illustration and not a ranking claim. What it
+does license, and what matters for practice, is negative and robust to the overlap: a top harmonic
+score on the npj/PhononBench benchmarks does not identify a model as a good finite-temperature
+screener, and a poor one does not disqualify it. We note explicitly that SevenNet-0 leads *both* layers,
 so the relationship is not a simple inversion and we do not claim one; an earlier version of this
 analysis, computed before the mode-selection correction described in §2.4, reported that the
 harmonic leaders sat behind MACE-MP-0 and CHGNet, and that specific ordering does not survive the
@@ -421,6 +444,17 @@ models). This is the cautionary result: the expensive gold standard is less reli
 cheap screen in the displacive regime that dominates generative-CSP outputs — recall 0.19 against
 0.53, with the deepest-well units unable to complete (Fig. 5).
 
+Because both methods are evaluated on the same (system, model, temperature) units, the contrast
+is a paired comparison and we test it as one rather than by inspecting whether the two marginal
+intervals overlap. On the ferroelectric oxides the screen is right where SSCHA is wrong on 14
+units against 3 the other way (exact McNemar p = 0.013). That specific test, however, **does not
+survive removing ORB-v2**: it becomes 10 against 3, p = 0.092. We report this rather than the
+favourable slice alone, because the ferroelectric-oxide subset is small once SSCHA's failures are
+excluded and ORB-v2 contributes disproportionately to it. The claim rests instead on the combined
+displacive set, where the cubic fluorites — numerically clean, zero blow-ups, and the family on
+which SSCHA fails most uniformly across architectures — carry it: 26 against 3, p = 2 × 10⁻⁵,
+with ORB-v2 excluded. Table S10 gives all three system sets with and without ORB-v2.
+
 ![**Fig. 3** Multi-mode SSCHA dynamic-stabilisation curves for bcc Ti/Zr/Hf, five models,
 versus temperature (§3.3). All models stabilise the bcc phase by ≤50 K; the margin to the stability
 boundary (MatterSim/ORB-v2 hugging ~0.4 THz, MACE-MP-0 firmly stable ~1.8 THz) discriminates the
@@ -429,6 +463,11 @@ models.](../results/figures/fig_sscha_bcc.png)
 ![**Fig. 4** Soft-mode screen vs gold-standard SSCHA minimum frequency on bcc
 (§3.3): the cheap screen tracks SSCHA on the family where the gold standard is
 trustworthy.](../results/figures/fig_method_agreement.png)
+
+![**Fig. 5** Recall of the displacive (ferroelectric-perovskite) instability at
+T ≤ 300 K: the cheap multi-mode soft-mode screen (0.53) versus the expensive SSCHA (0.19) (§3.3). The
+cautionary result is that the gold standard is less reliable than the screen in the regime that
+matters most; the paired test and its ORB-v2 sensitivity are in the text and Table S10.](../results/figures/fig_displacive_recall.png)
 
 Root cause: the fourth-order truncation, not the reference structure. A controlled diagnostic on
 cubic BaTiO₃ (MACE-MP-0, 100 K) isolates the mechanism, and the SCHA literature identifies it
@@ -481,27 +520,35 @@ false-stable, which confirms that the failure is methodological, not numerical.
 Because no single model is reliable across the set, we test whether cross-model disagreement flags
 the units where the majority-vote consensus finite-temperature call is wrong. On the non-bcc,
 non-borderline soft-mode units (n = 60; bcc excluded because its thermodynamic-T_c label is the
-wrong reference for dynamic stability, §3.3), the majority-vote consensus is wrong on 20.0% of
-units. The disagreement signal separates these: on the 14 units where the five models split on the
-stable/unstable call, the consensus error rate is 0.57, against 0.09 on the 46 unanimous units, a
-6.6× enrichment. As a ranked predictor of consensus error, the binary stable/unstable vote split
-reaches AUC 0.76, whereas the continuous cross-model frequency standard deviation carries no
-usable signal (AUC 0.36, below chance on this set; Fig. 6).
+wrong reference for dynamic stability, §3.3), the majority-vote consensus is wrong on 12/60 =
+0.200 [0.117, 0.320] of units. That set is fifteen systems × four temperatures, exactly the
+fifteen systems of the matched set above (Table S7), and each unit already collapses the five
+model votes, so the units are clustered by system and are not independent — every test below
+resamples whole systems rather than units.
+
+The disagreement signal separates the errors: on the 14 units where the five models split on the
+stable/unstable call, the consensus error rate is 8/14 = 0.571 [0.326, 0.786], against 4/46 =
+0.087 [0.034, 0.203] on the 46 unanimous units, a 6.6× enrichment. As a ranked predictor of
+consensus error, the binary stable/unstable vote split reaches AUC 0.762, and it survives the
+clustering: a permutation test over whole systems gives p = 0.004 and a cluster bootstrap gives a
+95% interval of [0.590, 0.934], excluding 0.5. The naive unit-level permutation returns p < 0.001,
+so treating the units as independent would indeed have overstated the significance, by about a
+factor of four in p, without changing the conclusion. The continuous cross-model frequency
+standard deviation carries no usable signal by contrast (AUC 0.361, clustered p = 0.275, 95%
+interval [0.046, 0.625]; Fig. 6). That interval spans 0.5, so although the point estimate sits
+below chance we do not read it as an inverted predictor — the honest statement is that it is
+uninformative.
 
 ![**Fig. 6** Ensemble-disagreement guardrail (§3.4): the discrete inter-model
-vote split predicts consensus error (AUC 0.76) while the continuous cross-model frequency spread
-does not (AUC 0.36, below chance).](../results/figures/fig_ensemble_guardrail.png)
+vote split predicts consensus error (AUC 0.762; system-clustered p = 0.004) while the continuous
+cross-model frequency spread does not (AUC 0.361, clustered 95% interval [0.046, 0.625], which
+spans chance).](../results/figures/fig_ensemble_guardrail.png)
 
 This refines H3 into a rule with a caveat: the discrete inter-model vote split is a useful, cheap
 guardrail (flag any candidate on which the foundation-MLIP ensemble disagrees), but the continuous
 frequency spread that one might naively threshold is not. The physical reading is that disagreement
 concentrates near the stability boundary, where split votes coincide with frequencies straddling
 zero and the call is both most uncertain and most error-prone.
-
-![**Fig. 5** Recall of the displacive (ferroelectric-perovskite) instability at
-T ≤ 300 K: the cheap multi-mode soft-mode screen (0.53) versus the expensive SSCHA (0.19) (§3.3). The
-cautionary result is that the gold standard is less reliable than the screen in the regime that
-matters most.](../results/figures/fig_displacive_recall.png)
 
 ### 3.5 Robustness: stochastic noise and finite size
 
@@ -530,16 +577,56 @@ failure is the fourth-order truncation identified in the root-cause diagnostic, 
 ## 4. Discussion
 
 The harmonic layer (§3.1) reproduces the literature and confirms H1: PES softening produces a real
-false-stable rate, localised to specific instabilities (bcc Zr/Hf) rather than uniform. The
-finite-temperature results support H2, though with a temperature-dependent statistic rather than a
-single clean effect. Harmonic accuracy is non-predictive of
-finite-temperature accuracy, and the standard escalation ("if in doubt, run SSCHA") fails on the
-displacive regime, because MLIP-driven SSCHA at its default bubble truncation false-stabilises deep
-double wells. The practical recommendation inverts the usual cost/accuracy intuition: for screening
+false-stable rate, localised to specific instabilities (bcc Zr/Hf) rather than uniform.
+
+H2 is confirmed in the form §3.2 tests and no further. What the data establish is a **failure of
+transfer**: harmonic correctness does not carry to the finite-temperature layer, with 17
+harmonically-correct units mis-called at 300 K against 4 the other way (p = 0.007). That is a
+statement about the relative difficulty of the two layers, and it is the one the title makes.
+What the data do **not** establish is the pre-registered form, that harmonic and
+finite-temperature accuracy are uncorrelated. Once pairs are clustered by system, no association
+reaches significance at any temperature, and the sign of the point estimate itself changes across
+the ladder; a failure to reject is not a demonstration, so we leave the association unresolved
+rather than reporting it as absent. The per-model comparison should be read the same way: the five
+finite-temperature accuracies span six units on a denominator of thirty and their intervals all
+overlap, so the ranking is suggestive, not established. None of this weakens the practical
+consequence, which is negative and needs no correlation to hold — a top harmonic benchmark score
+does not certify a model for finite-temperature screening.
+
+The standard escalation ("if in doubt, run SSCHA") fails on the displacive regime, because
+MLIP-driven SSCHA at its default bubble truncation false-stabilises deep double wells. The practical recommendation inverts the usual cost/accuracy intuition: for screening
 harmonically-unstable displacive candidates, the cheap all-imaginary-mode free-energy screen is the
 more reliable indicator, and a default-truncation SSCHA escalation should be reserved for
 martensitic and entropy-stabilised cases, or else run with the fourth-order resummation its own
 theory prescribes.
+
+Scope: foundation models as shipped, and why fine-tuning is outside it. Every result here is for
+the released checkpoints used without adaptation. That is a deliberate scope rather than an
+oversight, and it is the regime the benchmark is about. A practitioner filtering generative-CSP
+output does not know in advance which candidates are strongly anharmonic, so there is no subset
+to fine-tune on and no target-specific data to fine-tune with; the screening decision is taken
+with the model as shipped, which is exactly the setting PhononBench and comparable filters
+operate in. We would expect system-specific or family-specific fine-tuning to improve
+finite-temperature performance substantially, and for a study of a *known* anharmonic material it
+is clearly the right thing to do. What our results bound is the reliability of the untuned
+foundation model in the screening role it is actually being given, and nothing here should be
+read as a statement about what these architectures can achieve once adapted. Quantifying how much
+of the finite-temperature gap fine-tuning closes, and how much training data per family that
+takes, is the natural next study and is beyond what a benchmark of released checkpoints can say.
+
+On model-reported uncertainty. A natural proposal is to use the models' own uncertainty on the
+force predictions to decide where their stability calls should not be trusted. We agree with the
+principle, and §3.4 is that experiment: the five independent architectures form the ensemble, and
+we test whether their disagreement flags the units where the consensus call is wrong. The outcome
+is specific and, for anyone intending to threshold an uncertainty, worth knowing. The *discrete*
+signal works, with split votes carrying a 6.6-fold enrichment in consensus error and surviving a
+system-clustered permutation test. The *continuous* signal, the cross-model spread of the
+predicted frequency, which is the propagated form of exactly the force-level disagreement the
+proposal appeals to, carries no usable information (AUC 0.361, interval spanning chance). A
+committee spread computed on a single architecture's own ensemble is a different quantity from
+our cross-architecture spread and might behave better, but our measurement is the caution: the
+continuous version of this idea failed on this set, and it failed while the discrete version
+worked.
 
 Limitations. Ground-truth transition temperatures are approximate and scoring is qualitative. SSCHA
 cells are 2×2×2 (finite size), so dynamic-stabilisation temperatures are approximate, though the
@@ -555,14 +642,23 @@ screen call should be read as a placeholder.
 
 ## 5. Conclusions
 
-Finite-temperature dynamic stability separates foundation MLIPs that the harmonic benchmarks used
-to certify them rank equally. A cheap quantum free-energy screen, applied to every imaginary
-commensurate mode rather than to the softest one, recovers finite-temperature behaviour that
-harmonic accuracy does not predict, and it outperforms MLIP-driven SSCHA at its default bubble
-truncation on the deep displacive instabilities that dominate generative-CSP screening. Which mode
-is examined matters as much as which method is used: the deepest instability need not be the one
-that condenses, and in SrTiO₃ it is not. Harmonic accuracy does not certify a model for
-finite-temperature use, and neither does an unexamined SSCHA cross-check.
+Harmonic correctness does not carry over to the finite-temperature layer: on the matched set, 17
+harmonically-correct units are mis-called at 300 K against 4 the other way. A harmonic benchmark
+score therefore does not certify a foundation MLIP for the finite-temperature screening it is
+routinely used for, and the obvious escalation does not rescue it, because MLIP-driven SSCHA at
+its default bubble truncation systematically false-stabilises the deep displacive instabilities
+that dominate generative-CSP output. A cheap quantum free-energy screen, applied to every
+imaginary commensurate mode rather than to the softest one, is the more reliable indicator in
+that regime, and the contrast survives the removal of the one architecturally anomalous model.
+Which mode is examined matters as much as which method is used: the deepest instability need not
+be the one that condenses, and in SrTiO₃ it is not. Where a single model cannot be trusted,
+disagreement across an ensemble of independent architectures is a cheap and effective guardrail,
+provided it is read as a discrete vote split rather than as a continuous spread.
+
+We are deliberately not claiming a ranking of the five models at finite temperature. Their
+accuracies span six units on a denominator of thirty and every interval overlaps, so which model
+leads is not resolved by this design. The findings above are the ones that survive that
+limitation, and all of them are negative or comparative rather than a leaderboard.
 
 ## Data availability
 
