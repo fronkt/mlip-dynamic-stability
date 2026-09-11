@@ -648,6 +648,19 @@ our cross-architecture spread and might behave better, but our measurement is th
 continuous version of this idea failed on this set, and it failed while the discrete version
 worked.
 
+What an independent electronic-structure reference would add. Both layers compared here are
+driven by the same MLIP potential-energy surface, so their agreement is a consistency check and
+cannot by itself certify either. We are careful not to use it as one: the scoring labels and the
+SrTiO₃ validation gate are experimental, and therefore independent of the surface, and the
+SSCHA failure is attributed to its truncation by controls that hold the force engine fixed
+(§3.3, §3.5, ESI §S2.2) rather than by comparison with the screen. What none of that supplies is
+a check on the fitted double wells themselves. Computing first-principles energy profiles along
+the soft-mode coordinates for a subset of systems, and benchmarking MLIP forces against them
+along the SSCHA sampling paths, would separate a residual force-engine error from the
+approximation error we have isolated here, and is the natural next study. It requires
+electronic-structure resources beyond the scope of a benchmark built deliberately on published
+ground truth.
+
 Limitations. Ground-truth transition temperatures are approximate and scoring is qualitative. SSCHA
 cells are 2×2×2 (finite size), so dynamic-stabilisation temperatures are approximate, though the
 cross-model comparison at fixed cell is valid. ORB-v2's float32-only direct architecture is an

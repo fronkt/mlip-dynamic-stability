@@ -5,7 +5,7 @@
 `scripts/make_figures.py`.*
 
 *Citation convention: **sections** of this document are cited as §S1-§S4 and **tables** as
-Table S1-Table S11. The two sequences are independent; a cross-reference to "Table S1" means the
+Table S1-Table S12. The two sequences are independent; a cross-reference to "Table S1" means the
 table, not the section.*
 
 ## S1. Finite-T method development and discarded routes
