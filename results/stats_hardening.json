@@ -1,0 +1,1005 @@
+{
+  "_generated_by": "scripts/stats_hardening.py",
+  "_answers": [
+    "RSC Advances R3 item 3 (counts, intervals, clustering)",
+    "RSC Advances R3 item 5 (ORB-v2 split)",
+    "RSC Advances R1 item 6 (statistical language)"
+  ],
+  "_n_perm": 10000,
+  "_seed": 0,
+  "harmonic_per_model": {
+    "chgnet": {
+      "accuracy": {
+        "k": 15,
+        "n": 19,
+        "p": 0.7894736842105263,
+        "lo": 0.566657215370657,
+        "hi": 0.9149232337314461,
+        "fmt": "15/19 = 0.789 [0.567, 0.915]"
+      },
+      "false_stable": {
+        "k": 2,
+        "n": 13,
+        "p": 0.15384615384615385,
+        "lo": 0.04325817831792836,
+        "hi": 0.42234631043152104,
+        "fmt": "2/13 = 0.154 [0.043, 0.422]"
+      },
+      "n_systems": 19
+    },
+    "mace_mp0": {
+      "accuracy": {
+        "k": 17,
+        "n": 19,
+        "p": 0.8947368421052632,
+        "lo": 0.6860591726836749,
+        "hi": 0.9706414397282841,
+        "fmt": "17/19 = 0.895 [0.686, 0.971]"
+      },
+      "false_stable": {
+        "k": 2,
+        "n": 13,
+        "p": 0.15384615384615385,
+        "lo": 0.04325817831792836,
+        "hi": 0.42234631043152104,
+        "fmt": "2/13 = 0.154 [0.043, 0.422]"
+      },
+      "n_systems": 19
+    },
+    "mattersim": {
+      "accuracy": {
+        "k": 19,
+        "n": 19,
+        "p": 1.0,
+        "lo": 0.8318207757218146,
+        "hi": 1.0,
+        "fmt": "19/19 = 1.000 [0.832, 1.000]"
+      },
+      "false_stable": {
+        "k": 0,
+        "n": 13,
+        "p": 0.0,
+        "lo": 0.0,
+        "hi": 0.22809537263809343,
+        "fmt": "0/13 = 0.000 [0.000, 0.228]"
+      },
+      "n_systems": 19
+    },
+    "orb_v2": {
+      "accuracy": {
+        "k": 17,
+        "n": 19,
+        "p": 0.8947368421052632,
+        "lo": 0.6860591726836749,
+        "hi": 0.9706414397282841,
+        "fmt": "17/19 = 0.895 [0.686, 0.971]"
+      },
+      "false_stable": {
+        "k": 1,
+        "n": 13,
+        "p": 0.07692307692307693,
+        "lo": 0.013710421226987068,
+        "hi": 0.3331395094667843,
+        "fmt": "1/13 = 0.077 [0.014, 0.333]"
+      },
+      "n_systems": 19
+    },
+    "sevennet0": {
+      "accuracy": {
+        "k": 19,
+        "n": 19,
+        "p": 1.0,
+        "lo": 0.8318207757218146,
+        "hi": 1.0,
+        "fmt": "19/19 = 1.000 [0.832, 1.000]"
+      },
+      "false_stable": {
+        "k": 0,
+        "n": 13,
+        "p": 0.0,
+        "lo": 0.0,
+        "hi": 0.22809537263809343,
+        "fmt": "0/13 = 0.000 [0.000, 0.228]"
+      },
+      "n_systems": 19
+    }
+  },
+  "finite_t_per_model": {
+    "chgnet": {
+      "accuracy": {
+        "k": 26,
+        "n": 30,
+        "p": 0.8666666666666667,
+        "lo": 0.7031867330228921,
+        "hi": 0.9469034451972108,
+        "fmt": "26/30 = 0.867 [0.703, 0.947]"
+      },
+      "false_stable": {
+        "k": 3,
+        "n": 16,
+        "p": 0.1875,
+        "lo": 0.06591599066150139,
+        "hi": 0.4300888098298569,
+        "fmt": "3/16 = 0.188 [0.066, 0.430]"
+      },
+      "n_systems": 15
+    },
+    "mace_mp0": {
+      "accuracy": {
+        "k": 25,
+        "n": 30,
+        "p": 0.8333333333333334,
+        "lo": 0.664356494780228,
+        "hi": 0.9266345763289564,
+        "fmt": "25/30 = 0.833 [0.664, 0.927]"
+      },
+      "false_stable": {
+        "k": 4,
+        "n": 16,
+        "p": 0.25,
+        "lo": 0.10182067483951532,
+        "hi": 0.49498316555357136,
+        "fmt": "4/16 = 0.250 [0.102, 0.495]"
+      },
+      "n_systems": 15
+    },
+    "mattersim": {
+      "accuracy": {
+        "k": 25,
+        "n": 30,
+        "p": 0.8333333333333334,
+        "lo": 0.664356494780228,
+        "hi": 0.9266345763289564,
+        "fmt": "25/30 = 0.833 [0.664, 0.927]"
+      },
+      "false_stable": {
+        "k": 4,
+        "n": 16,
+        "p": 0.25,
+        "lo": 0.10182067483951532,
+        "hi": 0.49498316555357136,
+        "fmt": "4/16 = 0.250 [0.102, 0.495]"
+      },
+      "n_systems": 15
+    },
+    "orb_v2": {
+      "accuracy": {
+        "k": 24,
+        "n": 30,
+        "p": 0.8,
+        "lo": 0.626943035714534,
+        "hi": 0.904948928283732,
+        "fmt": "24/30 = 0.800 [0.627, 0.905]"
+      },
+      "false_stable": {
+        "k": 5,
+        "n": 16,
+        "p": 0.3125,
+        "lo": 0.14164643845620956,
+        "hi": 0.5559564418386054,
+        "fmt": "5/16 = 0.312 [0.142, 0.556]"
+      },
+      "n_systems": 15
+    },
+    "sevennet0": {
+      "accuracy": {
+        "k": 27,
+        "n": 30,
+        "p": 0.9,
+        "lo": 0.7437891740507678,
+        "hi": 0.9654001112802535,
+        "fmt": "27/30 = 0.900 [0.744, 0.965]"
+      },
+      "false_stable": {
+        "k": 2,
+        "n": 16,
+        "p": 0.125,
+        "lo": 0.03497748771084325,
+        "hi": 0.3602282728787867,
+        "fmt": "2/16 = 0.125 [0.035, 0.360]"
+      },
+      "n_systems": 15
+    }
+  },
+  "family_recall": {
+    "fe_oxide": {
+      "k": 16,
+      "n": 30,
+      "p": 0.5333333333333333,
+      "lo": 0.36142299607310463,
+      "hi": 0.6976761110378138,
+      "fmt": "16/30 = 0.533 [0.361, 0.698]",
+      "systems": [
+        "batio3_cubic",
+        "knbo3_cubic",
+        "pbtio3_cubic"
+      ]
+    },
+    "halide": {
+      "k": 23,
+      "n": 25,
+      "p": 0.92,
+      "lo": 0.7503389103191594,
+      "hi": 0.9777795987356678,
+      "fmt": "23/25 = 0.920 [0.750, 0.978]",
+      "systems": [
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic"
+      ]
+    },
+    "fluorite": {
+      "k": 20,
+      "n": 20,
+      "p": 1.0,
+      "lo": 0.83887484172924,
+      "hi": 1.0,
+      "fmt": "20/20 = 1.000 [0.839, 1.000]",
+      "systems": [
+        "zro2_cubic",
+        "hfo2_cubic"
+      ]
+    },
+    "afd_srtio3": {
+      "k": 3,
+      "n": 5,
+      "p": 0.6,
+      "lo": 0.2307242810852,
+      "hi": 0.8823792258789283,
+      "fmt": "3/5 = 0.600 [0.231, 0.882]",
+      "systems": [
+        "srtio3_cubic"
+      ]
+    }
+  },
+  "h3_guardrail": {
+    "composition": {
+      "n_units": 60,
+      "n_systems": 15,
+      "systems": [
+        "batio3_cubic",
+        "c_diamond",
+        "ceo2_cubic",
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic",
+        "cu_fcc",
+        "hfo2_cubic",
+        "knbo3_cubic",
+        "mgo_rocksalt",
+        "nacl_rocksalt",
+        "pbtio3_cubic",
+        "si_diamond",
+        "srtio3_cubic",
+        "zro2_cubic"
+      ],
+      "temperature_ladder_K": [
+        100.0,
+        300.0,
+        600.0,
+        900.0
+      ],
+      "units_per_system": {
+        "batio3_cubic": 4,
+        "c_diamond": 4,
+        "ceo2_cubic": 4,
+        "cspbi3_cubic": 4,
+        "cssnbr3_cubic": 4,
+        "cssni3_cubic": 4,
+        "cu_fcc": 4,
+        "hfo2_cubic": 4,
+        "knbo3_cubic": 4,
+        "mgo_rocksalt": 4,
+        "nacl_rocksalt": 4,
+        "pbtio3_cubic": 4,
+        "si_diamond": 4,
+        "srtio3_cubic": 4,
+        "zro2_cubic": 4
+      },
+      "balanced": true,
+      "note": "each unit already collapses five model votes, so the five models are NOT an independent axis here; the clustering unit is the system"
+    },
+    "consensus_error_rate": {
+      "k": 48,
+      "n": 60,
+      "p": 0.8,
+      "lo": 0.6821819418382982,
+      "hi": 0.8817149468217376,
+      "fmt": "48/60 = 0.800 [0.682, 0.882]",
+      "reported_as": "fraction CORRECT; the manuscript quotes the error rate, 1 - this"
+    },
+    "split_vote_error": {
+      "k": 8,
+      "n": 14,
+      "p": 0.5714285714285714,
+      "lo": 0.3259064456308049,
+      "hi": 0.786192011082044,
+      "fmt": "8/14 = 0.571 [0.326, 0.786]"
+    },
+    "unanimous_error": {
+      "k": 4,
+      "n": 46,
+      "p": 0.08695652173913043,
+      "lo": 0.034335867870330924,
+      "hi": 0.20324664086033262,
+      "fmt": "4/46 = 0.087 [0.034, 0.203]"
+    },
+    "auc_vote_disagreement": {
+      "auc": 0.762,
+      "p_perm_clustered": 0.0035,
+      "n_perm": 10000,
+      "n_clusters": 15,
+      "n_units": 60,
+      "ci_lo": 0.59,
+      "ci_hi": 0.934,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level": 0.0003
+    },
+    "auc_freq_std": {
+      "auc": 0.361,
+      "p_perm_clustered": 0.2748,
+      "n_perm": 10000,
+      "n_clusters": 15,
+      "n_units": 60,
+      "ci_lo": 0.046,
+      "ci_hi": 0.625,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level": 0.1386
+    }
+  },
+  "h2_matched_set": {
+    "100": {
+      "n_pairs": 75,
+      "n_systems": 15,
+      "n_models": 5,
+      "systems": [
+        "batio3_cubic",
+        "c_diamond",
+        "ceo2_cubic",
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic",
+        "cu_fcc",
+        "hfo2_cubic",
+        "knbo3_cubic",
+        "mgo_rocksalt",
+        "nacl_rocksalt",
+        "pbtio3_cubic",
+        "si_diamond",
+        "srtio3_cubic",
+        "zro2_cubic"
+      ],
+      "harmonic_correct": {
+        "k": 71,
+        "n": 75,
+        "p": 0.9466666666666667,
+        "lo": 0.8707401283803868,
+        "hi": 0.9790665722682097,
+        "fmt": "71/75 = 0.947 [0.871, 0.979]"
+      },
+      "finite_t_correct": {
+        "k": 69,
+        "n": 75,
+        "p": 0.92,
+        "lo": 0.836252096579779,
+        "hi": 0.9628198756718865,
+        "fmt": "69/75 = 0.920 [0.836, 0.963]"
+      },
+      "spearman_over_models": {
+        "rho": 0.645,
+        "p_perm": 0.6033,
+        "n": 5,
+        "exact": true,
+        "finest_resolvable_p": 0.0083
+      }
+    },
+    "300": {
+      "n_pairs": 75,
+      "n_systems": 15,
+      "n_models": 5,
+      "systems": [
+        "batio3_cubic",
+        "c_diamond",
+        "ceo2_cubic",
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic",
+        "cu_fcc",
+        "hfo2_cubic",
+        "knbo3_cubic",
+        "mgo_rocksalt",
+        "nacl_rocksalt",
+        "pbtio3_cubic",
+        "si_diamond",
+        "srtio3_cubic",
+        "zro2_cubic"
+      ],
+      "harmonic_correct": {
+        "k": 71,
+        "n": 75,
+        "p": 0.9466666666666667,
+        "lo": 0.8707401283803868,
+        "hi": 0.9790665722682097,
+        "fmt": "71/75 = 0.947 [0.871, 0.979]"
+      },
+      "finite_t_correct": {
+        "k": 58,
+        "n": 75,
+        "p": 0.7733333333333333,
+        "lo": 0.6666446451838127,
+        "hi": 0.8533863208847313,
+        "fmt": "58/75 = 0.773 [0.667, 0.853]"
+      },
+      "spearman_over_models": {
+        "rho": -0.667,
+        "p_perm": 0.405,
+        "n": 5,
+        "exact": true,
+        "finest_resolvable_p": 0.0083
+      }
+    },
+    "600": {
+      "n_pairs": 75,
+      "n_systems": 15,
+      "n_models": 5,
+      "systems": [
+        "batio3_cubic",
+        "c_diamond",
+        "ceo2_cubic",
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic",
+        "cu_fcc",
+        "hfo2_cubic",
+        "knbo3_cubic",
+        "mgo_rocksalt",
+        "nacl_rocksalt",
+        "pbtio3_cubic",
+        "si_diamond",
+        "srtio3_cubic",
+        "zro2_cubic"
+      ],
+      "harmonic_correct": {
+        "k": 71,
+        "n": 75,
+        "p": 0.9466666666666667,
+        "lo": 0.8707401283803868,
+        "hi": 0.9790665722682097,
+        "fmt": "71/75 = 0.947 [0.871, 0.979]"
+      },
+      "finite_t_correct": {
+        "k": 52,
+        "n": 75,
+        "p": 0.6933333333333334,
+        "lo": 0.5816954516809208,
+        "hi": 0.7861313291968298,
+        "fmt": "52/75 = 0.693 [0.582, 0.786]"
+      },
+      "spearman_over_models": {
+        "rho": -0.889,
+        "p_perm": 0.1074,
+        "n": 5,
+        "exact": true,
+        "finest_resolvable_p": 0.0083
+      }
+    },
+    "900": {
+      "n_pairs": 75,
+      "n_systems": 15,
+      "n_models": 5,
+      "systems": [
+        "batio3_cubic",
+        "c_diamond",
+        "ceo2_cubic",
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic",
+        "cu_fcc",
+        "hfo2_cubic",
+        "knbo3_cubic",
+        "mgo_rocksalt",
+        "nacl_rocksalt",
+        "pbtio3_cubic",
+        "si_diamond",
+        "srtio3_cubic",
+        "zro2_cubic"
+      ],
+      "harmonic_correct": {
+        "k": 71,
+        "n": 75,
+        "p": 0.9466666666666667,
+        "lo": 0.8707401283803868,
+        "hi": 0.9790665722682097,
+        "fmt": "71/75 = 0.947 [0.871, 0.979]"
+      },
+      "finite_t_correct": {
+        "k": 64,
+        "n": 75,
+        "p": 0.8533333333333334,
+        "lo": 0.7561523213162998,
+        "hi": 0.9160828299430378,
+        "fmt": "64/75 = 0.853 [0.756, 0.916]"
+      },
+      "spearman_over_models": {
+        "rho": -0.167,
+        "p_perm": 1.0,
+        "n": 5,
+        "exact": true,
+        "finest_resolvable_p": 0.0083
+      }
+    },
+    "composition_note": "n = 75 is 15 systems x 5 models. The same 15 systems carry the n = 60 guardrail set (15 x 4 temperatures), so the two analysis sets share their clustering structure. Systems whose id contains 'bcc' are dropped, which also removes the superionic agi_bcc; this is retained for comparability with the published numbers and is stated in section 3.2.",
+    "spearman_power_note": "With five models there are 5! = 120 distinct pairings, so the smallest attainable two-sided p is 1/120 = 0.0083 and any rho at this n is descriptive only. Note also that the coefficient changes sign across the ladder, which is itself the argument against reading it."
+  },
+  "screen_vs_sscha_paired": {
+    "fe_oxide__all_models": {
+      "n_paired_units": 27,
+      "n_systems": 3,
+      "both_correct": 2,
+      "screen_right_sscha_wrong": 14,
+      "sscha_right_screen_wrong": 3,
+      "both_wrong": 8,
+      "mcnemar_exact_p": 0.01273,
+      "note": "paired over the units where both methods return a physical number; this is the correct test of the contrast, and it is not the overlap of the two marginal Wilson intervals"
+    },
+    "fe_oxide__excl_orb_v2": {
+      "n_paired_units": 23,
+      "n_systems": 3,
+      "both_correct": 2,
+      "screen_right_sscha_wrong": 10,
+      "sscha_right_screen_wrong": 3,
+      "both_wrong": 8,
+      "mcnemar_exact_p": 0.09229,
+      "note": "paired over the units where both methods return a physical number; this is the correct test of the contrast, and it is not the overlap of the two marginal Wilson intervals"
+    },
+    "fluorite__all_models": {
+      "n_paired_units": 20,
+      "n_systems": 2,
+      "both_correct": 1,
+      "screen_right_sscha_wrong": 19,
+      "sscha_right_screen_wrong": 0,
+      "both_wrong": 0,
+      "mcnemar_exact_p": 0.0,
+      "note": "paired over the units where both methods return a physical number; this is the correct test of the contrast, and it is not the overlap of the two marginal Wilson intervals"
+    },
+    "fluorite__excl_orb_v2": {
+      "n_paired_units": 16,
+      "n_systems": 2,
+      "both_correct": 0,
+      "screen_right_sscha_wrong": 16,
+      "sscha_right_screen_wrong": 0,
+      "both_wrong": 0,
+      "mcnemar_exact_p": 3e-05,
+      "note": "paired over the units where both methods return a physical number; this is the correct test of the contrast, and it is not the overlap of the two marginal Wilson intervals"
+    },
+    "displacive_combined__all_models": {
+      "n_paired_units": 47,
+      "n_systems": 5,
+      "both_correct": 3,
+      "screen_right_sscha_wrong": 33,
+      "sscha_right_screen_wrong": 3,
+      "both_wrong": 8,
+      "mcnemar_exact_p": 0.0,
+      "note": "paired over the units where both methods return a physical number; this is the correct test of the contrast, and it is not the overlap of the two marginal Wilson intervals"
+    },
+    "displacive_combined__excl_orb_v2": {
+      "n_paired_units": 39,
+      "n_systems": 5,
+      "both_correct": 2,
+      "screen_right_sscha_wrong": 26,
+      "sscha_right_screen_wrong": 3,
+      "both_wrong": 8,
+      "mcnemar_exact_p": 2e-05,
+      "note": "paired over the units where both methods return a physical number; this is the correct test of the contrast, and it is not the overlap of the two marginal Wilson intervals"
+    }
+  },
+  "orb_split": {
+    "all_models": {
+      "harmonic": {
+        "chgnet": {
+          "accuracy": {
+            "k": 15,
+            "n": 19,
+            "p": 0.7894736842105263,
+            "lo": 0.566657215370657,
+            "hi": 0.9149232337314461,
+            "fmt": "15/19 = 0.789 [0.567, 0.915]"
+          },
+          "false_stable": {
+            "k": 2,
+            "n": 13,
+            "p": 0.15384615384615385,
+            "lo": 0.04325817831792836,
+            "hi": 0.42234631043152104,
+            "fmt": "2/13 = 0.154 [0.043, 0.422]"
+          },
+          "n_systems": 19
+        },
+        "mace_mp0": {
+          "accuracy": {
+            "k": 17,
+            "n": 19,
+            "p": 0.8947368421052632,
+            "lo": 0.6860591726836749,
+            "hi": 0.9706414397282841,
+            "fmt": "17/19 = 0.895 [0.686, 0.971]"
+          },
+          "false_stable": {
+            "k": 2,
+            "n": 13,
+            "p": 0.15384615384615385,
+            "lo": 0.04325817831792836,
+            "hi": 0.42234631043152104,
+            "fmt": "2/13 = 0.154 [0.043, 0.422]"
+          },
+          "n_systems": 19
+        },
+        "mattersim": {
+          "accuracy": {
+            "k": 19,
+            "n": 19,
+            "p": 1.0,
+            "lo": 0.8318207757218146,
+            "hi": 1.0,
+            "fmt": "19/19 = 1.000 [0.832, 1.000]"
+          },
+          "false_stable": {
+            "k": 0,
+            "n": 13,
+            "p": 0.0,
+            "lo": 0.0,
+            "hi": 0.22809537263809343,
+            "fmt": "0/13 = 0.000 [0.000, 0.228]"
+          },
+          "n_systems": 19
+        },
+        "orb_v2": {
+          "accuracy": {
+            "k": 17,
+            "n": 19,
+            "p": 0.8947368421052632,
+            "lo": 0.6860591726836749,
+            "hi": 0.9706414397282841,
+            "fmt": "17/19 = 0.895 [0.686, 0.971]"
+          },
+          "false_stable": {
+            "k": 1,
+            "n": 13,
+            "p": 0.07692307692307693,
+            "lo": 0.013710421226987068,
+            "hi": 0.3331395094667843,
+            "fmt": "1/13 = 0.077 [0.014, 0.333]"
+          },
+          "n_systems": 19
+        },
+        "sevennet0": {
+          "accuracy": {
+            "k": 19,
+            "n": 19,
+            "p": 1.0,
+            "lo": 0.8318207757218146,
+            "hi": 1.0,
+            "fmt": "19/19 = 1.000 [0.832, 1.000]"
+          },
+          "false_stable": {
+            "k": 0,
+            "n": 13,
+            "p": 0.0,
+            "lo": 0.0,
+            "hi": 0.22809537263809343,
+            "fmt": "0/13 = 0.000 [0.000, 0.228]"
+          },
+          "n_systems": 19
+        }
+      },
+      "finite_t": {
+        "chgnet": {
+          "accuracy": {
+            "k": 26,
+            "n": 30,
+            "p": 0.8666666666666667,
+            "lo": 0.7031867330228921,
+            "hi": 0.9469034451972108,
+            "fmt": "26/30 = 0.867 [0.703, 0.947]"
+          },
+          "false_stable": {
+            "k": 3,
+            "n": 16,
+            "p": 0.1875,
+            "lo": 0.06591599066150139,
+            "hi": 0.4300888098298569,
+            "fmt": "3/16 = 0.188 [0.066, 0.430]"
+          },
+          "n_systems": 15
+        },
+        "mace_mp0": {
+          "accuracy": {
+            "k": 25,
+            "n": 30,
+            "p": 0.8333333333333334,
+            "lo": 0.664356494780228,
+            "hi": 0.9266345763289564,
+            "fmt": "25/30 = 0.833 [0.664, 0.927]"
+          },
+          "false_stable": {
+            "k": 4,
+            "n": 16,
+            "p": 0.25,
+            "lo": 0.10182067483951532,
+            "hi": 0.49498316555357136,
+            "fmt": "4/16 = 0.250 [0.102, 0.495]"
+          },
+          "n_systems": 15
+        },
+        "mattersim": {
+          "accuracy": {
+            "k": 25,
+            "n": 30,
+            "p": 0.8333333333333334,
+            "lo": 0.664356494780228,
+            "hi": 0.9266345763289564,
+            "fmt": "25/30 = 0.833 [0.664, 0.927]"
+          },
+          "false_stable": {
+            "k": 4,
+            "n": 16,
+            "p": 0.25,
+            "lo": 0.10182067483951532,
+            "hi": 0.49498316555357136,
+            "fmt": "4/16 = 0.250 [0.102, 0.495]"
+          },
+          "n_systems": 15
+        },
+        "orb_v2": {
+          "accuracy": {
+            "k": 24,
+            "n": 30,
+            "p": 0.8,
+            "lo": 0.626943035714534,
+            "hi": 0.904948928283732,
+            "fmt": "24/30 = 0.800 [0.627, 0.905]"
+          },
+          "false_stable": {
+            "k": 5,
+            "n": 16,
+            "p": 0.3125,
+            "lo": 0.14164643845620956,
+            "hi": 0.5559564418386054,
+            "fmt": "5/16 = 0.312 [0.142, 0.556]"
+          },
+          "n_systems": 15
+        },
+        "sevennet0": {
+          "accuracy": {
+            "k": 27,
+            "n": 30,
+            "p": 0.9,
+            "lo": 0.7437891740507678,
+            "hi": 0.9654001112802535,
+            "fmt": "27/30 = 0.900 [0.744, 0.965]"
+          },
+          "false_stable": {
+            "k": 2,
+            "n": 16,
+            "p": 0.125,
+            "lo": 0.03497748771084325,
+            "hi": 0.3602282728787867,
+            "fmt": "2/16 = 0.125 [0.035, 0.360]"
+          },
+          "n_systems": 15
+        }
+      },
+      "bcc_method_agreement": {
+        "n_paired": 45,
+        "sign_agreement": 0.778,
+        "pearson_freq": 0.143,
+        "spearman_freq": 0.113
+      },
+      "displacive_recall": {
+        "softmode": {
+          "k": 16,
+          "n": 30,
+          "p": 0.5333333333333333,
+          "lo": 0.36142299607310463,
+          "hi": 0.6976761110378138,
+          "fmt": "16/30 = 0.533 [0.361, 0.698]",
+          "n_numerical_blowup": 0
+        },
+        "sscha": {
+          "k": 5,
+          "n": 27,
+          "p": 0.18518518518518517,
+          "lo": 0.08180707137686663,
+          "hi": 0.36698683634908447,
+          "fmt": "5/27 = 0.185 [0.082, 0.367]",
+          "n_numerical_blowup": 1
+        }
+      }
+    },
+    "excl_orb_v2": {
+      "harmonic": {
+        "chgnet": {
+          "accuracy": {
+            "k": 15,
+            "n": 19,
+            "p": 0.7894736842105263,
+            "lo": 0.566657215370657,
+            "hi": 0.9149232337314461,
+            "fmt": "15/19 = 0.789 [0.567, 0.915]"
+          },
+          "false_stable": {
+            "k": 2,
+            "n": 13,
+            "p": 0.15384615384615385,
+            "lo": 0.04325817831792836,
+            "hi": 0.42234631043152104,
+            "fmt": "2/13 = 0.154 [0.043, 0.422]"
+          },
+          "n_systems": 19
+        },
+        "mace_mp0": {
+          "accuracy": {
+            "k": 17,
+            "n": 19,
+            "p": 0.8947368421052632,
+            "lo": 0.6860591726836749,
+            "hi": 0.9706414397282841,
+            "fmt": "17/19 = 0.895 [0.686, 0.971]"
+          },
+          "false_stable": {
+            "k": 2,
+            "n": 13,
+            "p": 0.15384615384615385,
+            "lo": 0.04325817831792836,
+            "hi": 0.42234631043152104,
+            "fmt": "2/13 = 0.154 [0.043, 0.422]"
+          },
+          "n_systems": 19
+        },
+        "mattersim": {
+          "accuracy": {
+            "k": 19,
+            "n": 19,
+            "p": 1.0,
+            "lo": 0.8318207757218146,
+            "hi": 1.0,
+            "fmt": "19/19 = 1.000 [0.832, 1.000]"
+          },
+          "false_stable": {
+            "k": 0,
+            "n": 13,
+            "p": 0.0,
+            "lo": 0.0,
+            "hi": 0.22809537263809343,
+            "fmt": "0/13 = 0.000 [0.000, 0.228]"
+          },
+          "n_systems": 19
+        },
+        "sevennet0": {
+          "accuracy": {
+            "k": 19,
+            "n": 19,
+            "p": 1.0,
+            "lo": 0.8318207757218146,
+            "hi": 1.0,
+            "fmt": "19/19 = 1.000 [0.832, 1.000]"
+          },
+          "false_stable": {
+            "k": 0,
+            "n": 13,
+            "p": 0.0,
+            "lo": 0.0,
+            "hi": 0.22809537263809343,
+            "fmt": "0/13 = 0.000 [0.000, 0.228]"
+          },
+          "n_systems": 19
+        }
+      },
+      "finite_t": {
+        "chgnet": {
+          "accuracy": {
+            "k": 26,
+            "n": 30,
+            "p": 0.8666666666666667,
+            "lo": 0.7031867330228921,
+            "hi": 0.9469034451972108,
+            "fmt": "26/30 = 0.867 [0.703, 0.947]"
+          },
+          "false_stable": {
+            "k": 3,
+            "n": 16,
+            "p": 0.1875,
+            "lo": 0.06591599066150139,
+            "hi": 0.4300888098298569,
+            "fmt": "3/16 = 0.188 [0.066, 0.430]"
+          },
+          "n_systems": 15
+        },
+        "mace_mp0": {
+          "accuracy": {
+            "k": 25,
+            "n": 30,
+            "p": 0.8333333333333334,
+            "lo": 0.664356494780228,
+            "hi": 0.9266345763289564,
+            "fmt": "25/30 = 0.833 [0.664, 0.927]"
+          },
+          "false_stable": {
+            "k": 4,
+            "n": 16,
+            "p": 0.25,
+            "lo": 0.10182067483951532,
+            "hi": 0.49498316555357136,
+            "fmt": "4/16 = 0.250 [0.102, 0.495]"
+          },
+          "n_systems": 15
+        },
+        "mattersim": {
+          "accuracy": {
+            "k": 25,
+            "n": 30,
+            "p": 0.8333333333333334,
+            "lo": 0.664356494780228,
+            "hi": 0.9266345763289564,
+            "fmt": "25/30 = 0.833 [0.664, 0.927]"
+          },
+          "false_stable": {
+            "k": 4,
+            "n": 16,
+            "p": 0.25,
+            "lo": 0.10182067483951532,
+            "hi": 0.49498316555357136,
+            "fmt": "4/16 = 0.250 [0.102, 0.495]"
+          },
+          "n_systems": 15
+        },
+        "sevennet0": {
+          "accuracy": {
+            "k": 27,
+            "n": 30,
+            "p": 0.9,
+            "lo": 0.7437891740507678,
+            "hi": 0.9654001112802535,
+            "fmt": "27/30 = 0.900 [0.744, 0.965]"
+          },
+          "false_stable": {
+            "k": 2,
+            "n": 16,
+            "p": 0.125,
+            "lo": 0.03497748771084325,
+            "hi": 0.3602282728787867,
+            "fmt": "2/16 = 0.125 [0.035, 0.360]"
+          },
+          "n_systems": 15
+        }
+      },
+      "bcc_method_agreement": {
+        "n_paired": 36,
+        "sign_agreement": 0.833,
+        "pearson_freq": -0.254,
+        "spearman_freq": -0.003
+      },
+      "displacive_recall": {
+        "softmode": {
+          "k": 12,
+          "n": 24,
+          "p": 0.5,
+          "lo": 0.31427425806665943,
+          "hi": 0.6857257419333406,
+          "fmt": "12/24 = 0.500 [0.314, 0.686]",
+          "n_numerical_blowup": 0
+        },
+        "sscha": {
+          "k": 5,
+          "n": 23,
+          "p": 0.21739130434782608,
+          "lo": 0.09663978020337405,
+          "hi": 0.4190348303368928,
+          "fmt": "5/23 = 0.217 [0.097, 0.419]",
+          "n_numerical_blowup": 1
+        }
+      }
+    },
+    "note": "ORB-v2 is float32 and non-conservative, which is an architecture confound rather than a model property of interest. The manuscript reports the sign-agreement split (0.78 all / 0.83 excluding) but not the rank-correlation split; both are given here. Note the ex-ORB frequency rank correlation is approximately zero, not merely smaller."
+  }
+}
