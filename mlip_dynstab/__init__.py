@@ -30,6 +30,9 @@ METHOD_VERSION = {
     "sscha": 3,       # v3 = harmonic initialiser from phonopy full FCs (ase>=3.23 removed the
                       #      API cellconstructor's ASE bridge consumed); measured in pinned envs
                       # v2 = acoustic modes identified by |omega|, not by sort order
+    "harmonic_dispsweep": 1,   # same code path as "harmonic", non-production displacement
+                               # amplitude; kept under a separate method name so the sweep
+                               # cannot enter any harmonic rate through canonical()
     "hiphive": 1,
     "rattled": 1,
     "tdep": 1,
