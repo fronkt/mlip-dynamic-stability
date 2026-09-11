@@ -163,16 +163,48 @@ temperature dependence comes from the self-consistency rather than from the shap
 
 ## R1.3 — Contextualising MLIP architectures, training domain and screening methodologies
 
-**[PENDING]** I will add citations covering sparse-Gaussian-process and on-the-fly / active-learning
-potentials and ML-driven high-throughput screening, and situate the single-mode screen among them
-in the introduction and discussion.
+Done. The introduction has two new paragraphs and the bibliography eleven new entries (refs
+27-37), covering both threads the referee names.
 
-I note that the request names venues and years — "Adv Energy Mater 2026", "Chem Phys Rev 2024,
-2025", "PRB 2021", "JPCL 2021", "Acc Chem Res 2026" — without titles or authors, so I cannot
-identify the specific works intended. Following the editor's own guidance in the decision letter,
-I will add those that genuinely bear on this work and identify by title anything I have not been
-able to match, rather than padding the bibliography. If the referee will supply the intended
-references I will gladly consider each.
+**Active learning, sparse Gaussian processes and on-the-fly potentials.** The added works are
+more than context; three of them are on our own three families. On-the-fly Bayesian active
+learning has reproduced the entropy-driven phase transitions of hybrid perovskites (ref 27), the
+temperature-driven transitions and anharmonic thermal transport of zirconia (ref 28), and the
+alpha-beta transition of zirconium (ref 29). We have used this to sharpen the paper's claim
+rather than merely to acknowledge the field: these are *system-specific* potentials, actively
+trained on configurations from the target's own dynamics, and their success establishes that the
+gap we report belongs to **foundation models used as shipped**, not to machine-learned potentials
+in general. That is a better statement of the contribution than the submitted version had, and it
+came from this comment. Also added: the anharmonic-failure screen of ref 30, Gaussian
+approximation potentials (ref 31), on-the-fly Bayesian force fields with variance-triggered data
+acquisition (ref 32), committee uncertainty propagated into MD (ref 33), and the sparse-GP
+potential of ref 37.
+
+**ML-assisted high-throughput screening.** Added GNoME (ref 34), M3GNet (ref 35) and Matbench
+Discovery (ref 36). The last is a useful foil rather than background: it benchmarks the same
+model class on stability, but at the 0 K convex-hull level, so the distance between its criterion
+and finite-temperature dynamic stability states our gap in one sentence.
+
+**On identifying the requested references.** I could not match the request directly, because it
+gives venues and years without titles or authors. Working from the venue-and-year fingerprints,
+each of the six resolves to work from a single group. To be concrete: "PRB 2021" and "JPCL 2021"
+correspond to Hajibabaei, Myung and Kim (*Phys. Rev. B* **103**, 214102) and Hajibabaei and Kim
+(*J. Phys. Chem. Lett.* **12**, 8115); "Chem Phys Rev 2024" and "Chem Phys Rev 2025" to Willow
+*et al.* (**5**, 041307 and **6**, 021401); "Acc Chem Res 2026" to Ha *et al.* (**59**, 103); and
+"Adv Energy Mater 2026" to one of two review articles by the same group.
+
+I have cited the sparse-Gaussian-process potential of *Phys. Rev. B* **103**, 214102 (ref 37),
+which is a genuine primary source for the thread the referee raises. I have not cited the other
+five. Four are review articles rather than primary sources, and none of the six treats
+anharmonic crystals, phase transitions in the systems studied here, or the SCHA. I would also
+gently note that the comment describes these works as showing how "Bayesian committee machine
+potentials handle strongly anharmonic systems, phase transitions"; the *Chem. Phys. Rev.* **6**,
+021401 paper is about oxygen-containing organic compounds, and I did not want to paraphrase a
+characterisation into the manuscript that its abstract does not support.
+
+I have instead cited the primary literature that bears most directly on this work, following the
+editor's guidance in the decision letter. If the referee had specific papers in mind that I have
+mis-identified, I would be glad to reconsider any of them on a title.
 
 ## R1.4 — Convergence diagnostics for SSCHA
 
@@ -424,7 +456,8 @@ after Fig. 4, and all six figures appear in order of first citation.
   `ordering_invariant: false` next to prose stating the ordering is never reversed. Both are
   true — at zero tolerance the two models tie, so a strict inequality fails — and the ESI now
   says so.
-- **Reference 20** had a title and DOI but no author list. **[PENDING]** to be completed.
+- **Reference 20** had a title and DOI but no author list. Completed: D. Li, J. Yang, X. Chen,
+  L. Yu and S. Liu, *J. Phys. Chem. C*, 2025, **129**, 21538-21544.
 - **`verify_claims.py`** now runs 29 assertions against the deposited ledger, including the new
   within-cell fluorite control. All pass.
 
@@ -434,10 +467,8 @@ after Fig. 4, and all six figures appear in order of first citation.
 
 | | Item |
 |---|---|
-| ☐ | **R1.3** citations: identify, verify and add; record any that could not be matched |
 | ☐ | **R1.4** four-seed stochastic test extended to BaTiO₃ and one fluorite |
 | ☐ | **R2.2** force-level cross-model uncertainty on the E(Q) displaced configurations |
-| ☐ | Reference 20 author list |
 | ☐ | Displacement-amplitude sweep (not a referee request; closes a gap the paper itself declares) |
 | ☐ | Rebuild DOCX (clean + tracked changes), figures at 600 dpi, TOC entry |
 | ☐ | CRediT author-contributions section; link ORCID at submission |

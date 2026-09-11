@@ -67,6 +67,30 @@ architectures and across the distinct anharmonic families, that is displacive an
 antiferrodistortive oxide perovskites, halide perovskites, entropy-stabilised bcc refractory metals
 and cubic fluorites, under a common free-energy criterion and a temperature ladder.
 
+A separate line of work shows that machine-learned potentials can describe exactly the systems
+we test, provided they are trained for them. On-the-fly active learning with Bayesian error
+estimation has reproduced the entropy-driven phase transitions of hybrid perovskites,^27^ the
+temperature-driven transitions and anharmonic thermal transport of zirconia,^28^ and the alpha-beta
+transition of zirconium,^29^ which are respectively the perovskite, fluorite and bcc families of
+our set. These are system-specific potentials, actively trained on configurations drawn from the
+target's own dynamics, and their success sharpens rather than weakens the question here: the gap
+we measure is a property of *foundation* models used as shipped, not of machine-learned potentials
+in general. Active learning has also been applied directly to the anharmonic failure mode, with a
+screen over more than a hundred materials identifying those where MLIP molecular dynamics gives
+unphysical dynamic behaviour unless uncertainty is monitored.^30^ That literature descends from
+Gaussian-process potentials^31^ and their sparse variants,^37^ and from on-the-fly Bayesian force
+fields whose own predictive variance decides when new reference data are needed,^32^ and it supplies the natural alternative
+reliability criterion to ours, namely committee or ensemble uncertainty propagated into the
+simulation.^33^ We return to that comparison in §3.4 and §4.
+
+The screening context is the other half of the motivation. Universal potentials now drive
+high-throughput stability searches at the scale of millions of candidates,^34,35^ and the
+community benchmark for machine-learned stability prediction evaluates precisely the model class
+tested here.^36^ That benchmark, like the phonon benchmarks above, scores stability against 0 K
+convex-hull and harmonic criteria. The distance between that notion of stability and the
+finite-temperature dynamic stability a screened candidate actually needs is the gap this work
+measures.
+
 Research question: do foundation MLIPs reproduce finite-temperature dynamic stability,
 specifically the harmonic-unstable to thermally-stabilised transition, or does PES softening make
 their stability calls unreliable where the harmonic approximation fails?
@@ -635,8 +659,12 @@ of the finite-temperature gap fine-tuning closes, and how much training data per
 takes, is the natural next study and is beyond what a benchmark of released checkpoints can say.
 
 On model-reported uncertainty. A natural proposal is to use the models' own uncertainty on the
-force predictions to decide where their stability calls should not be trusted. We agree with the
-principle, and §3.4 is that experiment: the five independent architectures form the ensemble, and
+force predictions to decide where their stability calls should not be trusted. It is a
+well-founded one: committee spreads propagated into molecular dynamics give more resilient
+trajectories,^33^ a Bayesian force field's own predictive variance is a sound trigger for
+acquiring new reference data,^32^ and monitoring uncertainty is what distinguishes physical from
+unphysical MLIP dynamics on strongly anharmonic materials.^30^ We agree with the principle, and
+§3.4 is that experiment: the five independent architectures form the ensemble, and
 we test whether their disagreement flags the units where the consensus call is wrong. The outcome
 is specific and, for anyone intending to threshold an uncertainty, worth knowing. The *discrete*
 signal works, with split votes carrying a 6.6-fold enrichment in consensus error and surviving a
@@ -761,10 +789,21 @@ not-for-profit sectors.
 17. D. A. Wood and N. Marzari, *Phys. Rev. B*, 2007, **76**, 134301.
 18. A. Ranalli *et al.*, *Adv. Quantum Technol.*, 2023, **6**, 2200131.
 19. J. Yang, Z. Yin, L. Ao and S. Li, *Phys. Chem. Chem. Phys.*, 2026, **28**, 4459–4469.
-20. *Are Foundational Atomistic Models Reliable for Finite-Temperature Molecular Dynamics?*, *J. Phys. Chem. C*, 2025, DOI: 10.1021/acs.jpcc.5c07541.
+20. D. Li, J. Yang, X. Chen, L. Yu and S. Liu, *J. Phys. Chem. C*, 2025, **129**, 21538-21544.
 21. R. Bianco, I. Errea, L. Paulatto, M. Calandra and F. Mauri, *Phys. Rev. B*, 2017, **96**, 014111.
 22. L. Monacelli, *Phys. Rev. B*, 2025, **112**, 014109.
 23. D. J. Hooton, *Philos. Mag.*, 1955, **46**, 422.
 24. N. R. Werthamer, *Phys. Rev. B*, 1970, **1**, 572.
 25. R. Peierls, *Phys. Rev.*, 1938, **54**, 918.
 26. R. P. Feynman, *Statistical Mechanics: A Set of Lectures*, W. A. Benjamin, Reading, MA, 1972.
+27. R. Jinnouchi, J. Lahnsteiner, F. Karsai, G. Kresse and M. Bokdam, *Phys. Rev. Lett.*, 2019, **122**, 225701.
+28. C. Verdi, F. Karsai, P. Liu, R. Jinnouchi and G. Kresse, *npj Comput. Mater.*, 2021, **7**, 156.
+29. P. Liu, C. Verdi, F. Karsai and G. Kresse, *Phys. Rev. Mater.*, 2021, **5**, 053804.
+30. K. Kang, T. A. R. Purcell, C. Carbogno and M. Scheffler, *Phys. Rev. Mater.*, 2025, **9**, 063801.
+31. A. P. Bartók, M. C. Payne, R. Kondor and G. Csányi, *Phys. Rev. Lett.*, 2010, **104**, 136403.
+32. J. Vandermause, S. B. Torrisi, S. Batzner, Y. Xie, L. Sun, A. M. Kolpak and B. Kozinsky, *npj Comput. Mater.*, 2020, **6**, 20.
+33. G. Imbalzano, Y. Zhuang, V. Kapil, K. Rossi, E. A. Engel, F. Grasselli and M. Ceriotti, *J. Chem. Phys.*, 2021, **154**, 074102.
+34. A. Merchant, S. Batzner, S. S. Schoenholz, M. Aykol, G. Cheon and E. D. Cubuk, *Nature*, 2023, **624**, 80-85.
+35. C. Chen and S. P. Ong, *Nat. Comput. Sci.*, 2022, **2**, 718-728.
+36. J. Riebesell, R. E. A. Goodall, P. Benner, Y. Chiang, B. Deng, G. Ceder, M. Asta, A. A. Lee, A. Jain and K. A. Persson, *Nat. Mach. Intell.*, 2025, **7**, 836-847.
+37. A. Hajibabaei, C. W. Myung and K. S. Kim, *Phys. Rev. B*, 2021, **103**, 214102.
