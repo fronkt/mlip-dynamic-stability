@@ -1,7 +1,12 @@
 # Electronic Supplementary Information (ESI)
 
 *Companion to `manuscript.md`. All tables regenerate from `results/ledger.parquet` via
-`mlip_dynstab/analysis.py`; figures via `scripts/make_figures.py`.*
+`mlip_dynstab/analysis.py` and `scripts/build_esi_tables.py`; figures via
+`scripts/make_figures.py`.*
+
+*Citation convention: **sections** of this document are cited as §S1-§S4 and **tables** as
+Table S1-Table S11. The two sequences are independent; a cross-reference to "Table S1" means the
+table, not the section.*
 
 ## S1. Finite-T method development and discarded routes
 
@@ -61,6 +66,8 @@ estimator rather than a re-run of a cached result. That gives 100 paired (system
 measurements of the softest-mode frequency. Reproduced by `scripts/estimator_noise.py` from the
 deposited ledger; no new computation is involved.
 
+**Table S1** Harmonic estimator reproducibility: the v1/v2 paired replicate, per model.
+
 | model | n | median \|Δ\| (THz) | p95 \|Δ\| | max \|Δ\| | stability-call flips |
 |---|---|---|---|---|---|
 | CHGNet | 20 | 5.7 × 10⁻⁵ | 3.6 × 10⁻³ | 0.0076 | 0 |
@@ -101,6 +108,8 @@ bcc) converge under the cap and are unchanged.
 
 `scripts/sscha_v4_diag.py`:
 
+**Table S2** SSCHA root-cause diagnostic, cubic BaTiO₃ / MACE-MP-0 / 100 K.
+
 | Stage | min frequency (THz) |
 |---|---|
 | harmonic (ground truth) | −5.635 |
@@ -120,6 +129,8 @@ exactly this regime (ref 22) but is not viable at grid scale (≈tens of hours p
 numerically stable only in float64.
 
 ### S2.3 Reliability by family (complete grid)
+
+**Table S3** SSCHA reliability by chemistry family over the complete grid.
 
 | Family | n measured | failed units | numerical blow-ups (\|f\|>50 THz) | min freq (THz) | max freq (THz) |
 |---|---|---|---|---|---|
@@ -163,25 +174,288 @@ log rather than to a ledger).
 
 ## S3. Supplementary tables
 
-- **Table S1** — full per-model harmonic confusion matrices (all 19 scored systems).
-  `analysis.per_model_table(df, "harmonic")`.
-- **Table S2** — per-model finite-T (softmode) false-stable rates over the full T-ladder, with
-  and without bcc. `analysis.low_t_false_stable(df, exclude_bcc=...)`.
-- **Table S3** — per-(system, model) predicted stabilisation temperature T* vs experimental
-  transition temperature. `analysis.predicted_tstar(df)`. Note: the screen
-  systematically *under*-estimates the absolute T* for entropy-stabilised bcc, and it fails to
-  order PbTiO₃ against the other perovskite anchors (§3.2), so T* is reported as a diagnostic
-  rather than a quantitative or ordinal T_c prediction.
-- **Table S4** — per-(system, T) ensemble-disagreement guardrail table (H3).
-  `analysis.h3_ensemble_guardrail(df, "softmode")`.
+The tables below are generated from the deposited ledger by `scripts/build_esi_tables.py`; the
+function that produces each is named in its caption so any number can be re-derived
+independently. Every rate is given as a count over its denominator with a Wilson score interval,
+following the convention adopted throughout this revision.
+
+<!-- BEGIN GENERATED TABLES -->
+
+**Table S4** Per-model harmonic confusion matrices over the 19 scored systems (KTaO₃ excluded as borderline). Positive = predicted dynamically stable, so a false-stable is the screening-dangerous error. Rates carry Wilson score intervals. `analysis.per_model_table(df, "harmonic")`.
+
+| Model | TP | TN | False-stable | False-unstable | Accuracy [95% CI] | False-stable rate [95% CI] |
+|---|---|---|---|---|---|---|
+| CHGNet | 4 | 11 | 2 | 2 | 15/19 = 0.789 [0.567, 0.915] | 2/13 = 0.154 [0.043, 0.422] |
+| MACE-MP-0 | 6 | 11 | 2 | 0 | 17/19 = 0.895 [0.686, 0.971] | 2/13 = 0.154 [0.043, 0.422] |
+| MatterSim | 6 | 13 | 0 | 0 | 19/19 = 1.000 [0.832, 1.000] | 0/13 = 0.000 [0.000, 0.228] |
+| ORB-v2 | 5 | 12 | 1 | 1 | 17/19 = 0.895 [0.686, 0.971] | 1/13 = 0.077 [0.014, 0.333] |
+| SevenNet-0 | 6 | 13 | 0 | 0 | 19/19 = 1.000 [0.832, 1.000] | 0/13 = 0.000 [0.000, 0.228] |
+
+**Table S5** Per-model finite-temperature (soft-mode screen) false-stable and accuracy rates, at the T ≤ 300 K restriction used for the headline table and over the full 100/300/600/900 K ladder, each with and without the bcc metals. bcc is excluded from the headline because its thermodynamic-T_c label is the wrong reference for dynamic stability (§3.3). `analysis.low_t_false_stable(df, t_max=..., exclude_bcc=...)`.
+
+| Temperature set | bcc | Model | False-stable rate [95% CI] | Accuracy [95% CI] |
+|---|---|---|---|---|
+| T ≤ 300 K | excluded | CHGNet | 3/16 = 0.188 [0.066, 0.430] | 26/30 = 0.867 [0.703, 0.947] |
+| T ≤ 300 K | excluded | MACE-MP-0 | 4/16 = 0.250 [0.102, 0.495] | 25/30 = 0.833 [0.664, 0.927] |
+| T ≤ 300 K | excluded | MatterSim | 4/16 = 0.250 [0.102, 0.495] | 25/30 = 0.833 [0.664, 0.927] |
+| T ≤ 300 K | excluded | ORB-v2 | 5/16 = 0.312 [0.142, 0.556] | 24/30 = 0.800 [0.627, 0.905] |
+| T ≤ 300 K | excluded | SevenNet-0 | 2/16 = 0.125 [0.035, 0.360] | 27/30 = 0.900 [0.744, 0.965] |
+| T ≤ 300 K | included | CHGNet | 7/24 = 0.292 [0.149, 0.492] | 30/38 = 0.789 [0.637, 0.889] |
+| T ≤ 300 K | included | MACE-MP-0 | 10/24 = 0.417 [0.245, 0.612] | 27/38 = 0.711 [0.552, 0.830] |
+| T ≤ 300 K | included | MatterSim | 4/24 = 0.167 [0.067, 0.359] | 33/38 = 0.868 [0.727, 0.942] |
+| T ≤ 300 K | included | ORB-v2 | 9/24 = 0.375 [0.212, 0.573] | 28/38 = 0.737 [0.580, 0.850] |
+| T ≤ 300 K | included | SevenNet-0 | 8/24 = 0.333 [0.180, 0.533] | 29/38 = 0.763 [0.608, 0.870] |
+| full ladder | excluded | CHGNet | 4/22 = 0.182 [0.073, 0.385] | 49/60 = 0.817 [0.701, 0.894] |
+| full ladder | excluded | MACE-MP-0 | 8/22 = 0.364 [0.197, 0.570] | 46/60 = 0.767 [0.646, 0.856] |
+| full ladder | excluded | MatterSim | 6/22 = 0.273 [0.132, 0.482] | 49/60 = 0.817 [0.701, 0.894] |
+| full ladder | excluded | ORB-v2 | 7/22 = 0.318 [0.164, 0.527] | 50/60 = 0.833 [0.720, 0.907] |
+| full ladder | excluded | SevenNet-0 | 4/22 = 0.182 [0.073, 0.385] | 49/60 = 0.817 [0.701, 0.894] |
+| full ladder | included | CHGNet | 14/36 = 0.389 [0.248, 0.551] | 53/76 = 0.697 [0.587, 0.789] |
+| full ladder | included | MACE-MP-0 | 20/36 = 0.556 [0.396, 0.705] | 48/76 = 0.632 [0.519, 0.731] |
+| full ladder | included | MatterSim | 6/36 = 0.167 [0.079, 0.319] | 63/76 = 0.829 [0.729, 0.897] |
+| full ladder | included | ORB-v2 | 15/36 = 0.417 [0.271, 0.578] | 56/76 = 0.737 [0.628, 0.823] |
+| full ladder | included | SevenNet-0 | 16/36 = 0.444 [0.295, 0.604] | 51/76 = 0.671 [0.559, 0.766] |
+
+**Table S6** Predicted stabilisation temperature T* (the lowest ladder temperature at which the high-symmetry phase is called stable) against the experimental transition temperature, per system and model. T* is a **diagnostic, not a prediction**: a single-mode treatment is not expected to reproduce an absolute T_c, the screen systematically under-estimates T* for the entropy-stabilised bcc metals, and it fails to order PbTiO₃ against the other perovskite anchors (§3.2). `analysis.predicted_tstar(df)`.
+
+| System | Model | Experimental T_c (K) | Predicted T* (K) |
+|---|---|---|---|
+| agi_bcc | CHGNet | 420 | never stable |
+| agi_bcc | MACE-MP-0 | 420 | never stable |
+| agi_bcc | MatterSim | 420 | never stable |
+| agi_bcc | ORB-v2 | 420 | never stable |
+| agi_bcc | SevenNet-0 | 420 | never stable |
+| batio3_cubic | CHGNet | 393 | 300 |
+| batio3_cubic | MACE-MP-0 | 393 | 300 |
+| batio3_cubic | MatterSim | 393 | 300 |
+| batio3_cubic | ORB-v2 | 393 | 600 |
+| batio3_cubic | SevenNet-0 | 393 | 300 |
+| c_diamond | CHGNet | -- | 100 |
+| c_diamond | MACE-MP-0 | -- | 100 |
+| c_diamond | MatterSim | -- | 100 |
+| c_diamond | ORB-v2 | -- | 100 |
+| c_diamond | SevenNet-0 | -- | 100 |
+| ceo2_cubic | CHGNet | -- | 100 |
+| ceo2_cubic | MACE-MP-0 | -- | 100 |
+| ceo2_cubic | MatterSim | -- | 100 |
+| ceo2_cubic | ORB-v2 | -- | 100 |
+| ceo2_cubic | SevenNet-0 | -- | 100 |
+| cspbi3_cubic | CHGNet | 600 | never stable |
+| cspbi3_cubic | MACE-MP-0 | 600 | never stable |
+| cspbi3_cubic | MatterSim | 600 | never stable |
+| cspbi3_cubic | ORB-v2 | 600 | never stable |
+| cspbi3_cubic | SevenNet-0 | 600 | never stable |
+| cssnbr3_cubic | CHGNet | 292 | never stable |
+| cssnbr3_cubic | MACE-MP-0 | 292 | 900 |
+| cssnbr3_cubic | MatterSim | 292 | 900 |
+| cssnbr3_cubic | ORB-v2 | 292 | 600 |
+| cssnbr3_cubic | SevenNet-0 | 292 | never stable |
+| cssni3_cubic | CHGNet | 426 | never stable |
+| cssni3_cubic | MACE-MP-0 | 426 | never stable |
+| cssni3_cubic | MatterSim | 426 | 900 |
+| cssni3_cubic | ORB-v2 | 426 | 100 |
+| cssni3_cubic | SevenNet-0 | 426 | never stable |
+| cu_fcc | CHGNet | -- | 100 |
+| cu_fcc | MACE-MP-0 | -- | 100 |
+| cu_fcc | MatterSim | -- | 100 |
+| cu_fcc | ORB-v2 | -- | 100 |
+| cu_fcc | SevenNet-0 | -- | 100 |
+| hf_bcc | CHGNet | 2013 | 100 |
+| hf_bcc | MACE-MP-0 | 2013 | 100 |
+| hf_bcc | MatterSim | 2013 | never stable |
+| hf_bcc | ORB-v2 | 2013 | 100 |
+| hf_bcc | SevenNet-0 | 2013 | 100 |
+| hfo2_cubic | CHGNet | 2800 | never stable |
+| hfo2_cubic | MACE-MP-0 | 2800 | 600 |
+| hfo2_cubic | MatterSim | 2800 | never stable |
+| hfo2_cubic | ORB-v2 | 2800 | never stable |
+| hfo2_cubic | SevenNet-0 | 2800 | never stable |
+| knbo3_cubic | CHGNet | 708 | 300 |
+| knbo3_cubic | MACE-MP-0 | 708 | 300 |
+| knbo3_cubic | MatterSim | 708 | 300 |
+| knbo3_cubic | ORB-v2 | 708 | 600 |
+| knbo3_cubic | SevenNet-0 | 708 | 300 |
+| ktao3_cubic | CHGNet | -- | 100 |
+| ktao3_cubic | MACE-MP-0 | -- | 100 |
+| ktao3_cubic | MatterSim | -- | 100 |
+| ktao3_cubic | ORB-v2 | -- | 100 |
+| ktao3_cubic | SevenNet-0 | -- | 100 |
+| mgo_rocksalt | CHGNet | -- | 100 |
+| mgo_rocksalt | MACE-MP-0 | -- | 100 |
+| mgo_rocksalt | MatterSim | -- | 100 |
+| mgo_rocksalt | ORB-v2 | -- | 100 |
+| mgo_rocksalt | SevenNet-0 | -- | 100 |
+| nacl_rocksalt | CHGNet | -- | 100 |
+| nacl_rocksalt | MACE-MP-0 | -- | 100 |
+| nacl_rocksalt | MatterSim | -- | 100 |
+| nacl_rocksalt | ORB-v2 | -- | 100 |
+| nacl_rocksalt | SevenNet-0 | -- | 100 |
+| pbtio3_cubic | CHGNet | 763 | 900 |
+| pbtio3_cubic | MACE-MP-0 | 763 | 100 |
+| pbtio3_cubic | MatterSim | 763 | 100 |
+| pbtio3_cubic | ORB-v2 | 763 | 100 |
+| pbtio3_cubic | SevenNet-0 | 763 | 600 |
+| si_diamond | CHGNet | -- | 100 |
+| si_diamond | MACE-MP-0 | -- | 100 |
+| si_diamond | MatterSim | -- | 100 |
+| si_diamond | ORB-v2 | -- | 100 |
+| si_diamond | SevenNet-0 | -- | 100 |
+| srtio3_cubic | CHGNet | 105 | 100 |
+| srtio3_cubic | MACE-MP-0 | 105 | 300 |
+| srtio3_cubic | MatterSim | 105 | 300 |
+| srtio3_cubic | ORB-v2 | 105 | 100 |
+| srtio3_cubic | SevenNet-0 | 105 | 300 |
+| ti_bcc | CHGNet | 1155 | 600 |
+| ti_bcc | MACE-MP-0 | 1155 | 100 |
+| ti_bcc | MatterSim | 1155 | never stable |
+| ti_bcc | ORB-v2 | 1155 | never stable |
+| ti_bcc | SevenNet-0 | 1155 | 100 |
+| zr_bcc | CHGNet | 1136 | 100 |
+| zr_bcc | MACE-MP-0 | 1136 | 100 |
+| zr_bcc | MatterSim | 1136 | never stable |
+| zr_bcc | ORB-v2 | 1136 | 100 |
+| zr_bcc | SevenNet-0 | 1136 | 100 |
+| zro2_cubic | CHGNet | 2570 | never stable |
+| zro2_cubic | MACE-MP-0 | 2570 | never stable |
+| zro2_cubic | MatterSim | 2570 | never stable |
+| zro2_cubic | ORB-v2 | 2570 | never stable |
+| zro2_cubic | SevenNet-0 | 2570 | never stable |
+
+**Table S7** Composition of the two analysis sets, which the previous version of this ESI did not state. Both rest on the **same 15 systems**, so they share their clustering structure: the 60 guardrail units are 15 systems × 4 temperatures, and the 75 matched pairs are 15 systems × 5 models. In the guardrail set the five model votes are already collapsed into each unit, so the models are not an independent axis there and the clustering unit is the system. Systems whose identifier contains `bcc` are dropped, which also removes the superionic `agi_bcc` — retained deliberately for comparability with the published numbers and stated in §3.2.
+
+| Analysis set | n units | n systems | Temperature axis | Model axis | Balanced |
+|---|---|---|---|---|---|
+| n = 60 (H3 guardrail, §3.4) | 60 | 15 | 4 (100/300/600/900 K) | collapsed into each unit | yes |
+| n = 75 (H2 matched set, §3.2) | 75 | 15 | 1 per analysis (each T analysed separately) | 5 (an explicit axis) | yes |
+
+The 15 systems are: `batio3_cubic`, `c_diamond`, `ceo2_cubic`, `cspbi3_cubic`, `cssnbr3_cubic`, `cssni3_cubic`, `cu_fcc`, `hfo2_cubic`, `knbo3_cubic`, `mgo_rocksalt`, `nacl_rocksalt`, `pbtio3_cubic`, `si_diamond`, `srtio3_cubic`, `zro2_cubic`.
+
+**Table S8** The ensemble-disagreement guardrail set in full: every (system, temperature) unit behind the H3 analysis, with the cross-model frequency spread, the stable-vote fraction, and whether the majority consensus was correct. This is the n = 60 set. `analysis.h3_ensemble_guardrail(df, "softmode")`.
+
+| System | T (K) | n models | Freq. std (THz) | Stable-vote frac. | Vote | Consensus | Ground truth | Consensus correct |
+|---|---|---|---|---|---|---|---|---|
+| batio3_cubic | 100 | 5 | 0.064 | 0.00 | unanimous | unstable | unstable | yes |
+| batio3_cubic | 300 | 5 | 0.078 | 0.80 | split | stable | unstable | **no** |
+| batio3_cubic | 600 | 5 | 0.095 | 1.00 | unanimous | stable | stable | yes |
+| batio3_cubic | 900 | 5 | 0.121 | 1.00 | unanimous | stable | stable | yes |
+| c_diamond | 100 | 5 | 4.555 | 1.00 | unanimous | stable | stable | yes |
+| c_diamond | 300 | 5 | 4.555 | 1.00 | unanimous | stable | stable | yes |
+| c_diamond | 600 | 5 | 4.555 | 1.00 | unanimous | stable | stable | yes |
+| c_diamond | 900 | 5 | 4.555 | 1.00 | unanimous | stable | stable | yes |
+| ceo2_cubic | 100 | 5 | 0.405 | 1.00 | unanimous | stable | stable | yes |
+| ceo2_cubic | 300 | 5 | 0.405 | 1.00 | unanimous | stable | stable | yes |
+| ceo2_cubic | 600 | 5 | 0.405 | 1.00 | unanimous | stable | stable | yes |
+| ceo2_cubic | 900 | 5 | 0.405 | 1.00 | unanimous | stable | stable | yes |
+| cspbi3_cubic | 100 | 5 | 0.255 | 0.00 | unanimous | unstable | unstable | yes |
+| cspbi3_cubic | 300 | 5 | 0.309 | 0.00 | unanimous | unstable | unstable | yes |
+| cspbi3_cubic | 600 | 5 | 0.253 | 0.00 | unanimous | unstable | stable | **no** |
+| cspbi3_cubic | 900 | 5 | 0.054 | 0.00 | unanimous | unstable | stable | **no** |
+| cssnbr3_cubic | 100 | 5 | 0.323 | 0.00 | unanimous | unstable | unstable | yes |
+| cssnbr3_cubic | 300 | 5 | 0.019 | 0.00 | unanimous | unstable | stable | **no** |
+| cssnbr3_cubic | 600 | 5 | 0.022 | 0.20 | split | unstable | stable | **no** |
+| cssnbr3_cubic | 900 | 5 | 0.024 | 0.60 | split | stable | stable | yes |
+| cssni3_cubic | 100 | 5 | 0.236 | 0.20 | split | unstable | unstable | yes |
+| cssni3_cubic | 300 | 5 | 0.108 | 0.20 | split | unstable | unstable | yes |
+| cssni3_cubic | 600 | 5 | 0.136 | 0.20 | split | unstable | stable | **no** |
+| cssni3_cubic | 900 | 5 | 0.155 | 0.40 | split | unstable | stable | **no** |
+| cu_fcc | 100 | 5 | 0.612 | 1.00 | unanimous | stable | stable | yes |
+| cu_fcc | 300 | 5 | 0.612 | 1.00 | unanimous | stable | stable | yes |
+| cu_fcc | 600 | 5 | 0.612 | 1.00 | unanimous | stable | stable | yes |
+| cu_fcc | 900 | 5 | 0.612 | 1.00 | unanimous | stable | stable | yes |
+| hfo2_cubic | 100 | 5 | 12.225 | 0.00 | unanimous | unstable | unstable | yes |
+| hfo2_cubic | 300 | 5 | 0.228 | 0.00 | unanimous | unstable | unstable | yes |
+| hfo2_cubic | 600 | 5 | 0.283 | 0.20 | split | unstable | unstable | yes |
+| hfo2_cubic | 900 | 5 | 0.314 | 0.20 | split | unstable | unstable | yes |
+| knbo3_cubic | 100 | 5 | 0.407 | 0.00 | unanimous | unstable | unstable | yes |
+| knbo3_cubic | 300 | 5 | 0.591 | 0.80 | split | stable | unstable | **no** |
+| knbo3_cubic | 600 | 5 | 0.745 | 1.00 | unanimous | stable | unstable | **no** |
+| knbo3_cubic | 900 | 5 | 0.849 | 1.00 | unanimous | stable | stable | yes |
+| mgo_rocksalt | 100 | 5 | 0.932 | 1.00 | unanimous | stable | stable | yes |
+| mgo_rocksalt | 300 | 5 | 0.932 | 1.00 | unanimous | stable | stable | yes |
+| mgo_rocksalt | 600 | 5 | 0.932 | 1.00 | unanimous | stable | stable | yes |
+| mgo_rocksalt | 900 | 5 | 0.932 | 1.00 | unanimous | stable | stable | yes |
+| nacl_rocksalt | 100 | 5 | 0.423 | 1.00 | unanimous | stable | stable | yes |
+| nacl_rocksalt | 300 | 5 | 0.423 | 1.00 | unanimous | stable | stable | yes |
+| nacl_rocksalt | 600 | 5 | 0.423 | 1.00 | unanimous | stable | stable | yes |
+| nacl_rocksalt | 900 | 5 | 0.423 | 1.00 | unanimous | stable | stable | yes |
+| pbtio3_cubic | 100 | 5 | 0.830 | 0.60 | split | stable | unstable | **no** |
+| pbtio3_cubic | 300 | 5 | 1.025 | 0.60 | split | stable | unstable | **no** |
+| pbtio3_cubic | 600 | 5 | 1.184 | 0.80 | split | stable | unstable | **no** |
+| pbtio3_cubic | 900 | 5 | 1.293 | 1.00 | unanimous | stable | stable | yes |
+| si_diamond | 100 | 5 | 0.489 | 1.00 | unanimous | stable | stable | yes |
+| si_diamond | 300 | 5 | 0.489 | 1.00 | unanimous | stable | stable | yes |
+| si_diamond | 600 | 5 | 0.489 | 1.00 | unanimous | stable | stable | yes |
+| si_diamond | 900 | 5 | 0.489 | 1.00 | unanimous | stable | stable | yes |
+| srtio3_cubic | 100 | 5 | 0.157 | 0.40 | split | unstable | unstable | yes |
+| srtio3_cubic | 300 | 5 | 0.087 | 1.00 | unanimous | stable | stable | yes |
+| srtio3_cubic | 600 | 5 | 0.242 | 1.00 | unanimous | stable | stable | yes |
+| srtio3_cubic | 900 | 5 | 0.356 | 1.00 | unanimous | stable | stable | yes |
+| zro2_cubic | 100 | 5 | 2.156 | 0.00 | unanimous | unstable | unstable | yes |
+| zro2_cubic | 300 | 5 | 1.066 | 0.00 | unanimous | unstable | unstable | yes |
+| zro2_cubic | 600 | 5 | 0.220 | 0.00 | unanimous | unstable | unstable | yes |
+| zro2_cubic | 900 | 5 | 0.253 | 0.00 | unanimous | unstable | unstable | yes |
+
+**Table S9** Every rate that ORB-v2 could plausibly drive, reported with and without it. ORB-v2 is float32 with non-conservative forces, which is an architecture confound for finite-difference force constants rather than a model property of interest, and it accounts for the MgO false-unstable, the ≈ −35 THz Ti/Hf outliers and most of the SSCHA blow-ups. Two entries deserve attention: the frequency rank correlation on bcc is ≈ 0.00 once ORB-v2 is removed, not merely smaller, which is why call agreement rather than magnitude correlation is the cross-validation statistic we report; and the FE-perovskite recall contrast narrows. See Table S10 for the paired tests.
+
+| Quantity | Model set | Value |
+|---|---|---|
+| bcc screen-vs-SSCHA sign agreement | all five models | 0.778 over 45 pairs |
+| bcc screen-vs-SSCHA Spearman ρ (magnitudes) | all five models | +0.113 |
+| FE-perovskite recall, softmode | all five models | 16/30 = 0.533 [0.361, 0.698] |
+| FE-perovskite recall, sscha | all five models | 5/27 = 0.185 [0.082, 0.367] |
+| bcc screen-vs-SSCHA sign agreement | excluding ORB-v2 | 0.833 over 36 pairs |
+| bcc screen-vs-SSCHA Spearman ρ (magnitudes) | excluding ORB-v2 | -0.003 |
+| FE-perovskite recall, softmode | excluding ORB-v2 | 12/24 = 0.500 [0.314, 0.686] |
+| FE-perovskite recall, sscha | excluding ORB-v2 | 5/23 = 0.217 [0.097, 0.419] |
+
+**Table S10** The central screen-versus-SSCHA contrast tested **as a paired comparison**, which is what the design supports: both methods are evaluated on the same (system, model, temperature) units, so comparing their two marginal Wilson intervals would ignore the pairing. Counts are of discordant pairs; the test is an exact two-sided McNemar over them. The result to read honestly is the middle pair of rows: on the ferroelectric oxides **alone**, the contrast is significant with ORB-v2 included and not significant without it. The claim therefore rests on the combined displacive set, where the cubic fluorites — numerically clean, zero blow-ups, and essentially unaffected by ORB-v2 — carry it. `scripts/stats_hardening.py`.
+
+| System set | Model set | n paired | Screen right, SSCHA wrong | SSCHA right, screen wrong | Exact p |
+|---|---|---|---|---|---|
+| fe oxide | all models | 27 | 14 | 3 | 0.013 |
+| fe oxide | excl orb v2 | 23 | 10 | 3 | 0.092 |
+| fluorite | all models | 20 | 19 | 0 | 0 |
+| fluorite | excl orb v2 | 16 | 16 | 0 | 3e-05 |
+| displacive combined | all models | 47 | 33 | 3 | 0 |
+| displacive combined | excl orb v2 | 39 | 26 | 3 | 2e-05 |
+
+**Table S11** SSCHA numerical quality per family and model. The sampling configuration is identical for all 201 units and is therefore stated once here rather than tabulated: 256 configurations per population, a cap of 8 populations, a dedicated 512-configuration ensemble for the free-energy Hessian, 2560 samples in total. The stopping criterion is `python-sscha`'s automatic stochastic relaxation under the per-population step cap `minim.max_ka = 20` (§S2.1), with the Hessian evaluated on a fresh ensemble at the converged auxiliary matrix.
+
+Two quantities are tabulated from the six lowest recorded Hessian frequencies. *Acoustic zeros resolved* counts units in which all three translational zeros (|ω| < 0.001 THz) appear within that window, and the residual column gives the largest of their magnitudes over those units, which bounds the numerical noise on a quantity known analytically to be zero. *Swamped* counts the opposite case: units with **no** recorded mode near zero, meaning at least six modes lie below the acoustic branches. Swamping is not itself an error — a deeply unstable phase genuinely has many imaginary modes, and the reported minimum frequency excludes the acoustic branches from the full spectrum rather than from this window — but it separates the families sharply, and it marks the units on which the free-energy Hessian is furthest from the regime its bubble truncation is valid in (§3.3).
+
+**What the harness did not retain**, and what would therefore need a re-run to supply: the per-iteration free-energy gradient history, and a per-unit uncertainty on the Hessian eigenvalues. The uncertainty probe that does exist is the independent-seed study of §S2.4, which this revision extends beyond bcc-Zr at Referee 1's request.
+
+| Family | Model | n units | Acoustic zeros resolved | Max zero residual (THz) | Swamped | Wall time (s) |
+|---|---|---|---|---|---|---|
+| bcc | CHGNet | 15 | 15/15 | 7.0e-22 | 0 | 166–203 |
+| bcc | MACE-MP-0 | 15 | 15/15 | 2.3e-31 | 0 | 40–126 |
+| bcc | MatterSim | 15 | 15/15 | 1.9e-22 | 0 | 127–148 |
+| bcc | ORB-v2 | 15 | 15/15 | 0.0e+00 | 0 | 77–83 |
+| bcc | SevenNet-0 | 15 | 15/15 | 2.5e-14 | 0 | 171–230 |
+| fluorite | CHGNet | 8 | 8/8 | 4.9e-07 | 0 | 175–185 |
+| fluorite | MACE-MP-0 | 8 | 6/8 | 4.3e-07 | 2 | 163–174 |
+| fluorite | MatterSim | 8 | 8/8 | 4.6e-07 | 0 | 142–156 |
+| fluorite | ORB-v2 | 8 | 3/8 | 6.0e-07 | 4 | 79–85 |
+| fluorite | SevenNet-0 | 8 | 8/8 | 4.0e-07 | 0 | 179–184 |
+| perovskite | CHGNet | 20 | 6/20 | 9.2e-07 | 14 | 199–248 |
+| perovskite | MACE-MP-0 | 19 | 10/19 | 3.5e-07 | 8 | 184–240 |
+| perovskite | MatterSim | 18 | 9/18 | 3.3e-07 | 9 | 157–180 |
+| perovskite | ORB-v2 | 12 | 4/12 | 1.5e-06 | 8 | 96–104 |
+| perovskite | SevenNet-0 | 17 | 9/17 | 3.5e-07 | 8 | 190–228 |
+
+<!-- END GENERATED TABLES -->
 
 ## S4. Threats to validity (pre-registered, with outcomes)
 
 - **Finite-displacement noise near Γ** → acoustic-sum-rule handling + swept imaginary tolerance
   (default −0.1 THz). *Outcome: stability calls are robust to the tolerance for all but the
   borderline KTaO₃.*
-- **Single-mode vs multi-mode** → SSCHA cross-check. *Outcome: agreement on bcc (ρ=0.78);
-  divergence on perovskites traced to an SSCHA failure mode, not a screen failure (§3.3).*
+- **Single-mode vs multi-mode** → SSCHA cross-check. *Outcome: the two methods agree on the
+  stability **call** for bcc (sign agreement 0.78 over 45 paired units; 0.83 excluding ORB-v2),
+  which is the cross-validation statistic we report. Their **magnitudes** are not rank-correlated
+  (Spearman ρ = 0.11, and ≈ 0.00 excluding ORB-v2), as expected for two different observables away
+  from the sign change. Divergence on the perovskites is traced to an SSCHA failure mode, not a
+  screen failure (§3.3).*
 - **MLIP relaxation moving off the soft-mode geometry** → both at-reference and at-relaxed
   geometries recorded; relaxation hiding an instability is itself reported.
 - **Supercell / cell-size convergence** → SSCHA at 2×2×2 (finite size); cross-model comparison at

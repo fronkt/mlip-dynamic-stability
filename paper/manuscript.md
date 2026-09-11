@@ -307,7 +307,7 @@ temperature of the four, does **not** follow: T* is 100 K for MACE-MP-0, MatterS
 600 K for SevenNet-0 and 900 K for CHGNet. A single-mode treatment is not expected to reproduce an
 absolute T_c, but the PbTiO₃ failure is a genuine ordering failure rather than a scale error, and it
 is the clearest limitation of the screen in this work. T* is therefore reported as a diagnostic
-(full table S3), and the SrTiO₃ gate together with the control performance — not the T* ordering —
+(Table S6 of the ESI), and the SrTiO₃ gate together with the control performance — not the T* ordering —
 is what licenses the screen as the reference in §3.3.
 
 Per-model false-stable rates on the displacive/anharmonic set (non-bcc, non-borderline, T ≤ 300 K;
