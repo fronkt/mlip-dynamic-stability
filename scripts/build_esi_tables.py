@@ -323,8 +323,72 @@ def table_s11_sscha_diag(df: pd.DataFrame) -> str:
     )
 
 
+def table_s13_disp_sweep(raw: pd.DataFrame) -> str:
+    """Displacement-amplitude sensitivity of the harmonic layer.
+
+    Takes the RAW ledger, not the canonical view: sweep rows live under the method name
+    `harmonic_dispsweep` precisely so they cannot reach any harmonic rate, and the production
+    0.01 A arm is the existing `harmonic` rows.
+    """
+    sw = raw[raw["method"] == "harmonic_dispsweep"]
+    if sw.empty:
+        return ""
+    prod = A.canonical(raw)
+    prod = prod[prod["method"] == "harmonic"][
+        ["system", "model", "min_freq_thz", "pred_stable", "gt_stable"]]
+    m = sw.merge(prod, on=["system", "model"], suffixes=("", "_prod"))
+    m["delta"] = m["min_freq_thz"] - m["min_freq_thz_prod"]
+    m["flip"] = m["pred_stable"].astype(bool) != m["pred_stable_prod"].astype(bool)
+    bl = A.borderline_systems()
+
+    rows = []
+    for (model, d), g in m.groupby(["model", "disp_ang"]):
+        sc = g[~g["system"].isin(bl)]
+        k = int((sc["pred_stable"].astype(bool) == sc["gt_stable_prod"].astype(bool)).sum())
+        rows.append([PRETTY.get(model, model), f"{d:g}", len(g),
+                     f"{g['delta'].abs().median():.4f}", f"{g['delta'].abs().max():.4f}",
+                     int(g["flip"].sum()), ci(k, len(sc))])
+    # the production arm, for reference
+    for model, g in prod[prod["model"].isin(m["model"].unique())].groupby("model"):
+        sc = g[~g["system"].isin(bl)]
+        k = int((sc["pred_stable"].astype(bool) == sc["gt_stable"].astype(bool)).sum())
+        rows.append([PRETTY.get(model, model), "0.01 (production)", len(g), "--", "--", 0,
+                     ci(k, len(sc))])
+    rows.sort(key=lambda r: (r[0], r[1]))
+
+    flips = m[m["flip"]][["system", "model", "disp_ang", "min_freq_thz_prod", "min_freq_thz"]]
+    flip_lines = "; ".join(
+        f"{r.system} at {r.disp_ang:g} Å ({r.min_freq_thz_prod:+.3f} → {r.min_freq_thz:+.3f} THz)"
+        for r in flips.itertuples())
+
+    return (
+        "**Table S13** Sensitivity of the harmonic layer to the finite-displacement amplitude, "
+        "the one axis ESI §S1.2's v1/v2 replicate cannot probe. **Partial: CHGNet only.** The "
+        "remaining four models require compute not available for this revision and are not "
+        "reported. Deviations are against the same model's production 0.01 Å row.\n\n"
+        + md(rows, ["Model", "Amplitude (Å)", "n", r"Median \|Δ\| (THz)", r"Max \|Δ\| (THz)",
+                    "Call flips", "Harmonic accuracy [95% CI]"])
+        + "\n\nTwo things follow, and they point in opposite directions.\n\n"
+        "**The result that matters for this paper's claims is negative: no anharmonic test "
+        "system changes its call at any amplitude.** Every flip is on a harmonically-stable "
+        "control, and they are the same marginal units §3.1 identifies from the tolerance "
+        f"sweep: {flip_lines}. The soft-mode detection that the finite-temperature analysis "
+        "rests on is therefore amplitude-robust across a six-fold range of displacement.\n\n"
+        "**The result that goes against us is that CHGNet's harmonic accuracy is amplitude-"
+        "dependent**, running from 0.737 at 0.005 Å through 0.789 at the production 0.01 Å to "
+        "0.895 at 0.03 Å. That is a wider swing than the tolerance band already reported in "
+        "§3.2, and it runs through the same three marginal control units in both cases. We "
+        "therefore extend the conclusion already drawn there: CHGNet's harmonic accuracy is not "
+        "a robust number and should not be read as one, under either knob. Its two matched-set "
+        "harmonic errors (CeO₂, NaCl) are precisely the units that move, so the matched-set "
+        "comparison in §3.2 inherits the same caveat and is reported as an illustration rather "
+        "than a measurement. `scripts/run_disp_sweep.py`."
+    )
+
+
 def build() -> str:
-    df = A.canonical(pd.read_parquet(LEDGER))
+    raw = pd.read_parquet(LEDGER)
+    df = A.canonical(raw)
     if not STATS.exists():
         raise SystemExit("results/stats_hardening.json missing - run scripts/stats_hardening.py first")
     st = json.loads(STATS.read_text(encoding="utf-8"))
@@ -337,7 +401,9 @@ def build() -> str:
         table_s9_orb(st),
         table_s10_paired(st),
         table_s11_sscha_diag(df),
+        table_s13_disp_sweep(raw),
     ]
+    blocks = [b for b in blocks if b]
     return "\n\n".join(blocks)
 
 

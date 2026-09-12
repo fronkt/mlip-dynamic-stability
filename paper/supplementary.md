@@ -5,7 +5,7 @@
 `scripts/make_figures.py`.*
 
 *Citation convention: **sections** of this document are cited as §S1-§S4 and **tables** as
-Table S1-Table S12. The two sequences are independent; a cross-reference to "Table S1" means the
+Table S1-Table S13. The two sequences are independent; a cross-reference to "Table S1" means the
 table, not the section.*
 
 ## S1. Finite-T method development and discarded routes
@@ -619,6 +619,21 @@ Two quantities are tabulated from the six lowest recorded Hessian frequencies. *
 | perovskite | MatterSim | 18 | 9/18 | 3.3e-07 | 9 | 157–180 |
 | perovskite | ORB-v2 | 12 | 4/12 | 1.5e-06 | 8 | 96–104 |
 | perovskite | SevenNet-0 | 17 | 9/17 | 3.5e-07 | 8 | 190–228 |
+
+**Table S13** Sensitivity of the harmonic layer to the finite-displacement amplitude, the one axis ESI §S1.2's v1/v2 replicate cannot probe. **Partial: CHGNet only.** The remaining four models require compute not available for this revision and are not reported. Deviations are against the same model's production 0.01 Å row.
+
+| Model | Amplitude (Å) | n | Median \|Δ\| (THz) | Max \|Δ\| (THz) | Call flips | Harmonic accuracy [95% CI] |
+|---|---|---|---|---|---|---|
+| CHGNet | 0.005 | 19 | 0.0162 | 2.0077 | 1 | 14/19 = 0.737 [0.512, 0.882] |
+| CHGNet | 0.01 (production) | 20 | -- | -- | 0 | 15/19 = 0.789 [0.567, 0.915] |
+| CHGNet | 0.02 | 19 | 0.0559 | 2.5497 | 1 | 16/19 = 0.842 [0.624, 0.945] |
+| CHGNet | 0.03 | 19 | 0.1282 | 2.4710 | 2 | 17/19 = 0.895 [0.686, 0.971] |
+
+Two things follow, and they point in opposite directions.
+
+**The result that matters for this paper's claims is negative: no anharmonic test system changes its call at any amplitude.** Every flip is on a harmonically-stable control, and they are the same marginal units §3.1 identifies from the tolerance sweep: ceo2_cubic at 0.03 Å (-0.267 → -0.000 THz); cu_fcc at 0.005 Å (-0.000 → -0.476 THz); nacl_rocksalt at 0.02 Å (-0.238 → -0.000 THz); nacl_rocksalt at 0.03 Å (-0.238 → -0.000 THz). The soft-mode detection that the finite-temperature analysis rests on is therefore amplitude-robust across a six-fold range of displacement.
+
+**The result that goes against us is that CHGNet's harmonic accuracy is amplitude-dependent**, running from 0.737 at 0.005 Å through 0.789 at the production 0.01 Å to 0.895 at 0.03 Å. That is a wider swing than the tolerance band already reported in §3.2, and it runs through the same three marginal control units in both cases. We therefore extend the conclusion already drawn there: CHGNet's harmonic accuracy is not a robust number and should not be read as one, under either knob. Its two matched-set harmonic errors (CeO₂, NaCl) are precisely the units that move, so the matched-set comparison in §3.2 inherits the same caveat and is reported as an illustration rather than a measurement. `scripts/run_disp_sweep.py`.
 
 <!-- END GENERATED TABLES -->
 

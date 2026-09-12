@@ -110,6 +110,24 @@ def main() -> int:
           f"[3.2] matched-set harmonic: 3 models at 1.000, CHGNet and ORB-v2 at "
           f"{macc['chgnet']:.3f} (13/15)")
 
+    # [3.2] Displacement-amplitude sweep (CHGNet). Pins the two reported outcomes: no
+    # anharmonic system flips at any amplitude, and CHGNet's accuracy spans 0.737-0.895.
+    raw = pd.read_parquet("results/ledger.parquet")
+    sw = raw[raw.method == "harmonic_dispsweep"]
+    if len(sw):
+        pr = d[(d.method == "harmonic") & (d.model.isin(sw.model.unique()))][
+            ["system", "model", "pred_stable", "gt_stable"]]
+        mm = sw.merge(pr, on=["system", "model"], suffixes=("", "_prod"))
+        flipped = mm[mm.pred_stable.astype(bool) != mm.pred_stable_prod.astype(bool)]
+        check(set(flipped.system) <= set(CONTROLS),
+              f"[3.2] disp sweep: every call flip is a control ({sorted(set(flipped.system))})")
+        bl2 = A.borderline_systems()
+        accs = {}
+        for dd, g in mm[~mm.system.isin(bl2)].groupby("disp_ang"):
+            accs[float(dd)] = (g.pred_stable.astype(bool) == g.gt_stable_prod.astype(bool)).mean()
+        check(abs(min(accs.values()) - 14 / 19) < 1e-9 and abs(max(accs.values()) - 17 / 19) < 1e-9,
+              f"[3.2] disp sweep: CHGNet accuracy spans {min(accs.values()):.3f}-{max(accs.values()):.3f}")
+
     # [3.5] within-cell control: the same 2x2x2 cell that SSCHA calls stable is a cell in
     # which the harmonic calculation sees the fluorite instability. Pins the argument that the
     # fluorite false-stable is the truncation and not finite size (R3 item 2).

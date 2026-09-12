@@ -419,11 +419,21 @@ model) re-measurements. The spread is strongly model-dependent and must not be p
 largest deviation is 0.0076 THz and MatterSim's is 0.00057 THz, with zero stability-call flips
 across all forty of their re-measurements, whereas ORB-v2's reaches 2.01 THz and flips two calls,
 one of them the KTaO₃ unit already excluded as borderline. The two models carrying the reordering
-are therefore separated by two to four orders of magnitude more than the estimator's own noise, and
-what noise exists is localised to the float32 direct-force model that §3.1 already identifies as the
-weakest. This bounds environment and library nondeterminism at fixed displacement amplitude; it does
-not probe sensitivity to the amplitude itself, which would require re-measurement on a displacement
-grid (ESI §S1.2).
+are therefore separated by margins that exceed the estimator's own noise by roughly a factor of
+twenty for CHGNet (its two matched-set harmonic calls sit 0.138 and 0.167 THz from the tolerance
+against a maximum deviation of 0.0076 THz) and by far more for MatterSim, and what noise exists
+is localised to the float32 direct-force model that §3.1 already identifies as the weakest.
+
+That bounds environment and library nondeterminism at fixed displacement amplitude. The
+amplitude itself is a separate axis, and we have now measured it for CHGNet by re-running the
+scored systems at 0.005, 0.02 and 0.03 Å (Table S13; the other four models await compute and are
+not reported here). Two results follow and we report both. **No anharmonic test system changes
+its call at any amplitude**, so the soft-mode detection on which the finite-temperature analysis
+depends is robust across a six-fold range of displacement. CHGNet's own harmonic accuracy,
+however, is not: it runs from 0.737 at 0.005 Å to 0.895 at 0.03 Å, moving through the same three
+marginal control units (CeO₂, NaCl, Cu) that the tolerance sweep moves. That swing is wider than
+the tolerance band reported below, and it is why we treat CHGNet's harmonic standing as a
+quantity sensitive to both knobs rather than as a number.
 
 The defensible H2 statement is therefore about transfer, not about correlation: **harmonic
 correctness does not carry over to the finite-temperature layer**, demonstrated by the 17-versus-4
