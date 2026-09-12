@@ -241,6 +241,17 @@ orders of magnitude below that; the perovskites resolve them in 38 of 86.
 yet run. §S2.4 and Table S11 state that the seed study currently covers bcc-Zr only rather than
 implying otherwise.
 
+**A related axis is now measured, and it was not requested.** The paper's own robustness section
+bounded the harmonic estimator using a paired replicate at fixed displacement amplitude, which
+cannot speak to sensitivity to the amplitude itself. That sweep has now been run for CHGNet at
+0.005, 0.02 and 0.03 Å against the deposited 0.01 Å (Table S13; the other four models need
+compute I do not have). It reports in both directions. **No anharmonic test system changes its
+call at any amplitude**, so the soft-mode detection the finite-temperature analysis rests on is
+robust over a six-fold range. But CHGNet's harmonic accuracy runs from 0.737 to 0.895 across
+that range, through the same three marginal control units the tolerance sweep moves, two of
+which are its matched-set harmonic errors. Both are stated, and §3.2 now treats CHGNet's
+harmonic standing as sensitive to both knobs rather than as a number.
+
 ## R1.5 — Formalisation and sensitivity of the soft-mode screen
 
 Done, in new ESI §S1.3, which derives the screen from the Peierls bound. Note that §2.4's
@@ -386,6 +397,27 @@ that the accuracies are not separated by this design and the finite-temperature 
 suggestive rather than established. That is the referee's own conclusion, and I have adopted it
 in the text, in the Abstract, and in the title.
 
+**And it exposed a worse problem in the same table, which I have fixed.** The §3.2 table put a
+nineteen-system harmonic column beside a fifteen-system finite-temperature column. On the
+fifteen systems the finite-temperature layer actually scores, CHGNet is 13/15 = 0.867
+harmonically, which is *identical* to its finite-temperature accuracy; its apparent harmonic
+deficit was bcc Zr/Hf, which that layer excludes, plus CeO₂ and NaCl, which §3.1 already calls
+marginal finite-displacement noise. **The paper's flagship illustration, "CHGNet is worst
+harmonically yet second best at finite temperature", was therefore a denominator artifact and is
+withdrawn** from the Abstract and §3.2. The table now carries both columns with the matched one
+named as the only comparable one, and the matched data support a better statement anyway: three
+of five models are harmonically perfect on these systems and none exceeds 0.900 at finite
+temperature.
+
+**The full temperature ladder is now reported**, not the two points that made the case most
+sharply. It helps rather than hurts: the transfer failure is significant at 300 K (p = 0.007)
+**and at 600 K (p < 0.001)**, absent at 100 K, and not significant at 900 K where most labels
+have flipped to stable. The discordance is one-directional at every temperature. On the
+association, φ is positive at 100 K and negative above it, but at each of those three
+temperatures the both-wrong cell is structurally empty, so the sign is forced by a zero; the
+bootstrap interval excludes zero at three temperatures and the paper now explicitly gives that
+no weight rather than showing the 300 K interval alone.
+
 **Clustering.** The referee is right that the n = 60 units are clustered and that the model votes
 are already collapsed into each one. The composition, which the ESI never gave, is now Table S7:
 **both** analysis sets rest on the same 15 systems, with n = 60 being 15 systems × 4 temperatures
@@ -508,7 +540,7 @@ after Fig. 4, and all six figures appear in order of first citation.
 |---|---|
 | ☐ | **R1.4** four-seed stochastic test extended to BaTiO₃ and one fluorite |
 | ☐ | **R2.2** force-level cross-model uncertainty on the E(Q) displaced configurations |
-| ☐ | Displacement-amplitude sweep (not a referee request; closes a gap the paper itself declares) |
+| ◐ | Displacement-amplitude sweep: CHGNet done (Table S13); four models remain |
 | ☐ | Rebuild DOCX (clean + tracked changes), figures at 600 dpi, TOC entry |
 | ☐ | CRediT author-contributions section; link ORCID at submission |
 | ☐ | Decide on RSC's transparent peer review option |
