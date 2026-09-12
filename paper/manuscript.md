@@ -333,8 +333,13 @@ Across the other anharmonic families the screen is stronger: 23/25 = 0.920 [0.75
 halide perovskites and 20/20 = 1.000 [0.839, 1.000] on the cubic fluorites, while on the
 antiferrodistortive SrTiO₃ tilt it reaches 3/5 = 0.600 [0.231, 0.882] on a denominator too small
 to support any comparison. On the six harmonically-stable controls it is correct on all 120 model
-units, and finds **zero** imaginary commensurate modes in every case, so it never manufactures an
-instability.
+units (0/120, Wilson [0.000, 0.031]) and finds zero imaginary commensurate modes in every case.
+One qualification belongs with that number: the harmonic classifier reads an interpolated
+12×12×12 mesh while the screen reads only the **q** commensurate with the force-constant cell,
+so the three marginal harmonic false-unstables (ORB-v2 on MgO at −1.07 THz, CHGNet on CeO₂ and
+NaCl) have no commensurate counterpart for the screen to find. The control result is therefore
+in part a consequence of approximation A2, and we report it as a consistency check rather than
+as proof that the screen cannot manufacture an instability.
 
 Multi-anchor comparison against experiment. Beyond the SrTiO₃ gate (§2.4) we compare the screen's
 predicted stabilisation temperature T* (the lowest ladder T at which the cubic phase is called
@@ -414,8 +419,8 @@ harmonically perfect (1.000) and only mid-table at finite temperature (0.833). B
 intervals in the table above overlap, this is an illustration and not a ranking claim. What it
 does license, and what matters for practice, is negative and robust to the overlap: a top harmonic
 score on the npj/PhononBench benchmarks does not identify a model as a good finite-temperature
-screener, and a poor one does not disqualify it. We note explicitly that SevenNet-0 leads *both* layers,
-so the relationship is not a simple inversion and we do not claim one; an earlier version of this
+screener, and a poor one does not disqualify it. We note explicitly that SevenNet-0 is top-equal in
+*both* layers, tied with MatterSim harmonically, so the relationship is not a simple inversion and we do not claim one; an earlier version of this
 analysis, computed before the mode-selection correction described in §2.4, reported that the
 harmonic leaders sat behind MACE-MP-0 and CHGNet, and that specific ordering does not survive the
 correction. ORB-v2 remains the weakest finite-temperature screener (0.800) and the only model that
@@ -427,8 +432,9 @@ from this ranking comparison but from the per-family recall above and the SSCHA 
 CHGNet's harmonic accuracy is tolerance-dependent: 0.789 across the plateau tol ∈ [0.05, 0.20] used
 throughout, rising to 0.895 at tol = 0.30, where two marginal false-unstables (CeO₂ at −0.267 THz
 and NaCl at −0.238 THz) flip back and ORB-v2 becomes the uniquely worst model. We therefore state
-the ordering rather than the number as the claim: CHGNet sits strictly below MatterSim harmonically
-at every tolerance in [0.05, 0.50] and above it at finite temperature. At tol = 0 all five models
+the tolerance-robustness rather than the number: CHGNet sits below MatterSim harmonically at
+every tolerance in [0.05, 0.50], and at tol = 0 the two tie rather than reversing. We do not
+pair this with a finite-temperature ordering, because those intervals overlap. At tol = 0 all five models
 collapse to 0.63–0.74 as the Γ acoustic numerical zeros flood the false-unstable count, and the
 comparison is degenerate.
 
@@ -475,19 +481,36 @@ cheap screen in the displacive regime that dominates generative-CSP outputs — 
 
 Because both methods are evaluated on the same (system, model, temperature) units, the contrast
 is a paired comparison and we test it as one rather than by inspecting whether the two marginal
-intervals overlap. On the ferroelectric oxides the screen is right where SSCHA is wrong on 14
-units against 3 the other way (exact McNemar p = 0.013). That specific test, however, **does not
-survive removing ORB-v2**: it becomes 10 against 3, p = 0.092. We report this rather than the
-favourable slice alone, because the ferroelectric-oxide subset is small once SSCHA's failures are
-excluded and ORB-v2 contributes disproportionately to it. The claim rests instead on the combined
-displacive set, where the cubic fluorites — numerically clean, zero blow-ups, and the family on
-which SSCHA fails most uniformly across architectures — carry it: 26 against 3, p = 2 × 10⁻⁵,
-with ORB-v2 excluded. Table S10 gives all three system sets with and without ORB-v2.
+intervals overlap. **We do not, however, attach a significance claim to it, and the reason is
+worth setting out because an exact test on the paired units would supply a very small p.**
+
+Over the combined displacive set the screen is right where SSCHA is wrong on 33 units against 3
+the other way; excluding ORB-v2, 26 against 3. An exact McNemar over those discordant units
+returns p = 2 × 10⁻⁷ and p = 1.5 × 10⁻⁵. Those p-values assume the units are independent, and
+they are not: 47 units are five systems observed under five models at up to four temperatures.
+That is the same objection that applies to the guardrail set in §3.4, and it applies here with
+more force, because the number of systems is five rather than fifteen. Randomising the method
+label over whole systems instead, which is exact at this size, gives **p = 0.125** for the
+combined set, with four of the five systems favouring the screen (per-system net discordances
++6, +6, −1, +9, +10). With five systems the smallest attainable two-sided p is 2/2⁵ = 0.0625, so
+no arrangement of these data could have reached conventional significance at the system level.
+On the ferroelectric oxides alone (three systems) and the fluorites alone (two systems) the
+clustered test is uninformative by construction.
+
+What the data therefore support is an effect that is large, one-directional and consistent
+across four of five systems, not a significant one. We report it that way. The argument that
+the effect is real rests on mechanism rather than on sample size: the controlled diagnostic of
+§S2.2, in which only the truncation order changes and the sign of the answer changes with it;
+the fluorite within-cell control below; and the fact that the failure is predicted in the SCHA
+literature for exactly this regime.^22^ Table S10 gives every system set with and without
+ORB-v2, and both the unit-level and clustered tests. The ORB-v2 sensitivity is visible there
+too: on the ferroelectric oxides alone the unit-level contrast weakens from 14-versus-3
+(p = 0.013) to 10-versus-3 (p = 0.092) when ORB-v2 is removed.
 
 ![**Fig. 3** Multi-mode SSCHA dynamic-stabilisation curves for bcc Ti/Zr/Hf, five models,
 versus temperature (§3.3). All models stabilise the bcc phase by ≤50 K; the margin to the stability
-boundary (MatterSim/ORB-v2 hugging ~0.4 THz, MACE-MP-0 firmly stable ~1.8 THz) discriminates the
-models.](../results/figures/fig_sscha_bcc.png)
+boundary discriminates them: ORB-v2 hugs it at 0.06 THz and SevenNet-0 at 0.30 THz, while
+MACE-MP-0 and MatterSim sit firmly stable at 1.2 and 1.6 THz.](../results/figures/fig_sscha_bcc.png)
 
 ![**Fig. 4** Soft-mode screen vs gold-standard SSCHA minimum frequency on bcc
 (§3.3): the cheap screen tracks SSCHA on the family where the gold standard is
@@ -550,7 +573,7 @@ Because no single model is reliable across the set, we test whether cross-model 
 the units where the majority-vote consensus finite-temperature call is wrong. On the non-bcc,
 non-borderline soft-mode units (n = 60; bcc excluded because its thermodynamic-T_c label is the
 wrong reference for dynamic stability, §3.3), the majority-vote consensus is wrong on 12/60 =
-0.200 [0.117, 0.320] of units. That set is fifteen systems × four temperatures, exactly the
+0.200 [0.118, 0.318] of units. That set is fifteen systems × four temperatures, exactly the
 fifteen systems of the matched set above (Table S7), and each unit already collapses the five
 model votes, so the units are clustered by system and are not independent — every test below
 resamples whole systems rather than units.
@@ -562,20 +585,22 @@ consensus error, the binary stable/unstable vote split reaches AUC 0.762, and it
 clustering: a permutation test over whole systems gives p = 0.004 and a cluster bootstrap gives a
 95% interval of [0.590, 0.934], excluding 0.5. The naive unit-level permutation returns p < 0.001,
 so treating the units as independent would indeed have overstated the significance, by about a
-factor of four in p, without changing the conclusion. The continuous cross-model frequency
-standard deviation carries no usable signal by contrast (AUC 0.361, clustered p = 0.275, 95%
-interval [0.046, 0.625]; Fig. 6). That interval spans 0.5, so although the point estimate sits
-below chance we do not read it as an inverted predictor — the honest statement is that it is
-uninformative.
+factor of four in p, without changing the conclusion. No such signal could be resolved for the continuous cross-model
+frequency standard deviation (AUC 0.361, clustered p = 0.275, 95% interval [0.046, 0.625];
+Fig. 6). We state that as a failure to resolve rather than as an absence. The interval spans
+0.5, so the point estimate sitting below chance does not make it an inverted predictor; but the
+interval also reaches 0.625, so these data do not exclude a moderately useful one either. The
+practical reading is that the continuous spread cannot be relied on at this sample size,
+whereas the discrete vote split can.
 
 ![**Fig. 6** Ensemble-disagreement guardrail (§3.4): the discrete inter-model
-vote split predicts consensus error (AUC 0.762; system-clustered p = 0.004) while the continuous
-cross-model frequency spread does not (AUC 0.361, clustered 95% interval [0.046, 0.625], which
-spans chance).](../results/figures/fig_ensemble_guardrail.png)
+vote split predicts consensus error (AUC 0.762; system-clustered p = 0.004), while for the
+continuous cross-model frequency spread no signal could be resolved (AUC 0.361, clustered 95%
+interval [0.046, 0.625], which spans chance).](../results/figures/fig_ensemble_guardrail.png)
 
 This refines H3 into a rule with a caveat: the discrete inter-model vote split is a useful, cheap
-guardrail (flag any candidate on which the foundation-MLIP ensemble disagrees), but the continuous
-frequency spread that one might naively threshold is not. The physical reading is that disagreement
+guardrail (flag any candidate on which the foundation-MLIP ensemble disagrees), while the
+continuous frequency spread that one might naively threshold could not be shown to work here. The physical reading is that disagreement
 concentrates near the stability boundary, where split votes coincide with frequencies straddling
 zero and the call is both most uncertain and most error-prone.
 
@@ -612,8 +637,10 @@ established without a convergence test by comparing methods within a fixed cell.
 instability is the Γ ferroelectric mode, present in every cell including the 2×2×2 used. That
 argument covers one system, so we extend it to the fluorites by the stronger route: in the same
 2×2×2 cell and with the same force engine, the harmonic calculation finds every one of the ten
-fluorite units unstable, from −3.8 to −10.6 THz, while SSCHA finds every one of them stable, from
-+1.9 to +3.3 THz. The cell demonstrably resolves the instability, because the harmonic
+fluorite units unstable, from −3.8 to −10.6 THz, while SSCHA at 100 K finds every one of them
+stable, from +1.9 to +3.3 THz. The comparison is made at 100 K because that is where SSCHA is
+uniformly false-stable; by 600 to 900 K three of the five models do destabilise, with the wrong
+temperature trend, as §3.3 reports. The cell demonstrably resolves the instability, because the harmonic
 calculation resolves it there; what loses it is the free-energy Hessian's truncation, exactly as
 the root-cause diagnostic finds. A finite-size explanation would have to account for an
 instability that is visible to one method and invisible to another in the same supercell.
@@ -670,7 +697,8 @@ is specific and, for anyone intending to threshold an uncertainty, worth knowing
 signal works, with split votes carrying a 6.6-fold enrichment in consensus error and surviving a
 system-clustered permutation test. The *continuous* signal, the cross-model spread of the
 predicted frequency, which is the propagated form of exactly the force-level disagreement the
-proposal appeals to, carries no usable information (AUC 0.361, interval spanning chance). A
+proposal appeals to, yielded no signal we could resolve (AUC 0.361, 95% interval
+[0.046, 0.625], spanning chance, so a moderately useful predictor is not excluded either). A
 committee spread computed on a single architecture's own ensemble is a different quantity from
 our cross-architecture spread and might behave better, but our measurement is the caution: the
 continuous version of this idea failed on this set, and it failed while the discrete version
@@ -710,11 +738,13 @@ routinely used for, and the obvious escalation does not rescue it, because MLIP-
 its default bubble truncation systematically false-stabilises the deep displacive instabilities
 that dominate generative-CSP output. A cheap quantum free-energy screen, applied to every
 imaginary commensurate mode rather than to the softest one, is the more reliable indicator in
-that regime, and the contrast survives the removal of the one architecturally anomalous model.
+that regime. Over the combined displacive set that contrast survives removing the one
+architecturally anomalous model, though on the ferroelectric oxides alone it does not (§3.3).
 Which mode is examined matters as much as which method is used: the deepest instability need not
 be the one that condenses, and in SrTiO₃ it is not. Where a single model cannot be trusted,
 disagreement across an ensemble of independent architectures is a cheap and effective guardrail,
-provided it is read as a discrete vote split rather than as a continuous spread.
+provided it is read as a discrete vote split; the continuous spread was not resolvable as a
+predictor at this sample size.
 
 We are deliberately not claiming a ranking of the five models at finite temperature. Their
 accuracies span six units on a denominator of thirty and every interval overlaps, so which model

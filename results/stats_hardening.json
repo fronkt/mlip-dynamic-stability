@@ -539,8 +539,23 @@
       "screen_right_sscha_wrong": 14,
       "sscha_right_screen_wrong": 3,
       "both_wrong": 8,
-      "mcnemar_exact_p": 0.01273,
-      "note": "paired over the units where both methods return a physical number; this is the correct test of the contrast, and it is not the overlap of the two marginal Wilson intervals"
+      "mcnemar_exact_p_UNIT_LEVEL": 0.0127258,
+      "clustered_by_system": {
+        "n_clusters": 3,
+        "per_cluster_net": [
+          6,
+          6,
+          -1
+        ],
+        "clusters_favouring_a": 2,
+        "clusters_favouring_b": 1,
+        "clusters_tied": 0,
+        "observed_net": 11,
+        "p_exact_clustered": 0.5,
+        "finest_attainable_p": 0.25,
+        "at_resolution_floor": false
+      },
+      "note": "Two tests, and the unit-level one is NOT the one to quote. Pairing is the right structure -- both methods see the same (system, model, temperature) units, so comparing two marginal Wilson intervals would ignore it -- but an exact McNemar over discordant units also assumes those units are independent, and they are not: they cluster by system. That is the same objection Referee 3 raised about the guardrail AUC, and it applies here too. The clustered test randomises the method label over whole systems and is exact. Its resolution floor is 2/2^k, so with five systems no arrangement can reach p < 0.0625, and the honest report is the effect size and its consistency across systems rather than a significance claim."
     },
     "fe_oxide__excl_orb_v2": {
       "n_paired_units": 23,
@@ -549,8 +564,23 @@
       "screen_right_sscha_wrong": 10,
       "sscha_right_screen_wrong": 3,
       "both_wrong": 8,
-      "mcnemar_exact_p": 0.09229,
-      "note": "paired over the units where both methods return a physical number; this is the correct test of the contrast, and it is not the overlap of the two marginal Wilson intervals"
+      "mcnemar_exact_p_UNIT_LEVEL": 0.0922852,
+      "clustered_by_system": {
+        "n_clusters": 3,
+        "per_cluster_net": [
+          4,
+          4,
+          -1
+        ],
+        "clusters_favouring_a": 2,
+        "clusters_favouring_b": 1,
+        "clusters_tied": 0,
+        "observed_net": 7,
+        "p_exact_clustered": 0.5,
+        "finest_attainable_p": 0.25,
+        "at_resolution_floor": false
+      },
+      "note": "Two tests, and the unit-level one is NOT the one to quote. Pairing is the right structure -- both methods see the same (system, model, temperature) units, so comparing two marginal Wilson intervals would ignore it -- but an exact McNemar over discordant units also assumes those units are independent, and they are not: they cluster by system. That is the same objection Referee 3 raised about the guardrail AUC, and it applies here too. The clustered test randomises the method label over whole systems and is exact. Its resolution floor is 2/2^k, so with five systems no arrangement can reach p < 0.0625, and the honest report is the effect size and its consistency across systems rather than a significance claim."
     },
     "fluorite__all_models": {
       "n_paired_units": 20,
@@ -559,8 +589,22 @@
       "screen_right_sscha_wrong": 19,
       "sscha_right_screen_wrong": 0,
       "both_wrong": 0,
-      "mcnemar_exact_p": 0.0,
-      "note": "paired over the units where both methods return a physical number; this is the correct test of the contrast, and it is not the overlap of the two marginal Wilson intervals"
+      "mcnemar_exact_p_UNIT_LEVEL": 3.8e-06,
+      "clustered_by_system": {
+        "n_clusters": 2,
+        "per_cluster_net": [
+          9,
+          10
+        ],
+        "clusters_favouring_a": 2,
+        "clusters_favouring_b": 0,
+        "clusters_tied": 0,
+        "observed_net": 19,
+        "p_exact_clustered": 0.5,
+        "finest_attainable_p": 0.5,
+        "at_resolution_floor": true
+      },
+      "note": "Two tests, and the unit-level one is NOT the one to quote. Pairing is the right structure -- both methods see the same (system, model, temperature) units, so comparing two marginal Wilson intervals would ignore it -- but an exact McNemar over discordant units also assumes those units are independent, and they are not: they cluster by system. That is the same objection Referee 3 raised about the guardrail AUC, and it applies here too. The clustered test randomises the method label over whole systems and is exact. Its resolution floor is 2/2^k, so with five systems no arrangement can reach p < 0.0625, and the honest report is the effect size and its consistency across systems rather than a significance claim."
     },
     "fluorite__excl_orb_v2": {
       "n_paired_units": 16,
@@ -569,8 +613,22 @@
       "screen_right_sscha_wrong": 16,
       "sscha_right_screen_wrong": 0,
       "both_wrong": 0,
-      "mcnemar_exact_p": 3e-05,
-      "note": "paired over the units where both methods return a physical number; this is the correct test of the contrast, and it is not the overlap of the two marginal Wilson intervals"
+      "mcnemar_exact_p_UNIT_LEVEL": 3.05e-05,
+      "clustered_by_system": {
+        "n_clusters": 2,
+        "per_cluster_net": [
+          8,
+          8
+        ],
+        "clusters_favouring_a": 2,
+        "clusters_favouring_b": 0,
+        "clusters_tied": 0,
+        "observed_net": 16,
+        "p_exact_clustered": 0.5,
+        "finest_attainable_p": 0.5,
+        "at_resolution_floor": true
+      },
+      "note": "Two tests, and the unit-level one is NOT the one to quote. Pairing is the right structure -- both methods see the same (system, model, temperature) units, so comparing two marginal Wilson intervals would ignore it -- but an exact McNemar over discordant units also assumes those units are independent, and they are not: they cluster by system. That is the same objection Referee 3 raised about the guardrail AUC, and it applies here too. The clustered test randomises the method label over whole systems and is exact. Its resolution floor is 2/2^k, so with five systems no arrangement can reach p < 0.0625, and the honest report is the effect size and its consistency across systems rather than a significance claim."
     },
     "displacive_combined__all_models": {
       "n_paired_units": 47,
@@ -579,8 +637,25 @@
       "screen_right_sscha_wrong": 33,
       "sscha_right_screen_wrong": 3,
       "both_wrong": 8,
-      "mcnemar_exact_p": 0.0,
-      "note": "paired over the units where both methods return a physical number; this is the correct test of the contrast, and it is not the overlap of the two marginal Wilson intervals"
+      "mcnemar_exact_p_UNIT_LEVEL": 2e-07,
+      "clustered_by_system": {
+        "n_clusters": 5,
+        "per_cluster_net": [
+          6,
+          6,
+          -1,
+          9,
+          10
+        ],
+        "clusters_favouring_a": 4,
+        "clusters_favouring_b": 1,
+        "clusters_tied": 0,
+        "observed_net": 30,
+        "p_exact_clustered": 0.125,
+        "finest_attainable_p": 0.0625,
+        "at_resolution_floor": false
+      },
+      "note": "Two tests, and the unit-level one is NOT the one to quote. Pairing is the right structure -- both methods see the same (system, model, temperature) units, so comparing two marginal Wilson intervals would ignore it -- but an exact McNemar over discordant units also assumes those units are independent, and they are not: they cluster by system. That is the same objection Referee 3 raised about the guardrail AUC, and it applies here too. The clustered test randomises the method label over whole systems and is exact. Its resolution floor is 2/2^k, so with five systems no arrangement can reach p < 0.0625, and the honest report is the effect size and its consistency across systems rather than a significance claim."
     },
     "displacive_combined__excl_orb_v2": {
       "n_paired_units": 39,
@@ -589,8 +664,25 @@
       "screen_right_sscha_wrong": 26,
       "sscha_right_screen_wrong": 3,
       "both_wrong": 8,
-      "mcnemar_exact_p": 2e-05,
-      "note": "paired over the units where both methods return a physical number; this is the correct test of the contrast, and it is not the overlap of the two marginal Wilson intervals"
+      "mcnemar_exact_p_UNIT_LEVEL": 1.52e-05,
+      "clustered_by_system": {
+        "n_clusters": 5,
+        "per_cluster_net": [
+          4,
+          4,
+          -1,
+          8,
+          8
+        ],
+        "clusters_favouring_a": 4,
+        "clusters_favouring_b": 1,
+        "clusters_tied": 0,
+        "observed_net": 23,
+        "p_exact_clustered": 0.125,
+        "finest_attainable_p": 0.0625,
+        "at_resolution_floor": false
+      },
+      "note": "Two tests, and the unit-level one is NOT the one to quote. Pairing is the right structure -- both methods see the same (system, model, temperature) units, so comparing two marginal Wilson intervals would ignore it -- but an exact McNemar over discordant units also assumes those units are independent, and they are not: they cluster by system. That is the same objection Referee 3 raised about the guardrail AUC, and it applies here too. The clustered test randomises the method label over whole systems and is exact. Its resolution floor is 2/2^k, so with five systems no arrangement can reach p < 0.0625, and the honest report is the effect size and its consistency across systems rather than a significance claim."
     }
   },
   "orb_split": {

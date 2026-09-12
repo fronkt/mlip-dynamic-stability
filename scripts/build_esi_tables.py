@@ -211,23 +211,34 @@ def table_s10_paired(st: dict) -> str:
         if not v:
             continue
         setname, tag = key.rsplit("__", 1)
+        c = v["clustered_by_system"]
+        p_unit = v["mcnemar_exact_p_UNIT_LEVEL"]
         rows.append([
             setname.replace("_", " "), tag.replace("_", " "),
-            v["n_paired_units"], v["screen_right_sscha_wrong"],
-            v["sscha_right_screen_wrong"], f"{v['mcnemar_exact_p']:.2g}",
+            v["n_paired_units"],
+            f'{v["screen_right_sscha_wrong"]}/{v["sscha_right_screen_wrong"]}',
+            f"{p_unit:.2g}" if p_unit >= 1e-6 else f"{p_unit:.0e}",
+            f'{c["clusters_favouring_a"]}/{c["n_clusters"]}',
+            f'{c["p_exact_clustered"]:.4f}',
+            f'{c["finest_attainable_p"]:.4f}',
         ])
     return (
-        "**Table S10** The central screen-versus-SSCHA contrast tested **as a paired "
-        "comparison**, which is what the design supports: both methods are evaluated on the same "
-        "(system, model, temperature) units, so comparing their two marginal Wilson intervals "
-        "would ignore the pairing. Counts are of discordant pairs; the test is an exact "
-        "two-sided McNemar over them. The result to read honestly is the middle pair of rows: on "
-        "the ferroelectric oxides **alone**, the contrast is significant with ORB-v2 included "
-        "and not significant without it. The claim therefore rests on the combined displacive "
-        "set, where the cubic fluorites — numerically clean, zero blow-ups, and essentially "
-        "unaffected by ORB-v2 — carry it. `scripts/stats_hardening.py`.\n\n"
-        + md(rows, ["System set", "Model set", "n paired", "Screen right, SSCHA wrong",
-                    "SSCHA right, screen wrong", "Exact p"])
+        "**Table S10** The central screen-versus-SSCHA contrast, tested as the paired "
+        "comparison it is. Both methods see the same (system, model, temperature) units, so "
+        "comparing their two marginal Wilson intervals would ignore the pairing. Two p-values "
+        "are given and **the unit-level one should not be quoted**: an exact McNemar over "
+        "discordant units also assumes those units are independent, and they cluster by system. "
+        "The clustered column randomises the method label over whole systems and is exact at "
+        "this size. Its resolution floor, 2/2^k, is given alongside, because with five "
+        "displacive systems no arrangement of the data can reach p < 0.0625 and with two "
+        "fluorite systems none can go below 0.5. The reportable content of this table is the "
+        "size and the consistency of the effect (four of five systems favour the screen, with "
+        "per-system net discordances +6, +6, -1, +9, +10) rather than a significance claim; the "
+        "case that the effect is real rests on the mechanism isolated in Table S2. "
+        "`scripts/stats_hardening.py`.\n\n"
+        + md(rows, ["System set", "Model set", "n paired", "Discordant (screen/SSCHA)",
+                    "Unit-level p (do not quote)", "Systems favouring screen",
+                    "Clustered p", "Floor"])
     )
 
 
@@ -296,11 +307,17 @@ def table_s11_sscha_diag(df: pd.DataFrame) -> str:
         "imaginary modes, and the reported minimum frequency excludes the acoustic branches from "
         "the full spectrum rather than from this window — but it separates the families "
         "sharply, and it marks the units on which the free-energy Hessian is furthest from the "
-        "regime its bubble truncation is valid in (§3.3).\n\n"
+        "regime its bubble truncation is valid in (§3.3). Read swamping as a fraction "
+        "rather than a count, because the per-model denominators differ: on the "
+        "perovskites it runs from 8/19 = 0.42 for MACE-MP-0 to 14/20 = 0.70 for CHGNet, "
+        "so it is present for every architecture but is not uniform across them. On the "
+        "fluorites it is **not** architecture-neutral, being 4/8 for ORB-v2 and 2/8 for "
+        "MACE-MP-0 against 0/8 for the other three.\n\n"
         "**What the harness did not retain**, and what would therefore need a re-run to supply: "
         "the per-iteration free-energy gradient history, and a per-unit uncertainty on the "
         "Hessian eigenvalues. The uncertainty probe that does exist is the independent-seed "
-        "study of §S2.4, which this revision extends beyond bcc-Zr at Referee 1's request.\n\n"
+        "study of §S2.4, which at present covers bcc-Zr only; extending it to a "
+        "displacive system is work in progress and is not reported here.\n\n"
         + md(rows, ["Family", "Model", "n units", "Acoustic zeros resolved",
                     "Max zero residual (THz)", "Swamped", "Wall time (s)"])
     )

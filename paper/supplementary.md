@@ -83,14 +83,28 @@ the matched set as borderline, and `hf_bcc`, which moves from −0.0891 to −0.
 either way at the production tolerance, but a flip at tol = 0). This is consistent with ORB-v2's
 float32 direct-force architecture, identified as the weakest model in §3.1 on independent grounds.
 
+**A note on the deposited flag.** `results/estimator_noise.json` records
+`ordering_invariant: false` next to the statement that CHGNet sits strictly below MatterSim at
+every tolerance in [0.05, 0.50]. Both are correct. The flag is evaluated over the full swept
+range including tol = 0, where the two models *tie* at 0.684 rather than reversing, so the
+strict inequality fails without the ordering ever inverting.
+
 **This is a lower bound, not a full characterisation.** v1 and v2 share a code path, a displacement
 amplitude and a seedless algorithm, so the pair probes environment and library nondeterminism only.
 It does *not* probe sensitivity to the finite displacement amplitude itself, which is the axis a
-reader familiar with κ_SRME's estimator noise will ask about. Closing that would require re-running
-the 95 scored units on a displacement grid (0.005 / 0.01 / 0.02 / 0.03 Å). Note for anyone
-attempting it: `disp` is hardcoded in `harmonic.py` and is *not* part of the unit hash, so it must
-be added to the settings dict with a `METHOD_VERSION` bump or `has_unit()` will silently skip every
-re-run unit.
+reader familiar with κ_SRME's estimator noise will ask about. Closing it requires re-running the
+scored units on a displacement grid (0.005 / 0.01 / 0.02 / 0.03 Å), which is in progress and is
+not reported here.
+
+The harness now supports that sweep, and the way it does so is worth recording because the
+obvious implementation is wrong twice over. `disp` was not part of the unit hash, so a re-run at
+a new amplitude was skipped by `has_unit()` as already present; but simply adding it to the hash
+would have changed the hash of all 100 deposited harmonic rows and detached the ledger from the
+code that produced it. The production amplitude is therefore still absent from the hash, and only
+a departure from it is recorded. Swept units are also written under the method name
+`harmonic_dispsweep` rather than `harmonic`, because they carry the same `method_version` as
+production rows and would otherwise pass through `analysis.canonical()` and inflate the
+denominator of every harmonic rate in this paper.
 
 ### S1.3 Complete derivation of the single-mode quantum SCHA screen
 
@@ -569,22 +583,22 @@ The 15 systems are: `batio3_cubic`, `c_diamond`, `ceo2_cubic`, `cspbi3_cubic`, `
 | FE-perovskite recall, softmode | excluding ORB-v2 | 12/24 = 0.500 [0.314, 0.686] |
 | FE-perovskite recall, sscha | excluding ORB-v2 | 5/23 = 0.217 [0.097, 0.419] |
 
-**Table S10** The central screen-versus-SSCHA contrast tested **as a paired comparison**, which is what the design supports: both methods are evaluated on the same (system, model, temperature) units, so comparing their two marginal Wilson intervals would ignore the pairing. Counts are of discordant pairs; the test is an exact two-sided McNemar over them. The result to read honestly is the middle pair of rows: on the ferroelectric oxides **alone**, the contrast is significant with ORB-v2 included and not significant without it. The claim therefore rests on the combined displacive set, where the cubic fluorites — numerically clean, zero blow-ups, and essentially unaffected by ORB-v2 — carry it. `scripts/stats_hardening.py`.
+**Table S10** The central screen-versus-SSCHA contrast, tested as the paired comparison it is. Both methods see the same (system, model, temperature) units, so comparing their two marginal Wilson intervals would ignore the pairing. Two p-values are given and **the unit-level one should not be quoted**: an exact McNemar over discordant units also assumes those units are independent, and they cluster by system. The clustered column randomises the method label over whole systems and is exact at this size. Its resolution floor, 2/2^k, is given alongside, because with five displacive systems no arrangement of the data can reach p < 0.0625 and with two fluorite systems none can go below 0.5. The reportable content of this table is the size and the consistency of the effect (four of five systems favour the screen, with per-system net discordances +6, +6, -1, +9, +10) rather than a significance claim; the case that the effect is real rests on the mechanism isolated in Table S2. `scripts/stats_hardening.py`.
 
-| System set | Model set | n paired | Screen right, SSCHA wrong | SSCHA right, screen wrong | Exact p |
-|---|---|---|---|---|---|
-| fe oxide | all models | 27 | 14 | 3 | 0.013 |
-| fe oxide | excl orb v2 | 23 | 10 | 3 | 0.092 |
-| fluorite | all models | 20 | 19 | 0 | 0 |
-| fluorite | excl orb v2 | 16 | 16 | 0 | 3e-05 |
-| displacive combined | all models | 47 | 33 | 3 | 0 |
-| displacive combined | excl orb v2 | 39 | 26 | 3 | 2e-05 |
+| System set | Model set | n paired | Discordant (screen/SSCHA) | Unit-level p (do not quote) | Systems favouring screen | Clustered p | Floor |
+|---|---|---|---|---|---|---|---|
+| fe oxide | all models | 27 | 14/3 | 0.013 | 2/3 | 0.5000 | 0.2500 |
+| fe oxide | excl orb v2 | 23 | 10/3 | 0.092 | 2/3 | 0.5000 | 0.2500 |
+| fluorite | all models | 20 | 19/0 | 3.8e-06 | 2/2 | 0.5000 | 0.5000 |
+| fluorite | excl orb v2 | 16 | 16/0 | 3e-05 | 2/2 | 0.5000 | 0.5000 |
+| displacive combined | all models | 47 | 33/3 | 2e-07 | 4/5 | 0.1250 | 0.0625 |
+| displacive combined | excl orb v2 | 39 | 26/3 | 1.5e-05 | 4/5 | 0.1250 | 0.0625 |
 
 **Table S11** SSCHA numerical quality per family and model. The sampling configuration is identical for all 201 units and is therefore stated once here rather than tabulated: 256 configurations per population, a cap of 8 populations, a dedicated 512-configuration ensemble for the free-energy Hessian, 2560 samples in total. The stopping criterion is `python-sscha`'s automatic stochastic relaxation under the per-population step cap `minim.max_ka = 20` (§S2.1), with the Hessian evaluated on a fresh ensemble at the converged auxiliary matrix.
 
-Two quantities are tabulated from the six lowest recorded Hessian frequencies. *Acoustic zeros resolved* counts units in which all three translational zeros (|ω| < 0.001 THz) appear within that window, and the residual column gives the largest of their magnitudes over those units, which bounds the numerical noise on a quantity known analytically to be zero. *Swamped* counts the opposite case: units with **no** recorded mode near zero, meaning at least six modes lie below the acoustic branches. Swamping is not itself an error — a deeply unstable phase genuinely has many imaginary modes, and the reported minimum frequency excludes the acoustic branches from the full spectrum rather than from this window — but it separates the families sharply, and it marks the units on which the free-energy Hessian is furthest from the regime its bubble truncation is valid in (§3.3).
+Two quantities are tabulated from the six lowest recorded Hessian frequencies. *Acoustic zeros resolved* counts units in which all three translational zeros (|ω| < 0.001 THz) appear within that window, and the residual column gives the largest of their magnitudes over those units, which bounds the numerical noise on a quantity known analytically to be zero. *Swamped* counts the opposite case: units with **no** recorded mode near zero, meaning at least six modes lie below the acoustic branches. Swamping is not itself an error — a deeply unstable phase genuinely has many imaginary modes, and the reported minimum frequency excludes the acoustic branches from the full spectrum rather than from this window — but it separates the families sharply, and it marks the units on which the free-energy Hessian is furthest from the regime its bubble truncation is valid in (§3.3). Read swamping as a fraction rather than a count, because the per-model denominators differ: on the perovskites it runs from 8/19 = 0.42 for MACE-MP-0 to 14/20 = 0.70 for CHGNet, so it is present for every architecture but is not uniform across them. On the fluorites it is **not** architecture-neutral, being 4/8 for ORB-v2 and 2/8 for MACE-MP-0 against 0/8 for the other three.
 
-**What the harness did not retain**, and what would therefore need a re-run to supply: the per-iteration free-energy gradient history, and a per-unit uncertainty on the Hessian eigenvalues. The uncertainty probe that does exist is the independent-seed study of §S2.4, which this revision extends beyond bcc-Zr at Referee 1's request.
+**What the harness did not retain**, and what would therefore need a re-run to supply: the per-iteration free-energy gradient history, and a per-unit uncertainty on the Hessian eigenvalues. The uncertainty probe that does exist is the independent-seed study of §S2.4, which at present covers bcc-Zr only; extending it to a displacive system is work in progress and is not reported here.
 
 | Family | Model | n units | Acoustic zeros resolved | Max zero residual (THz) | Swamped | Wall time (s) |
 |---|---|---|---|---|---|---|

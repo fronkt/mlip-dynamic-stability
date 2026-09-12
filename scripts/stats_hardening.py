@@ -208,6 +208,7 @@ def screen_vs_sscha_paired(df: pd.DataFrame, systems: list[str], t_max: float = 
     c = int((~s_ok & q_ok).sum())      # SSCHA right, screen wrong
     nd = b + c
     p = min(1.0, 2 * sum(comb(nd, k) for k in range(min(b, c) + 1)) / 2 ** nd) if nd else 1.0
+    clustered = S.cluster_exact_paired(s_ok.to_numpy(), q_ok.to_numpy(), m["system"].to_numpy())
     return {
         "n_paired_units": int(len(m)),
         "n_systems": int(m["system"].nunique()),
@@ -215,10 +216,18 @@ def screen_vs_sscha_paired(df: pd.DataFrame, systems: list[str], t_max: float = 
         "screen_right_sscha_wrong": b,
         "sscha_right_screen_wrong": c,
         "both_wrong": int((~s_ok & ~q_ok).sum()),
-        "mcnemar_exact_p": round(p, 5),
-        "note": ("paired over the units where both methods return a physical number; this is "
-                 "the correct test of the contrast, and it is not the overlap of the two "
-                 "marginal Wilson intervals"),
+        "mcnemar_exact_p_UNIT_LEVEL": round(p, 7),
+        "clustered_by_system": clustered,
+        "note": ("Two tests, and the unit-level one is NOT the one to quote. Pairing is the "
+                 "right structure -- both methods see the same (system, model, temperature) "
+                 "units, so comparing two marginal Wilson intervals would ignore it -- but an "
+                 "exact McNemar over discordant units also assumes those units are "
+                 "independent, and they are not: they cluster by system. That is the same "
+                 "objection Referee 3 raised about the guardrail AUC, and it applies here too. "
+                 "The clustered test randomises the method label over whole systems and is "
+                 "exact. Its resolution floor is 2/2^k, so with five systems no arrangement "
+                 "can reach p < 0.0625, and the honest report is the effect size and its "
+                 "consistency across systems rather than a significance claim."),
     }
 
 
@@ -308,11 +317,19 @@ def main() -> None:
     for m, v in sorted(res["finite_t_per_model"].items()):
         print(f"  {m:12s} {v['accuracy']['fmt']}")
     print("\n-- screen vs SSCHA, paired (the central contrast) --")
+    print(f"   {'set / model subset':30s} {'units':>5s} {'disc.':>7s} {'unit-p':>9s} "
+          f"{'sys':>5s} {'clust-p':>8s} {'floor':>7s}")
     for tag, v in res["screen_vs_sscha_paired"].items():
-        if v:
-            print(f"  {tag:12s} n={v['n_paired_units']:3d}  screen-only-right "
-                  f"{v['screen_right_sscha_wrong']:2d} vs SSCHA-only-right "
-                  f"{v['sscha_right_screen_wrong']:2d}   exact p {v['mcnemar_exact_p']}")
+        if not v:
+            continue
+        c = v["clustered_by_system"]
+        print(f"   {tag:30s} {v['n_paired_units']:5d} "
+              f"{v['screen_right_sscha_wrong']:3d}/{v['sscha_right_screen_wrong']:<3d} "
+              f"{v['mcnemar_exact_p_UNIT_LEVEL']:9.2g} "
+              f"{c['clusters_favouring_a']}/{c['n_clusters']:<3d} "
+              f"{c['p_exact_clustered']:8.4f} {c['finest_attainable_p']:7.4f}")
+    print("   The unit-level p treats correlated units as independent. The clustered column is")
+    print("   the one to quote; its resolution floor is 2/2^k, shown alongside.")
 
     print("\n-- five-model Spearman --")
     for t, v in res["h2_matched_set"].items():
