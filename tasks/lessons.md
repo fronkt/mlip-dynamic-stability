@@ -198,3 +198,40 @@
   softens broadly: SrTiO3 reads -0.0 (uniquely missed) and it falsely calls MgO unstable
   (-2.8). Rule: report per-system min_freq across models, not just binary rates — the
   "softening toward zero" is the physics, and float32-only direct models (ORB) need a caveat.
+
+---
+
+## 2026-09-11 — RSC revision session
+
+**Fixing a criticism in one place while committing it in another.** Referee 3's sharpest point
+was that the guardrail AUC treated system-clustered units as independent. I fixed that in §3.4,
+then two sections away introduced a NEW paired screen-vs-SSCHA test that made exactly the same
+error, and wrote "every test below resamples whole systems" one section after the test that
+didn't. Clustered properly it was p = 0.125, not 2e-7. **Rule: when a referee names a
+methodological defect, grep the whole paper for the pattern, not just the passage they cite —
+including anything added in the same revision.**
+
+**Verify what a diagnostic measures before writing prose around it.** Twice this session a
+plausible-looking analysis measured nothing:
+- "Max acoustic residual" computed as the three smallest-|ω| of the recorded lowest-six. On a
+  deeply unstable spectrum the acoustic zeros are not in that window at all, so it was reading
+  optical modes. Replaced with "are the three zeros resolvable at all", which is interpretable.
+- The exact-1D solver looked like a free validation of SCHA accuracy. It calls 96.5% of modes
+  condensed at EVERY temperature, because P → exp(−V/kT) keeps a double well bimodal forever.
+  An isolated 1D mode cannot thermally stabilise, so it is not a finite-T reference. Reframed.
+
+**Denominators before comparisons.** The §3.2 table put a 19-system harmonic column beside a
+15-system finite-T column, and the paper's flagship illustration lived entirely in the gap. On
+matched systems the effect vanished. **Rule: any two columns compared in a sentence must be
+scored on the same units, and the caption must say so.**
+
+**Adding a swept parameter to a hashed ledger has two failure modes, not one.** Leaving `disp`
+out of the hash means re-runs are silently skipped; putting it in changes every deposited hash.
+The resolution is to exclude the production value and retag departures to their own method name
+— otherwise the sweep rows share `method_version` with production, pass `canonical()`, and
+inflate every harmonic denominator in the paper.
+
+**Heredoc escape trap, hit twice.** `
+` inside Python written through a bash heredoc lands as a
+real newline and breaks the string. Use Write/Edit for any Python containing escapes; `ast.parse`
+before running.
