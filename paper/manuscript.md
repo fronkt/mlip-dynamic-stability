@@ -203,7 +203,9 @@ of 𝓕 with respect to Ω at fixed Q₀ gives the self-consistency condition
 $$M\Omega^2 = \langle V''\rangle_{Q_0,\sigma} = 2a + 12b\,\langle Q^2\rangle + 30c\,\langle Q^4\rangle,$$
 
 which we solve by bracketed root finding on σ² (avoiding the runaway large-σ fixed point a damped
-iteration can reach), and 𝓕 is then minimised over the centroid on a Q₀ grid.
+iteration can reach), and 𝓕 is then minimised over the centroid on a Q₀ grid. ESI §S1.3 derives
+each of these steps in full, pins the normalisation convention for **u** on which M and Q depend,
+and states what the single-mode restriction neglects.
 
 Criterion and observable. Two distinct quantities come out of 𝓕, and we keep them separate. The
 **stability call** is the variational one: the mode has condensed at T if the global minimum of
@@ -236,7 +238,7 @@ same fitted potentials exactly: an isolated mode's thermal density stays bimodal
 temperature, because it tends to exp(−V/k_BT), so the temperature dependence the screen needs
 comes from the self-consistency rather than from the shape of the well. That comparison also
 shows the screen never condenses a mode whose exact density is unimodal, in none of the 228
-mode-temperature evaluations covering 57 (system, model) units.
+mode-temperature evaluations covering 57 (system, model) units (Table S12).
 
 Approximations, declared. Table 1 states what the screen neglects, the expected direction of the
 bias, and where the consequence is visible in our own data.
@@ -302,7 +304,8 @@ MACE-MP-0 and CHGNet each carry two false-stable calls (rate 0.154) on the bcc Z
 modes, softened to −0.00 THz; this is the PES-softening bias of the literature, localised to
 specific instabilities. ORB-v2 carries one false-stable (rate 0.077): it correctly flags bcc-Zr
 (−0.43 THz) and bcc-Hf (−0.19 THz) unstable but reads SrTiO₃ at +0.00 THz. ORB-v2 (a direct-force
-model, run in its default float32 precision) softens in both directions; besides that false-stable
+model, run in its default float32 precision) softens in both directions, and Table S9 reports
+every rate it could plausibly drive both with and without it; besides that false-stable
 it falsely calls MgO unstable (−1.07 THz), its one false-unstable on the oxide side. CHGNet carries the only non-ORB false-unstables (rate 0.333), CeO₂ (−0.27 THz) and
 NaCl (−0.24 THz), both genuinely stable controls tripped just past the −0.1 THz tolerance; both
 flip back to stable at a tolerance of ≈0.25 THz, so they are finite-displacement noise rather than
@@ -356,7 +359,8 @@ is the clearest limitation of the screen in this work. T* is therefore reported 
 (Table S6 of the ESI), and the SrTiO₃ gate together with the control performance — not the T* ordering —
 is what licenses the screen as the reference in §3.3.
 
-Per-model false-stable rates on the displacive/anharmonic set (non-bcc, non-borderline, T ≤ 300 K;
+Per-model false-stable rates on the displacive/anharmonic set (Table S5 gives the same rates over
+the full temperature ladder and with the bcc metals included; non-bcc, non-borderline, T ≤ 300 K;
 bcc excluded because its thermodynamic-T_c label is the wrong reference for dynamic stability,
 §3.3):
 
@@ -398,18 +402,31 @@ models over fifteen systems) is temperature-dependent, and we separate two quest
 marginal homogeneity that McNemar's exact test addresses. At T = 300 K they are not: 17
 harmonically-correct units are mis-called at finite temperature against only 4 the other way,
 McNemar exact p = 0.007. Harmonic correctness therefore does not transfer, and this is the
-significant result. The second question is whether harmonic and finite-temperature correctness are
-*associated*, which McNemar does not test. There the effect is negative but not significant:
-φ = −0.129 at 300 K, with a system-clustered permutation p = 0.31 over 10,000 permutations of whole
-systems' finite-temperature rows, and a system-clustered bootstrap 95% interval of [−0.195, −0.057]
-— an interval that reflects the precision of the point estimate rather than a test of the null, and
-whose sign rides on a structurally empty both-incorrect cell. At T = 100 K the association is weakly
-positive and likewise not significant (φ = +0.149, clustered permutation p = 0.12, McNemar exact
-p = 0.73, matched per-model rank correlation ρ = +0.65). With five models and fifteen systems this
-design cannot resolve the sign of the association, and we do not claim it. The transferable finding
-is the failure of transfer itself. (The matched set excludes systems whose name carries the bcc
-tag, which also removes the superionic AgI unit; the denominator is therefore fifteen systems, not
-sixteen.)
+significant result. We give the whole ladder rather than the temperatures that make the point
+most sharply:
+
+| T (K) | both correct | harm ✓, finite-T ✗ | harm ✗, finite-T ✓ | both wrong | McNemar exact p | φ | clustered p |
+|---|---|---|---|---|---|---|---|
+| 100 | 66 | 5 | 3 | 1 | 0.727 | +0.149 | 0.125 |
+| 300 | 54 | 17 | 4 | 0 | **0.007** | −0.129 | 0.305 |
+| 600 | 48 | 23 | 4 | 0 | **<0.001** | −0.158 | 0.083 |
+| 900 | 60 | 11 | 4 | 0 | 0.118 | −0.098 | 0.358 |
+
+The transfer failure is significant at 300 K and at 600 K, absent at 100 K, and not significant
+at 900 K, by which point most ground-truth labels have flipped to stable and the comparison
+loses its force. The third column carries it, and it exceeds the fourth at every temperature.
+
+The second question is whether harmonic and finite-temperature correctness are *associated*,
+which McNemar does not test. There the answer is that this design cannot say. The
+system-clustered permutation p, over 10,000 permutations of whole systems' finite-temperature
+rows, is above 0.08 at every temperature. φ is positive at 100 K and negative at the three
+higher ones, but at each of those three the both-wrong cell is **structurally empty**, so the
+sign is forced by a zero rather than measured. A system-clustered bootstrap interval excludes
+zero at 300, 600 and 900 K; we give that no weight either, because it describes the precision of
+a point estimate whose sign is already known to be an artifact. With five models over fifteen
+systems we claim no association in either direction, and the transferable finding is the failure
+of transfer itself. (The matched set excludes systems whose name carries the bcc tag, which also
+removes the superionic AgI unit; the denominator is therefore fifteen systems, not sixteen.)
 
 Because the reordering rests on harmonic calls, we bound the harmonic estimator's own
 reproducibility noise directly rather than assuming it is small. The v1 and v2 harmonic generations
@@ -417,7 +434,7 @@ reproducibility noise directly rather than assuming it is small. The v1 and v2 h
 12×12×12 meshes — re-measured in independently pinned environments, giving 100 paired (system,
 model) re-measurements. The spread is strongly model-dependent and must not be pooled: CHGNet's
 largest deviation is 0.0076 THz and MatterSim's is 0.00057 THz, with zero stability-call flips
-across all forty of their re-measurements, whereas ORB-v2's reaches 2.01 THz and flips two calls,
+across all forty of their re-measurements, whereas ORB-v2's reaches 2.01 THz and flips two calls (Table S1),
 one of them the KTaO₃ unit already excluded as borderline. The two models carrying the reordering
 are therefore separated by margins that exceed the estimator's own noise by roughly a factor of
 twenty for CHGNet (its two matched-set harmonic calls sit 0.138 and 0.167 THz from the tolerance
@@ -480,10 +497,13 @@ this failure, and the expensive v4 Hessian is its own prescribed remedy, but tha
 impractical at screening scale (see the root cause below). The finding is that the default
 escalation path, at the truncation its implementation ships with, is unsafe in this regime.
 
-bcc metals: SSCHA is a clean gold standard, and the screen agrees with it where it counts. Across
+bcc metals: SSCHA is a clean gold standard, and the screen agrees with it where it counts.
+Table S3 gives reliability by family over the complete grid, and Table S11 the per-unit
+numerical diagnostics and the sampling configuration. Across
 Ti/Zr/Hf × 5 models × 5 temperatures (75 runs) SSCHA produced zero numerical failures, with minimum
-free-energy-Hessian frequencies in a physical [0.06, 2.1] THz range. All five models anharmonically
-stabilise the bcc phase by ≤50 K (the dynamic-stabilisation temperature, which is far below the
+free-energy-Hessian frequencies in a physical [0.06, 2.1] THz range. All five models already give a
+positive frequency at 50 K, the lowest temperature on the SSCHA ladder, so the
+dynamic-stabilisation temperature is left-censored at 50 K rather than measured (it is far below the
 thermodynamic transition because bcc-to-hcp/ω is a martensitic, strain-coupled first-order
 transition; using the thermodynamic T_c to label dynamic stability is the wrong comparison and is
 what makes the models look false-stable on bcc). The margin to the stability boundary discriminates
@@ -538,7 +558,8 @@ too: on the ferroelectric oxides alone the unit-level contrast weakens from 14-v
 (p = 0.013) to 10-versus-3 (p = 0.092) when ORB-v2 is removed.
 
 ![**Fig. 3** Multi-mode SSCHA dynamic-stabilisation curves for bcc Ti/Zr/Hf, five models,
-versus temperature (§3.3). All models stabilise the bcc phase by ≤50 K; the margin to the stability
+versus temperature (§3.3). All five are already stable at 50 K, the lowest temperature computed,
+so the stabilisation temperature is left-censored there; the margin to the stability
 boundary discriminates them: ORB-v2 hugs it at 0.06 THz and SevenNet-0 at 0.30 THz, while
 MACE-MP-0 and MatterSim sit firmly stable at 1.2 and 1.6 THz.](../results/figures/fig_sscha_bcc.png)
 
@@ -559,7 +580,7 @@ for an instability is meaningless.^21,22^ The object that *can* detect a displac
 a fixed high-symmetry reference is the free-energy Hessian,
 ∂²F/∂**R**∂**R** = **Φ** + **Φ**⁽³⁾**Λ**[**1** − **Φ**⁽⁴⁾**Λ**]⁻¹**Φ**⁽³⁾, which was derived for
 exactly that purpose and demonstrated on the ferroelectric transitions of SnTe and GeTe.^21^ Our
-diagnostic shows the failure enters at the truncation: the harmonic soft mode is −5.6 THz
+diagnostic (Table S2) shows the failure enters at the truncation: the harmonic soft mode is −5.6 THz
 (correctly unstable), yet with the fourth-order term dropped, which is the bubble approximation and
 the `python-sscha` default, the Hessian returns +2.87 THz and the call is false-stable. That is the
 regime in which the bubble is known to fail, since it breaks down for the cubic phase of metal
@@ -569,9 +590,11 @@ determine phase stability.^22^ Our contribution is to measure that breakdown at 
 to show it is not confined to halides: it holds for oxide perovskites, and for cubic fluorites it
 holds in a numerically clean form with zero stochastic blow-ups (above), which separates a
 methodological limit from a numerical one. Enabling the fourth-order term (`include_v4=True`) is
-therefore the physically correct escalation, consistent with that RPA requirement, but it ran for
-more than 18 min on a single unit without finishing (tens of hours per unit at grid scale) and is
-numerically viable only in float64, which is the practical barrier at screening scale. We therefore
+therefore the physically correct escalation, consistent with that RPA requirement, but on a
+single unit it had not finished after 18 min, against roughly 200 s for the production
+v4=False path on the same unit, and it is numerically viable only in float64. We report that
+observed bound rather than extrapolating a per-unit cost from one non-completion; over a grid of
+201 units even the bound is the practical barrier. We therefore
 use SSCHA as the bcc gold standard and the experimental transition temperature (the SrTiO₃ gate,
 §2.4) as the validation for the perovskite screen. We add one structural observation from our own
 data: even within the single-mode screen, deep wells condense first-order-like — the free energy
@@ -608,7 +631,8 @@ fifteen systems of the matched set above (Table S7), and each unit already colla
 model votes, so the units are clustered by system and are not independent — every test below
 resamples whole systems rather than units.
 
-The disagreement signal separates the errors: on the 14 units where the five models split on the
+Table S8 lists every unit in that set. The disagreement signal separates the errors: on the 14
+units where the five models split on the
 stable/unstable call, the consensus error rate is 8/14 = 0.571 [0.326, 0.786], against 4/46 =
 0.087 [0.034, 0.203] on the 46 unanimous units, a 6.6× enrichment. As a ranked predictor of
 consensus error, the binary stable/unstable vote split reaches AUC 0.762, and it survives the
@@ -686,9 +710,9 @@ harmonically-correct units mis-called at 300 K against 4 the other way (p = 0.00
 statement about the relative difficulty of the two layers, and it is the one the title makes.
 What the data do **not** establish is the pre-registered form, that harmonic and
 finite-temperature accuracy are uncorrelated. Once pairs are clustered by system, no association
-reaches significance at any temperature, and the sign of the point estimate itself changes across
-the ladder; a failure to reject is not a demonstration, so we leave the association unresolved
-rather than reporting it as absent. The per-model comparison should be read the same way: the five
+reaches significance at any temperature, and the sign of the point estimate is positive at 100 K
+and negative above it only because the both-wrong cell is empty there. A failure to reject is
+not a demonstration, so we leave the association unresolved rather than reporting it as absent. The per-model comparison should be read the same way: the five
 finite-temperature accuracies span six units on a denominator of thirty and their intervals all
 overlap, so the ranking is suggestive, not established. None of this weakens the practical
 consequence, which is negative and needs no correlation to hold — a top harmonic benchmark score
