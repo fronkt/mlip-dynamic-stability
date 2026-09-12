@@ -390,7 +390,8 @@
         "p_perm": 0.6033,
         "n": 5,
         "exact": true,
-        "finest_resolvable_p": 0.0083
+        "n_pairings": 120,
+        "finest_attainable_p": 0.6033
       }
     },
     "300": {
@@ -435,7 +436,8 @@
         "p_perm": 0.405,
         "n": 5,
         "exact": true,
-        "finest_resolvable_p": 0.0083
+        "n_pairings": 120,
+        "finest_attainable_p": 0.1074
       }
     },
     "600": {
@@ -480,7 +482,8 @@
         "p_perm": 0.1074,
         "n": 5,
         "exact": true,
-        "finest_resolvable_p": 0.0083
+        "n_pairings": 120,
+        "finest_attainable_p": 0.1074
       }
     },
     "900": {
@@ -525,11 +528,12 @@
         "p_perm": 1.0,
         "n": 5,
         "exact": true,
-        "finest_resolvable_p": 0.0083
+        "n_pairings": 120,
+        "finest_attainable_p": 0.1074
       }
     },
     "composition_note": "n = 75 is 15 systems x 5 models. The same 15 systems carry the n = 60 guardrail set (15 x 4 temperatures), so the two analysis sets share their clustering structure. Systems whose id contains 'bcc' are dropped, which also removes the superionic agi_bcc; this is retained for comparability with the published numbers and is stated in section 3.2.",
-    "spearman_power_note": "With five models there are 5! = 120 distinct pairings, so the smallest attainable two-sided p is 1/120 = 0.0083 and any rho at this n is descriptive only. Note also that the coefficient changes sign across the ladder, which is itself the argument against reading it."
+    "spearman_power_note": "With five models there are only 5! = 120 distinct pairings, so this statistic has a resolution floor (reported per temperature as finest_attainable_p) and any rho at this n is descriptive only. Note also that the coefficient changes sign across the ladder, which is itself the argument against reading it."
   },
   "screen_vs_sscha_paired": {
     "fe_oxide__all_models": {

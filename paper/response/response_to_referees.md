@@ -84,8 +84,15 @@ asserts that harmonic accuracy is non-predictive.
 > *both the single-mode screen and SSCHA rely on the MLIP force engine, [so] disagreement between
 > them cannot definitively establish which method is correct*
 
-The premise is correct and the manuscript should have been clearer that it does not rely on that
-agreement. **No claim in the paper is licensed by screen–SSCHA agreement.** The ground truth is
+The premise is correct, and the manuscript should have been clearer about what does and does
+not rest on that agreement. Being precise rather than sweeping: **no scoring, no validation gate
+and no headline claim is licensed by screen-SSCHA agreement.** There is one place where the
+agreement is used as evidence, and we now flag it as such rather than leaving it implicit: ESI
+§S1.3 uses the bcc call agreement (0.78, or 0.83 excluding ORB-v2) to bound how much the screen's
+neglect of mode-mode coupling can move a stability call, since the multi-mode SSCHA does retain
+those couplings. That bound is legitimate only on bcc, where SSCHA is independently well behaved,
+and it is a bound on an approximation rather than a validation of either method. The ground
+truth is
 experimental, not computational, and is therefore independent of the MLIP potential-energy
 surface in a way that a DFT reference would only partly be:
 
@@ -133,13 +140,16 @@ engine is identical across those rows. Only the truncation changes, and the sign
 
 **2. Architecture-uniformity.** An out-of-distribution force-engine failure should be
 architecture-specific and precision-sensitive. It is not. The false-stabilisation occurs for all
-five architectures, spans float32 and float64 models alike, and the new Table S11 shows that the
-"swamped" perovskite spectra are distributed evenly across the five models (14, 8, 9, 8, 8) rather
-than concentrating in any one.
+five architectures, spans float32 and float64 models alike, and the new Table S11 shows the "swamped"
+perovskite spectra present for every architecture: as fractions, since the denominators differ,
+8/19 = 0.42 for MACE-MP-0 through 14/20 = 0.70 for CHGNet. It is not uniform across models, but
+it is nowhere near confined to one.
 
 **3. A within-cell control on the fluorites, new in this revision (§3.5).** In the same 2×2×2
 cell and with the same force engine, the harmonic calculation finds all ten fluorite units
-unstable, −3.8 to −10.6 THz, while SSCHA finds all ten stable, +1.9 to +3.3 THz. Both numbers now
+unstable, −3.8 to −10.6 THz, while SSCHA at 100 K finds all ten stable, +1.9 to +3.3 THz. The
+comparison is stated at 100 K because that is where SSCHA is uniformly false-stable; by 600 to
+900 K three of the five models destabilise, with the wrong temperature trend (§3.3). Both numbers now
 have assertions in `scripts/verify_claims.py`. The force engine that is allegedly failing
 out-of-distribution locates the instability correctly when asked harmonically, in the same cell,
 at the same geometry.
@@ -227,7 +237,9 @@ spectrum, and how large their residual is. This separates the families sharply �
 them in 75/75 units, with the largest residual over any model at 2.5 × 10⁻¹⁴ THz and most
 orders of magnitude below that; the perovskites resolve them in 38 of 86.
 
-**[PENDING] Four-seed extension beyond bcc-Zr**, to BaTiO₃ and one fluorite, as requested.
+**[PENDING] Four-seed extension beyond bcc-Zr**, to BaTiO₃ and one fluorite, as requested. Not
+yet run. §S2.4 and Table S11 state that the seed study currently covers bcc-Zr only rather than
+implying otherwise.
 
 ## R1.5 — Formalisation and sensitivity of the soft-mode screen
 
@@ -360,8 +372,12 @@ All correct, all adopted. A new module `mlip_dynstab/stats.py` and driver
 `scripts/stats_hardening.py` implement these; the outputs are deposited in
 `results/stats_hardening.json`.
 
-**Counts and intervals.** Every rate in the paper is now *k/n* with a Wilson score interval, and
-the referee's own arithmetic was right: the harmonic accuracies are 19/19, 17/19 and 15/19.
+**Counts and intervals.** Every rate in the results tables, every per-family recall and every
+guardrail rate is now *k/n* with a Wilson score interval, and the referee's own arithmetic was
+right: the harmonic accuracies are 19/19, 17/19 and 15/19. Two quantities are deliberately still
+quoted without one, and I would rather name them than let the claim be read too broadly: the bcc
+sign agreement (35/45 and 30/36), which is a concordance rather than an accuracy, and the 0/120
+and 0/57 zero counts, which now carry their one-sided intervals in the text where they appear.
 Wilson rather than Wald because several rates sit at the boundary, where Wald would assign
 MatterSim's 19/19 the interval [1.000, 1.000].
 
@@ -389,16 +405,30 @@ evidence. The surviving p = 0.007 result is labelled as a difference in layer di
 (marginal homogeneity) wherever it appears, and never as an association.
 
 **Spearman.** Adopted, with a sharper version of the referee's point. With five models there are
-5! = 120 pairings, so the smallest attainable two-sided p is 1/120 = 0.0083 and the coefficient
-cannot carry an inference at any value. Enumerated exactly: ρ = +0.645 (p = 0.60) at 100 K,
+5! = 120 pairings, so the statistic has a resolution floor and cannot carry an inference at any
+value. The floor is computed rather than asserted (the test is two-sided and the accuracy
+vectors contain ties, so it is not 1/120): it is 0.107 at 300, 600 and 900 K and 0.603 at
+100 K. Enumerated exactly: ρ = +0.645 (p = 0.60) at 100 K,
 −0.667 (p = 0.41) at 300 K, −0.889 (p = 0.11) at 600 K, −0.167 (p = 1.00) at 900 K. It changes
 sign across the ladder, which is itself the argument. It is now reported as descriptive only.
 
-**A paired test the manuscript was missing.** Comparing the screen's 0.53 against SSCHA's 0.19 by
-inspecting two marginal intervals ignores that both methods are evaluated on the same units. Tested
-as the paired comparison it is, the screen is right where SSCHA is wrong on 14 units against 3 on
-the FE oxides (exact p = 0.013). **This result does not survive removing ORB-v2** — it becomes 10
-against 3, p = 0.092 — and I report that rather than the favourable slice; see R3.5.
+**A paired test the manuscript was missing, and a significance claim I have withdrawn as a
+result of writing it.** Comparing the screen's 0.53 against SSCHA's 0.19 by inspecting two
+marginal intervals ignores that both methods see the same units, so I added the paired test. An
+exact McNemar over the discordant units gives p = 2 × 10⁻⁷ on the combined displacive set. I am
+not quoting that number, because on inspection it commits the referee's own objection: those 47
+units are five systems under five models at up to four temperatures, and treating them as
+independent is exactly what §3.4 was corrected for. Randomising the method label over whole
+systems instead, which is exact at this size, gives **p = 0.125**, with four of five systems
+favouring the screen (net discordances +6, +6, −1, +9, +10). With five systems the floor is
+2/2⁵ = 0.0625, so no arrangement of these data could have reached significance at the system
+level.
+
+§3.3 therefore now reports a large, one-directional, consistent effect and explicitly declines a
+significance claim, and rests the case that the effect is real on mechanism instead: the
+diagnostic in which only the truncation order changes and the sign of the answer changes with
+it. Table S10 gives every system set both ways and both tests, with the unit-level column
+labelled as one not to quote.
 
 ## R3.4 — Tables S1–S4
 
@@ -410,7 +440,11 @@ and ran; the tables were never rendered.
 rather than being hand-maintained (`--check` fails if it is stale). Two further defects found in
 the same pass are fixed: the ESI numbered its *sections* S1–S4 **and** its *tables* S1–S4, so a
 reader looking for Table S1 landed on a section, and the three tables that did have content had no
-numbers or captions. Tables are now S1–S12 in order of appearance with a disambiguating note.
+numbers or captions. Tables are now S1–S12 and every one has a caption, with a note at the head of the ESI
+disambiguating them from the sections. One exception to strict order of appearance: Table S12,
+the exact-1D comparison, sits in §S1.4 and so is rendered early; it is numbered last because it
+was added last, and I have kept the number stable rather than renumbering the tables the referee
+has already been asked to check.
 
 Beyond the four requested, the ESI now also carries the analysis-set composition (S7), the ORB-v2
 split (S9), the paired tests (S10), the SSCHA diagnostics (S11), and the exact-1D comparison (S12).
@@ -435,9 +469,14 @@ to it.
 
 The claim therefore rests on the combined displacive set rather than on the ferroelectric oxides
 alone, where the cubic fluorites carry it: **26 against 3, p = 2 × 10⁻⁵, with ORB-v2 excluded.**
-The fluorites are the appropriate anchor independently of this — they are numerically clean, with
-zero blow-ups and no failed units, and Table S11 shows their difficulty is not concentrated in any
-one architecture. §3.3 now states all of this explicitly, and Table S10 gives all three system
+The fluorites are the appropriate anchor for two reasons, and one thing I first claimed for them
+is wrong and has been corrected. They are numerically clean, with zero blow-ups and no failed
+units, and the paired discordance excluding ORB-v2 is 16 against 0. What I initially wrote, that
+Table S11 shows their difficulty is not concentrated in any one architecture, does not survive
+checking the denominators: fluorite spectra in which no acoustic zero is resolvable are 4/8 for
+ORB-v2 and 2/8 for MACE-MP-0 against 0/8 for the other three, so that particular diagnostic *is*
+ORB-weighted. The table and its caption now say so. The ORB-independence of the fluorite anchor
+rests on the recall comparison, not on that diagnostic. §3.3 now states all of this explicitly, and Table S10 gives all three system
 sets both ways so a reader can check the sensitivity themselves.
 
 ## R3.6 — Figure order

@@ -315,9 +315,13 @@ def cluster_permutation_spearman(a, b, n_perm: int = 10000, seed: int = 0) -> di
     """Exact-if-small permutation p for a Spearman rho.
 
     With five models there are only 5! = 120 distinct pairings, so the p-value is enumerated
-    exactly and ``n_perm`` is ignored. That is the point worth reporting: the finest resolution
-    this statistic can express is 1/120, so no arrangement of five models can reach p < 0.008,
-    and the coefficient cannot carry an inference no matter what it equals.
+    exactly and ``n_perm`` is ignored. That is the point worth reporting: the statistic has a
+    resolution floor, and no arrangement of five models can go below it whatever rho equals.
+
+    The floor is computed rather than asserted. It is *not* 1/120: the test is two-sided, so a
+    perfectly ordered pairing is matched in |rho| by the perfectly reversed one, and the +1
+    correction applies as well. It is evaluated here by placing the observation at the maximum
+    of the null.
     """
     from itertools import permutations
     a = list(a)
@@ -334,6 +338,11 @@ def cluster_permutation_spearman(a, b, n_perm: int = 10000, seed: int = 0) -> di
     null = null[~np.isnan(null)]
     p = (float((np.sum(np.abs(null) >= abs(obs)) + 1) / (null.size + 1))
          if not math.isnan(obs) and null.size else float("nan"))
+    if null.size:
+        floor = float((np.sum(np.abs(null) >= np.abs(null).max()) + 1) / (null.size + 1))
+    else:
+        floor = float("nan")
     return {"rho": round(obs, 3) if not math.isnan(obs) else float("nan"),
             "p_perm": round(p, 4), "n": n, "exact": exact,
-            "finest_resolvable_p": round(1.0 / max(null.size, 1), 4)}
+            "n_pairings": int(null.size),
+            "finest_attainable_p": round(floor, 4)}

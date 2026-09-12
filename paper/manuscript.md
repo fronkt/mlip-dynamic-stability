@@ -234,7 +234,8 @@ direct thermal-density criterion, and ESI §S1.4 makes the distinction concrete 
 same fitted potentials exactly: an isolated mode's thermal density stays bimodal at every
 temperature, because it tends to exp(−V/k_BT), so the temperature dependence the screen needs
 comes from the self-consistency rather than from the shape of the well. That comparison also
-shows the screen never condenses a mode whose exact density is unimodal (0 of 228).
+shows the screen never condenses a mode whose exact density is unimodal, in none of the 228
+mode-temperature evaluations covering 57 (system, model) units.
 
 Approximations, declared. Table 1 states what the screen neglects, the expected direction of the
 bias, and where the consequence is visible in our own data.

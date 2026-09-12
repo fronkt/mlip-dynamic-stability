@@ -171,8 +171,9 @@ def h2_composition_and_spearman(df: pd.DataFrame, temps=(100.0, 300.0, 600.0, 90
             "retained for comparability with the published numbers and is stated in section 3.2."
         )
         out["spearman_power_note"] = (
-            "With five models there are 5! = 120 distinct pairings, so the smallest attainable "
-            "two-sided p is 1/120 = 0.0083 and any rho at this n is descriptive only. Note also "
+            "With five models there are only 5! = 120 distinct pairings, so this statistic has a "
+            "resolution floor (reported per temperature as finest_attainable_p) and any rho at "
+            "this n is descriptive only. Note also "
             "that the coefficient changes sign across the ladder, which is itself the argument "
             "against reading it."
         )
@@ -336,7 +337,7 @@ def main() -> None:
         if isinstance(v, dict) and "spearman_over_models" in v:
             sp = v["spearman_over_models"]
             print(f"  T={t:>3s} K  rho {sp['rho']:+.3f}  exact p {sp['p_perm']:.4f}  "
-                  f"(finest attainable {sp['finest_resolvable_p']:.4f})")
+                  f"(finest attainable {sp['finest_attainable_p']:.4f})")
 
 
 if __name__ == "__main__":

@@ -223,7 +223,9 @@ Each deciding mode is stored as an effective mass and three polynomial coefficie
 one-dimensional Schrödinger problem for the *same* fitted potential can be solved to machine
 precision by diagonalising the tridiagonal Hamiltonian on a grid and Boltzmann-averaging the
 resulting states (`finite_t._solve_1d`, run over the deposited ledger by
-`scripts/scha_vs_exact.py`; 228 modes, no solver failures, no new computation). The natural
+`scripts/scha_vs_exact.py`; 228 mode-temperature evaluations over 57 (system, model) units,
+involving 75 distinct fitted potentials because the deciding mode can change along the ladder;
+no solver failures, no new computation). The natural
 stability criterion for that exact solution is the potential of mean force
 W(Q) = −k_BT ln P(Q,T): the mode has condensed if the thermal density is bimodal.
 
@@ -245,7 +247,7 @@ questions.
 | 600 | 0.9649 | 0.5614 |
 | 900 | 0.9649 | 0.4912 |
 
-**Table S12** The exact isolated-mode criterion against the variational one, over the same 228
+**Table S12** The exact isolated-mode criterion against the variational one, over the same 57
 fitted potentials.
 
 That contrast is itself the argument for the variational criterion. The temperature dependence
@@ -255,7 +257,7 @@ potential, and not by the shape of the well. It also explains why all three disc
 §S1 failed the SrTiO₃ gate: each read a density or an effective force constant rather than
 minimising a free energy.
 
-**The screen never manufactures a mode-level condensation.** Across all 228 modes there is not a
+**The screen never manufactures a mode-level condensation.** Across all 228 evaluations there is not a
 single case in which the screen condenses a mode whose exact thermal density is unimodal; the
 disagreements are entirely in the other direction, and they concentrate in shallow wells
 (median depth 27.9 meV, against 216 meV where the two agree). The screen's condensation calls
