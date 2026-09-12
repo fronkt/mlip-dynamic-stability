@@ -23,10 +23,11 @@ models divide: MatterSim and SevenNet-0 reproduce every documented soft mode (ac
 whereas MACE-MP-0 and CHGNet soften the bcc Zr/Hf instabilities to zero (15% false-stable rate)
 and ORB-v2 misses the SrTiO₃ soft mode (8%). (ii) Harmonic correctness does not transfer to the finite-temperature layer: on the matched set,
 17 harmonically-correct units are mis-called at 300 K against only 4 the other way (McNemar exact
-p = 0.007). CHGNet illustrates it, being the worst model harmonically yet second best at finite
-temperature while MatterSim is harmonically perfect and only mid-table, though with fifteen
-systems the per-model intervals overlap and we treat the finite-temperature ranking as suggestive
-rather than established. We do not claim the stronger reading that harmonic accuracy is
+p = 0.007). On the matched systems three of the five models are harmonically
+perfect and none of them exceeds 0.900 at finite temperature, so a model can be
+indistinguishable from flawless at the harmonic level and still mis-call one displacive unit in
+six; with fifteen systems the per-model intervals overlap, and we treat the finite-temperature
+ranking as suggestive rather than established. We do not claim the stronger reading that harmonic accuracy is
 uncorrelated with finite-temperature accuracy: once pairs are clustered by system no association
 is significant at any temperature, and failing to reject that null is not evidence for it. Screening every
 imaginary mode rather than the softest one is essential, because the deepest mode need not be the
@@ -359,19 +360,35 @@ Per-model false-stable rates on the displacive/anharmonic set (non-bcc, non-bord
 bcc excluded because its thermodynamic-T_c label is the wrong reference for dynamic stability,
 §3.3):
 
-| Model | Finite-T false-stable rate | Finite-T accuracy | (Harmonic accuracy) |
-|---|---|---|---|
-| SevenNet-0 | 2/16 = 0.125 [0.035, 0.360] | 27/30 = 0.900 [0.744, 0.965] | 1.000 |
-| CHGNet | 3/16 = 0.188 [0.066, 0.430] | 26/30 = 0.867 [0.703, 0.947] | 0.789 |
-| MatterSim | 4/16 = 0.250 [0.102, 0.495] | 25/30 = 0.833 [0.664, 0.927] | 1.000 |
-| MACE-MP-0 | 4/16 = 0.250 [0.102, 0.495] | 25/30 = 0.833 [0.664, 0.927] | 0.895 |
-| ORB-v2 | 5/16 = 0.312 [0.142, 0.556] | 24/30 = 0.800 [0.627, 0.905] | 0.895 |
+| Model | Finite-T false-stable rate | Finite-T accuracy | Harmonic accuracy, matched | (Harmonic, all 19) |
+|---|---|---|---|---|
+| SevenNet-0 | 2/16 = 0.125 [0.035, 0.360] | 27/30 = 0.900 [0.744, 0.965] | 15/15 = 1.000 [0.796, 1.000] | 1.000 |
+| CHGNet | 3/16 = 0.188 [0.066, 0.430] | 26/30 = 0.867 [0.703, 0.947] | 13/15 = 0.867 [0.621, 0.963] | 0.789 |
+| MatterSim | 4/16 = 0.250 [0.102, 0.495] | 25/30 = 0.833 [0.664, 0.927] | 15/15 = 1.000 [0.796, 1.000] | 1.000 |
+| MACE-MP-0 | 4/16 = 0.250 [0.102, 0.495] | 25/30 = 0.833 [0.664, 0.927] | 15/15 = 1.000 [0.796, 1.000] | 0.895 |
+| ORB-v2 | 5/16 = 0.312 [0.142, 0.556] | 24/30 = 0.800 [0.627, 0.905] | 13/15 = 0.867 [0.621, 0.963] | 0.895 |
 
-**These five accuracies are not separated by this design.** Every interval overlaps every
-other, the whole spread is six units wide on a denominator of thirty, and we therefore treat
-the finite-temperature ranking as suggestive rather than established. What the table is used
-for below is the *joint* pattern with the harmonic column — a model can be strong in one layer
-and unremarkable in the other — and not the position of any model within either column.
+The fourth column is the harmonic accuracy **on the same fifteen systems** the
+finite-temperature column scores, and it is the only harmonic column that may legitimately be
+compared with it. The fifth reproduces the §3.1 figure over all nineteen scored systems and is
+shown only so the two are not confused: it includes the bcc metals, which the finite-temperature
+layer excludes, and MACE-MP-0's and CHGNet's harmonic errors are concentrated exactly there.
+
+Two consequences follow, and the first corrects an illustration we previously drew from this
+table. On the matched set MACE-MP-0 is harmonically perfect, not 0.895, and CHGNet is 0.867
+rather than 0.789 — the same as its finite-temperature accuracy. **"CHGNet is worst harmonically
+yet second best at finite temperature" was therefore an artifact of comparing a nineteen-system
+column with a fifteen-system one, and we no longer make that claim.** On matched systems CHGNet's
+two remaining harmonic errors are CeO₂ and NaCl, which §3.1 identifies as marginal
+finite-displacement noise that flips back at a tolerance of ≈0.25 THz.
+
+What the matched columns do show is a consistent one-way degradation: three models are
+harmonically perfect on these fifteen systems and none of them exceeds 0.900 at finite
+temperature, while CHGNet, the only model that is not harmonically perfect here, is also the
+only one whose accuracy does not fall. **These five accuracies are not separated by this
+design** — every interval overlaps every other, and the whole finite-temperature spread is six
+units wide on a denominator of thirty — so this is an illustration of the transfer failure
+quantified below, not a ranking.
 
 Read against the harmonic ranking (final column), the ordering is not preserved but neither is it
 inverted, and we are explicit about this because a naive comparison invites a cleaner story than the
@@ -414,14 +431,16 @@ asymmetry above. We deliberately do not upgrade this to "harmonic accuracy is no
 finite-temperature accuracy". That phrasing asserts a null, and the tests above fail to reject a
 null rather than establishing one; with fifteen systems and five models the design cannot resolve
 whether a weak association exists, still less its sign.
-The clearest single illustration of the transfer failure is CHGNet: it is the **worst** model
-harmonically (0.789) yet second **best** at finite temperature (0.867), while MatterSim is
-harmonically perfect (1.000) and only mid-table at finite temperature (0.833). Because the
-intervals in the table above overlap, this is an illustration and not a ranking claim. What it
-does license, and what matters for practice, is negative and robust to the overlap: a top harmonic
-score on the npj/PhononBench benchmarks does not identify a model as a good finite-temperature
-screener, and a poor one does not disqualify it. We note explicitly that SevenNet-0 is top-equal in
-*both* layers, tied with MatterSim harmonically, so the relationship is not a simple inversion and we do not claim one; an earlier version of this
+The clearest illustration on matched data is MatterSim: harmonically perfect on these fifteen
+systems, and 0.833 at finite temperature. MACE-MP-0 and SevenNet-0 are also harmonically perfect
+here and reach 0.833 and 0.900. A model can therefore be indistinguishable from flawless at the
+harmonic level and still mis-call one displacive unit in six at finite temperature. Because the
+intervals overlap, this is an illustration and not a ranking claim. What it does license, and
+what matters for practice, is negative and robust to the overlap: a top harmonic score on the
+npj/PhononBench benchmarks does not identify a model as a good finite-temperature screener, and
+a poor one does not disqualify it. We note explicitly that SevenNet-0 is top-equal in *both*
+layers, tied with MatterSim and MACE-MP-0 harmonically on the matched set, so the relationship
+is not an inversion and we do not claim one; an earlier version of this
 analysis, computed before the mode-selection correction described in §2.4, reported that the
 harmonic leaders sat behind MACE-MP-0 and CHGNet, and that specific ordering does not survive the
 correction. ORB-v2 remains the weakest finite-temperature screener (0.800) and the only model that

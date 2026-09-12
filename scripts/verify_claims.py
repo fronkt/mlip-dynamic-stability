@@ -98,6 +98,18 @@ def main() -> int:
     ma = A.method_agreement_summary(d[d.system.isin(BCC)])
     check(ma["n_paired"] == 45 and abs(ma["sign_agreement"] - 0.778) < 0.005,
           f"[3.3] bcc call agreement {ma['sign_agreement']:.3f} over 45 pairs")
+    # [3.2] The matched-set harmonic column. The finite-T column scores 15 systems; quoting the
+    # 19-system harmonic accuracy beside it produced the (withdrawn) "CHGNet worst harmonically,
+    # second best at finite T" illustration. On matched systems CHGNet is 0.867 in BOTH layers.
+    bl = A.borderline_systems()
+    mh = d[(d.method == "harmonic") & (~d.system.isin(bl)) & (~d.system.str.contains("bcc"))]
+    macc = {m: (g.pred_stable.astype(bool) == g.gt_stable.astype(bool)).mean()
+            for m, g in mh.groupby("model")}
+    check(all(abs(macc[m] - 1.0) < 1e-9 for m in ("mace_mp0", "mattersim", "sevennet0"))
+          and abs(macc["chgnet"] - 13 / 15) < 1e-9 and abs(macc["orb_v2"] - 13 / 15) < 1e-9,
+          f"[3.2] matched-set harmonic: 3 models at 1.000, CHGNet and ORB-v2 at "
+          f"{macc['chgnet']:.3f} (13/15)")
+
     # [3.5] within-cell control: the same 2x2x2 cell that SSCHA calls stable is a cell in
     # which the harmonic calculation sees the fluorite instability. Pins the argument that the
     # fluorite false-stable is the truncation and not finite size (R3 item 2).
