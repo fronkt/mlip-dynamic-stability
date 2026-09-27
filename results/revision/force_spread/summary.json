@@ -1,0 +1,2062 @@
+{
+  "_provenance": {
+    "script": "scripts/force_spread.py",
+    "stage": "analyze",
+    "git_head": "9719f98",
+    "git_dirty": true,
+    "host": "db4a641a37b8",
+    "utc": "2026-09-27T04:59:26+00:00",
+    "python": "3.11.11",
+    "packages": {
+      "numpy": "2.2.2",
+      "pandas": "3.0.5",
+      "ase": "3.29.0",
+      "phonopy": "4.4.0",
+      "torch": "2.6.0+cu124"
+    },
+    "settings": {
+      "allow_partial_fc": false,
+      "ckpt": null,
+      "device": "cuda",
+      "model": null,
+      "n_configs": 16,
+      "n_perm": 10000,
+      "out": null,
+      "seed": 0,
+      "smoke": false,
+      "stage": "analyze"
+    }
+  },
+  "smoke": false,
+  "preregistration": {
+    "primary_metric": "PRIMARY METRIC. For each of the 60 consensus units, the force spread S is the median over the 16 configurations of sqrt(mean over atoms i and Cartesian components a of sigma_ia^2), where sigma_ia is the population standard deviation (ddof = 0) across the five production models of the force F_ia in eV/A. The primary statistic is the rank AUC of S as a predictor of 'consensus call wrong' (stats.auc, ties credited 0.5), with a two-sided system-clustered permutation p (stats.cluster_permutation_auc, 10000 permutations, seed 0) and a system-clustered bootstrap 95% CI (stats.cluster_bootstrap_auc, 10000 resamples, seed 0).",
+    "block_sha256": "504d6031ca21a93ec8e663b443e5bbbfcb13ae0921c005540ffcabaa6556f16f",
+    "text": "PRE-REGISTRATION -- written 2026-09-26, before any configuration was generated or any force\nevaluated; amended 2026-09-27 in review, still before any real configuration existed ((g)\nmade species-pair-resolved, the missing-data rule, the softness confound; the primary is\nunchanged). Do not edit this block once results exist. A later change of design goes in a\nseparately labelled post-hoc section, and the primary below is still the one reported.\n\n  Units. Exactly the units of analysis.h3_guardrail_summary(df, method=\"softmode\") on\n  analysis.load_canonical(): the consensus (system, T) units of h3_ensemble_guardrail with\n  bcc and borderline systems removed -- 15 systems x 4 ladder temperatures (100, 300, 600,\n  900 K) = 60 units. Label: consensus call wrong (stable-vote fraction >= 0.5 is called\n  stable, compared with gt_stable). Without ORB-v2 the consensus is rebuilt from the four\n  remaining votes by the same rule (a 2-2 tie is called stable). The per-(system, model, T)\n  softmode units those consensus units are built from (300; 240 without ORB-v2) carry the\n  per-model label pred_stable != gt_stable.\n\n  Geometry. build_atoms(get_spec(system)), the unrelaxed registry cell with every atom on a\n  high-symmetry site, in the 2x2x2 supercell the harmonic layer uses (cli.run_unit default;\n  the 6x6x6 bcc override is softmode-only and bcc is outside the unit set). One geometry for\n  every model, so the spread measures disagreement about forces and nothing else. At that\n  geometry an equivariant model's force is zero by site symmetry, so the spread is entirely\n  the models' disagreement about the response to displacement.\n\n  Configurations. Force constants from each of the five production models at that geometry\n  (phonopy, cli.PRODUCTION_DISP_ANG = 0.01 A, symmetrised as in harmonic.compute_harmonic;\n  the residual force of the undisplaced cell is subtracted, which is a no-op for an\n  equivariant model and removes ORB-v2's symmetry-breaking offset), averaged over the five\n  models. Supercell dynamical matrix at Gamma; the three translations removed exactly by\n  diagonalising in the orthogonal complement of the mass-weighted translation vectors;\n  imaginary omega replaced by |omega| with a floor of 0.5 THz. N = 16 draws per (system, T)\n  from the quantum harmonic distribution: mode variance\n  <q_k^2> = hbar / (2 omega_k) coth(hbar omega_k / 2 k_B T) in mass-weighted coordinates,\n  mapped back to Cartesian by u = M^(-1/2) E q. Units: amu, THz, Angstrom, eV. RNG seed\n  (0, crc32(system), T). Frozen once written; every force file records the hash of the\n  configurations it was evaluated on, and the analysis refuses a mismatch.\n\n  Models. The five production models (mace_mp0, chgnet, orb_v2, sevennet0, mattersim) and\n  two within-architecture committees: MACE-MP-0 small / medium / large (medium is the\n  production model) and MatterSim v1.0.0 1M / 5M (5M is production). ORB-v2 is float32 and\n  non-conservative; its dtype is recorded and every result is also given without it.\n\n  PRIMARY METRIC. For each of the 60 consensus units, the force spread S is the median over\n  the 16 configurations of sqrt(mean over atoms i and Cartesian components a of\n  sigma_ia^2), where sigma_ia is the population standard deviation (ddof = 0) across the\n  five production models of the force F_ia in eV/A. The primary statistic is the rank AUC\n  of S as a predictor of 'consensus call wrong' (stats.auc, ties credited 0.5), with a\n  two-sided system-clustered permutation p (stats.cluster_permutation_auc, 10000\n  permutations, seed 0) and a system-clustered bootstrap 95% CI\n  (stats.cluster_bootstrap_auc, 10000 resamples, seed 0).\n\n  Secondary, each reported whatever the primary shows and none promoted after the fact:\n  (a) S over the four models without ORB-v2, against the four-model consensus label;\n  (b) S over the MACE-MP-0 committee and (c) over the MatterSim committee, against the\n  five-model label; (d) the normalised spread, S computed per configuration divided by the\n  RMS of the across-model mean force before the median, for five and for four models;\n  (e) per-(system, model, T): the median over configurations of the RMS deviation of that\n  model's forces from the mean of the OTHER models (leave-one-out), as a predictor of that\n  model's call being wrong -- pooled over models and per model, with and without ORB-v2;\n  (f) the MACE committee spread for MACE-MP-0's own call and the MatterSim committee spread\n  for MatterSim's own call; (g) the primary restricted to units in which none of the 16\n  configurations brings any pair of atoms closer than 0.75 of the shortest distance between\n  the same two species in the reference cell (a harmonic draw on a floored soft spectrum can\n  overlap atoms, and a spread measured there is extrapolation by every model, not\n  disagreement about thermal forces; the ratio is resolved by species pair because the\n  overlaps are A-site cations driven into anions, which a ratio against the shortest, B-X,\n  bond misses). All clustered by system exactly as the primary; where (g) leaves unequal\n  blocks the clustered permutation is undefined and only the clustered bootstrap CI is\n  reported. The naive unit-level permutation p is printed beside each only as a labelled\n  companion; it is not evidence, because the units share systems.\n\n  Missing data. A configuration on which any model in a score's set raises or returns a\n  non-finite force is dropped from that score's median for every model in the set (never\n  imputed; the count is reported per unit), and a unit left with fewer than half its\n  configurations is unscored, which makes the score incomplete rather than re-defined.\n\n  Decision rule. The force spread is reported as flagging untrustworthy finite-T calls only\n  if the clustered-bootstrap 95% CI of the primary AUC lies entirely above 0.5 AND the\n  four-model (a) AUC point estimate is also above 0.5. A CI entirely below 0.5 is reported\n  as anti-informative (the spread is larger where the consensus is right), not re-signed.\n  Anything else is reported as \"not shown\".\n\n  Known confound, stated in advance. Thermal amplitude grows with T, so S grows with T, and\n  consensus errors are not uniform over the ladder. Amplitude also grows with the softness\n  of the mean spectrum, and the soft systems are the displacive ones where the calls are\n  hard, so S partly measures softness. The per-temperature AUCs (descriptive only; 15 units\n  each) and the normalised variant (d) are the checks. Neither replaces the primary. A\n  second, found in the CPU smoke test before any real configuration existed: the soft\n  halide spectra put many modes on the 0.5 THz floor, and the harmonic draws then bring\n  the A-site cation into the anions (MACE+CHGNet mean FCs, all 15 systems, 16 draws: the\n  pair-resolved contact ratio is 0.74 / 0.56 / 0.47 / 0.15 for CsSnBr3 at 100 / 300 / 600 /\n  900 K, the last a Cs-Br pair at 0.63 A; CsPbI3 is at 0.69 already at 100 K; PbTiO3 has\n  a Pb-O pair at 1.10 A at 600 K). The halide consensus errors sit at exactly those\n  temperatures, so (g) is the check that a positive primary is not this artifact. Raising\n  the floor is not a remedy: at 1.0 or 1.5 THz it moves 75-81 of the 117 halide modes,\n  most of the real spectrum rather than the unstable part, and the 900 K ratios stay at\n  0.46-0.75.\n\n"
+  },
+  "design_as_preregistered": true,
+  "production_versions_match_ledger": true,
+  "verdict": "not shown: the clustered CI spans 0.5, or the ex-ORB-v2 estimate is <= 0.5",
+  "g_artifact_check": {
+    "auc": 0.314,
+    "ci_lo": 0.146,
+    "ci_hi": 0.529,
+    "n_units": 43,
+    "n_wrong": 4,
+    "n_clusters": 15,
+    "status": "ok"
+  },
+  "primary": {
+    "score": "S_5model",
+    "label": "consensus_wrong",
+    "models_required": [
+      "mace_mp0",
+      "chgnet",
+      "orb_v2",
+      "sevennet0",
+      "mattersim"
+    ],
+    "models_missing": [],
+    "n_units_expected": 60,
+    "complete": true,
+    "n_units": 60,
+    "n_wrong": 12,
+    "n_clusters": 15,
+    "auc": 0.681,
+    "p_perm_clustered": 0.1039,
+    "n_perm": 10000,
+    "ci_lo": 0.416,
+    "ci_hi": 0.908,
+    "n_boot": 9998,
+    "p_perm_naive_unit_level__companion_only": 0.0516,
+    "status": "ok"
+  },
+  "consensus_level": {
+    "primary_S_5model": {
+      "score": "S_5model",
+      "label": "consensus_wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 12,
+      "n_clusters": 15,
+      "auc": 0.681,
+      "p_perm_clustered": 0.1039,
+      "n_perm": 10000,
+      "ci_lo": 0.416,
+      "ci_hi": 0.908,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.0516,
+      "status": "ok"
+    },
+    "a_S_ex_orb_4model": {
+      "score": "S_ex_orb_4model",
+      "label": "consensus_wrong_ex_orb",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 12,
+      "n_clusters": 15,
+      "auc": 0.684,
+      "p_perm_clustered": 0.1033,
+      "n_perm": 10000,
+      "ci_lo": 0.413,
+      "ci_hi": 0.916,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.0459,
+      "status": "ok"
+    },
+    "b_S_mace_committee": {
+      "score": "S_mace_committee",
+      "label": "consensus_wrong",
+      "models_required": [
+        "mace_mp0_small",
+        "mace_mp0",
+        "mace_mp0_large"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 12,
+      "n_clusters": 15,
+      "auc": 0.717,
+      "p_perm_clustered": 0.0403,
+      "n_perm": 10000,
+      "ci_lo": 0.535,
+      "ci_hi": 0.902,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.0198,
+      "status": "ok"
+    },
+    "c_S_mattersim_committee": {
+      "score": "S_mattersim_committee",
+      "label": "consensus_wrong",
+      "models_required": [
+        "mattersim_mattersim-v1.0.0-1m",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 12,
+      "n_clusters": 15,
+      "auc": 0.726,
+      "p_perm_clustered": 0.0536,
+      "n_perm": 10000,
+      "ci_lo": 0.516,
+      "ci_hi": 0.901,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.0142,
+      "status": "ok"
+    },
+    "d_Snorm_5model": {
+      "score": "Snorm_5model",
+      "label": "consensus_wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 12,
+      "n_clusters": 15,
+      "auc": 0.578,
+      "p_perm_clustered": 0.5411,
+      "n_perm": 10000,
+      "ci_lo": 0.335,
+      "ci_hi": 0.795,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.4117,
+      "status": "ok"
+    },
+    "d_Snorm_ex_orb_4model": {
+      "score": "Snorm_ex_orb_4model",
+      "label": "consensus_wrong_ex_orb",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 12,
+      "n_clusters": 15,
+      "auc": 0.576,
+      "p_perm_clustered": 0.5541,
+      "n_perm": 10000,
+      "ci_lo": 0.323,
+      "ci_hi": 0.798,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.4215,
+      "status": "ok"
+    },
+    "g_S_5model_no_overlap": {
+      "score": "S_5model",
+      "label": "consensus_wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 43,
+      "complete": true,
+      "n_units": 43,
+      "n_wrong": 4,
+      "n_clusters": 15,
+      "auc": 0.314,
+      "p_perm_clustered": null,
+      "perm_note": "cluster_permutation_auc needs equal-sized blocks, got sizes [1, 2, 3, 4]. Use the bootstrap, or aggregate to one row per cluster.",
+      "ci_lo": 0.146,
+      "ci_hi": 0.529,
+      "n_boot": 9651,
+      "p_perm_naive_unit_level__companion_only": 0.235,
+      "status": "ok",
+      "criterion": "min over every configuration of the unit of the pair-resolved contact ratio >= 0.75",
+      "min_pair_ratio_threshold": 0.75,
+      "units_dropped": [
+        "batio3_cubic@600",
+        "batio3_cubic@900",
+        "cspbi3_cubic@300",
+        "cspbi3_cubic@600",
+        "cspbi3_cubic@900",
+        "cssnbr3_cubic@300",
+        "cssnbr3_cubic@600",
+        "cssnbr3_cubic@900",
+        "cssni3_cubic@300",
+        "cssni3_cubic@600",
+        "cssni3_cubic@900",
+        "nacl_rocksalt@900",
+        "pbtio3_cubic@300",
+        "pbtio3_cubic@600",
+        "pbtio3_cubic@900",
+        "srtio3_cubic@600",
+        "srtio3_cubic@900"
+      ]
+    }
+  },
+  "per_model_level": {
+    "e_loo_pooled_5model": {
+      "score": "loo_5model",
+      "label": "wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 300,
+      "complete": true,
+      "n_units": 300,
+      "n_wrong": 57,
+      "n_clusters": 15,
+      "auc": 0.654,
+      "p_perm_clustered": 0.0939,
+      "n_perm": 10000,
+      "ci_lo": 0.425,
+      "ci_hi": 0.832,
+      "n_boot": 10000,
+      "p_perm_naive_unit_level__companion_only": 0.0004,
+      "status": "ok"
+    },
+    "e_loo_pooled_ex_orb_4model": {
+      "score": "loo_ex_orb",
+      "label": "wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 240,
+      "complete": true,
+      "n_units": 240,
+      "n_wrong": 47,
+      "n_clusters": 15,
+      "auc": 0.689,
+      "p_perm_clustered": 0.063,
+      "n_perm": 10000,
+      "ci_lo": 0.438,
+      "ci_hi": 0.882,
+      "n_boot": 10000,
+      "p_perm_naive_unit_level__companion_only": 0.0001,
+      "status": "ok"
+    },
+    "e_loo_mace_mp0_5model": {
+      "score": "loo_5model",
+      "label": "wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 14,
+      "n_clusters": 15,
+      "auc": 0.699,
+      "p_perm_clustered": 0.0816,
+      "n_perm": 10000,
+      "ci_lo": 0.465,
+      "ci_hi": 0.907,
+      "n_boot": 9999,
+      "p_perm_naive_unit_level__companion_only": 0.0236,
+      "status": "ok"
+    },
+    "e_loo_mace_mp0_ex_orb": {
+      "score": "loo_ex_orb",
+      "label": "wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 14,
+      "n_clusters": 15,
+      "auc": 0.731,
+      "p_perm_clustered": 0.0411,
+      "n_perm": 10000,
+      "ci_lo": 0.502,
+      "ci_hi": 0.927,
+      "n_boot": 9999,
+      "p_perm_naive_unit_level__companion_only": 0.0082,
+      "status": "ok"
+    },
+    "e_loo_chgnet_5model": {
+      "score": "loo_5model",
+      "label": "wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 11,
+      "n_clusters": 15,
+      "auc": 0.681,
+      "p_perm_clustered": 0.1524,
+      "n_perm": 10000,
+      "ci_lo": 0.286,
+      "ci_hi": 0.931,
+      "n_boot": 9994,
+      "p_perm_naive_unit_level__companion_only": 0.0613,
+      "status": "ok"
+    },
+    "e_loo_chgnet_ex_orb": {
+      "score": "loo_ex_orb",
+      "label": "wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 11,
+      "n_clusters": 15,
+      "auc": 0.688,
+      "p_perm_clustered": 0.1325,
+      "n_perm": 10000,
+      "ci_lo": 0.307,
+      "ci_hi": 0.936,
+      "n_boot": 9994,
+      "p_perm_naive_unit_level__companion_only": 0.0522,
+      "status": "ok"
+    },
+    "e_loo_orb_v2_5model": {
+      "score": "loo_5model",
+      "label": "wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 10,
+      "n_clusters": 15,
+      "auc": 0.542,
+      "p_perm_clustered": 0.7358,
+      "n_perm": 10000,
+      "ci_lo": 0.29,
+      "ci_hi": 0.768,
+      "n_boot": 9997,
+      "p_perm_naive_unit_level__companion_only": 0.6872,
+      "status": "ok"
+    },
+    "e_loo_sevennet0_5model": {
+      "score": "loo_5model",
+      "label": "wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 11,
+      "n_clusters": 15,
+      "auc": 0.75,
+      "p_perm_clustered": 0.0657,
+      "n_perm": 10000,
+      "ci_lo": 0.481,
+      "ci_hi": 0.932,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.0079,
+      "status": "ok"
+    },
+    "e_loo_sevennet0_ex_orb": {
+      "score": "loo_ex_orb",
+      "label": "wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 11,
+      "n_clusters": 15,
+      "auc": 0.761,
+      "p_perm_clustered": 0.0481,
+      "n_perm": 10000,
+      "ci_lo": 0.502,
+      "ci_hi": 0.941,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.0046,
+      "status": "ok"
+    },
+    "e_loo_mattersim_5model": {
+      "score": "loo_5model",
+      "label": "wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 11,
+      "n_clusters": 15,
+      "auc": 0.586,
+      "p_perm_clustered": 0.4466,
+      "n_perm": 10000,
+      "ci_lo": 0.331,
+      "ci_hi": 0.834,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.3793,
+      "status": "ok"
+    },
+    "e_loo_mattersim_ex_orb": {
+      "score": "loo_ex_orb",
+      "label": "wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 11,
+      "n_clusters": 15,
+      "auc": 0.584,
+      "p_perm_clustered": 0.4534,
+      "n_perm": 10000,
+      "ci_lo": 0.309,
+      "ci_hi": 0.844,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.3915,
+      "status": "ok"
+    },
+    "f_committee_mace_mp0_own_call": {
+      "score": "committee",
+      "label": "wrong",
+      "models_required": [
+        "mace_mp0_small",
+        "mace_mp0",
+        "mace_mp0_large"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 14,
+      "n_clusters": 15,
+      "auc": 0.722,
+      "p_perm_clustered": 0.034,
+      "n_perm": 10000,
+      "ci_lo": 0.564,
+      "ci_hi": 0.873,
+      "n_boot": 9999,
+      "p_perm_naive_unit_level__companion_only": 0.0103,
+      "status": "ok"
+    },
+    "f_committee_mattersim_own_call": {
+      "score": "committee",
+      "label": "wrong",
+      "models_required": [
+        "mattersim_mattersim-v1.0.0-1m",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 60,
+      "complete": true,
+      "n_units": 60,
+      "n_wrong": 11,
+      "n_clusters": 15,
+      "auc": 0.686,
+      "p_perm_clustered": 0.12,
+      "n_perm": 10000,
+      "ci_lo": 0.473,
+      "ci_hi": 0.873,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.0538,
+      "status": "ok"
+    }
+  },
+  "per_temperature_primary__descriptive": {
+    "100": {
+      "score": "S_5model",
+      "label": "consensus_wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 15,
+      "complete": true,
+      "n_units": 15,
+      "n_wrong": 1,
+      "n_clusters": 15,
+      "auc": 0.643,
+      "p_perm_clustered": 0.7389,
+      "n_perm": 10000,
+      "ci_lo": 0.357,
+      "ci_hi": 0.857,
+      "n_boot": 6446,
+      "p_perm_naive_unit_level__companion_only": 0.7389,
+      "status": "ok",
+      "median_S_5model": 0.044396409840304144
+    },
+    "300": {
+      "score": "S_5model",
+      "label": "consensus_wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 15,
+      "complete": true,
+      "n_units": 15,
+      "n_wrong": 4,
+      "n_clusters": 15,
+      "auc": 0.477,
+      "p_perm_clustered": 0.9504,
+      "n_perm": 10000,
+      "ci_lo": 0.136,
+      "ci_hi": 0.833,
+      "n_boot": 9904,
+      "p_perm_naive_unit_level__companion_only": 0.9504,
+      "status": "ok",
+      "median_S_5model": 0.06913188044729954
+    },
+    "600": {
+      "score": "S_5model",
+      "label": "consensus_wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 15,
+      "complete": true,
+      "n_units": 15,
+      "n_wrong": 5,
+      "n_clusters": 15,
+      "auc": 0.8,
+      "p_perm_clustered": 0.06,
+      "n_perm": 10000,
+      "ci_lo": 0.432,
+      "ci_hi": 1.0,
+      "n_boot": 9989,
+      "p_perm_naive_unit_level__companion_only": 0.06,
+      "status": "ok",
+      "median_S_5model": 0.07785474738512582
+    },
+    "900": {
+      "score": "S_5model",
+      "label": "consensus_wrong",
+      "models_required": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ],
+      "models_missing": [],
+      "n_units_expected": 15,
+      "complete": true,
+      "n_units": 15,
+      "n_wrong": 2,
+      "n_clusters": 15,
+      "auc": 0.962,
+      "p_perm_clustered": 0.0371,
+      "n_perm": 10000,
+      "ci_lo": 0.833,
+      "ci_hi": 1.0,
+      "n_boot": 8809,
+      "p_perm_naive_unit_level__companion_only": 0.0371,
+      "status": "ok",
+      "median_S_5model": 0.08902646321133026
+    }
+  },
+  "reference_call_level_signals": {
+    "vote_disagreement_5model": {
+      "n_units": 60,
+      "n_wrong": 12,
+      "n_clusters": 15,
+      "auc": 0.762,
+      "p_perm_clustered": 0.0035,
+      "n_perm": 10000,
+      "ci_lo": 0.59,
+      "ci_hi": 0.934,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.0003,
+      "status": "ok"
+    },
+    "freq_std_5model": {
+      "n_units": 60,
+      "n_wrong": 12,
+      "n_clusters": 15,
+      "auc": 0.361,
+      "p_perm_clustered": 0.2748,
+      "n_perm": 10000,
+      "ci_lo": 0.046,
+      "ci_hi": 0.625,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.1396,
+      "status": "ok"
+    },
+    "vote_disagreement_ex_orb": {
+      "n_units": 60,
+      "n_wrong": 12,
+      "n_clusters": 15,
+      "auc": 0.628,
+      "p_perm_clustered": 0.0469,
+      "n_perm": 10000,
+      "ci_lo": 0.438,
+      "ci_hi": 0.839,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.0214,
+      "status": "ok"
+    },
+    "freq_std_ex_orb": {
+      "n_units": 60,
+      "n_wrong": 12,
+      "n_clusters": 15,
+      "auc": 0.299,
+      "p_perm_clustered": 0.103,
+      "n_perm": 10000,
+      "ci_lo": 0.076,
+      "ci_hi": 0.516,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level__companion_only": 0.0311,
+      "status": "ok"
+    }
+  },
+  "descriptive": {
+    "n_units_scored_S_5model": 60,
+    "median_S_5model_by_consensus": {
+      "wrong": 0.13450130513741515,
+      "right": 0.06879619328967994
+    },
+    "spearman_S_5model_vs_vote_disagreement": 0.168,
+    "spearman_S_5model_vs_freq_std": 0.008
+  },
+  "inputs": {
+    "unit_set": {
+      "n_consensus_units": 60,
+      "n_per_model_units": 300,
+      "systems": [
+        "batio3_cubic",
+        "c_diamond",
+        "ceo2_cubic",
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic",
+        "cu_fcc",
+        "hfo2_cubic",
+        "knbo3_cubic",
+        "mgo_rocksalt",
+        "nacl_rocksalt",
+        "pbtio3_cubic",
+        "si_diamond",
+        "srtio3_cubic",
+        "zro2_cubic"
+      ],
+      "temps_K": [
+        100.0,
+        300.0,
+        600.0,
+        900.0
+      ],
+      "n_configs_requested": 16,
+      "h3_guardrail_summary_reference": {
+        "n_units": 60,
+        "consensus_error_rate": 0.2,
+        "split_vote_error_rate": 0.571,
+        "unanimous_error_rate": 0.087,
+        "n_split": 14,
+        "n_unanimous": 46,
+        "auc_vote_disagreement": 0.762,
+        "auc_freq_std": 0.361
+      }
+    },
+    "configs": {
+      "batio3_cubic": {
+        "config_hash": "a61b0bd486a2684d",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 12,
+        "n_floored": 0,
+        "min_freq_thz": -4.443260664394403,
+        "ref_pair_min_ang": {
+          "O-O": 2.8284271247461903,
+          "O-Ti": 2.0,
+          "O-Ba": 2.8284271247461903,
+          "Ti-Ti": 4.0,
+          "Ti-Ba": 3.4641016151377544,
+          "Ba-Ba": 4.0
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.055136139849568444,
+            "max_disp_ang": 0.2252161747877686,
+            "min_interatomic_dist_ang": 1.7503895290011393,
+            "min_dist_ratio": 0.8751947645005697,
+            "min_pair_ratio": 0.8751947645005697,
+            "min_pair_ratio_pair": "O-Ti",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.07317706462507585,
+            "max_disp_ang": 0.3383516134813807,
+            "min_interatomic_dist_ang": 1.6451956241034387,
+            "min_dist_ratio": 0.8225978120517193,
+            "min_pair_ratio": 0.8225978120517193,
+            "min_pair_ratio_pair": "O-Ti",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "600": {
+            "rms_disp_ang": 0.10247038692072169,
+            "max_disp_ang": 0.40465794979765285,
+            "min_interatomic_dist_ang": 1.270855903868386,
+            "min_dist_ratio": 0.635427951934193,
+            "min_pair_ratio": 0.635427951934193,
+            "min_pair_ratio_pair": "O-Ti",
+            "frac_configs_below_pair_ratio": 0.1875
+          },
+          "900": {
+            "rms_disp_ang": 0.12061317078101211,
+            "max_disp_ang": 0.5384816312846861,
+            "min_interatomic_dist_ang": 1.373038646988961,
+            "min_dist_ratio": 0.6865193234944805,
+            "min_pair_ratio": 0.6865193234944805,
+            "min_pair_ratio_pair": "O-Ti",
+            "frac_configs_below_pair_ratio": 0.375
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:38+00:00"
+      },
+      "c_diamond": {
+        "config_hash": "fa00157401130486",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 0,
+        "n_floored": 0,
+        "min_freq_thz": 12.816978695131713,
+        "ref_pair_min_ang": {
+          "C-C": 1.5445563076495463
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.04134916905085639,
+            "max_disp_ang": 0.15439830900397042,
+            "min_interatomic_dist_ang": 1.3973607782032795,
+            "min_dist_ratio": 0.9047004445760453,
+            "min_pair_ratio": 0.9047004445760453,
+            "min_pair_ratio_pair": "C-C",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.04435860322295708,
+            "max_disp_ang": 0.16159774886810432,
+            "min_interatomic_dist_ang": 1.3752504005654802,
+            "min_dist_ratio": 0.8903854095538218,
+            "min_pair_ratio": 0.8903854095538218,
+            "min_pair_ratio_pair": "C-C",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "600": {
+            "rms_disp_ang": 0.05317139044201926,
+            "max_disp_ang": 0.1729936855916086,
+            "min_interatomic_dist_ang": 1.3676596533219911,
+            "min_dist_ratio": 0.8854708931934308,
+            "min_pair_ratio": 0.8854708931934308,
+            "min_pair_ratio_pair": "C-C",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "900": {
+            "rms_disp_ang": 0.06129065814846273,
+            "max_disp_ang": 0.21991431879786835,
+            "min_interatomic_dist_ang": 1.3059552328649289,
+            "min_dist_ratio": 0.845521284265957,
+            "min_pair_ratio": 0.845521284265957,
+            "min_pair_ratio_pair": "C-C",
+            "frac_configs_below_pair_ratio": 0.0
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:38+00:00"
+      },
+      "ceo2_cubic": {
+        "config_hash": "e3d2e2adcfa7558f",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 0,
+        "n_floored": 0,
+        "min_freq_thz": 3.2031849610887675,
+        "ref_pair_min_ang": {
+          "O-O": 2.7049999999999983,
+          "O-Ce": 2.342598717236905,
+          "Ce-Ce": 3.825447686219222
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.049924426432004655,
+            "max_disp_ang": 0.22600005391215824,
+            "min_interatomic_dist_ang": 2.162736158810971,
+            "min_dist_ratio": 0.9232209267842159,
+            "min_pair_ratio": 0.9232209267842159,
+            "min_pair_ratio_pair": "O-Ce",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.06726287118614027,
+            "max_disp_ang": 0.27411088085658514,
+            "min_interatomic_dist_ang": 2.074649654090325,
+            "min_dist_ratio": 0.8856188807861101,
+            "min_pair_ratio": 0.8856188807861101,
+            "min_pair_ratio_pair": "O-Ce",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "600": {
+            "rms_disp_ang": 0.0865877533930348,
+            "max_disp_ang": 0.3471939167899017,
+            "min_interatomic_dist_ang": 1.9670117074576041,
+            "min_dist_ratio": 0.8396707865432856,
+            "min_pair_ratio": 0.8396707865432856,
+            "min_pair_ratio_pair": "O-Ce",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "900": {
+            "rms_disp_ang": 0.10738964328633487,
+            "max_disp_ang": 0.41454089679606915,
+            "min_interatomic_dist_ang": 1.881559210015031,
+            "min_dist_ratio": 0.8031931359692409,
+            "min_pair_ratio": 0.8031931359692409,
+            "min_pair_ratio_pair": "O-Ce",
+            "frac_configs_below_pair_ratio": 0.0
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:39+00:00"
+      },
+      "cspbi3_cubic": {
+        "config_hash": "8cabec1371948783",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 39,
+        "n_floored": 27,
+        "min_freq_thz": -0.8256923715047542,
+        "ref_pair_min_ang": {
+          "I-I": 4.447701653663383,
+          "I-Cs": 4.447701653663383,
+          "I-Pb": 3.1449999999999996,
+          "Cs-Cs": 6.29,
+          "Cs-Pb": 5.447299789804118,
+          "Pb-Pb": 6.289999999999998
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.17436174617270137,
+            "max_disp_ang": 0.7057143591303879,
+            "min_interatomic_dist_ang": 2.939157747400804,
+            "min_dist_ratio": 0.934549363243499,
+            "min_pair_ratio": 0.7699668845826478,
+            "min_pair_ratio_pair": "I-Cs",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.3052137627073156,
+            "max_disp_ang": 1.3755799566149944,
+            "min_interatomic_dist_ang": 2.8302613208237815,
+            "min_dist_ratio": 0.8999241083700419,
+            "min_pair_ratio": 0.6461358314601064,
+            "min_pair_ratio_pair": "I-Cs",
+            "frac_configs_below_pair_ratio": 0.8125
+          },
+          "600": {
+            "rms_disp_ang": 0.44231309884675274,
+            "max_disp_ang": 1.8916607954592146,
+            "min_interatomic_dist_ang": 2.116788859973754,
+            "min_dist_ratio": 0.6730648203414163,
+            "min_pair_ratio": 0.4759286986415208,
+            "min_pair_ratio_pair": "I-Cs",
+            "frac_configs_below_pair_ratio": 1.0
+          },
+          "900": {
+            "rms_disp_ang": 0.5421334469333471,
+            "max_disp_ang": 2.661477453334261,
+            "min_interatomic_dist_ang": 1.709035988204257,
+            "min_dist_ratio": 0.5434136687453918,
+            "min_pair_ratio": 0.38425149015932675,
+            "min_pair_ratio_pair": "I-Cs",
+            "frac_configs_below_pair_ratio": 1.0
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:39+00:00"
+      },
+      "cssnbr3_cubic": {
+        "config_hash": "9b650ec30da85eaf",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 6,
+        "n_floored": 15,
+        "min_freq_thz": -0.7112190638701272,
+        "ref_pair_min_ang": {
+          "Br-Br": 4.1012193308819755,
+          "Br-Sn": 2.9,
+          "Br-Cs": 4.101219330881975,
+          "Sn-Sn": 5.799999999999999,
+          "Sn-Cs": 5.0229473419497435,
+          "Cs-Cs": 5.8
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.17781207500858748,
+            "max_disp_ang": 0.8201595113913678,
+            "min_interatomic_dist_ang": 2.6340764961234098,
+            "min_dist_ratio": 0.9083022400425551,
+            "min_pair_ratio": 0.7590764763016119,
+            "min_pair_ratio_pair": "Br-Cs",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.31041972642109494,
+            "max_disp_ang": 1.5070179951597484,
+            "min_interatomic_dist_ang": 2.4734091786435544,
+            "min_dist_ratio": 0.8528997167736395,
+            "min_pair_ratio": 0.6387213642302897,
+            "min_pair_ratio_pair": "Br-Cs",
+            "frac_configs_below_pair_ratio": 0.9375
+          },
+          "600": {
+            "rms_disp_ang": 0.44242587304396175,
+            "max_disp_ang": 2.1878442032321606,
+            "min_interatomic_dist_ang": 1.6741751332202557,
+            "min_dist_ratio": 0.5773017700759503,
+            "min_pair_ratio": 0.4082139964117016,
+            "min_pair_ratio_pair": "Br-Cs",
+            "frac_configs_below_pair_ratio": 1.0
+          },
+          "900": {
+            "rms_disp_ang": 0.5495649329901571,
+            "max_disp_ang": 2.5049847057480634,
+            "min_interatomic_dist_ang": 0.8976654277061393,
+            "min_dist_ratio": 0.3095398026572894,
+            "min_pair_ratio": 0.2188776935061151,
+            "min_pair_ratio_pair": "Br-Cs",
+            "frac_configs_below_pair_ratio": 1.0
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:39+00:00"
+      },
+      "cssni3_cubic": {
+        "config_hash": "5acce5eea5cf7cd5",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 18,
+        "n_floored": 33,
+        "min_freq_thz": -0.6080097185418043,
+        "ref_pair_min_ang": {
+          "Sn-Sn": 6.219999999999998,
+          "Sn-I": 3.1099999999999994,
+          "Sn-Cs": 5.386678011539208,
+          "I-I": 4.398204178980325,
+          "I-Cs": 4.398204178980325,
+          "Cs-Cs": 6.22
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.18171483380408968,
+            "max_disp_ang": 0.8624736787504567,
+            "min_interatomic_dist_ang": 2.7358007532757957,
+            "min_dist_ratio": 0.8796786988025068,
+            "min_pair_ratio": 0.7610187596093306,
+            "min_pair_ratio_pair": "I-Cs",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.3195567726651415,
+            "max_disp_ang": 1.5827446677675858,
+            "min_interatomic_dist_ang": 2.229993355617229,
+            "min_dist_ratio": 0.7170396641856043,
+            "min_pair_ratio": 0.5070236089253656,
+            "min_pair_ratio_pair": "I-Cs",
+            "frac_configs_below_pair_ratio": 1.0
+          },
+          "600": {
+            "rms_disp_ang": 0.44340412848455873,
+            "max_disp_ang": 2.0408066371152493,
+            "min_interatomic_dist_ang": 2.2731309216917244,
+            "min_dist_ratio": 0.7309102642095578,
+            "min_pair_ratio": 0.5168316042614295,
+            "min_pair_ratio_pair": "I-Cs",
+            "frac_configs_below_pair_ratio": 1.0
+          },
+          "900": {
+            "rms_disp_ang": 0.5510003630252523,
+            "max_disp_ang": 2.2993637457219847,
+            "min_interatomic_dist_ang": 1.3803702154284097,
+            "min_dist_ratio": 0.44384894386765594,
+            "min_pair_ratio": 0.3138485980313068,
+            "min_pair_ratio_pair": "I-Cs",
+            "frac_configs_below_pair_ratio": 1.0
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:39+00:00"
+      },
+      "cu_fcc": {
+        "config_hash": "054460bb93f4e8b1",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 0,
+        "n_floored": 0,
+        "min_freq_thz": 3.2162638950542126,
+        "ref_pair_min_ang": {
+          "Cu-Cu": 2.552655480083436
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.04623765174298981,
+            "max_disp_ang": 0.1562443804963374,
+            "min_interatomic_dist_ang": 2.3642755591930906,
+            "min_dist_ratio": 0.9262023714676185,
+            "min_pair_ratio": 0.9262023714676185,
+            "min_pair_ratio_pair": "Cu-Cu",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.0753749269444712,
+            "max_disp_ang": 0.25020319521621026,
+            "min_interatomic_dist_ang": 2.30235999901497,
+            "min_dist_ratio": 0.9019470183025698,
+            "min_pair_ratio": 0.9019470183025698,
+            "min_pair_ratio_pair": "Cu-Cu",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "600": {
+            "rms_disp_ang": 0.10464127628974415,
+            "max_disp_ang": 0.39111617177473695,
+            "min_interatomic_dist_ang": 2.1750417455672384,
+            "min_dist_ratio": 0.8520702313874904,
+            "min_pair_ratio": 0.8520702313874904,
+            "min_pair_ratio_pair": "Cu-Cu",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "900": {
+            "rms_disp_ang": 0.10976054110918354,
+            "max_disp_ang": 0.3495642954165891,
+            "min_interatomic_dist_ang": 2.1097853700976685,
+            "min_dist_ratio": 0.8265061174760286,
+            "min_pair_ratio": 0.8265061174760286,
+            "min_pair_ratio_pair": "Cu-Cu",
+            "frac_configs_below_pair_ratio": 0.0
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:39+00:00"
+      },
+      "hfo2_cubic": {
+        "config_hash": "e14914460063f8dc",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 3,
+        "n_floored": 0,
+        "min_freq_thz": -7.287676755814181,
+        "ref_pair_min_ang": {
+          "O-O": 2.5399999999999974,
+          "O-Hf": 2.199704525612473,
+          "Hf-Hf": 3.5921024484276605
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.050380587847370296,
+            "max_disp_ang": 0.20755638988707717,
+            "min_interatomic_dist_ang": 1.9762787760482812,
+            "min_dist_ratio": 0.898429199484425,
+            "min_pair_ratio": 0.898429199484425,
+            "min_pair_ratio_pair": "O-Hf",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.06574445160656772,
+            "max_disp_ang": 0.31014750854619877,
+            "min_interatomic_dist_ang": 1.934693697186947,
+            "min_dist_ratio": 0.8795243518664226,
+            "min_pair_ratio": 0.8795243518664226,
+            "min_pair_ratio_pair": "O-Hf",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "600": {
+            "rms_disp_ang": 0.0859204154168852,
+            "max_disp_ang": 0.319433841287191,
+            "min_interatomic_dist_ang": 1.847909241745826,
+            "min_dist_ratio": 0.8400715733542916,
+            "min_pair_ratio": 0.8400715733542916,
+            "min_pair_ratio_pair": "O-Hf",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "900": {
+            "rms_disp_ang": 0.10772123019600999,
+            "max_disp_ang": 0.4198294951658592,
+            "min_interatomic_dist_ang": 1.714278847198438,
+            "min_dist_ratio": 0.7793223259024409,
+            "min_pair_ratio": 0.7793223259024409,
+            "min_pair_ratio_pair": "O-Hf",
+            "frac_configs_below_pair_ratio": 0.0
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:39+00:00"
+      },
+      "knbo3_cubic": {
+        "config_hash": "6ae3d79ac7201b10",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 12,
+        "n_floored": 0,
+        "min_freq_thz": -4.476132775051799,
+        "ref_pair_min_ang": {
+          "O-O": 2.842569260369921,
+          "O-K": 2.842569260369921,
+          "O-Nb": 2.01,
+          "K-K": 4.02,
+          "K-Nb": 3.481422123213443,
+          "Nb-Nb": 4.02
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.06028512594478684,
+            "max_disp_ang": 0.3045897424342825,
+            "min_interatomic_dist_ang": 1.8059826384339268,
+            "min_dist_ratio": 0.898498825091506,
+            "min_pair_ratio": 0.8871914756101188,
+            "min_pair_ratio_pair": "O-K",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.08632766017847278,
+            "max_disp_ang": 0.3550693887010412,
+            "min_interatomic_dist_ang": 1.7287149710467813,
+            "min_dist_ratio": 0.8600571995257619,
+            "min_pair_ratio": 0.8475606684969197,
+            "min_pair_ratio_pair": "O-K",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "600": {
+            "rms_disp_ang": 0.11499243118369859,
+            "max_disp_ang": 0.4934389791993917,
+            "min_interatomic_dist_ang": 1.5971025513740547,
+            "min_dist_ratio": 0.7945783837681865,
+            "min_pair_ratio": 0.7945783837681865,
+            "min_pair_ratio_pair": "O-Nb",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "900": {
+            "rms_disp_ang": 0.13656208040455806,
+            "max_disp_ang": 0.5627909674075187,
+            "min_interatomic_dist_ang": 1.5210203667461115,
+            "min_dist_ratio": 0.7567265506199561,
+            "min_pair_ratio": 0.7567265506199561,
+            "min_pair_ratio_pair": "O-Nb",
+            "frac_configs_below_pair_ratio": 0.0
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:39+00:00"
+      },
+      "mgo_rocksalt": {
+        "config_hash": "7cb0b3455e384b0e",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 0,
+        "n_floored": 0,
+        "min_freq_thz": 7.8670528334032905,
+        "ref_pair_min_ang": {
+          "O-O": 2.9769195487953644,
+          "O-Mg": 2.1049999999999995,
+          "Mg-Mg": 2.9769195487953644
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.04893570378025496,
+            "max_disp_ang": 0.2198394430382987,
+            "min_interatomic_dist_ang": 1.8310933307818111,
+            "min_dist_ratio": 0.8698780668797205,
+            "min_pair_ratio": 0.8698780668797205,
+            "min_pair_ratio_pair": "O-Mg",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.060675763515368346,
+            "max_disp_ang": 0.2517750207570116,
+            "min_interatomic_dist_ang": 1.8573207698440124,
+            "min_dist_ratio": 0.8823376578831414,
+            "min_pair_ratio": 0.8823376578831414,
+            "min_pair_ratio_pair": "O-Mg",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "600": {
+            "rms_disp_ang": 0.07818724162825914,
+            "max_disp_ang": 0.2825110637852123,
+            "min_interatomic_dist_ang": 1.773818078732035,
+            "min_dist_ratio": 0.8426689210128434,
+            "min_pair_ratio": 0.8426689210128434,
+            "min_pair_ratio_pair": "O-Mg",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "900": {
+            "rms_disp_ang": 0.09219473103097756,
+            "max_disp_ang": 0.3544116646825828,
+            "min_interatomic_dist_ang": 1.7263391564963892,
+            "min_dist_ratio": 0.8201136135374772,
+            "min_pair_ratio": 0.8199081912098546,
+            "min_pair_ratio_pair": "O-O",
+            "frac_configs_below_pair_ratio": 0.0
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:39+00:00"
+      },
+      "nacl_rocksalt": {
+        "config_hash": "0ffe1889e65ce1fd",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 0,
+        "n_floored": 0,
+        "min_freq_thz": 2.2730288328165122,
+        "ref_pair_min_ang": {
+          "Na-Na": 3.988082245892127,
+          "Na-Cl": 2.8199999999999994,
+          "Cl-Cl": 3.988082245892127
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.0848421760045449,
+            "max_disp_ang": 0.41421645547661606,
+            "min_interatomic_dist_ang": 2.4036964517045654,
+            "min_dist_ratio": 0.8523746282640304,
+            "min_pair_ratio": 0.8523746282640304,
+            "min_pair_ratio_pair": "Na-Cl",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.14049009248061373,
+            "max_disp_ang": 0.5740518381019555,
+            "min_interatomic_dist_ang": 2.312497684891139,
+            "min_dist_ratio": 0.820034640032319,
+            "min_pair_ratio": 0.820034640032319,
+            "min_pair_ratio_pair": "Na-Cl",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "600": {
+            "rms_disp_ang": 0.19618522035190852,
+            "max_disp_ang": 0.8073647767316147,
+            "min_interatomic_dist_ang": 2.17248350396554,
+            "min_dist_ratio": 0.7703842212643761,
+            "min_pair_ratio": 0.7600673871547535,
+            "min_pair_ratio_pair": "Na-Na",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "900": {
+            "rms_disp_ang": 0.24513976730617626,
+            "max_disp_ang": 0.9890813058863256,
+            "min_interatomic_dist_ang": 1.8638832865365167,
+            "min_dist_ratio": 0.6609515200484103,
+            "min_pair_ratio": 0.6609515200484103,
+            "min_pair_ratio_pair": "Na-Cl",
+            "frac_configs_below_pair_ratio": 0.3125
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:39+00:00"
+      },
+      "pbtio3_cubic": {
+        "config_hash": "f587bf0e39e1cf84",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 12,
+        "n_floored": 0,
+        "min_freq_thz": -5.292534605909742,
+        "ref_pair_min_ang": {
+          "O-O": 2.807213921310594,
+          "O-Ti": 1.985,
+          "O-Pb": 2.807213921310594,
+          "Ti-Ti": 3.97,
+          "Ti-Pb": 3.4381208530242215,
+          "Pb-Pb": 3.97
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.09024906157934062,
+            "max_disp_ang": 0.4702368184061884,
+            "min_interatomic_dist_ang": 1.7367855213017316,
+            "min_dist_ratio": 0.8749549225701418,
+            "min_pair_ratio": 0.7901872233084107,
+            "min_pair_ratio_pair": "O-Pb",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.14483909009568274,
+            "max_disp_ang": 0.8717546707565946,
+            "min_interatomic_dist_ang": 1.5592446901662502,
+            "min_dist_ratio": 0.7855136978167507,
+            "min_pair_ratio": 0.6652439810776454,
+            "min_pair_ratio_pair": "O-Pb",
+            "frac_configs_below_pair_ratio": 0.375
+          },
+          "600": {
+            "rms_disp_ang": 0.20796052861765696,
+            "max_disp_ang": 1.3052245815744092,
+            "min_interatomic_dist_ang": 1.5613975066336463,
+            "min_dist_ratio": 0.7865982401177058,
+            "min_pair_ratio": 0.556208949656634,
+            "min_pair_ratio_pair": "O-Pb",
+            "frac_configs_below_pair_ratio": 1.0
+          },
+          "900": {
+            "rms_disp_ang": 0.2525850162708213,
+            "max_disp_ang": 1.2426325015311892,
+            "min_interatomic_dist_ang": 1.1469503398138559,
+            "min_dist_ratio": 0.5778087354225974,
+            "min_pair_ratio": 0.40857247504614225,
+            "min_pair_ratio_pair": "O-Pb",
+            "frac_configs_below_pair_ratio": 1.0
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:40+00:00"
+      },
+      "si_diamond": {
+        "config_hash": "2c1c03a81d985787",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 0,
+        "n_floored": 0,
+        "min_freq_thz": 4.3663987752022,
+        "ref_pair_min_ang": {
+          "Si-Si": 2.351258971274751
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.048051267300709494,
+            "max_disp_ang": 0.18678690549976693,
+            "min_interatomic_dist_ang": 2.194584873781799,
+            "min_dist_ratio": 0.9333658693461528,
+            "min_pair_ratio": 0.9333658693461528,
+            "min_pair_ratio_pair": "Si-Si",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.06526490296859562,
+            "max_disp_ang": 0.2491205993927353,
+            "min_interatomic_dist_ang": 2.1753969934410184,
+            "min_dist_ratio": 0.9252051858250273,
+            "min_pair_ratio": 0.9252051858250273,
+            "min_pair_ratio_pair": "Si-Si",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "600": {
+            "rms_disp_ang": 0.08205298116322658,
+            "max_disp_ang": 0.2716211503871862,
+            "min_interatomic_dist_ang": 2.1339194294359873,
+            "min_dist_ratio": 0.9075646092182983,
+            "min_pair_ratio": 0.9075646092182983,
+            "min_pair_ratio_pair": "Si-Si",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "900": {
+            "rms_disp_ang": 0.10615769973329996,
+            "max_disp_ang": 0.4772051367492758,
+            "min_interatomic_dist_ang": 2.0862504146872802,
+            "min_dist_ratio": 0.887290783437694,
+            "min_pair_ratio": 0.887290783437694,
+            "min_pair_ratio_pair": "Si-Si",
+            "frac_configs_below_pair_ratio": 0.0
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:40+00:00"
+      },
+      "srtio3_cubic": {
+        "config_hash": "299af7b93e71b838",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 0,
+        "n_floored": 0,
+        "min_freq_thz": 2.603541557515089,
+        "ref_pair_min_ang": {
+          "O-O": 2.7612519805334674,
+          "O-Ti": 1.9524999999999997,
+          "O-Sr": 2.7612519805334674,
+          "Ti-Ti": 3.905,
+          "Ti-Sr": 3.381829201778232,
+          "Sr-Sr": 3.9049999999999994
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.059719578383521016,
+            "max_disp_ang": 0.2561516420445687,
+            "min_interatomic_dist_ang": 1.7220171667059634,
+            "min_dist_ratio": 0.88195501495824,
+            "min_pair_ratio": 0.88195501495824,
+            "min_pair_ratio_pair": "O-Ti",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.09034340140809687,
+            "max_disp_ang": 0.35976295417213294,
+            "min_interatomic_dist_ang": 1.6936301898137052,
+            "min_dist_ratio": 0.8674162303783383,
+            "min_pair_ratio": 0.8440263761458201,
+            "min_pair_ratio_pair": "O-Sr",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "600": {
+            "rms_disp_ang": 0.12812817079180178,
+            "max_disp_ang": 0.4798991203860103,
+            "min_interatomic_dist_ang": 1.587225026058323,
+            "min_dist_ratio": 0.812919347533072,
+            "min_pair_ratio": 0.7415834611724095,
+            "min_pair_ratio_pair": "O-Sr",
+            "frac_configs_below_pair_ratio": 0.125
+          },
+          "900": {
+            "rms_disp_ang": 0.1540770352557026,
+            "max_disp_ang": 0.7806773556809198,
+            "min_interatomic_dist_ang": 1.5041602199508186,
+            "min_dist_ratio": 0.7703765531118151,
+            "min_pair_ratio": 0.7003500339897957,
+            "min_pair_ratio_pair": "O-Sr",
+            "frac_configs_below_pair_ratio": 0.1875
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:40+00:00"
+      },
+      "zro2_cubic": {
+        "config_hash": "c9b083b4e180e9a2",
+        "fc_models": [
+          "chgnet",
+          "mace_mp0",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "fc_is_full_production_set": true,
+        "n_configs": 16,
+        "temps_K": [
+          100.0,
+          300.0,
+          600.0,
+          900.0
+        ],
+        "n_imaginary": 3,
+        "n_floored": 0,
+        "min_freq_thz": -3.8731282909042286,
+        "ref_pair_min_ang": {
+          "O-O": 2.544999999999998,
+          "O-Zr": 2.2040346526313943,
+          "Zr-Zr": 3.5991735162395266
+        },
+        "per_temperature": {
+          "100": {
+            "rms_disp_ang": 0.050269345527338756,
+            "max_disp_ang": 0.1921636120314466,
+            "min_interatomic_dist_ang": 1.9578841910388982,
+            "min_dist_ratio": 0.8883182434093686,
+            "min_pair_ratio": 0.8883182434093686,
+            "min_pair_ratio_pair": "O-Zr",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "300": {
+            "rms_disp_ang": 0.06502104934613083,
+            "max_disp_ang": 0.26779942858566574,
+            "min_interatomic_dist_ang": 1.9251640300811486,
+            "min_dist_ratio": 0.8734726687634868,
+            "min_pair_ratio": 0.8734726687634868,
+            "min_pair_ratio_pair": "O-Zr",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "600": {
+            "rms_disp_ang": 0.08682393291179516,
+            "max_disp_ang": 0.34118401085359906,
+            "min_interatomic_dist_ang": 1.8054763848549542,
+            "min_dist_ratio": 0.8191687833489361,
+            "min_pair_ratio": 0.8191687833489361,
+            "min_pair_ratio_pair": "O-Zr",
+            "frac_configs_below_pair_ratio": 0.0
+          },
+          "900": {
+            "rms_disp_ang": 0.11014445743819704,
+            "max_disp_ang": 0.44366081642334887,
+            "min_interatomic_dist_ang": 1.8029251766033887,
+            "min_dist_ratio": 0.8180112660437886,
+            "min_pair_ratio": 0.8180112660437886,
+            "min_pair_ratio_pair": "O-Zr",
+            "frac_configs_below_pair_ratio": 0.0
+          }
+        },
+        "git_head": "9719f98",
+        "utc": "2026-09-27T04:48:40+00:00"
+      }
+    },
+    "forces": {
+      "chgnet": {
+        "file": "forces_chgnet.npz",
+        "model_version": "chgnet=0.4.2",
+        "ledger_model_version": "chgnet=0.4.2",
+        "matches_ledger": true,
+        "model_dtype": "torch.float32",
+        "conservative": true,
+        "systems": [
+          "batio3_cubic",
+          "c_diamond",
+          "ceo2_cubic",
+          "cspbi3_cubic",
+          "cssnbr3_cubic",
+          "cssni3_cubic",
+          "cu_fcc",
+          "hfo2_cubic",
+          "knbo3_cubic",
+          "mgo_rocksalt",
+          "nacl_rocksalt",
+          "pbtio3_cubic",
+          "si_diamond",
+          "srtio3_cubic",
+          "zro2_cubic"
+        ],
+        "host": "db4a641a37b8",
+        "git_head": "9719f98",
+        "wall_s_total": 89.5,
+        "s_per_eval_median": 0.0889,
+        "max_residual_force_rms_ev_ang": 1.0695902217806783e-05,
+        "n_nonfinite_configs": {},
+        "errors": {}
+      },
+      "mace_mp0": {
+        "file": "forces_mace_mp0.npz",
+        "model_version": "mace-torch=0.3.16;ckpt=medium",
+        "ledger_model_version": "mace-torch=0.3.16;ckpt=medium",
+        "matches_ledger": true,
+        "model_dtype": "torch.float64",
+        "conservative": true,
+        "systems": [
+          "batio3_cubic",
+          "c_diamond",
+          "ceo2_cubic",
+          "cspbi3_cubic",
+          "cssnbr3_cubic",
+          "cssni3_cubic",
+          "cu_fcc",
+          "hfo2_cubic",
+          "knbo3_cubic",
+          "mgo_rocksalt",
+          "nacl_rocksalt",
+          "pbtio3_cubic",
+          "si_diamond",
+          "srtio3_cubic",
+          "zro2_cubic"
+        ],
+        "host": "db4a641a37b8",
+        "git_head": "9719f98",
+        "wall_s_total": 69.0,
+        "s_per_eval_median": 0.0652,
+        "max_residual_force_rms_ev_ang": 5.080240738823457e-15,
+        "n_nonfinite_configs": {},
+        "errors": {}
+      },
+      "mace_mp0_large": {
+        "file": "forces_mace_mp0_large.npz",
+        "model_version": "mace-torch=0.3.16;ckpt=large",
+        "ledger_model_version": null,
+        "matches_ledger": null,
+        "model_dtype": "torch.float64",
+        "conservative": true,
+        "systems": [
+          "batio3_cubic",
+          "c_diamond",
+          "ceo2_cubic",
+          "cspbi3_cubic",
+          "cssnbr3_cubic",
+          "cssni3_cubic",
+          "cu_fcc",
+          "hfo2_cubic",
+          "knbo3_cubic",
+          "mgo_rocksalt",
+          "nacl_rocksalt",
+          "pbtio3_cubic",
+          "si_diamond",
+          "srtio3_cubic",
+          "zro2_cubic"
+        ],
+        "host": "db4a641a37b8",
+        "git_head": "9719f98",
+        "wall_s_total": 82.4,
+        "s_per_eval_median": 0.075,
+        "max_residual_force_rms_ev_ang": 2.0851166929372755e-12,
+        "n_nonfinite_configs": {},
+        "errors": {}
+      },
+      "mace_mp0_small": {
+        "file": "forces_mace_mp0_small.npz",
+        "model_version": "mace-torch=0.3.16;ckpt=small",
+        "ledger_model_version": null,
+        "matches_ledger": null,
+        "model_dtype": "torch.float64",
+        "conservative": true,
+        "systems": [
+          "batio3_cubic",
+          "c_diamond",
+          "ceo2_cubic",
+          "cspbi3_cubic",
+          "cssnbr3_cubic",
+          "cssni3_cubic",
+          "cu_fcc",
+          "hfo2_cubic",
+          "knbo3_cubic",
+          "mgo_rocksalt",
+          "nacl_rocksalt",
+          "pbtio3_cubic",
+          "si_diamond",
+          "srtio3_cubic",
+          "zro2_cubic"
+        ],
+        "host": "db4a641a37b8",
+        "git_head": "9719f98",
+        "wall_s_total": 49.8,
+        "s_per_eval_median": 0.0472,
+        "max_residual_force_rms_ev_ang": 5.172547213676354e-15,
+        "n_nonfinite_configs": {},
+        "errors": {}
+      },
+      "mattersim": {
+        "file": "forces_mattersim.npz",
+        "model_version": "mattersim=1.2.5;ckpt=mattersim-v1.0.0-5m",
+        "ledger_model_version": "mattersim=1.2.5;ckpt=mattersim-v1.0.0-5m",
+        "matches_ledger": true,
+        "model_dtype": "torch.float32",
+        "conservative": true,
+        "systems": [
+          "batio3_cubic",
+          "c_diamond",
+          "ceo2_cubic",
+          "cspbi3_cubic",
+          "cssnbr3_cubic",
+          "cssni3_cubic",
+          "cu_fcc",
+          "hfo2_cubic",
+          "knbo3_cubic",
+          "mgo_rocksalt",
+          "nacl_rocksalt",
+          "pbtio3_cubic",
+          "si_diamond",
+          "srtio3_cubic",
+          "zro2_cubic"
+        ],
+        "host": "db4a641a37b8",
+        "git_head": "9719f98",
+        "wall_s_total": 66.0,
+        "s_per_eval_median": 0.065,
+        "max_residual_force_rms_ev_ang": 3.4247241599537376e-06,
+        "n_nonfinite_configs": {},
+        "errors": {}
+      },
+      "mattersim_mattersim-v1.0.0-1m": {
+        "file": "forces_mattersim_mattersim-v1.0.0-1m.npz",
+        "model_version": "mattersim=1.2.5;ckpt=mattersim-v1.0.0-1m",
+        "ledger_model_version": null,
+        "matches_ledger": null,
+        "model_dtype": "torch.float32",
+        "conservative": true,
+        "systems": [
+          "batio3_cubic",
+          "c_diamond",
+          "ceo2_cubic",
+          "cspbi3_cubic",
+          "cssnbr3_cubic",
+          "cssni3_cubic",
+          "cu_fcc",
+          "hfo2_cubic",
+          "knbo3_cubic",
+          "mgo_rocksalt",
+          "nacl_rocksalt",
+          "pbtio3_cubic",
+          "si_diamond",
+          "srtio3_cubic",
+          "zro2_cubic"
+        ],
+        "host": "db4a641a37b8",
+        "git_head": "9719f98",
+        "wall_s_total": 64.7,
+        "s_per_eval_median": 0.0649,
+        "max_residual_force_rms_ev_ang": 4.30254060445777e-06,
+        "n_nonfinite_configs": {},
+        "errors": {}
+      },
+      "orb_v2": {
+        "file": "forces_orb_v2.npz",
+        "model_version": "orb-models=0.7.0;orb_v2",
+        "ledger_model_version": "orb-models=0.7.0;orb_v2",
+        "matches_ledger": true,
+        "model_dtype": "torch.float32",
+        "conservative": false,
+        "systems": [
+          "batio3_cubic",
+          "c_diamond",
+          "ceo2_cubic",
+          "cspbi3_cubic",
+          "cssnbr3_cubic",
+          "cssni3_cubic",
+          "cu_fcc",
+          "hfo2_cubic",
+          "knbo3_cubic",
+          "mgo_rocksalt",
+          "nacl_rocksalt",
+          "pbtio3_cubic",
+          "si_diamond",
+          "srtio3_cubic",
+          "zro2_cubic"
+        ],
+        "host": "db4a641a37b8",
+        "git_head": "9719f98",
+        "wall_s_total": 21.2,
+        "s_per_eval_median": 0.0204,
+        "max_residual_force_rms_ev_ang": 0.00042737674974127816,
+        "n_nonfinite_configs": {},
+        "errors": {}
+      },
+      "sevennet0": {
+        "file": "forces_sevennet0.npz",
+        "model_version": "sevenn=0.13.0;ckpt=7net-0",
+        "ledger_model_version": "sevenn=0.13.0;ckpt=7net-0",
+        "matches_ledger": true,
+        "model_dtype": "torch.float32",
+        "conservative": true,
+        "systems": [
+          "batio3_cubic",
+          "c_diamond",
+          "ceo2_cubic",
+          "cspbi3_cubic",
+          "cssnbr3_cubic",
+          "cssni3_cubic",
+          "cu_fcc",
+          "hfo2_cubic",
+          "knbo3_cubic",
+          "mgo_rocksalt",
+          "nacl_rocksalt",
+          "pbtio3_cubic",
+          "si_diamond",
+          "srtio3_cubic",
+          "zro2_cubic"
+        ],
+        "host": "db4a641a37b8",
+        "git_head": "9719f98",
+        "wall_s_total": 86.9,
+        "s_per_eval_median": 0.0857,
+        "max_residual_force_rms_ev_ang": 4.2561470328902524e-07,
+        "n_nonfinite_configs": {},
+        "errors": {}
+      }
+    },
+    "models_missing_from_design": []
+  },
+  "notes": [
+    "std across models is the population std (ddof=0), matching np.nanstd in analysis.h3_ensemble_guardrail.",
+    "Ex-ORB-v2 consensus labels are rebuilt from four votes; a 2-2 tie is called stable (analysis.h3_ensemble_guardrail, stable-vote fraction >= 0.5).",
+    "Configurations sit near the unrelaxed registry cell, not each model's relaxed cell where the production calls were made; that is the price of a common input.",
+    "The MACE-MP-0 small/medium/large and MatterSim 1M/5M checkpoints differ in size and training run; they are family committees, not a deep ensemble of one model."
+  ]
+}
