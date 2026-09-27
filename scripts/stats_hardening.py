@@ -12,6 +12,17 @@ honestly. Specifically it
     no arrangement of five models can reach conventional significance;
   * recomputes the headline tables with and without ORB-v2 (Referee 3's item 5).
 
+Revision plan S1-S4 (tasks/todo.md Phase 2) adds four blocks, each with and without ORB-v2:
+
+  * ``h2_clustered``  -- the H2 transfer asymmetry at every ladder T, tested by system, with
+    per-system counts, a leave-one-system-out table and the shared-screen-error split;
+  * ``bcc_agreement`` -- screen-vs-SSCHA agreement on bcc scored on curvature sign AND on the
+    stability call, with the harmonically trivial pairs separated;
+  * ``orb_split_s3``  -- the four-model guardrail, family recalls, SSCHA blow-ups and failures
+    per model, and Referee 3's ORB-v2 premises re-measured (named ``_s3`` because the key
+    ``orb_split`` already exists and its value must not change);
+  * ``sscha_high_t``  -- SSCHA false-unstables by temperature on the non-bcc systems.
+
 Writes results/stats_hardening.json. Run from the repo root:
 
     python scripts/stats_hardening.py [--n-perm 10000] [--seed 0]
@@ -264,13 +275,506 @@ def orb_split(df: pd.DataFrame) -> dict:
     return out
 
 
+# ------------------------------------------- revision plan S1-S4 (2026-09-26) ----
+
+TEMPS = (100.0, 300.0, 600.0, 900.0)
+MODEL_SETS = (("all_models", ()), ("excl_orb_v2", ("orb_v2",)))
+KEYS = ["system", "model", "temperature_K"]
+BCC_METALS = ["ti_bcc", "zr_bcc", "hf_bcc"]
+CONTROLS = ["si_diamond", "mgo_rocksalt", "nacl_rocksalt", "cu_fcc", "c_diamond", "ceo2_cubic"]
+SSCHA_GRID = REPO / "results" / "sscha_units_v1.csv"   # the 208 attempted SSCHA units
+BLOWUP_THZ = 50.0                                        # |f| above this = numerical blow-up
+AS_REVIEWED = "paper/submissions/rsc-advances-2026-07/manuscript-as-reviewed.md"
+
+
+def _kn(k: int, n: int) -> dict:
+    """k/n with a Wilson interval; an empty denominator gives nulls, never NaN (strict JSON)."""
+    if int(n) == 0:
+        return {"k": int(k), "n": 0, "p": None, "lo": None, "hi": None, "fmt": "0/0"}
+    r = S.rate_ci(int(k), int(n))
+    return r.as_dict() | {"fmt": S.fmt_rate(r)}
+
+
+def _mcnemar_exact_p(b: int, c: int) -> float:
+    """Two-sided exact binomial McNemar on the discordant counts (same formula as
+    analysis.h2_paired_summary). Treats units as independent."""
+    from math import comb
+    nd = b + c
+    return min(1.0, 2 * sum(comb(nd, k) for k in range(min(b, c) + 1)) / 2 ** nd) if nd else 1.0
+
+
+def _drop_models(df: pd.DataFrame, excl: tuple[str, ...]) -> pd.DataFrame:
+    return df[~df["model"].isin(excl)] if excl else df
+
+
+def _r(x, nd: int = 3):
+    return None if x is None or not np.isfinite(x) else round(float(x), nd)
+
+
+# ---- S1: H2 clustered ----
+
+def _h2_pairs(df: pd.DataFrame, t: float) -> pd.DataFrame:
+    """The matched set of ``analysis.h2_paired_summary`` at one T: one row per (system, model),
+    non-bcc and non-borderline, harmonic call paired with the screen's call at T."""
+    bl = A.borderline_systems()
+
+    def matched(d):
+        return d[(~d["system"].isin(bl)) & (~d["system"].str.contains("bcc"))]
+
+    cols = ["system", "model", "pred_stable", "gt_stable"]
+    h = matched(df[df["method"] == "harmonic"])[cols]
+    f = matched(df[(df["method"] == "softmode") & (df["temperature_K"] == t)])[cols]
+    m = h.rename(columns={"pred_stable": "hp", "gt_stable": "hg"}).merge(
+        f.rename(columns={"pred_stable": "fp", "gt_stable": "fg"}), on=["system", "model"])
+    m["harm_ok"] = m["hp"].astype(bool) == m["hg"].astype(bool)
+    m["ft_ok"] = m["fp"].astype(bool) == m["fg"].astype(bool)
+    return m.sort_values(["system", "model"]).reset_index(drop=True)
+
+
+def _h2_test(m: pd.DataFrame) -> dict:
+    hok = m["harm_ok"].to_numpy(bool)
+    fok = m["ft_ok"].to_numpy(bool)
+    b = int((hok & ~fok).sum())
+    c = int((~hok & fok).sum())
+    cl = S.cluster_exact_paired(hok, fok, m["system"].to_numpy())
+    # A system with zero net discordance adds nothing to either tail, so the attainable floor is
+    # set by the systems that are NOT tied: 2 / 2^(k - tied), coarser than 2 / 2^k.
+    k_inf = cl["n_clusters"] - cl["clusters_tied"]
+    cl["finest_attainable_p_given_ties"] = round(2.0 / 2 ** k_inf, 5) if k_inf else 1.0
+    return {
+        "n_pairs": int(len(m)),
+        "n_systems": int(m["system"].nunique()),
+        "b_harm_right_ft_wrong": b,
+        "c_harm_wrong_ft_right": c,
+        "mcnemar_exact_p_UNIT_LEVEL": round(_mcnemar_exact_p(b, c), 5),
+        "clustered_by_system": cl,
+    }
+
+
+def _shared_screen_errors(df: pd.DataFrame, t: float, min_models: int = 4) -> dict:
+    """Matched-set systems the screen mis-calls at T for >= ``min_models`` of the FIVE models.
+    Always computed on the five-model grid, so the same systems are removed in both model sets."""
+    bl = A.borderline_systems()
+    f = df[(df["method"] == "softmode") & (df["temperature_K"] == t)
+           & ~df["system"].isin(bl) & ~df["system"].str.contains("bcc")]
+    wrong = f["pred_stable"].astype(bool) != f["gt_stable"].astype(bool)
+    per = wrong.groupby(f["system"]).agg(["sum", "size"])
+    return {s: {"n_models_wrong": int(r["sum"]), "n_models": int(r["size"])}
+            for s, r in per.iterrows() if r["sum"] >= min_models}
+
+
+def h2_clustered(df: pd.DataFrame, temps=TEMPS) -> dict:
+    """S1. The H2 transfer asymmetry, tested at the level the data are clustered at."""
+    out: dict = {
+        "answers": ["R1.6", "R3.1", "R3.3 (H2 McNemar clustering)", "R3.5 (ORB split)"],
+        "definition": (
+            "Matched set of analysis.h2_paired_summary (non-bcc, non-borderline; 15 systems x "
+            "5 models, 15 x 4 without ORB-v2). b = harmonic call right and screen call at T wrong; "
+            "c = the reverse. mcnemar_exact_p_UNIT_LEVEL treats the units as independent and is a "
+            "companion only. clustered_by_system is stats.cluster_exact_paired(a = harmonic right, "
+            "b = finite-T right, cluster = system): exact enumeration of the 2^k per-system sign "
+            "flips, so clusters_favouring_a counts systems with more b than c units. A 'shared "
+            "screen error' system is one the screen mis-calls at that T for >= 4 of the 5 models "
+            "(the screen's own T* error rather than an MLIP-specific one); the set is defined on "
+            "all five models and applied to both model sets."),
+    }
+    for t in temps:
+        shared = _shared_screen_errors(df, t)
+        entry: dict = {"shared_screen_error_systems": shared}
+        for tag, excl in MODEL_SETS:
+            m = _h2_pairs(_drop_models(df, excl), t)
+            if m.empty:
+                continue
+            res = _h2_test(m)
+            if not excl:     # must be the same numbers the manuscript's function returns
+                ref = A.h2_paired_summary(df, t=t)
+                assert (ref["concordance"]["harm_ok_ft_bad"], ref["concordance"]["harm_bad_ft_ok"]) \
+                    == (res["b_harm_right_ft_wrong"], res["c_harm_wrong_ft_right"]), (t, ref)
+                assert abs(ref["mcnemar_exact_p"] - res["mcnemar_exact_p_UNIT_LEVEL"]) < 5e-4
+            per_sys = {}
+            for s, g in m.groupby("system"):
+                b = int((g["harm_ok"] & ~g["ft_ok"]).sum())
+                c = int((~g["harm_ok"] & g["ft_ok"]).sum())
+                per_sys[s] = {"b": b, "c": c, "net": b - c}
+            res["per_system_discordance"] = per_sys
+            loso = {}
+            for s in sorted(m["system"].unique()):
+                r = _h2_test(m[m["system"] != s])
+                loso[s] = {"b": r["b_harm_right_ft_wrong"], "c": r["c_harm_wrong_ft_right"],
+                           "p_unit": r["mcnemar_exact_p_UNIT_LEVEL"],
+                           "p_clustered": r["clustered_by_system"]["p_exact_clustered"]}
+            pcl = {s: v["p_clustered"] for s, v in loso.items()}
+            res["leave_one_system_out"] = {
+                "p_clustered_min": min(pcl.values()),
+                "dropped_system_at_min": min(pcl, key=pcl.get),
+                "p_clustered_max": max(pcl.values()),
+                "drops_with_p_clustered_below_0.05": sorted(s for s, p in pcl.items() if p < 0.05),
+                "by_dropped_system": loso,
+            }
+            disc = m[m["harm_ok"] != m["ft_ok"]]
+            in_sh = disc["system"].isin(shared)
+            res["discordant_units"] = [
+                {"system": r.system, "model": r.model, "type": "b" if r.harm_ok else "c",
+                 "shared_screen_error": bool(r.system in shared)}
+                for r in disc.itertuples()]
+            w = _h2_test(m[~m["system"].isin(shared)])
+            res["shared_screen_error_split"] = {
+                "b_in_shared_systems": int((disc["harm_ok"] & in_sh).sum()),
+                "c_in_shared_systems": int((~disc["harm_ok"] & in_sh).sum()),
+                "without_shared_systems": {
+                    "n_pairs": w["n_pairs"], "n_systems": w["n_systems"],
+                    "b": w["b_harm_right_ft_wrong"], "c": w["c_harm_wrong_ft_right"],
+                    "p_unit": w["mcnemar_exact_p_UNIT_LEVEL"],
+                    "p_clustered": w["clustered_by_system"]["p_exact_clustered"],
+                    "finest_attainable_p_given_ties":
+                        w["clustered_by_system"]["finest_attainable_p_given_ties"]},
+            }
+            entry[tag] = res
+        out[str(int(t))] = entry
+    out["note"] = (
+        "The unit-level McNemar p is not quotable as evidence: the 75 (60) pairs are 15 systems "
+        "x 5 (4) models and cluster by system, which ESI Table S7 already states. The clustered "
+        "p is the test. The shared-screen-error split is a decomposition, not an independent "
+        "test: removing systems selected on finite-T error removes b-type units by "
+        "construction, so it shows WHERE the asymmetry sits (in systems where the screen's T* "
+        "is wrong for nearly every model), not that it is absent elsewhere.")
+    return out
+
+
+# ---- S2: bcc agreement, curvature sign vs call ----
+
+def bcc_agreement(df: pd.DataFrame) -> dict:
+    """S2. Screen-vs-SSCHA agreement on the bcc metals, scored two ways."""
+    ss = df[df["method"] == "sscha"]
+    sscha_call_is_sign = bool((ss["pred_stable"].astype(bool)
+                               == (ss["min_eff_freq_thz"] >= 0)).all())
+    harm = df[(df["method"] == "harmonic") & df["system"].isin(BCC_METALS)][
+        ["system", "model", "pred_stable", "min_freq_thz"]].rename(
+        columns={"pred_stable": "harm_stable", "min_freq_thz": "harm_min_freq_thz"})
+    out: dict = {
+        "answers": ["R1.1 residue (bcc 'clean gold standard')", "R3.5"],
+        "definition": {
+            "set": ("analysis.method_agreement on ti/zr/hf_bcc: the (system, model, T) units where "
+                    "both the screen and SSCHA ran, i.e. T = 100/300/600 K."),
+            "curvature_sign": ("min_eff_freq_thz >= 0 in both methods (analysis.method_agreement "
+                               "'agree'). This is the statistic the manuscript calls 'call "
+                               "agreement'. For the screen it is the symmetric-point curvature, "
+                               "which §2.4 says is not the call."),
+            "call": "pred_stable of the softmode row == pred_stable of the sscha row.",
+            "trivial": ("pairs whose harmonic layer (canonical harmonic row, tolerance -0.1 THz) "
+                        "has NO instability for that (system, model): both methods then agree "
+                        "without any thermal stabilisation having been tested."),
+            "sscha_call_equals_curvature_sign_on_every_row": sscha_call_is_sign,
+        },
+    }
+    for tag, excl in MODEL_SETS:
+        d = _drop_models(df[df["system"].isin(BCC_METALS)], excl)
+        m = A.method_agreement(d)
+        sm = d[d["method"] == "softmode"][KEYS + ["pred_stable"]].rename(
+            columns={"pred_stable": "call_screen"})
+        sq = d[d["method"] == "sscha"][KEYS + ["pred_stable"]].rename(
+            columns={"pred_stable": "call_sscha"})
+        m = m.merge(sm, on=KEYS).merge(sq, on=KEYS).merge(harm, on=["system", "model"], how="left")
+        m["call_agree"] = m["call_screen"].astype(bool) == m["call_sscha"].astype(bool)
+        m["trivial"] = m["harm_stable"].astype(bool)
+        summ = A.method_agreement_summary(d)
+        assert summ["n_paired"] == len(m) and abs(summ["sign_agreement"] - m["agree"].mean()) < 5e-4
+
+        def two(x: pd.DataFrame) -> dict:
+            return {"curvature_sign": _kn(x["agree"].sum(), len(x)),
+                    "call": _kn(x["call_agree"].sum(), len(x))}
+
+        triv_pairs = sorted({f"{s}/{mo}" for s, mo in
+                             m.loc[m["trivial"], ["system", "model"]].itertuples(index=False)})
+        diff = m[m["agree"] != m["call_agree"]]
+        out[tag] = {
+            "n_paired": int(len(m)),
+            "curvature_sign_agreement": _kn(m["agree"].sum(), len(m)),
+            "call_agreement": _kn(m["call_agree"].sum(), len(m)),
+            "trivial_split": {"trivial_pairs": triv_pairs,
+                              "trivial": two(m[m["trivial"]]),
+                              "non_trivial": two(m[~m["trivial"]])},
+            "per_model": {mo: two(g) for mo, g in m.groupby("model")},
+            "units_where_scores_differ": [
+                {"system": r.system, "model": r.model, "T": float(r.temperature_K),
+                 "screen_curvature_thz": _r(r.min_eff_freq_thz_softmode),
+                 "sscha_freq_thz": _r(r.min_eff_freq_thz_sscha),
+                 "screen_call_stable": bool(r.call_screen), "sscha_call_stable": bool(r.call_sscha),
+                 "curvature_sign_agree": bool(r.agree), "call_agree": bool(r.call_agree)}
+                for r in diff.itertuples()],
+            "frequency_correlation_DESCRIPTIVE": {
+                "spearman": summ.get("spearman_freq"), "pearson": summ.get("pearson_freq"),
+                "n": int(len(m)),
+                "note": ("descriptive only: pairs cluster by system and model, and no test is "
+                         "attached")},
+        }
+    return out
+
+
+# ---- S3: ORB-v2 split of everything else ----
+
+def _tie_info(df: pd.DataFrame) -> dict:
+    g = A.h3_ensemble_guardrail(df, method="softmode")
+    g = g[~g["system"].str.contains("bcc") & ~g["system"].isin(A.borderline_systems())]
+    tied = g[g["stable_vote_frac"] == 0.5]
+    return {
+        "rule": ("analysis.h3_ensemble_guardrail: consensus_stable = stable_vote_frac >= 0.5, "
+                 "so a 2-2 split among four models is called STABLE"),
+        "n_models_per_unit": sorted(int(x) for x in g["n_models"].unique()),
+        "n_tied_units": int(len(tied)),
+        "n_tied_units_in_error": int((~tied["consensus_correct"].astype(bool)).sum()),
+        "tied_units": [{"system": r.system, "T": float(r.T), "gt_stable": bool(r.gt_stable),
+                        "consensus_correct": bool(r.consensus_correct)}
+                       for r in tied.itertuples()],
+    }
+
+
+def _family_recall(d: pd.DataFrame, method: str, systems: list[str],
+                   t_max: float = 300.0) -> dict | None:
+    """Recall of the unstable class on one family at T <= t_max, displacive_recall's rules:
+    finite frequencies only; for SSCHA, blow-ups (|f| > 50 THz) leave the denominator and are
+    counted separately."""
+    x = d[(d["method"] == method) & d["system"].isin(systems) & (d["temperature_K"] <= t_max)]
+    x = x[~x["gt_stable"].astype(bool) & np.isfinite(x["min_eff_freq_thz"])]
+    if x.empty:
+        return None
+    blow = (x["min_eff_freq_thz"].abs() > BLOWUP_THZ) if method == "sscha" else \
+        pd.Series(False, index=x.index)
+    valid = x[~blow]
+    return _kn((~valid["pred_stable"].astype(bool)).sum(), len(valid)) | {
+        "n_numerical_blowup": int(blow.sum()),
+        "systems_present": sorted(x["system"].unique().tolist())}
+
+
+def _sscha_blowups_failures(df: pd.DataFrame) -> dict:
+    grid = pd.read_csv(SSCHA_GRID)
+    ss = df[df["method"] == "sscha"]
+    extra = ss[KEYS].merge(grid, on=KEYS, how="left", indicator=True)
+    assert (extra["_merge"] == "left_only").sum() == 0, "SSCHA rows outside the attempted grid"
+    mg = grid.merge(ss[KEYS + ["min_eff_freq_thz"]], on=KEYS, how="left", indicator=True)
+    per_model = {}
+    for mo, g in mg.groupby("model"):
+        failed = g[g["_merge"] == "left_only"]
+        ret = g[g["_merge"] == "both"]
+        blow = ret[ret["min_eff_freq_thz"].abs() > BLOWUP_THZ]
+        per_model[mo] = {
+            "n_grid": int(len(g)), "n_returned": int(len(ret)),
+            "n_failed": int(len(failed)),
+            "failed_units": [f"{r.system}@{int(r.temperature_K)}K" for r in failed.itertuples()],
+            "n_blowup": int(len(blow)),
+            "blowup_units": [{"system": r.system, "T": float(r.temperature_K),
+                              "min_eff_freq_thz": _r(r.min_eff_freq_thz, 1)}
+                             for r in blow.itertuples()],
+        }
+    totals = {}
+    for tag, excl in MODEL_SETS:
+        pm = [v for mo, v in per_model.items() if mo not in excl]
+        totals[tag] = {k: int(sum(v[k] for v in pm))
+                       for k in ("n_grid", "n_returned", "n_failed", "n_blowup")}
+    return {
+        "definition": (
+            f"blow-up: a returned SSCHA unit with |min_eff_freq_thz| > {BLOWUP_THZ:g} THz "
+            "(analysis.sscha_reliability / displacive_recall; manuscript §3.3, ESI Table S3). "
+            "failed: a unit of the attempted grid (results/sscha_units_v1.csv, 208 units) with "
+            "no canonical ledger row -- it died at a cellconstructor symmetry or ensemble "
+            "assertion (manuscript §3.3; ESI §S2.3)."),
+        "per_model": per_model,
+        "totals": totals,
+    }
+
+
+def orb_split_s3(df: pd.DataFrame, n_perm: int, seed: int) -> dict:
+    """S3. Everything Referee 3's item 5 asks to see with and without ORB-v2 that the existing
+    ``orb_split`` block does not already carry."""
+    out: dict = {"answers": ["R3.5", "R2.2 (guardrail robustness)"]}
+
+    guard = {}
+    for tag, excl in MODEL_SETS:
+        d = _drop_models(df, excl)
+        gc = guardrail_clustered(d, n_perm, seed)
+        comp = gc.pop("composition")
+        gc["consensus_error"] = _kn(gc["consensus_error_rate"]["n"] - gc["consensus_error_rate"]["k"],
+                                    gc["consensus_error_rate"]["n"])
+        gc.pop("consensus_error_rate")      # the old key held the fraction CORRECT; not repeated
+        guard[tag] = {"n_units": comp["n_units"], "n_systems": comp["n_systems"],
+                      "balanced": comp["balanced"], **gc,
+                      "h3_guardrail_summary": A.h3_guardrail_summary(d, method="softmode"),
+                      "ties": _tie_info(d)}
+    out["guardrail"] = guard | {"note": (
+        f"guardrail_clustered on each model set: clustered permutation p and cluster-bootstrap "
+        f"CI with n = {n_perm}, seed {seed}; auc_freq_std is item (ii). The all_models entry "
+        "reproduces the h3_guardrail block.")}
+
+    fams = {"fe_oxide": FE, "halide": HALIDE, "fluorite": FLUORITE, "afd_srtio3": AFD}
+    rec = {}
+    for tag, excl in MODEL_SETS:
+        d = _drop_models(df, excl)
+        scr = {f: _family_recall(d, "softmode", s) for f, s in fams.items()}
+        ssc = {f: _family_recall(d, "sscha", s) for f, s in fams.items()}
+        dr = A.displacive_recall(d).set_index("method")      # FE must agree with the paper's function
+        for meth, v in (("softmode", scr["fe_oxide"]), ("sscha", ssc["fe_oxide"])):
+            assert (v["k"], v["n"]) == (int(dr.loc[meth, "correct_unstable"]),
+                                        int(dr.loc[meth, "n_valid"])), (tag, meth)
+        ctl = d[(d["method"] == "softmode") & d["system"].isin(CONTROLS)]
+        rec[tag] = {
+            "screen": scr,
+            "sscha": ssc,
+            "controls_screen_false_unstable": _kn((~ctl["pred_stable"].astype(bool)).sum(),
+                                                  len(ctl)) | {"temperatures": "all four"},
+            "sscha_reliability_by_family": A.sscha_reliability(d).to_dict("records"),
+        }
+    out["family_recall"] = rec | {"note": (
+        "Recall of the unstable class at T <= 300 K on genuinely unstable units (same rules as "
+        "analysis.displacive_recall, which covers FE only and is asserted equal here). "
+        "analysis.sscha_reliability gives n, blow-ups and the frequency range per family but no "
+        "recall. SSCHA was run on one halide (cssni3_cubic) and on no control; the controls' "
+        "entry is the screen's false-unstable count over all four temperatures.")}
+
+    out["sscha_blowups_and_failures"] = _sscha_blowups_failures(df)
+
+    # (v) the ORB-v2 premises Referee 3 quoted, re-measured
+    h = df[(df["method"] == "harmonic") & (df["model"] == "orb_v2")
+           & (df["system"] == "mgo_rocksalt")].iloc[0]
+    fs = per_model_with_ci(df, "softmode", t_max=300.0, exclude_bcc=True)["orb_v2"]["false_stable"]
+    v = df[(df["method"] == "softmode") & (df["model"] == "orb_v2")
+           & df["system"].isin(BCC_METALS)]
+    bcc_tab = {s: {str(int(t)): _r(f) for t, f in zip(g["temperature_K"], g["min_eff_freq_thz"])}
+               for s, g in v.sort_values("temperature_K").groupby("system")}
+    paired_t = sorted(set(df[(df["method"] == "sscha") & df["system"].isin(BCC_METALS)]
+                          ["temperature_K"]) & set(TEMPS))     # 100/300/600 K on bcc
+
+    def _argmin(x: pd.DataFrame) -> dict:
+        r = x.loc[x["min_eff_freq_thz"].idxmin()]
+        return {"min_eff_freq_thz": _r(r["min_eff_freq_thz"]), "system": r["system"],
+                "T": float(r["temperature_K"])}
+
+    bf = out["sscha_blowups_and_failures"]
+    out["orb_premises"] = {
+        "source_of_old_values": AS_REVIEWED,
+        "mgo_harmonic_min_freq_thz": {
+            "now": _r(h["min_freq_thz"]), "as_reviewed": -2.8,
+            "pred_stable": bool(h["pred_stable"]), "gt_stable": bool(h["gt_stable"])},
+        "orb_finite_t_false_stable": {"now": fs, "as_reviewed": 0.562,
+                                      "set": "softmode, T <= 300 K, non-bcc, non-borderline"},
+        "orb_softmode_bcc_min_eff_freq_thz": {
+            "by_system_and_T": bcc_tab,
+            "sscha_paired_T": [float(t) for t in paired_t],
+            "min_on_sscha_paired_T": _argmin(v[v["temperature_K"].isin(paired_t)]),
+            "min_full_ladder": _argmin(v),
+            "hf_bcc_min": _r(v[v["system"] == "hf_bcc"]["min_eff_freq_thz"].min()),
+            "as_reviewed": "Ti/Hf near -35 THz"},
+        "sscha_blowups": {
+            "orb_v2": bf["per_model"]["orb_v2"]["n_blowup"],
+            "all_models": bf["totals"]["all_models"]["n_blowup"],
+            "models_with_blowups": sorted(mo for mo, x in bf["per_model"].items() if x["n_blowup"]),
+            "as_reviewed": "six numerical blow-ups, concentrated in the float32 ORB-v2 runs"},
+    }
+    out["harmonic_tolerance_sweep"] = {
+        tag: A.harmonic_tolerance_sweep(_drop_models(df, excl)).to_dict("records")
+        for tag, excl in MODEL_SETS}
+    return out
+
+
+# ---- S4: SSCHA high-temperature false-unstables ----
+
+def sscha_high_t(df: pd.DataFrame) -> dict:
+    """S4. The anti-stabilisation with temperature that the manuscript does not discuss."""
+    grid = pd.read_csv(SSCHA_GRID)
+    harm = df[df["method"] == "harmonic"][["system", "model", "min_freq_thz"]]
+    scr = df[df["method"] == "softmode"][KEYS + ["ft_decide_harm_thz", "ft_decide_q"]]
+    out: dict = {
+        "answers": ["R1.2 (OOD hypothesis)"],
+        "definition": (
+            "Non-bcc SSCHA rows. false-unstable = SSCHA calls unstable (min_eff_freq_thz < 0) "
+            "and the label is stable; blow-ups (|f| > 50 THz) are INCLUDED in the counts and "
+            "tallied alongside. harmonic_min_freq_thz is the model's harmonic-layer minimum "
+            "(T-independent); screen_deciding_mode_harm_thz is the harmonic frequency of the "
+            "screen's deciding mode (ft_decide_harm_thz) on the softmode row at the same T."),
+    }
+    for tag, excl in MODEL_SETS:
+        ss = _drop_models(df[(df["method"] == "sscha") & ~df["system"].str.contains("bcc")], excl)
+        by_t = {}
+        for t in TEMPS:
+            x = ss[ss["temperature_K"] == t]
+            gs = x[x["gt_stable"].astype(bool)]
+            fu = gs[~gs["pred_stable"].astype(bool)]
+            by_t[str(int(t))] = _kn(len(fu), len(gs)) | {
+                "n_units_at_T": int(len(x)),
+                "n_blowup_among_false_unstable": int((fu["min_eff_freq_thz"].abs() > BLOWUP_THZ).sum()),
+                "by_system": {s: int(k) for s, k in fu["system"].value_counts().sort_index().items()}}
+
+        st = ss[(ss["system"] == "srtio3_cubic") & ss["gt_stable"].astype(bool)]
+        st = st[KEYS + ["transition_T_K", "pred_stable", "min_eff_freq_thz"]].merge(
+            harm, on=["system", "model"], how="left").merge(scr, on=KEYS, how="left")
+        st = st.sort_values(["temperature_K", "model"])
+        tc = float(st["transition_T_K"].iloc[0])
+        g_st = _drop_models(grid[(grid["system"] == "srtio3_cubic") & (grid["temperature_K"] > tc)], excl)
+        k_fu = int((~st["pred_stable"].astype(bool)).sum())
+        srtio3 = {
+            "transition_T_K": tc,
+            "n_grid_above_tc": int(len(g_st)),
+            "n_returned": int(len(st)),
+            "false_unstable": _kn(k_fu, len(st)),
+            "sscha_freq_range_thz": [_r(st["min_eff_freq_thz"].min()), _r(st["min_eff_freq_thz"].max())],
+            "units": [{"model": r.model, "T": float(r.temperature_K),
+                       "sscha_min_eff_freq_thz": _r(r.min_eff_freq_thz),
+                       "false_unstable": not bool(r.pred_stable),
+                       "blow_up": bool(abs(r.min_eff_freq_thz) > BLOWUP_THZ),
+                       "harmonic_min_freq_thz": _r(r.min_freq_thz),
+                       "screen_deciding_mode_q": r.ft_decide_q,
+                       "screen_deciding_mode_harm_thz": _r(r.ft_decide_harm_thz)}
+                      for r in st.itertuples()],
+        }
+
+        piv = ss.pivot_table(index=["system", "model"], columns="temperature_K",
+                             values="min_eff_freq_thz")
+        gtp = ss.pivot_table(index=["system", "model"], columns="temperature_K",
+                             values="gt_stable", aggfunc="first")
+        s100 = piv[piv[100.0] >= 0]
+        units = []
+        for (s, mo), row in s100.iterrows():
+            neg_t = [t for t in TEMPS if t in row.index and np.isfinite(row[t]) and row[t] < 0]
+            hi_neg = [t for t in neg_t if t >= 600.0]
+            hm = harm[(harm["system"] == s) & (harm["model"] == mo)]["min_freq_thz"]
+            sd = scr[(scr["system"] == s) & (scr["model"] == mo)].set_index("temperature_K")
+            units.append({
+                "system": s, "model": mo,
+                "sscha_min_eff_freq_thz": {str(int(t)): _r(row[t]) for t in TEMPS if t in row.index},
+                "first_negative_T": neg_t[0] if neg_t else None,
+                "negative_by_600_900K": bool(hi_neg),
+                "high_T_negative_is_false_unstable": bool(any(bool(gtp.loc[(s, mo), t])
+                                                               for t in hi_neg)),
+                "harmonic_min_freq_thz": _r(hm.iloc[0]) if len(hm) else None,
+                "screen_deciding_mode_harm_thz": {str(int(t)): _r(sd.loc[t, "ft_decide_harm_thz"])
+                                                  for t in TEMPS if t in sd.index},
+            })
+        n_neg = sum(u["negative_by_600_900K"] for u in units)
+        out[tag] = {
+            "false_unstable_by_T": by_t,
+            "srtio3_above_tc": srtio3,
+            "stable_at_100K_turn_negative": _kn(n_neg, len(units)) | {
+                "n_stable_at_100K": len(units),
+                "n_negative_by_600_900K": int(n_neg),
+                "n_of_those_false_unstable_at_high_T": int(sum(
+                    u["high_T_negative_is_false_unstable"] for u in units if u["negative_by_600_900K"])),
+                "units": units},
+        }
+    out["note"] = (
+        "Growth of the SSCHA instability with temperature on the same PES is the signature "
+        "Referee 1's out-of-distribution hypothesis (item 2) predicts. For the fluorites the "
+        "label is 'unstable' at every T, so their high-T negatives are label-correct but the "
+        "trend with T is physically the wrong direction; high_T_negative_is_false_unstable "
+        "separates the two cases.")
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n-perm", type=int, default=10000)
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 
-    df = A.canonical(pd.read_parquet(LEDGER))
+    df = A.load_canonical(LEDGER)
 
     res = {
         "_generated_by": "scripts/stats_hardening.py",
@@ -296,6 +800,11 @@ def main() -> None:
             for tag, excl in [("all_models", ()), ("excl_orb_v2", ("orb_v2",))]
         },
         "orb_split": orb_split(df),
+        # revision plan S1-S4 (tasks/todo.md Phase 2)
+        "h2_clustered": h2_clustered(df),
+        "bcc_agreement": bcc_agreement(df),
+        "orb_split_s3": orb_split_s3(df, args.n_perm, args.seed),
+        "sscha_high_t": sscha_high_t(df),
     }
 
     OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
@@ -338,6 +847,51 @@ def main() -> None:
             sp = v["spearman_over_models"]
             print(f"  T={t:>3s} K  rho {sp['rho']:+.3f}  exact p {sp['p_perm']:.4f}  "
                   f"(finest attainable {sp['finest_attainable_p']:.4f})")
+
+    print("\n-- S1 H2 transfer asymmetry, clustered by system --")
+    print(f"   {'T':>4s} {'set':12s} {'b/c':>6s} {'unit-p':>8s} {'sys a/b':>8s} {'clust-p':>8s} "
+          f"{'LOSO p range':>16s} {'ex-shared b/c, clust-p':>24s}")
+    for t in ("100", "300", "600", "900"):
+        for tag in ("all_models", "excl_orb_v2"):
+            e = res["h2_clustered"][t][tag]
+            c = e["clustered_by_system"]
+            lo = e["leave_one_system_out"]
+            w = e["shared_screen_error_split"]["without_shared_systems"]
+            print(f"   {t:>4s} {tag:12s} {e['b_harm_right_ft_wrong']:>3d}/{e['c_harm_wrong_ft_right']:<2d} "
+                  f"{e['mcnemar_exact_p_UNIT_LEVEL']:8.4f} "
+                  f"{c['clusters_favouring_a']:>4d}/{c['clusters_favouring_b']:<3d} "
+                  f"{c['p_exact_clustered']:8.4f} "
+                  f"[{lo['p_clustered_min']:.3f}, {lo['p_clustered_max']:.3f}]   "
+                  f"{w['b']:>3d}/{w['c']:<2d} {w['p_clustered']:.3f}")
+
+    print("\n-- S2 bcc screen vs SSCHA --")
+    for tag in ("all_models", "excl_orb_v2"):
+        e = res["bcc_agreement"][tag]
+        ts = e["trivial_split"]
+        print(f"   {tag:12s} curvature sign {e['curvature_sign_agreement']['fmt']}; "
+              f"call {e['call_agreement']['fmt']}")
+        print(f"   {'':12s} non-trivial: sign {ts['non_trivial']['curvature_sign']['fmt']}; "
+              f"call {ts['non_trivial']['call']['fmt']}; "
+              f"rho (descriptive) {e['frequency_correlation_DESCRIPTIVE']['spearman']:+.3f}")
+
+    print("\n-- S3 guardrail with / without ORB-v2 --")
+    for tag in ("all_models", "excl_orb_v2"):
+        e = res["orb_split_s3"]["guardrail"][tag]
+        a = e["auc_vote_disagreement"]
+        print(f"   {tag:12s} split err {e['split_vote_error']['fmt']}  unan err "
+              f"{e['unanimous_error']['fmt']}  AUC {a['auc']:.3f} p {a['p_perm_clustered']:.4f} "
+              f"CI [{a['ci_lo']:.3f}, {a['ci_hi']:.3f}]  ties {e['ties']['n_tied_units']}")
+    bf = res["orb_split_s3"]["sscha_blowups_and_failures"]
+    print("   SSCHA blow-ups / failed per model: " + ", ".join(
+        f"{m} {v['n_blowup']}/{v['n_failed']}" for m, v in bf["per_model"].items()))
+
+    print("\n-- S4 SSCHA non-bcc false-unstable by T --")
+    for tag in ("all_models", "excl_orb_v2"):
+        e = res["sscha_high_t"][tag]
+        print(f"   {tag:12s} " + "  ".join(f"{t} K {v['k']}/{v['n']}"
+                                          for t, v in e["false_unstable_by_T"].items())
+              + f"   SrTiO3 above Tc {e['srtio3_above_tc']['false_unstable']['fmt']}"
+              + f"   100 K-stable -> negative {e['stable_at_100K_turn_negative']['fmt']}")
 
 
 if __name__ == "__main__":

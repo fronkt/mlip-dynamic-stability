@@ -295,14 +295,12 @@ def h2_harmonic_predictiveness(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def h2_paired_summary(df: pd.DataFrame, t: float = 100.0) -> dict:
-    """H2 done correctly: pair the harmonic and finite-T (softmode at T=``t``) call for each
+    """Pair the harmonic call with the finite-T call (softmode at T=``t``) for each
     (system, model) on the MATCHED non-bcc, non-borderline set, so harmonic and finite-T accuracy
-    share the same denominator (the model-level 'inversion' seen with bcc-in-harmonic vs
-    bcc-out-of-finite-T is a denominator artifact). Reports the 2x2 concordance of correctness,
-    the phi correlation, an exact-binomial McNemar test on the discordant pairs, and the matched
-    per-model accuracies with their rank correlation. The honest finding is that harmonic accuracy
-    is a WEAK (not negative) predictor of finite-T accuracy, and that the harmonic leaders are not
-    the finite-T leaders -- not a clean inversion."""
+    share the same denominator. Returns the 2x2 concordance of correctness, the phi coefficient,
+    the two-sided exact-binomial McNemar p on the discordant pairs (unit level: the pairs are
+    treated as independent), and the matched per-model accuracies with their Spearman rank
+    correlation over the models."""
     from math import comb
     bl = borderline_systems()
     def nonbcc(d):
