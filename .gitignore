@@ -45,8 +45,7 @@ mp_api_key.txt
 results/revision/*/work/
 results/revision/*/locks/
 results/revision/sscha_seeds/_dryrun/
-# Revision DFT: unselected C3a inputs (never run), pw.x stderr (gfortran IEEE notes only),
-# and the queue's byte-identical pw.in copies; the full box tree is in the raw archive
+# Revision DFT: unselected C3a inputs (never run) and pw.x stderr (gfortran IEEE notes only);
+# the full box tree is in the raw archive
 results/revision/dft/qe/ax_*/
 results/revision/dft/qe/*/pw.err
-results/revision/dft/qe/*/pw.in.ran

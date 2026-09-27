@@ -1,0 +1,3 @@
+# dft_reference.py analyze checks sha256 of geometry files and byte-compares pw.in with
+# pw.in.ran; keep these byte-exact (LF) on Windows checkouts with core.autocrlf=true
+results/revision/dft/** -text
