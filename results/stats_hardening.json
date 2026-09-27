@@ -6201,5 +6201,141 @@
       }
     },
     "note": "Growth of the SSCHA instability with temperature on the same PES is the signature Referee 1's out-of-distribution hypothesis (item 2) predicts. For the fluorites the label is 'unstable' at every T, so their high-T negatives are label-correct but the trend with T is physically the wrong direction; high_T_negative_is_false_unstable separates the two cases."
+  },
+  "criterion_blindness": {
+    "answers": [
+      "R1.1b (global vs local)",
+      "R1.2",
+      "R1.4 ('methodological trap')"
+    ],
+    "all_models": {
+      "n_sscha_false_stable_nonbcc": 57,
+      "screen_curvature_positive": {
+        "k": 52,
+        "n": 57,
+        "p": 0.9122807017543859,
+        "lo": 0.8105512289011539,
+        "hi": 0.9619483282466917,
+        "fmt": "52/57 = 0.912 [0.811, 0.962]"
+      },
+      "screen_call_unstable": {
+        "k": 46,
+        "n": 57,
+        "p": 0.8070175438596491,
+        "lo": 0.6865930974139526,
+        "hi": 0.8886725302493367,
+        "fmt": "46/57 = 0.807 [0.687, 0.889]"
+      },
+      "curvature_positive_and_call_unstable": {
+        "k": 41,
+        "n": 57,
+        "p": 0.7192982456140351,
+        "lo": 0.5916980131314522,
+        "hi": 0.8192060066280402,
+        "fmt": "41/57 = 0.719 [0.592, 0.819]"
+      },
+      "by_system": {
+        "batio3_cubic": {
+          "n": 10,
+          "screen_curv_pos": 10,
+          "screen_call_unstable": 6
+        },
+        "cssni3_cubic": {
+          "n": 1,
+          "screen_curv_pos": 0,
+          "screen_call_unstable": 1
+        },
+        "hfo2_cubic": {
+          "n": 16,
+          "screen_curv_pos": 13,
+          "screen_call_unstable": 16
+        },
+        "knbo3_cubic": {
+          "n": 13,
+          "screen_curv_pos": 13,
+          "screen_call_unstable": 6
+        },
+        "pbtio3_cubic": {
+          "n": 2,
+          "screen_curv_pos": 2,
+          "screen_call_unstable": 2
+        },
+        "zro2_cubic": {
+          "n": 15,
+          "screen_curv_pos": 14,
+          "screen_call_unstable": 15
+        }
+      },
+      "paired_nonbcc_T_le_300": {
+        "n": 66,
+        "sscha_sign_eq_screen_curvature_sign": 40,
+        "sscha_call_eq_screen_call": 21
+      }
+    },
+    "excl_orb_v2": {
+      "n_sscha_false_stable_nonbcc": 50,
+      "screen_curvature_positive": {
+        "k": 47,
+        "n": 50,
+        "p": 0.94,
+        "lo": 0.8378290830011957,
+        "hi": 0.9793850296674343,
+        "fmt": "47/50 = 0.940 [0.838, 0.979]"
+      },
+      "screen_call_unstable": {
+        "k": 39,
+        "n": 50,
+        "p": 0.78,
+        "lo": 0.6475845040707112,
+        "hi": 0.8724608403547808,
+        "fmt": "39/50 = 0.780 [0.648, 0.872]"
+      },
+      "curvature_positive_and_call_unstable": {
+        "k": 36,
+        "n": 50,
+        "p": 0.72,
+        "lo": 0.5833487629248485,
+        "hi": 0.8252582934094667,
+        "fmt": "36/50 = 0.720 [0.583, 0.825]"
+      },
+      "by_system": {
+        "batio3_cubic": {
+          "n": 8,
+          "screen_curv_pos": 8,
+          "screen_call_unstable": 4
+        },
+        "cssni3_cubic": {
+          "n": 1,
+          "screen_curv_pos": 0,
+          "screen_call_unstable": 1
+        },
+        "hfo2_cubic": {
+          "n": 14,
+          "screen_curv_pos": 12,
+          "screen_call_unstable": 14
+        },
+        "knbo3_cubic": {
+          "n": 11,
+          "screen_curv_pos": 11,
+          "screen_call_unstable": 4
+        },
+        "pbtio3_cubic": {
+          "n": 2,
+          "screen_curv_pos": 2,
+          "screen_call_unstable": 2
+        },
+        "zro2_cubic": {
+          "n": 14,
+          "screen_curv_pos": 14,
+          "screen_call_unstable": 14
+        }
+      },
+      "paired_nonbcc_T_le_300": {
+        "n": 56,
+        "sscha_sign_eq_screen_curvature_sign": 34,
+        "sscha_call_eq_screen_call": 20
+      }
+    },
+    "note": "Counts over non-bcc (system, model, T) units with both a softmode and an sscha row. Curvature > 0 means the screen's symmetric-point free-energy curvature is positive."
   }
 }

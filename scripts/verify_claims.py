@@ -373,6 +373,22 @@ def main() -> int:
           f"[3.3] SSCHA: {reversals(nb)[1]} of {reversals(nb)[0]} non-bcc units stable at 100 K "
           f"turn negative by 600-900 K (ex-ORB {reversals(nbx)[1]} of {reversals(nbx)[0]})")
 
+    # [3.3] Local vs global criterion on the SAME PES: on the non-bcc units SSCHA calls stable
+    # against an unstable label, the screen's own symmetric-point curvature (the single-mode
+    # analogue of the SSCHA Hessian) is positive on 52/57, and on 41/57 it is positive while the
+    # screen's free-energy comparison calls the phase unstable. Recomputed from the ledger.
+    kk = ["system", "model", "temperature_K"]
+    cb = d[d.method == "softmode"][kk + ["min_eff_freq_thz", "pred_stable", "gt_stable"]].merge(
+        d[d.method == "sscha"][kk + ["min_eff_freq_thz", "pred_stable"]], on=kk,
+        suffixes=("_scr", "_ss"))
+    cb = cb[~cb.system.str.contains("bcc")]
+    cfs = cb[cb.pred_stable_ss.astype(bool) & ~cb.gt_stable.astype(bool)]
+    cpos = int((cfs.min_eff_freq_thz_scr > 0).sum())
+    cblind = int(((cfs.min_eff_freq_thz_scr > 0) & ~cfs.pred_stable_scr.astype(bool)).sum())
+    check(len(cfs) == 57 and cpos == 52 and cblind == 41,
+          f"[3.3] SSCHA false-stables: screen curvature positive on {cpos}/{len(cfs)}, "
+          f"curvature-positive-but-condensed on {cblind}/{len(cfs)}")
+
     print()
     if _fails:
         print(f"{len(_fails)} CLAIM(S) FAILED -- the manuscript and the ledger disagree:")

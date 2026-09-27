@@ -768,6 +768,53 @@ def sscha_high_t(df: pd.DataFrame) -> dict:
     return out
 
 
+def criterion_blindness(df: pd.DataFrame) -> dict:
+    """The SSCHA false-stables seen through the screen's two observables on the SAME PES.
+
+    The screen reports two things per unit from one E(Q) map: a stability CALL (does any
+    displaced centroid have lower single-mode SCHA free energy than Q0 = 0, a global
+    comparison) and a CURVATURE (the free-energy curvature at the symmetric point, the
+    single-mode analogue of the SSCHA free-energy Hessian, a local test). Where SSCHA calls a
+    non-bcc phase stable against an unstable label, this asks which of the screen's two
+    observables agrees with it. If the screen's own curvature is positive there, the SSCHA
+    false-stable is reproduced by a local criterion evaluated on the same MLIP energies, and
+    the disagreement with the screen's call is a local-versus-global criterion difference, not
+    a force-engine difference. Descriptive counts; no test.
+    """
+    keep = ["system", "model", "temperature_K"]
+    sm = df[df["method"] == "softmode"][keep + ["min_eff_freq_thz", "pred_stable", "gt_stable"]]
+    ss = df[df["method"] == "sscha"][keep + ["min_eff_freq_thz", "pred_stable"]]
+    out: dict = {"answers": ["R1.1b (global vs local)", "R1.2", "R1.4 ('methodological trap')"]}
+    for tag, excl in MODEL_SETS:
+        m = _drop_models(sm.merge(ss, on=keep, suffixes=("_scr", "_ss")), excl)
+        m = m[~m["system"].str.contains("bcc")]
+        fs = m[m["pred_stable_ss"].astype(bool) & ~m["gt_stable"].astype(bool)]
+        curv_pos = fs["min_eff_freq_thz_scr"] > 0
+        call_unst = ~fs["pred_stable_scr"].astype(bool)
+        lo = m[m["temperature_K"] <= 300.0]
+        out[tag] = {
+            "n_sscha_false_stable_nonbcc": int(len(fs)),
+            "screen_curvature_positive": _kn(int(curv_pos.sum()), len(fs)),
+            "screen_call_unstable": _kn(int(call_unst.sum()), len(fs)),
+            "curvature_positive_and_call_unstable": _kn(int((curv_pos & call_unst).sum()), len(fs)),
+            "by_system": {s: {"n": int(len(g)),
+                              "screen_curv_pos": int((g["min_eff_freq_thz_scr"] > 0).sum()),
+                              "screen_call_unstable": int((~g["pred_stable_scr"].astype(bool)).sum())}
+                          for s, g in fs.groupby("system")},
+            "paired_nonbcc_T_le_300": {
+                "n": int(len(lo)),
+                "sscha_sign_eq_screen_curvature_sign": int(
+                    ((lo["min_eff_freq_thz_ss"] >= 0) == (lo["min_eff_freq_thz_scr"] >= 0)).sum()),
+                "sscha_call_eq_screen_call": int(
+                    (lo["pred_stable_ss"].astype(bool) == lo["pred_stable_scr"].astype(bool)).sum()),
+            },
+        }
+    out["note"] = (
+        "Counts over non-bcc (system, model, T) units with both a softmode and an sscha row. "
+        "Curvature > 0 means the screen's symmetric-point free-energy curvature is positive.")
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n-perm", type=int, default=10000)
@@ -805,6 +852,7 @@ def main() -> None:
         "bcc_agreement": bcc_agreement(df),
         "orb_split_s3": orb_split_s3(df, args.n_perm, args.seed),
         "sscha_high_t": sscha_high_t(df),
+        "criterion_blindness": criterion_blindness(df),
     }
 
     OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
