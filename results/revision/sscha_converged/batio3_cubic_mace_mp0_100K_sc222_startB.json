@@ -1,0 +1,826 @@
+{
+ "schema": "sscha_converged/v1",
+ "study": "C1c converged SSCHA, start A vs B (R1.4)",
+ "dry_run": false,
+ "unit": {
+  "system": "batio3_cubic",
+  "model": "mace_mp0",
+  "T": 100.0,
+  "supercell": [
+   2,
+   2,
+   2
+  ]
+ },
+ "unit_tag": "batio3_cubic_mace_mp0_100K_sc222",
+ "start": "B",
+ "item": "C1c",
+ "why": "Table S2 false-stable: harmonic Gamma mode -6.3 THz; production SSCHA stayed at the ForcePositiveDefinite start",
+ "recipe": {
+  "n_configs": 1000,
+  "max_pop": 30,
+  "n_hessian": 2000,
+  "disp": 0.03,
+  "relax": true,
+  "fmax": 0.001,
+  "root_representation": "root2",
+  "min_step_dyn": 0.5,
+  "meaningful_factor": 0.2,
+  "max_ka": "per_population",
+  "imag_tol_thz": -0.1,
+  "max_steps_per_pop": 400,
+  "kong_liu_ratio": 0.5,
+  "converge_min_kl_ratio": 0.7,
+  "gradient_error": "serial_stochastic_error",
+  "start_b_thz": 0.3,
+  "use_julia": false,
+  "seed": 0,
+  "seed_rule": "np.random.seed(seed + index of start), A=0, B=1",
+  "fresh_splits": 8
+ },
+ "recipe_source": "production_recipe() + converged_recipe() (scripts/sscha_seed_study.py)",
+ "provenance_created": {
+  "script": "scripts/sscha_seed_study.py",
+  "script_sha256": "21703d92487e2278035aab2601a452f44af01d83c384f60e2f9a2d930c44b32e",
+  "finite_t_sha256": "ed801a9506a74f50158681956da2e7cf52dca493058734cf228f987e5b795e08",
+  "git_head": "2fdbb61",
+  "git_dirty_production_code": [],
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T08:16:19Z",
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "packages": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "torch": "2.6.0+cu124",
+   "pandas": "3.0.5",
+   "pyarrow": "25.0.1",
+   "pymatgen": "2026.5.4",
+   "python-sscha": "1.6.1",
+   "CellConstructor": "1.6.2",
+   "julia": null,
+   "mace-torch": "0.3.16"
+  },
+  "env_lock": {
+   "lock_file": "envs/lock-mace-2026-08-17.txt",
+   "packages": {
+    "numpy": {
+     "pinned": "2.2.2",
+     "installed": "2.2.2",
+     "match": true
+    },
+    "scipy": {
+     "pinned": "1.17.1",
+     "installed": "1.17.1",
+     "match": true
+    },
+    "ase": {
+     "pinned": "3.29.0",
+     "installed": "3.29.0",
+     "match": true
+    },
+    "phonopy": {
+     "pinned": "4.4.0",
+     "installed": "4.4.0",
+     "match": true
+    },
+    "spglib": {
+     "pinned": "2.7.0",
+     "installed": "2.7.0",
+     "match": true
+    },
+    "torch": {
+     "pinned": "2.6.0+cu124",
+     "installed": "2.6.0+cu124",
+     "match": true
+    },
+    "pandas": {
+     "pinned": "3.0.5",
+     "installed": "3.0.5",
+     "match": true
+    },
+    "pyarrow": {
+     "pinned": "25.0.1",
+     "installed": "25.0.1",
+     "match": true
+    },
+    "pymatgen": {
+     "pinned": "2026.5.4",
+     "installed": "2026.5.4",
+     "match": true
+    },
+    "python-sscha": {
+     "pinned": "1.6.1",
+     "installed": "1.6.1",
+     "match": true
+    },
+    "CellConstructor": {
+     "pinned": "1.6.2",
+     "installed": "1.6.2",
+     "match": true
+    },
+    "mace-torch": {
+     "pinned": "0.3.16",
+     "installed": "0.3.16",
+     "match": true
+    }
+   },
+   "all_pinned_match": true
+  },
+  "omp_num_threads": "2",
+  "cpu": {
+   "os_cpu_count": 128,
+   "affinity": 128,
+   "cgroup_quota": 61.43999,
+   "usable": 61
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "cuda_device": "NVIDIA GeForce RTX 3090",
+  "julia_ext_available": false,
+  "julia_error": "",
+  "schamodules": {
+   "file": "/root/env-mace/lib/python3.11/site-packages/SCHAModules.cpython-311-x86_64-linux-gnu.so",
+   "ldd": [
+    "liblapack.so.3 => /lib/x86_64-linux-gnu/liblapack.so.3 (0x0000727b247d6000)",
+    "libblas.so.3 => /lib/x86_64-linux-gnu/libblas.so.3 (0x0000727b24730000)",
+    "libgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (0x0000727b24455000)"
+   ]
+  },
+  "model_version": "mace-torch=0.3.16;ckpt=medium"
+ },
+ "previous_runs": [
+  {
+   "start": {
+    "min_nonac_thz": 0.29999999999995025,
+    "lowest6_thz": [
+     2.027876593844487e-07,
+     2.6688038009222703e-07,
+     3.103646160913976e-07,
+     0.29999999999995025,
+     0.29999999999999327,
+     0.3000000000000027
+    ],
+    "n_imag_nonac": 0,
+    "acoustic_max_abs_thz": 3.103646160913976e-07
+   },
+   "status": "failed",
+   "utc_start": "2026-09-27T08:16:19Z",
+   "host": "db4a641a37b8",
+   "pid": 17619,
+   "work_dir": "results/revision/sscha_converged/work/batio3_cubic_mace_mp0_100K_sc222_startB",
+   "settings": {
+    "n_boot": 30,
+    "n_splits_fallback": 4,
+    "unit_timeout_s": 10800.0,
+    "device": "cuda"
+   },
+   "timings_s": {
+    "relax_and_harmonic_fc": 4.519609689712524
+   },
+   "julia_ext_available": false,
+   "relaxed_cellpar": [
+    4.034047026810178,
+    4.0340470268101765,
+    4.034047026810181,
+    89.99999999999994,
+    90.0,
+    90.0
+   ],
+   "harmonic_pre_fpd": {
+    "min_nonac_thz": -6.2992184746646505,
+    "lowest6_thz": [
+     -6.2992184746646505,
+     -6.2992184746646505,
+     -6.2992184746646425,
+     -5.665567245652984,
+     -5.665567245652982,
+     -5.665567245652974
+    ],
+    "n_imag_nonac": 12,
+    "acoustic_max_abs_thz": 2.2161481343217455e-07
+   },
+   "start_construction": {
+    "start": "B",
+    "rule": "ForcePositiveDefinite construction with every imaginary non-acoustic mode set to +0.3 THz instead of |w|, + Symmetrize",
+    "start_b_thz": 0.3,
+    "replaced_modes": [
+     {
+      "iq": 0,
+      "q": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mode": 0,
+      "harmonic_thz": -6.2992184746646505,
+      "start_thz": 0.3
+     },
+     {
+      "iq": 0,
+      "q": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mode": 1,
+      "harmonic_thz": -6.2992184746646505,
+      "start_thz": 0.3
+     },
+     {
+      "iq": 0,
+      "q": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mode": 2,
+      "harmonic_thz": -6.2992184746646425,
+      "start_thz": 0.3
+     },
+     {
+      "iq": 1,
+      "q": [
+       0.12394501022844111,
+       0.12394501022844116,
+       -8.326672684688674e-17
+      ],
+      "mode": 0,
+      "harmonic_thz": -5.283296587456393,
+      "start_thz": 0.3
+     },
+     {
+      "iq": 2,
+      "q": [
+       3.1471701410093603e-18,
+       -0.12394501022844118,
+       0.12394501022844111
+      ],
+      "mode": 0,
+      "harmonic_thz": -5.283296587456402,
+      "start_thz": 0.3
+     },
+     {
+      "iq": 3,
+      "q": [
+       -0.12394501022844111,
+       -1.0594852735791521e-17,
+       0.12394501022844102
+      ],
+      "mode": 0,
+      "harmonic_thz": -5.2832965874564035,
+      "start_thz": 0.3
+     },
+     {
+      "iq": 4,
+      "q": [
+       -0.12394501022844111,
+       -6.182611031265367e-35,
+       0.0
+      ],
+      "mode": 0,
+      "harmonic_thz": -5.665567245652984,
+      "start_thz": 0.3
+     },
+     {
+      "iq": 4,
+      "q": [
+       -0.12394501022844111,
+       -6.182611031265367e-35,
+       0.0
+      ],
+      "mode": 1,
+      "harmonic_thz": -5.665567245652963,
+      "start_thz": 0.3
+     },
+     {
+      "iq": 5,
+      "q": [
+       -4.2104631985826616e-18,
+       -0.12394501022844116,
+       8.643518660349754e-17
+      ],
+      "mode": 0,
+      "harmonic_thz": -5.665567245652974,
+      "start_thz": 0.3
+     },
+     {
+      "iq": 5,
+      "q": [
+       -4.2104631985826616e-18,
+       -0.12394501022844116,
+       8.643518660349754e-17
+      ],
+      "mode": 1,
+      "harmonic_thz": -5.665567245652958,
+      "start_thz": 0.3
+     },
+     {
+      "iq": 6,
+      "q": [
+       4.2454333726556115e-19,
+       2.2136931766074125e-17,
+       -0.12394501022844102
+      ],
+      "mode": 0,
+      "harmonic_thz": -5.665567245652982,
+      "start_thz": 0.3
+     },
+     {
+      "iq": 6,
+      "q": [
+       4.2454333726556115e-19,
+       2.2136931766074125e-17,
+       -0.12394501022844102
+      ],
+      "mode": 1,
+      "harmonic_thz": -5.665567245652973,
+      "start_thz": 0.3
+     }
+    ],
+    "n_replaced": 12,
+    "identical_to_A": false
+   },
+   "dyn_meta": {
+    "nqirr": 4,
+    "nq": 8,
+    "nat_prim": 5,
+    "nat_supercell": 40
+   },
+   "global_seed": 1,
+   "stopping_criteria": {
+    "meaningful_factor": 0.2,
+    "abs_conv_thr": 1e-08,
+    "kong_liu_ratio": 0.5,
+    "converge_min_kl_ratio": 0.7,
+    "gradi_op": "all",
+    "minim_struct": true,
+    "max_steps_per_pop": 400,
+    "max_pop": 30,
+    "n_configs_per_population": 1000,
+    "root_representation": "root2",
+    "min_step_dyn": 0.5,
+    "precond_dyn": true,
+    "use_julia": false,
+    "gradient_error_source": "serial get_preconditioned_gradient error via RealErrorEnsemble",
+    "semantics": {
+     "converged": "gc < meaningful_factor * gc_err AND gw < meaningful_factor * gw_err (or < abs_conv_thr), gradi_op 'all' (SchaMinimizer.py:1622-1651). gc_err is the library's serial stochastic error (module_stochastic.f90:270-274), not the parallel wrapper's placeholder (Ensemble.py:2657); it is set to zero where KL/N at the gradient is below converge_min_kl_ratio, so convergence cannot be declared at a statistically invalid point. Its scale is the Fourier transform of the real-space error matrix (coherent at Gamma), divided by sqrt(nsym*nq) (:456): a 1/sqrt(N_eff) noise scale, not a calibrated z-score. The structures here have no free Wyckoff parameter, so gw is zero by symmetry and the test reduces to gc",
+     "converged_dyn": "a converged population is not restored (:1391), so the final dyn is one step past the gradient that passed; kl_ratio_at_end is the KL after it",
+     "population_end": "converged, KL/N < kong_liu_ratio on a new direction (:1654-1661), or max_steps_per_pop steps (max_ka reset per population by the pre hook)",
+     "relax_end": "a converged population (Relax.py:410-411), max_pop populations, or the wall-clock cap (the post hook ends the current population after one more step and sets max_pop so no new population is drawn, Relax.py:412-416)",
+     "restore": "an unconverged population discards its last step (SchaMinimizer.py:1389-1397)"
+    }
+   },
+   "error": "AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex",
+   "traceback": "Traceback (most recent call last):\n  File \"/root/mlip-dynamic-stability/scripts/sscha_seed_study.py\", line 2785, in _run_converged_start\n    (run_converged_mock if args.dry_run else run_converged_sscha)(ctx, s, sp, entry)\n  File \"/root/mlip-dynamic-stability/scripts/sscha_seed_study.py\", line 2245, in run_converged_sscha\n    converged = bool(relaxer.relax(get_stress=False))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mace/lib/python3.11/site-packages/sscha/Relax.py\", line 388, in relax\n    self.minim.run(custom_function_pre = self.__cfpre__,\n  File \"/root/env-mace/lib/python3.11/site-packages/sscha/SchaMinimizer.py\", line 1300, in run\n    timer.execute_timed_function(self.minimization_step, custom_function_gradient)\n  File \"/root/env-mace/lib/python3.11/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mace/lib/python3.11/site-packages/sscha/SchaMinimizer.py\", line 652, in minimization_step\n    timer.execute_timed_function(self.update)\n  File \"/root/env-mace/lib/python3.11/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mace/lib/python3.11/site-packages/sscha/SchaMinimizer.py\", line 1008, in update\n    timer.execute_timed_function(self.ensemble.update_weights, self.dyn, self.ensemble.current_T)\n  File \"/root/env-mace/lib/python3.11/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mace/lib/python3.11/site-packages/sscha/Ensemble.py\", line 1926, in update_weights\n    w_new, pols, wqn, polsqn = timer.execute_timed_function(new_dynamical_matrix.DiagonalizeSupercell, return_qmodes=True)\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mace/lib/python3.11/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mace/lib/python3.11/site-packages/cellconstructor/Phonons.py\", line 4015, in DiagonalizeSupercell\n    assert np.max(np.abs(np.imag(self.dynmats[iq]))) < __EPSILON__, \"Error, at point {} (q = -q + G) the dynamical matrix is complex\".format(iq)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex\n",
+   "relax_partial": {
+    "reason": "exception",
+    "steps": [],
+    "hook_errors": [],
+    "pop_start_aux_min_nonac_thz": {},
+    "controller": {
+     "steps_per_pop": 400,
+     "pops": {
+      "1": {
+       "n_fe_at_start": 1,
+       "max_ka_set": 400,
+       "t_first_step_s": 170.7675325870514
+      }
+     },
+     "capped": null,
+     "deadline_after_s": 10799.999989748001,
+     "errors": []
+    }
+   },
+   "wall_s": 176.05627942085266,
+   "utc_end": "2026-09-27T08:19:15Z",
+   "provenance": {
+    "git_head": "2fdbb61",
+    "host": "db4a641a37b8",
+    "packages": {
+     "numpy": "2.2.2",
+     "scipy": "1.17.1",
+     "ase": "3.29.0",
+     "phonopy": "4.4.0",
+     "spglib": "2.7.0",
+     "torch": "2.6.0+cu124",
+     "pandas": "3.0.5",
+     "pyarrow": "25.0.1",
+     "pymatgen": "2026.5.4",
+     "python-sscha": "1.6.1",
+     "CellConstructor": "1.6.2",
+     "julia": null,
+     "mace-torch": "0.3.16"
+    },
+    "model_version": "mace-torch=0.3.16;ckpt=medium",
+    "device": "cuda",
+    "omp_num_threads": "2"
+   },
+   "work_dir_moved_to": "results/revision/sscha_converged/work/batio3_cubic_mace_mp0_100K_sc222_startB.stale-1790498697"
+  }
+ ],
+ "ledger": {
+  "source": "mlip_dynstab.analysis.load_canonical(), method == 'sscha'",
+  "found": true,
+  "n_rows": 1,
+  "min_eff_freq_thz": 2.8677283895017274,
+  "uhash": "b94d6a2f15433da6",
+  "model_version": "mace-torch=0.3.16;ckpt=medium",
+  "method_version": 3.0,
+  "lowest6_thz": [
+   -1.3946005242039292e-07,
+   -9.608931864910509e-08,
+   8.260634145456867e-08,
+   2.8677283895017274,
+   2.8677283895017336,
+   2.867728389501738
+  ],
+  "wall_s": 230.85,
+  "other_supercells": []
+ },
+ "provenance_last_run": {
+  "script": "scripts/sscha_seed_study.py",
+  "script_sha256": "dd76649e3e95953fc9baa36abf9f79e472464c230960aff473f27757e8123c45",
+  "finite_t_sha256": "ed801a9506a74f50158681956da2e7cf52dca493058734cf228f987e5b795e08",
+  "git_head": "c25d0b3",
+  "git_dirty_production_code": [],
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T08:44:57Z",
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "packages": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "torch": "2.6.0+cu124",
+   "pandas": "3.0.5",
+   "pyarrow": "25.0.1",
+   "pymatgen": "2026.5.4",
+   "python-sscha": "1.6.1",
+   "CellConstructor": "1.6.2",
+   "julia": null,
+   "mace-torch": "0.3.16"
+  },
+  "env_lock": {
+   "lock_file": "envs/lock-mace-2026-08-17.txt",
+   "packages": {
+    "numpy": {
+     "pinned": "2.2.2",
+     "installed": "2.2.2",
+     "match": true
+    },
+    "scipy": {
+     "pinned": "1.17.1",
+     "installed": "1.17.1",
+     "match": true
+    },
+    "ase": {
+     "pinned": "3.29.0",
+     "installed": "3.29.0",
+     "match": true
+    },
+    "phonopy": {
+     "pinned": "4.4.0",
+     "installed": "4.4.0",
+     "match": true
+    },
+    "spglib": {
+     "pinned": "2.7.0",
+     "installed": "2.7.0",
+     "match": true
+    },
+    "torch": {
+     "pinned": "2.6.0+cu124",
+     "installed": "2.6.0+cu124",
+     "match": true
+    },
+    "pandas": {
+     "pinned": "3.0.5",
+     "installed": "3.0.5",
+     "match": true
+    },
+    "pyarrow": {
+     "pinned": "25.0.1",
+     "installed": "25.0.1",
+     "match": true
+    },
+    "pymatgen": {
+     "pinned": "2026.5.4",
+     "installed": "2026.5.4",
+     "match": true
+    },
+    "python-sscha": {
+     "pinned": "1.6.1",
+     "installed": "1.6.1",
+     "match": true
+    },
+    "CellConstructor": {
+     "pinned": "1.6.2",
+     "installed": "1.6.2",
+     "match": true
+    },
+    "mace-torch": {
+     "pinned": "0.3.16",
+     "installed": "0.3.16",
+     "match": true
+    }
+   },
+   "all_pinned_match": true
+  },
+  "omp_num_threads": "2",
+  "cpu": {
+   "os_cpu_count": 128,
+   "affinity": 128,
+   "cgroup_quota": 61.43999,
+   "usable": 61
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "cuda_device": "NVIDIA GeForce RTX 3090",
+  "julia_ext_available": false,
+  "julia_error": "",
+  "schamodules": {
+   "file": "/root/env-mace/lib/python3.11/site-packages/SCHAModules.cpython-311-x86_64-linux-gnu.so",
+   "ldd": [
+    "liblapack.so.3 => /lib/x86_64-linux-gnu/liblapack.so.3 (0x00007105e35c9000)",
+    "libblas.so.3 => /lib/x86_64-linux-gnu/libblas.so.3 (0x00007105e3523000)",
+    "libgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (0x00007105e3248000)"
+   ]
+  },
+  "model_version": "mace-torch=0.3.16;ckpt=medium"
+ },
+ "calculator_fallback": false,
+ "run": {
+  "start": {
+   "min_nonac_thz": 0.29999999999992955,
+   "lowest6_thz": [
+    -3.990653298863364e-07,
+    -1.6543142683078146e-07,
+    -3.286683147516942e-08,
+    0.29999999999992955,
+    0.2999999999999513,
+    0.2999999999999709
+   ],
+   "n_imag_nonac": 0,
+   "acoustic_max_abs_thz": 3.990653298863364e-07
+  },
+  "status": "failed",
+  "utc_start": "2026-09-27T08:44:57Z",
+  "host": "db4a641a37b8",
+  "pid": 22601,
+  "work_dir": "results/revision/sscha_converged/work/batio3_cubic_mace_mp0_100K_sc222_startB",
+  "settings": {
+   "n_boot": 30,
+   "n_splits_fallback": 4,
+   "unit_timeout_s": 10800.0,
+   "device": "cuda"
+  },
+  "timings_s": {
+   "relax_and_harmonic_fc": 5.3533406257629395
+  },
+  "julia_ext_available": false,
+  "relaxed_cellpar": [
+   4.0340470268101845,
+   4.034047026810169,
+   4.034047026810169,
+   89.99999999999972,
+   90.0,
+   90.0
+  ],
+  "harmonic_pre_fpd": {
+   "min_nonac_thz": -6.299218474664662,
+   "lowest6_thz": [
+    -6.299218474664662,
+    -6.299218474664644,
+    -6.299218474664635,
+    -5.665567245652917,
+    -5.665567245652909,
+    -5.665567245652907
+   ],
+   "n_imag_nonac": 12,
+   "acoustic_max_abs_thz": 1.4877176285941886e-07
+  },
+  "start_construction": {
+   "start": "B",
+   "rule": "ForcePositiveDefinite construction with every imaginary non-acoustic mode set to +0.3 THz instead of |w|, + Symmetrize",
+   "start_b_thz": 0.3,
+   "replaced_modes": [
+    {
+     "iq": 0,
+     "q": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "mode": 0,
+     "harmonic_thz": -6.299218474664662,
+     "start_thz": 0.3
+    },
+    {
+     "iq": 0,
+     "q": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "mode": 1,
+     "harmonic_thz": -6.299218474664644,
+     "start_thz": 0.3
+    },
+    {
+     "iq": 0,
+     "q": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "mode": 2,
+     "harmonic_thz": -6.299218474664635,
+     "start_thz": 0.3
+    },
+    {
+     "iq": 2,
+     "q": [
+      0.12394501022844094,
+      3.3306690738754696e-16,
+      -0.12394501022844136
+     ],
+     "mode": 0,
+     "harmonic_thz": -5.28329658745635,
+     "start_thz": 0.3
+    },
+    {
+     "iq": 3,
+     "q": [
+      2.2905455445450186e-17,
+      0.12394501022844105,
+      0.12394501022844107
+     ],
+     "mode": 0,
+     "harmonic_thz": -5.28329658745634,
+     "start_thz": 0.3
+    },
+    {
+     "iq": 4,
+     "q": [
+      -0.12394501022844094,
+      -0.12394501022844136,
+      3.1056936682601006e-16
+     ],
+     "mode": 0,
+     "harmonic_thz": -5.283296587456361,
+     "start_thz": 0.3
+    },
+    {
+     "iq": 5,
+     "q": [
+      0.12394501022844094,
+      -2.9262664335626724e-34,
+      0.0
+     ],
+     "mode": 0,
+     "harmonic_thz": -5.665567245652917,
+     "start_thz": 0.3
+    },
+    {
+     "iq": 5,
+     "q": [
+      0.12394501022844094,
+      -2.9262664335626724e-34,
+      0.0
+     ],
+     "mode": 1,
+     "harmonic_thz": -5.665567245652898,
+     "start_thz": 0.3
+    },
+    {
+     "iq": 6,
+     "q": [
+      2.980554614876764e-18,
+      0.12394501022844137,
+      -2.8771230995099658e-16
+     ],
+     "mode": 0,
+     "harmonic_thz": -5.665567245652909,
+     "start_thz": 0.3
+    },
+    {
+     "iq": 6,
+     "q": [
+      2.980554614876764e-18,
+      0.12394501022844137,
+      -2.8771230995099658e-16
+     ],
+     "mode": 1,
+     "harmonic_thz": -5.665567245652887,
+     "start_thz": 0.3
+    },
+    {
+     "iq": 7,
+     "q": [
+      6.413934348939958e-19,
+      -3.1621078508198185e-16,
+      0.12394501022844137
+     ],
+     "mode": 0,
+     "harmonic_thz": -5.665567245652907,
+     "start_thz": 0.3
+    },
+    {
+     "iq": 7,
+     "q": [
+      6.413934348939958e-19,
+      -3.1621078508198185e-16,
+      0.12394501022844137
+     ],
+     "mode": 1,
+     "harmonic_thz": -5.665567245652885,
+     "start_thz": 0.3
+    }
+   ],
+   "n_replaced": 12,
+   "identical_to_A": false
+  },
+  "dyn_meta": {
+   "nqirr": 4,
+   "nq": 8,
+   "nat_prim": 5,
+   "nat_supercell": 40
+  },
+  "global_seed": 1,
+  "stopping_criteria": {
+   "meaningful_factor": 0.2,
+   "abs_conv_thr": 1e-08,
+   "kong_liu_ratio": 0.5,
+   "converge_min_kl_ratio": 0.7,
+   "gradi_op": "all",
+   "minim_struct": true,
+   "max_steps_per_pop": 400,
+   "max_pop": 30,
+   "n_configs_per_population": 1000,
+   "root_representation": "root2",
+   "min_step_dyn": 0.5,
+   "precond_dyn": true,
+   "use_julia": false,
+   "gradient_error_source": "serial get_preconditioned_gradient error via RealErrorEnsemble",
+   "semantics": {
+    "converged": "gc < meaningful_factor * gc_err AND gw < meaningful_factor * gw_err (or < abs_conv_thr), gradi_op 'all' (SchaMinimizer.py:1622-1651). gc_err is the library's serial stochastic error (module_stochastic.f90:270-274), not the parallel wrapper's placeholder (Ensemble.py:2657); it is set to zero where KL/N at the gradient is below converge_min_kl_ratio, so convergence cannot be declared at a statistically invalid point. Its scale is the Fourier transform of the real-space error matrix (coherent at Gamma), divided by sqrt(nsym*nq) (:456): a 1/sqrt(N_eff) noise scale, not a calibrated z-score. The structures here have no free Wyckoff parameter, so gw is zero by symmetry and the test reduces to gc",
+    "converged_dyn": "a converged population is not restored (:1391), so the final dyn is one step past the gradient that passed; kl_ratio_at_end is the KL after it",
+    "population_end": "converged, KL/N < kong_liu_ratio on a new direction (:1654-1661), or max_steps_per_pop steps (max_ka reset per population by the pre hook)",
+    "relax_end": "a converged population (Relax.py:410-411), max_pop populations, or the wall-clock cap (the post hook ends the current population after one more step and sets max_pop so no new population is drawn, Relax.py:412-416)",
+    "restore": "an unconverged population discards its last step (SchaMinimizer.py:1389-1397)"
+   }
+  },
+  "error": "AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex",
+  "traceback": "Traceback (most recent call last):\n  File \"/root/mlip-dynamic-stability/scripts/sscha_seed_study.py\", line 2796, in _run_converged_start\n    (run_converged_mock if args.dry_run else run_converged_sscha)(ctx, s, sp, entry)\n  File \"/root/mlip-dynamic-stability/scripts/sscha_seed_study.py\", line 2252, in run_converged_sscha\n    converged = bool(relaxer.relax(get_stress=False))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mace/lib/python3.11/site-packages/sscha/Relax.py\", line 388, in relax\n    self.minim.run(custom_function_pre = self.__cfpre__,\n  File \"/root/env-mace/lib/python3.11/site-packages/sscha/SchaMinimizer.py\", line 1300, in run\n    timer.execute_timed_function(self.minimization_step, custom_function_gradient)\n  File \"/root/env-mace/lib/python3.11/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mace/lib/python3.11/site-packages/sscha/SchaMinimizer.py\", line 652, in minimization_step\n    timer.execute_timed_function(self.update)\n  File \"/root/env-mace/lib/python3.11/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mace/lib/python3.11/site-packages/sscha/SchaMinimizer.py\", line 1008, in update\n    timer.execute_timed_function(self.ensemble.update_weights, self.dyn, self.ensemble.current_T)\n  File \"/root/env-mace/lib/python3.11/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mace/lib/python3.11/site-packages/sscha/Ensemble.py\", line 1926, in update_weights\n    w_new, pols, wqn, polsqn = timer.execute_timed_function(new_dynamical_matrix.DiagonalizeSupercell, return_qmodes=True)\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mace/lib/python3.11/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mace/lib/python3.11/site-packages/cellconstructor/Phonons.py\", line 4015, in DiagonalizeSupercell\n    assert np.max(np.abs(np.imag(self.dynmats[iq]))) < __EPSILON__, \"Error, at point {} (q = -q + G) the dynamical matrix is complex\".format(iq)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex\n",
+  "relax_partial": {
+   "reason": "exception",
+   "steps": [],
+   "hook_errors": [],
+   "pop_start_aux_min_nonac_thz": {},
+   "controller": {
+    "steps_per_pop": 400,
+    "pops": {
+     "1": {
+      "n_fe_at_start": 1,
+      "max_ka_set": 400,
+      "t_first_step_s": 141.89652705192566
+     }
+    },
+    "capped": null,
+    "deadline_after_s": 10799.999984741211,
+    "errors": []
+   }
+  },
+  "wall_s": 147.99521565437317,
+  "utc_end": "2026-09-27T08:47:25Z",
+  "provenance": {
+   "git_head": "c25d0b3",
+   "host": "db4a641a37b8",
+   "packages": {
+    "numpy": "2.2.2",
+    "scipy": "1.17.1",
+    "ase": "3.29.0",
+    "phonopy": "4.4.0",
+    "spglib": "2.7.0",
+    "torch": "2.6.0+cu124",
+    "pandas": "3.0.5",
+    "pyarrow": "25.0.1",
+    "pymatgen": "2026.5.4",
+    "python-sscha": "1.6.1",
+    "CellConstructor": "1.6.2",
+    "julia": null,
+    "mace-torch": "0.3.16"
+   },
+   "model_version": "mace-torch=0.3.16;ckpt=medium",
+   "device": "cuda",
+   "omp_num_threads": "2"
+  }
+ },
+ "last_written_utc": "2026-09-27T08:47:25Z"
+}
