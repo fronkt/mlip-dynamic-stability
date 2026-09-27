@@ -29,15 +29,30 @@ Everything that feeds the paper is in `tasks/revision-claims-2026-09-27.md` (§9
   ZrO2/MACE 100 K −22.4 / −26.0 → UNSTABLE, correct (production +3.09 was the non-convergence);
   MatterSim Zr 2×2×2: 50 K +0.41/+0.41, 300 K +0.92/+0.93; **3×3×3 300 K −0.92/−0.95** (bcc 2×2×2 stability is a
   finite-size effect). BaTiO3 start B at 0.3 THz fails (complex-dyn assertion) — the 1.0 THz retry is in `_b1/`.
-- C3a PBE along the screen paths (6 systems incl. KNbO3, CsSnBr3) and C3b PBE on SSCHA configs: see the
-  bottom of this block for completion status. Outputs: `results/revision/dft/` (analyze locally:
-  `python scripts/dft_reference.py analyze`).
+- **C3a PBE along the screen paths (6 systems incl. KNbO3, CsSnBr3): 380/380 pw.x jobs JOB DONE. C3b PBE on
+  SSCHA configs + rattled baseline: 68/68 JOB DONE.** Queue logs: 377 + 68 ok, 0 SCF-not-converged; the 3 C3a
+  failures (QE d_matrix error 14 on the CHGNet-relaxed, slightly off-cubic BaTiO3 cell:
+  `a_batio3_cubic_chgnet_q0-0-0-b0_i00`, `..._q1d2-1d2-0-b0_i00`, `..._i01`) were rerun with `nosym=.true.`
+  (pw.in edited by hand; original in `pw.in.orig_sym`, reason in `NOSYM_NOTE.txt`, failed output in
+  `pw.out.failed`) → ok. job.json does not record nosym; **do not run `qe-inputs --force`** on these three or
+  analyze will mark their outputs `stale_output`. NOT YET ANALYZED. Everything committed (5549086, 222465e):
+  `results/revision/dft/{geom,geom_c3b,mlip,qe,logs}`; `.gitattributes` keeps that tree byte-exact because
+  analyze hashes the geometry files and byte-compares pw.in with pw.in.ran (verified: committed blob sha =
+  working copy = the `geom_sha256` MLIP-eval recorded on the box). Not in git: the 533 unselected `ax_*` C3a
+  inputs (never run) and pw.err (gfortran IEEE notes only) — both in the raw archive.
+- **Box 52872517 DESTROYED 2026-09-27 ~22:32 UTC** after all runs finished (vast credit left $17.80). Nothing
+  runs anywhere. Raw archives in `C:\Users\frank\mlip-rsc-revision-raw\` (local only, not yet on Zenodo):
+  `box_final_2026-09-27.tar.gz` (64 MB, 6,093 files, verified count + gzip: full `results/revision/dft`,
+  C1c `sscha_converged{,_b1}` incl. `work/` ensembles, box `logs/`, `aside/`, c1c/c3b driver scripts);
+  `sscha_work_2026-09-27.tar.gz` (C1 seeds); `dft_c3a_2026-09-27.tar.gz` (superseded by box_final). The C1c
+  `work/` ensembles are also extracted into the repo tree (gitignored). A new box needs `setup_rsc_box.sh` +
+  the as-run notes in `scripts/box/as_run/README.md` (SSSP API URL).
 - **Found by the letter integrator:** the screen's symmetric-point curvature is positive BY CONSTRUCTION (= trial
   stiffness), so "52/57" was circular; the informative count is the screen CALL (46/57). Fixed everywhere; lesson
   in `tasks/lessons.md`. H2's 17 v 4 depends on the frozen-cell convention (7 v 4 to 24 v 4).
 
 **Next session, in order:**
-1. `python scripts/dft_reference.py analyze` on the pulled C3a/C3b outputs → R1.1 (does the PBE-backed screen reproduce
+1. `python scripts/dft_reference.py analyze` on the committed C3a/C3b outputs (runs locally, no box) → R1.1 (does the PBE-backed screen reproduce
    the MLIP calls on BaTiO3/KNbO3/CsSnBr3? decides whether the H2 counterexamples are screen error or model error) and
    R1.2 (MLIP force error on SSCHA-sampled vs near-equilibrium configs). Adversarially verify before writing.
 2. Decide the converged-SSCHA GRID (`--preset grid`, ~105 units, start A, ~5–7 GPU-h, ~$4): needed if §3.3 keeps a
@@ -103,17 +118,17 @@ Every study writes its own JSON/parquet under `results/revision/` and records th
   small/medium/large, MatterSim 1M/5M). Scores: cross-model force RMS deviation per (system, T) for
   the consensus test, and per-model deviation from the ensemble mean for the per-unit test. Clustered
   AUC, with and without ORB-v2.
-- [ ] **C3a PBE along the soft-mode coordinates (R1.1).** `scripts/dft_reference.py` + QE (conda-forge),
+- [x] **C3a PBE along the soft-mode coordinates (R1.1).** RUN 09-27: 380/380 JOB DONE (3 via nosym rerun); analysis pending. `scripts/dft_reference.py` + QE (conda-forge),
   SSSP pseudopotentials. SrTiO3 R tilt, BaTiO3 Γ/deciding mode (each model's pattern), bcc-Zr N
   point, ZrO2 X point. All five MLIPs re-evaluated on the identical geometries. Outputs: E(Q) curves,
   well depths, and the single-mode screen's call re-solved on the PBE-fitted potential.
-- [ ] **C3b PBE forces on SSCHA-sampled configurations (R1.2).** 12–16 configurations per C1 unit.
+- [x] **C3b PBE forces on SSCHA-sampled configurations (R1.2).** RUN 09-27: 68/68 JOB DONE; analysis pending. 12–16 configurations per C1 unit.
   MLIP-vs-PBE force and energy error on thermally sampled configurations, against a near-equilibrium
   baseline. This is the out-of-distribution test R1.2 asks for.
 - [x] **C4 Displacement sweep, remaining four models.** DONE 09-27 (a27e1e3): MACE/MatterSim/SevenNet no flips; CHGNet controls only; ORB-v2 flips test systems. `scripts/run_disp_sweep.py --device cuda`.
 - [ ] **C5 bcc finite-size, re-measured.** zr_bcc SSCHA 2×2×2 vs 3×3×3 at 100 and 300 K for
   MatterSim and MACE-MP-0 in the current envs (the deposited 3×3×3 rows are June v1).
-- [ ] C6 Pull everything back; destroy the box the moment it is idle.
+- [x] C6 Pull everything back; destroy the box the moment it is idle. DONE 09-27 ~22:32 UTC (see RESUME block).
 
 ## Phase 2 — Zero-compute statistics and sensitivity (parallel with Phase 1)
 
