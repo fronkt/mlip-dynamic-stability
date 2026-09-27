@@ -40,3 +40,8 @@ Thumbs.db
 mp_api_key.txt
 
 !results/convergence_study.parquet
+
+# Revision compute: raw SSCHA ensembles are deposited on Zenodo, not in git
+results/revision/*/work/
+results/revision/*/locks/
+results/revision/sscha_seeds/_dryrun/

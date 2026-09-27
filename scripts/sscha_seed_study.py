@@ -55,6 +55,25 @@ Usage (from the repo root, inside the model's env on the GPU box):
     python scripts/sscha_seed_study.py --system batio3_cubic --model mace_mp0 --T 100 --dry-run --device cpu --out-dir <scratch>
 Resumable: a seed whose status is "ok" is skipped, and so is a "failed" one unless
 --retry-failed is given. A seed left "running" by a dead box is recomputed.
+
+Converged mode (C1c; the seed-study paths above are untouched). The box runs showed that no
+production relaxation converges, and that python-sscha 1.6.1's convergence test compares the
+gradient with a placeholder error of ones (Ensemble.py:2657), not its stochastic error. This mode
+relaxes to genuine convergence (real error, per-population step cap, Kong-Liu guard; the reasons
+and source lines are in the comment block above CONV_PRESET) from two starts per unit, A = the
+production ForcePositiveDefinite start and B = imaginary modes set to a small positive
+frequency, and records per population and per step what the minimiser did. Outputs under
+results/revision/sscha_converged/: <unit>_start<A|B>.json (flushed at every population end),
+<unit>_AB.json (start comparison), work/<unit>_start<S>/ (dyn_pop*, dyn files, Hessian ensemble).
+    python scripts/sscha_seed_study.py --preset converged --list
+    python scripts/sscha_seed_study.py --preset converged                # both starts, this env
+    python scripts/sscha_seed_study.py --converge --system batio3_cubic --model mace_mp0 --T 100 --start B
+    python scripts/sscha_seed_study.py --converge --summarize
+    python scripts/sscha_seed_study.py --preset converged --dry-run --device cpu --out-dir <scratch>
+Resumable per (unit, start) with the seed study's rules; --unit-timeout caps each relaxation
+(between minimiser steps only: wrap every box process in `timeout` for true hangs). A flock per
+(unit, start) under <out>/locks/ keeps two processes off the same start; a killed run's partial
+history moves to previous_runs when it is recomputed.
 """
 from __future__ import annotations
 
@@ -81,7 +100,9 @@ if str(REPO) not in sys.path:
 
 import numpy as np  # noqa: E402
 
-SCRIPT = "scripts/sscha_seed_study.py"
+# The file actually run ("scripts/sscha_seed_study.py" under its own name), so a copy run beside
+# it (e.g. while the committed one is in use on the box) records its own name with its sha256.
+SCRIPT = Path(__file__).resolve().relative_to(REPO).as_posix()
 SCHEMA = "sscha_seed_study/v1"
 STUDY_DIR = REPO / "results" / "revision" / "sscha_seeds"
 LEDGER_TOL_THZ = 0.02
@@ -1584,6 +1605,1325 @@ def _dig(d, *keys):
     return d
 
 
+# ======================================================= C1c: converged SSCHA mode ====
+#
+# The seed study showed that no production run converges: the cumulative max_ka = 20 stops
+# population 1 after 19 kept steps and lets populations 2-8 take one discarded step each, so the
+# final Hessian sits within ~0.2 THz of the ForcePositiveDefinite start. This mode asks whether
+# "SSCHA calls the deep displacive wells stable" survives a relaxation that actually converges.
+# Read from the python-sscha 1.6.1 sdist (line numbers are that source's):
+#
+#  * The convergence test is gc < meaningful_factor * gc_err (and the same for gw), gradi_op
+#    "all" (SchaMinimizer.py:1622-1651); the docstring calls meaningful_factor "the ration
+#    between the gradient and its error below which the minimization is considered to be
+#    converged" (:132-134), default 0.2 (:113).
+#  * Without julia that "error" is a placeholder. minimization_step takes the dyn gradient from
+#    get_preconditioned_gradient_parallel (:357-364), which computes the serial gradient AND its
+#    stochastic error and then returns `gradient, np.zeros_like(gradient) + 1` (Ensemble.py:
+#    2641-2657). After the division by sqrt(QE_nsym * prod(supercell)) (:456) gc_err is the
+#    constant 3*nat/sqrt(nsym) = 2.165 (BaTiO3), 1.299 (ZrO2), 0.433 (Zr) in every step of every
+#    box run, whatever the ensemble. meaningful_factor has therefore been an absolute threshold
+#    on gc (1e-4 * 2.165 = 2.2e-4 for BaTiO3), not a noise test; that is why an uncapped
+#    population chased the gradient for 1000+ steps.
+#  * The discarded error is a real one: the serial routine's average_error_weight is the
+#    standard error of the reweighted mean (SCHAModules/module_stochastic.f90:237-284, 1/sqrt(N)
+#    delta-method ratio estimator). RealErrorEnsemble hands exactly that back to the minimiser;
+#    the gradient that drives the step is still the library's parallel one, so the trajectory is
+#    unchanged and only the stopping test gains its documented meaning. Caveat on its scale: the
+#    per-element real-space error matrix is Fourier transformed like a force-constant matrix
+#    (GetDynQFromFCSupercell(..., fc2=grad_err), Ensemble.py:2786-2803; Phonons.py:4586-4587), so
+#    the nq supercell images add coherently at Gamma and cancel at q != 0. Its norm is about
+#    sqrt(nq) times a q-resolved error norm, and after the /sqrt(nsym*nq) of :456 the pure-noise
+#    value of gc/gc_err depends on the unit's symmetry (roughly sqrt(nsym * d_sym / d_total),
+#    O(1-2) here). It is a noise scale that falls as 1/sqrt(N_eff), which is what the stopping
+#    test needs, but gc/gc_err is not a calibrated z-score; the fresh-ensemble check below is.
+#  * check_stop tests convergence BEFORE the Kong-Liu stop (:1648 vs :1656), after every
+#    evaluation including rejected line-search trials (run() :1360-1364; Minimizer.run_step
+#    :231-251 retries along the old direction), and the ratio-estimator error grows as the
+#    weights degenerate. A trial point with KL/N ~ 0.03 (seen at 600 K) could pass with a real
+#    error. The guard: at a gradient evaluated where KL/N < converge_min_kl_ratio the returned
+#    error is zero, so no convergence can be declared there. 0.7 is the FAQ's Hessian condition
+#    ("the SSCHA minimization must end with a gradient that can be decreased indefinitely
+#    without decreasing the KL below 0.7 /0.8", UserGuide/faq.rst:214).
+#  * max_ka is compared with the cumulative history (:1370; Relax re-enters init with
+#    delete_previous_data=False, Relax.py:386). The per-population cap is set from the pre-step
+#    hook at each population's first step: max_ka = len(__fe__) + cap - 1 allows exactly `cap`
+#    steps (each step appends one __fe__, :1315). A capped population keeps all but its last
+#    step (:1389-1397) and the next population is drawn from there.
+#  * Kong-Liu 0.5 is the library default and the FAQ's "good and safe value" (faq.rst:301); the
+#    line search caps each accepted direction at a 10% KL drop (Minimizer.py:61, 242), so a
+#    population ends after ~6-7 accepted directions (~50-70 evaluations on the box logs).
+#  * "when your calculation stops because it converged (not because it runs out of
+#    iterations), then it should be well converged" (faq.rst:196); "The free energy hessian
+#    requires much more configurations than the SCHA minimization" (faq.rst:214); the gradient
+#    error scales as 1/sqrt(N) (faq.rst:284).
+#
+# Convergence evidence recorded per (unit, start): the library's own stop reason with the real
+# error; KL at the converged gradient; an independent test on the FRESH Hessian ensemble drawn
+# at the final dyn (KL = 1); and start independence. The fresh test is calibrated on the data,
+# not on the library's error normalisation: the symmetrised gradient is recomputed on K disjoint
+# antithetic-pair splits, whose spread gives its pure-noise expectation, R = |g|^2 / tr Cov(g)
+# is ~1 at the exact SCHA minimum, and at a dyn that carries the last population's own sampling
+# error it is ~1 + n_hessian / (KL * n_configs); much larger means a systematic gradient remains.
+# A converged population keeps the step taken from its converged gradient (no restore when
+# converged, SchaMinimizer.py:1391), so the final dyn is one step past that gradient; kl_ratio
+# after that step is recorded. Start A is the production start (ForcePositiveDefinite,
+# imaginary omega -> |omega|, far above the instability); start B replaces each imaginary
+# non-acoustic mode by a small positive frequency (start_b_thz) and leaves every other mode as
+# ForcePositiveDefinite builds it. A converged SSCHA reaches the same auxiliary dyn and Hessian
+# from both. B draws from global seed base+1, A from base: shared random numbers would make the
+# two Hessians agree beyond what their bootstrap sd (which assumes independent noise) allows.
+
+CONV_PRESET = "converged"
+CONV_SCHEMA = "sscha_converged/v1"
+CONV_DIR = REPO / "results" / "revision" / "sscha_converged"
+CONV_STARTS = ("A", "B")
+CONV_SEED = 0
+CONV_MEANINGFUL = 0.2        # SchaMinimizer.py:113, with the REAL error (RealErrorEnsemble)
+CONV_KL_RATIO = 0.5          # SchaMinimizer.py:113; faq.rst:301
+CONV_MIN_KL = 0.7            # faq.rst:214; KL/N required at a gradient that may converge
+CONV_DEFAULTS = {"n_configs": 1000, "max_pop": 30, "n_hessian": 2000, "max_steps_per_pop": 400,
+                 "start_b_thz": 0.3, "unit_timeout_s": 7200.0}
+CONV_SALT = 20260929
+FRESH_SPLITS = 8             # disjoint antithetic-pair splits for the fresh-gradient noise estimate
+# R / R_expected at or below this: the fresh gradient is consistent with a converged dyn. Under
+# that hypothesis R / R_expected is roughly chi^2_d / d with d the number of symmetric gradient
+# components (a handful for bcc Zr, tens for the perovskites); 2.5 is its ~97% point at d = 5.
+FRESH_R_FACTOR_OK = 2.5
+AB_Z_TOL = 3.0               # |Hessian min A - B| within 3 combined bootstrap sd: start-independent
+IMAG_REPLACE_TOL_THZ = 1e-3  # start B replaces only modes below -1e-3 THz (not numerical zeros)
+FLUSH_EVERY_STEPS = 50
+
+CONV_SEMANTICS = {
+    "converged": "gc < meaningful_factor * gc_err AND gw < meaningful_factor * gw_err (or < "
+                 "abs_conv_thr), gradi_op 'all' (SchaMinimizer.py:1622-1651). gc_err is the "
+                 "library's serial stochastic error (module_stochastic.f90:270-274), not the "
+                 "parallel wrapper's placeholder (Ensemble.py:2657); it is set to zero where "
+                 "KL/N at the gradient is below converge_min_kl_ratio, so convergence cannot be "
+                 "declared at a statistically invalid point. Its scale is the Fourier transform "
+                 "of the real-space error matrix (coherent at Gamma), divided by "
+                 "sqrt(nsym*nq) (:456): a 1/sqrt(N_eff) noise scale, not a calibrated z-score. "
+                 "The structures here have no free Wyckoff parameter, so gw is zero by symmetry "
+                 "and the test reduces to gc",
+    "converged_dyn": "a converged population is not restored (:1391), so the final dyn is one "
+                     "step past the gradient that passed; kl_ratio_at_end is the KL after it",
+    "population_end": "converged, KL/N < kong_liu_ratio on a new direction (:1654-1661), or "
+                      "max_steps_per_pop steps (max_ka reset per population by the pre hook)",
+    "relax_end": "a converged population (Relax.py:410-411), max_pop populations, or the "
+                 "wall-clock cap (the post hook ends the current population after one more step "
+                 "and sets max_pop so no new population is drawn, Relax.py:412-416)",
+    "restore": "an unconverged population discards its last step (SchaMinimizer.py:1389-1397)",
+}
+
+CONVERGED_UNITS = [
+    dict(system="batio3_cubic", model="mace_mp0", T=100.0, supercell=(2, 2, 2), item="C1c",
+         why="Table S2 false-stable: harmonic Gamma mode -6.3 THz; production SSCHA stayed at "
+             "the ForcePositiveDefinite start"),
+    dict(system="zro2_cubic", model="mace_mp0", T=100.0, supercell=(2, 2, 2), item="C1c",
+         why="fluorite false-stable: harmonic -5.5 THz; production SSCHA stayed at the start"),
+    dict(system="srtio3_cubic", model="mace_mp0", T=100.0, supercell=(2, 2, 2), item="C1c",
+         why="positive control: labelled unstable at 100 K (AFD R mode, transition 105 K); a "
+             "converged SSCHA should call it unstable"),
+    dict(system="zr_bcc", model="mattersim", T=50.0, supercell=(2, 2, 2), item="C1c",
+         why="bcc with a harmonic instability (-2.0 THz), low T"),
+    dict(system="zr_bcc", model="mattersim", T=300.0, supercell=(2, 2, 2), item="C1c",
+         why="bcc at 300 K on the ledger's 2x2x2 cell"),
+    dict(system="zr_bcc", model="mattersim", T=300.0, supercell=(3, 3, 3), item="C1c",
+         why="bcc at 300 K, 3x3x3: the production 3x3x3 run gave -2.1 THz against +1.95 on 2x2x2"),
+]
+
+
+def conv_base_dir(args) -> Path:
+    if args.out_dir:
+        return Path(args.out_dir).resolve()
+    return CONV_DIR / "_dryrun" if args.dry_run else CONV_DIR
+
+
+def conv_paths(base: Path, tag: str, start: str) -> dict:
+    work = Path(base) / "work" / f"{tag}_start{start}"
+    return {"json": Path(base) / f"{tag}_start{start}.json", "work": work,
+            "ensemble": work / "hessian_ensemble", "compare": Path(base) / f"{tag}_AB.json"}
+
+
+def converged_recipe(args) -> dict:
+    """The production recipe (relax, disp, fmax, root2, min_step_dyn, imag_tol) with the
+    relaxation and Hessian settings of the converged mode on top. Stored in every JSON; a run
+    with a different recipe refuses to write into a file made with another one."""
+    r = production_recipe()
+    r.update(n_configs=int(args.conv_n_configs), max_pop=int(args.conv_max_pop),
+             n_hessian=int(args.conv_n_hessian), meaningful_factor=CONV_MEANINGFUL,
+             max_ka="per_population", max_steps_per_pop=int(args.conv_steps_per_pop),
+             kong_liu_ratio=CONV_KL_RATIO, converge_min_kl_ratio=CONV_MIN_KL,
+             gradient_error="serial_stochastic_error", start_b_thz=float(args.start_b_thz),
+             # julia's get_fourier_gradient (SchaMinimizer.py:350-354) would bypass the real-error
+             # subclass and its KL guard; the box envs have no julia, and this keeps it so.
+             use_julia=False,
+             seed=CONV_SEED, seed_rule="np.random.seed(seed + index of start), A=0, B=1",
+             fresh_splits=FRESH_SPLITS)
+    return r
+
+
+def conv_global_seed(R: dict, start: str) -> int:
+    return int(R["seed"]) + CONV_STARTS.index(start)
+
+
+def real_error_ensemble_class(base, log: list, min_kl_ratio: float):
+    """A subclass of ``base`` (sscha.Ensemble.Ensemble) whose get_preconditioned_gradient_parallel
+    returns the library's parallel gradient together with the library's serial stochastic error
+    instead of the placeholder array of ones (Ensemble.py:2657).
+
+    The serial routine is the one the parallel wrapper already calls per chunk and whose error it
+    discards (Ensemble.py:2641); on one process the chunk is the whole ensemble, so the two
+    gradients agree to rounding and the relative difference is logged at every call. Where KL/N at
+    the gradient is below ``min_kl_ratio`` the returned error is zero (no convergence can be
+    declared there); a failure of the serial call also returns zero, never the placeholder.
+    Ensemble fixes its attribute set (Ensemble.py:276-304), so the diagnostics go to ``log``."""
+
+    class RealErrorEnsemble(base):
+        def get_preconditioned_gradient_parallel(self, *args, timer=None, **kwargs):
+            t0 = time.time()
+            grad, placeholder = base.get_preconditioned_gradient_parallel(self, *args, timer=timer,
+                                                                          **kwargs)
+            rec = {"call": len(log), "t_parallel_s": time.time() - t0,
+                   "placeholder_raw_norm": float(np.linalg.norm(np.asarray(placeholder)))}
+            try:
+                t1 = time.time()
+                sub = args[0] if args else kwargs.get("subtract_sscha", True)
+                kw = {k: v for k, v in kwargs.items() if k not in ("subtract_sscha", "return_error")}
+                g_ser, err = self.get_preconditioned_gradient(sub, True, *args[2:], **kw)
+                err = np.array(err, dtype=np.complex128)
+                g = np.asarray(grad)
+                gn = float(np.linalg.norm(g))
+                dn = float(np.linalg.norm(np.asarray(g_ser) - g))
+                kl = float(self.get_effective_sample_size()) / float(self.N)
+                rec.update(t_serial_s=time.time() - t1, kl_ratio_at_gradient=kl,
+                           err_raw_norm=float(np.linalg.norm(err)),
+                           grad_rel_diff_parallel_vs_serial=(dn / gn if gn > 0 else dn),
+                           guarded=bool(kl < min_kl_ratio))
+                if rec["guarded"]:
+                    err[...] = 0.0
+                log.append(rec)
+                return grad, err
+            except Exception as exc:
+                rec.update(error=f"{type(exc).__name__}: {exc}", guarded=True)
+                log.append(rec)
+                return grad, np.zeros(np.shape(placeholder), dtype=np.complex128)
+
+    RealErrorEnsemble.__name__ = RealErrorEnsemble.__qualname__ = f"RealError{base.__name__}"
+    return RealErrorEnsemble
+
+
+class PopulationController:
+    """``custom_function_pre`` / post companion that turns the cumulative max_ka into a
+    per-population cap and enforces a wall-clock cap on the relaxation.
+
+    pre(): at a population's first step (Relax sets minim.population before init and run,
+    Relax.py:385-388) it sets max_ka = len(__fe__) + cap - 1, and flushes the previous
+    population's record. post(): past the deadline it sets max_ka = len(__fe__) (run() stops
+    after one more step, SchaMinimizer.py:1370) and relaxer.max_pop = population (Relax draws no
+    further population, Relax.py:412-416), so a capped run ends with the dyn and history it had.
+    It never touches the dyn, the ensemble or the RNG."""
+
+    def __init__(self, relaxer, steps_per_pop: int, deadline=None, on_flush=None,
+                 flush_every: int = FLUSH_EVERY_STEPS):
+        self.relaxer = relaxer
+        self.cap = max(1, int(steps_per_pop))
+        self.deadline = deadline
+        self.on_flush = on_flush
+        self.flush_every = int(flush_every)
+        self.t0 = time.time()
+        self.cur_pop = None
+        self.pops: dict[int, dict] = {}
+        self.capped = None
+        self.errors: list[str] = []
+        self._since_flush = 0
+
+    def state(self) -> dict:
+        return {"steps_per_pop": self.cap, "pops": self.pops, "capped": self.capped,
+                "deadline_after_s": (None if self.deadline is None else self.deadline - self.t0),
+                "errors": self.errors}
+
+    def _flush(self, reason: str):
+        self._since_flush = 0
+        if self.on_flush is not None:
+            try:
+                self.on_flush(reason)
+            except Exception as exc:
+                self.errors.append(f"flush: {type(exc).__name__}: {exc}")
+
+    def pre(self, minim):
+        try:
+            pop = int(minim.population)
+            if pop == self.cur_pop:
+                return
+            prev, self.cur_pop = self.cur_pop, pop
+            n0 = len(getattr(minim, "__fe__"))
+            if self.capped is None:
+                minim.max_ka = n0 + self.cap - 1
+            self.pops[pop] = {"n_fe_at_start": n0, "max_ka_set": int(minim.max_ka),
+                              "t_first_step_s": time.time() - self.t0}
+            if prev is not None:
+                self._flush(f"end of population {prev}")
+        except Exception as exc:
+            self.errors.append(f"pre: {type(exc).__name__}: {exc}")
+
+    def post(self, minim):
+        try:
+            now = time.time()
+            row = self.pops.get(self.cur_pop)
+            if row is not None:
+                row["t_last_step_s"] = now - self.t0
+            if self.capped is None and self.deadline is not None and now > self.deadline:
+                n = len(getattr(minim, "__fe__"))
+                minim.max_ka = n
+                self.relaxer.max_pop = int(minim.population)
+                self.capped = {"pop": int(minim.population), "n_fe": n, "t_s": now - self.t0}
+                print(f"[wall cap] relaxation stopped in population {minim.population} after "
+                      f"{now - self.t0:.0f} s", flush=True)
+            self._since_flush += 1
+            if self._since_flush >= self.flush_every:
+                self._flush("periodic")
+        except Exception as exc:
+            self.errors.append(f"post: {type(exc).__name__}: {exc}")
+
+
+class ConvRecorder(StepRecorder):
+    """StepRecorder plus, per step, the real gradient error from RealErrorEnsemble's log, scaled
+    exactly as minimization_step scales the error it is handed (/ sqrt(QE_nsym * prod(supercell)),
+    SchaMinimizer.py:456, with QE_nsym stored as minim.N_symmetries, :337), the KL at the
+    gradient, whether the guard fired, and the wall time. Read-only like its parent."""
+
+    def __init__(self, ry_to_thz: float, grad_log: list):
+        super().__init__(ry_to_thz)
+        self.grad_log = grad_log
+        self._seen = 0
+        self.t0 = time.time()
+
+    def post(self, minim):
+        n = len(self.steps)
+        super().post(minim)
+        new = self.grad_log[self._seen:]
+        self._seen = len(self.grad_log)
+        if len(self.steps) == n:
+            return
+        try:
+            st = self.steps[-1]
+            st["t_s"] = time.time() - self.t0
+            st["n_gradient_calls"] = len(new)
+            if new:
+                g = new[-1]
+                div = math.sqrt(float(getattr(minim, "N_symmetries", 1) or 1)
+                                * float(np.prod(np.asarray(minim.ensemble.supercell))))
+                real = g.get("err_raw_norm")
+                st["gc_err_real"] = None if real is None else real / div
+                st["gc_err_placeholder"] = g["placeholder_raw_norm"] / div
+                st["gc_over_err_real"] = (st["gc"] / st["gc_err_real"]
+                                          if st.get("gc_err_real") else None)
+                st["kl_ratio_at_gradient"] = g.get("kl_ratio_at_gradient")
+                st["convergence_guarded"] = g.get("guarded")
+                st["grad_rel_diff_parallel_vs_serial"] = g.get("grad_rel_diff_parallel_vs_serial")
+                st["t_gradient_s"] = (g.get("t_parallel_s") or 0.0) + (g.get("t_serial_s") or 0.0)
+                if g.get("error"):
+                    st["gradient_error_failure"] = g["error"]
+        except Exception as exc:
+            self.errors.append(f"conv: {type(exc).__name__}: {exc}")
+
+
+def wire_conv_hooks(relaxer, ry: float, grad_log: list, R: dict, ctx: dict, out: dict):
+    """Attach recorder and controller to the relaxer. The deadline counts from here, i.e. it caps
+    the relaxation; the Hessian ensemble and bootstrap after it are bounded by n_hessian/n_boot."""
+    rec = ConvRecorder(ry, grad_log)
+    timeout = float(ctx.get("unit_timeout") or 0.0)
+    deadline = (time.time() + timeout) if timeout > 0 else None
+
+    def flush(reason):
+        out["relax_partial"] = {"reason": reason, "utc": utc_now(), "n_steps": len(rec.steps),
+                                "steps": rec.steps, "pop_start_aux_min_nonac_thz": rec.pop_start,
+                                "controller": ctrl.state(), "hook_errors": rec.errors}
+        ctx["flush"]()
+
+    ctrl = PopulationController(relaxer, R["max_steps_per_pop"], deadline, flush)
+
+    def post(minim):
+        n = len(rec.steps)
+        rec.post(minim)
+        ctrl.post(minim)
+        # A stop test fired: this is the population's last step, so write it now rather than
+        # at the next population's first step, which comes after N_configs force calls.
+        st = rec.steps[-1] if len(rec.steps) > n else {}
+        if st.get("stop_converged") or st.get("stop_kong_liu") or st.get("stop_max_ka"):
+            ctrl._flush(f"end of population {st.get('pop')} (stop test fired)")
+
+    relaxer.setup_custom_functions(custom_function_pre=ctrl.pre, custom_function_post=post)
+    out["_recorder"], out["_controller"] = rec, ctrl
+    return rec, ctrl
+
+
+def conv_stopping_criteria(minim, relaxer, R: dict) -> dict:
+    julia = bool(getattr(minim, "use_julia", False))
+    return {"meaningful_factor": float(minim.meaningful_factor),
+            "abs_conv_thr": float(minim.abs_conv_thr),
+            "kong_liu_ratio": float(minim.kong_liu_ratio),
+            "converge_min_kl_ratio": float(R["converge_min_kl_ratio"]),
+            "gradi_op": minim.gradi_op, "minim_struct": bool(minim.minim_struct),
+            "max_steps_per_pop": int(R["max_steps_per_pop"]), "max_pop": int(relaxer.max_pop),
+            "n_configs_per_population": int(relaxer.N_configs),
+            "root_representation": getattr(minim, "root_representation", None),
+            "min_step_dyn": getattr(minim, "min_step_dyn", None),
+            "precond_dyn": getattr(minim, "precond_dyn", None), "use_julia": julia,
+            "gradient_error_source": ("julia get_fourier_gradient error (native; the guard is "
+                                      "not applied)" if julia else
+                                      "serial get_preconditioned_gradient error via "
+                                      "RealErrorEnsemble"),
+            "semantics": CONV_SEMANTICS}
+
+
+def conv_population_table(steps: list, pop_start: dict, pop_end: dict, ctrl) -> list:
+    """population_table plus the converged-mode columns: the real error and gc/err at the last
+    step, KL at that gradient, whether the population ended converged, which cap ended it, and
+    its wall times (minimisation, and the gap before it = ensemble + forces + finalize)."""
+    rows = population_table(steps, pop_start, pop_end)
+    prev_end = 0.0
+    for r in rows:
+        p = r["pop"]
+        st = [s for s in steps if s["pop"] == p]
+        last = st[-1] if st else {}
+        c = ctrl.pops.get(p, {})
+        if r["stop_reason"] == "max_ka_cumulative":
+            r["stop_reason"] = ("wall_cap" if ctrl.capped and ctrl.capped["pop"] == p
+                                else "per_population_step_cap")
+        r["converged_at_end"] = r["stop_reason"] == "converged"
+        t1, t2 = c.get("t_first_step_s"), c.get("t_last_step_s")
+        r.update(gc_err_real_last=last.get("gc_err_real"),
+                 gc_over_err_real_last=last.get("gc_over_err_real"),
+                 kl_ratio_at_gradient_last=last.get("kl_ratio_at_gradient"),
+                 guarded_last=last.get("convergence_guarded"),
+                 gw_last=last.get("gw"), gw_err_last=last.get("gw_err"),
+                 n_fe_at_start=c.get("n_fe_at_start"), max_ka_set=c.get("max_ka_set"),
+                 t_first_step_s=t1, t_last_step_s=t2,
+                 minimization_wall_s=(t2 - t1 if t1 is not None and t2 is not None else None),
+                 ensemble_and_overhead_before_s=(t1 - prev_end if t1 is not None else None))
+        if t2 is not None:
+            prev_end = t2
+    return rows
+
+
+def conv_relax_block(rec, ctrl, pop_end: dict, converged: bool, n_pops: int, R: dict,
+                     grad_log: list) -> dict:
+    pops = conv_population_table(rec.steps, rec.pop_start, pop_end, ctrl)
+    last = rec.steps[-1] if rec.steps else {}
+    reason = "converged" if converged else ("wall_cap" if ctrl.capped else "max_pop")
+    diffs = [g["grad_rel_diff_parallel_vs_serial"] for g in grad_log
+             if g.get("grad_rel_diff_parallel_vs_serial") is not None]
+    kl_end = last.get("kl_ratio_at_gradient", last.get("kl_ratio"))
+    return {
+        "converged": bool(converged), "stop_reason": reason,
+        "not_converged_within_cap": reason == "wall_cap",
+        "n_populations": int(n_pops), "n_steps_total": len(rec.steps),
+        "n_force_evaluations_relax": int(n_pops) * int(R["n_configs"]),
+        "kl_ratio_at_end": last.get("kl_ratio"), "kl_ratio_at_gradient_end": kl_end,
+        "gc_over_err_real_end": last.get("gc_over_err_real"),
+        "faq_hessian_kl_ok": (bool(kl_end is not None and kl_end >= CONV_MIN_KL)
+                              if converged else None),
+        "gradient_checks": {
+            "n_calls": len(grad_log),
+            "n_guarded": sum(1 for g in grad_log if g.get("guarded")),
+            "n_errors": sum(1 for g in grad_log if g.get("error")),
+            "max_rel_diff_parallel_vs_serial": max(diffs) if diffs else None,
+            "mean_t_parallel_s": (float(np.mean([g["t_parallel_s"] for g in grad_log]))
+                                  if grad_log else None),
+            "mean_t_serial_s": (float(np.mean([g["t_serial_s"] for g in grad_log
+                                               if "t_serial_s" in g]))
+                                if any("t_serial_s" in g for g in grad_log) else None)},
+        "wall_cap": ctrl.capped, "controller": ctrl.state(),
+        "populations": pops, "steps": rec.steps, "hook_errors": rec.errors,
+        "units": {"gc / gc_err": "as the minimiser compares them (SchaMinimizer.py:596-600, "
+                                 "456); gc_err is 0 where the KL guard fired",
+                  "gc_err_real": "the serial stochastic error, same scaling, guard ignored",
+                  "gc_err_placeholder": "what the library's own test would have used",
+                  "kl_ratio": "KL/N after the step; kl_ratio_at_gradient: before it",
+                  "fe_Ry": "Ry per primitive cell"},
+    }
+
+
+def soften_imaginary_modes(dyn, w_small_ry: float, ry_to_thz: float):
+    """Start B: ForcePositiveDefinite's construction (cellconstructor Phonons.py:1576-1607: per q,
+    DyagDinQ, then Phi' = sqrt(M_a M_b) sum_mu w_mu^2 e_mu^a e_mu^b*), except that each imaginary
+    non-acoustic mode gets w_small^2 instead of |w|^2. Real modes, and the three acoustic modes at
+    Gamma (the three nearest zero, as nonacoustic_idx), are rebuilt exactly as there; modes
+    within IMAG_REPLACE_TOL_THZ of zero are left to that rule too. The caller symmetrizes, as
+    production does after ForcePositiveDefinite. Returns (new dyn, list of replaced modes)."""
+    out = dyn.Copy()
+    nat = out.structure.N_atoms
+    mass1 = np.zeros(3 * nat)
+    for i in range(nat):
+        mass1[3 * i: 3 * i + 3] = out.structure.masses[out.structure.atoms[i]]
+    msq = np.sqrt(np.outer(mass1, mass1))
+    replaced = []
+    for iq in range(len(out.dynmats)):
+        w, pols = out.DyagDinQ(iq)
+        w = np.real(np.asarray(w)).astype(float)
+        q = np.asarray(out.q_tot[iq], dtype=float)
+        acoustic = (set(int(i) for i in np.argsort(np.abs(w))[:3])
+                    if float(np.sqrt(q.dot(q))) < 1e-6 else set())
+        w2 = w ** 2
+        for i in range(len(w)):
+            if i not in acoustic and w[i] * ry_to_thz < -IMAG_REPLACE_TOL_THZ:
+                w2[i] = w_small_ry ** 2
+                replaced.append({"iq": iq, "q": q.tolist(), "mode": i,
+                                 "harmonic_thz": float(w[i] * ry_to_thz),
+                                 "start_thz": float(w_small_ry * ry_to_thz)})
+        out.dynmats[iq] = np.einsum("i, ji, ki", w2, pols, np.conj(pols)) * msq
+    return out, replaced
+
+
+def build_start(dyn_harm, start: str, start_b_thz: float, ry: float):
+    """(start dyn, record). A: the production start (finite_t.py:1039-1040). B: see
+    soften_imaginary_modes. Both symmetrized afterwards, as production does."""
+    if start == "A":
+        d = dyn_harm.Copy()
+        d.ForcePositiveDefinite()
+        d.Symmetrize()
+        return d, {"start": "A", "rule": "ForcePositiveDefinite (imaginary w -> |w|) + Symmetrize",
+                   "source": "finite_t.py:1039-1040 (the production start)"}
+    d, replaced = soften_imaginary_modes(dyn_harm, float(start_b_thz) / ry, ry)
+    d.Symmetrize()
+    return d, {"start": "B",
+               "rule": f"ForcePositiveDefinite construction with every imaginary non-acoustic mode "
+                       f"set to +{start_b_thz:g} THz instead of |w|, + Symmetrize",
+               "start_b_thz": float(start_b_thz), "replaced_modes": replaced,
+               "n_replaced": len(replaced), "identical_to_A": not replaced}
+
+
+def split_noise_statistic(g_full, parts) -> dict:
+    """R = |g|^2 / tr Cov(g) from K disjoint splits. ``parts`` is [(n_k, g_k)]: the gradient on
+    each split and its size in resampling units (antithetic pairs). With rho = 1 the gradient is
+    an average over configurations followed by linear maps (Fourier transform, SymmetrizeFCQ), so
+    g = sum_k (n_k/N) g_k (checked: lin_rel_err) and tr Cov(g) = sum_k n_k |g_k - g|^2 /
+    ((K-1) N). Pure numpy, so it is tested without sscha."""
+    g_full = np.asarray(g_full)
+    n = np.array([float(p[0]) for p in parts])
+    G = np.array([np.asarray(p[1]) for p in parts])
+    k, N = len(parts), float(n.sum())
+    gbar = np.tensordot(n / N, G, axes=1)
+    gnorm2 = float(np.sum(np.abs(g_full) ** 2))
+    lin = float(np.sqrt(np.sum(np.abs(gbar - g_full) ** 2) / gnorm2)) if gnorm2 > 0 else None
+    dev2 = np.array([float(np.sum(np.abs(G[i] - gbar) ** 2)) for i in range(k)])
+    tr_cov = float(np.sum(n * dev2) / ((k - 1) * N)) if k > 1 else None
+    r = gnorm2 / tr_cov if tr_cov else None
+    return {"K": int(k), "split_sizes": [int(x) for x in n], "lin_rel_err": lin,
+            "gnorm2": gnorm2, "tr_cov": tr_cov, "R": r,
+            "noise_ratio": None if r is None else math.sqrt(r)}
+
+
+def fresh_gradient_check(he, dyn, rng, n_relax: int, kl_relax_end, n_splits: int = FRESH_SPLITS) -> dict:
+    """The gradient on the fresh Hessian ensemble drawn AT the final auxiliary dyn (KL = 1), with
+    the symmetrization of minimization_step (non-spglib branch, SchaMinimizer.py:330-337, 449-451,
+    596). Unlike the last population's reweighted gradient, which the minimiser drove down on that
+    very ensemble, this one is independent.
+
+    Two numbers. gc_over_err uses the library's error and its /sqrt(nsym*nq) (:456); its
+    pure-noise value depends on the unit's symmetry and supercell (see the C1c comment block), so
+    it is recorded, not judged. The judged one is calibrated on the data: the same symmetrised
+    gradient on ``n_splits`` disjoint antithetic-pair splits (Ensemble.split, the library's own)
+    gives tr Cov(g), and R = |g|^2 / tr Cov(g) (split_noise_statistic). At the exact SCHA minimum
+    E[R] = 1; the relaxed dyn carries the last population's sampling error, which adds about
+    n_hessian / (KL * n_configs), so R_expected = 1 + that, and R / R_expected well above 1 means
+    a systematic gradient the relaxation did not remove. Reads the ensemble only; run it before
+    get_free_energy_hessian, which converts the ensemble's arrays in place (Ensemble.py:3669,
+    3818)."""
+    import cellconstructor as CC
+    import cellconstructor.symmetries  # noqa: F401
+    t = time.time()
+    qe_sym = CC.symmetries.QE_Symmetry(dyn.structure)
+    qe_sym.SetupQPoint(verbose=False)
+    nsym = int(qe_sym.QE_nsym)
+
+    def sym_grad(ens, with_error):
+        res = ens.get_preconditioned_gradient(True, with_error, preconditioned=1)
+        g, e = res if with_error else (res, None)
+        g = np.array(g, dtype=np.complex128)
+        qe_sym.SymmetrizeFCQ(g, dyn.q_stars, asr="custom")
+        return g, (None if e is None else np.array(e, dtype=np.complex128))
+
+    g, e = sym_grad(he, True)
+    e /= np.sqrt(nsym * np.prod(np.asarray(he.supercell)))
+    gc = float(np.sqrt(np.sum(np.abs(g) ** 2)))
+    gc_err = float(np.sqrt(np.sum(np.abs(e) ** 2)))
+    out = {"gc": gc, "gc_err": gc_err, "gc_over_err": gc / gc_err if gc_err > 0 else None,
+           "gc_over_err_note": "library error normalisation; not a calibrated z-score",
+           "kl_ratio": float(he.get_effective_sample_size()) / float(he.N),
+           "n_configs": int(he.N), "nsym": nsym}
+    try:
+        paired = antithetic_pairs_ok(he)
+        units = rng.permutation(he.N // 2 if paired else he.N)
+        parts = []
+        for grp in np.array_split(units, int(n_splits)):
+            mask = np.zeros(he.N, dtype=bool)
+            if paired:
+                mask[2 * grp] = True
+                mask[2 * grp + 1] = True
+            else:
+                mask[grp] = True
+            parts.append((len(grp), sym_grad(he.split(mask), False)[0]))
+        st = split_noise_statistic(g, parts)
+        kl = min(1.0, max(CONV_MIN_KL, float(kl_relax_end))) if kl_relax_end else 1.0
+        r_exp = 1.0 + float(he.N) / (kl * float(n_relax))
+        rr = st["R"] / r_exp if st["R"] is not None else None
+        out["split_null"] = {**st, "antithetic_pairs_verified": paired,
+                             "R_expected_if_converged": r_exp,
+                             "R_over_expected": rr, "threshold": FRESH_R_FACTOR_OK}
+        out["consistent_with_minimum"] = (None if rr is None or (st["lin_rel_err"] or 0) > 1e-6
+                                          else bool(rr <= FRESH_R_FACTOR_OK))
+    except Exception as exc:
+        out["split_null"] = {"error": f"{type(exc).__name__}: {exc}",
+                             "traceback": traceback.format_exc()}
+        out["consistent_with_minimum"] = None
+    out["wall_s"] = time.time() - t
+    return out
+
+
+def run_converged_sscha(ctx: dict, start: str, sp: dict, out: dict) -> None:
+    """One converged SSCHA relaxation from start A or B, the Hessian at its end, diagnostics.
+    Fills ``out`` as it goes and flushes it to disk at every population end."""
+    import warnings
+    warnings.filterwarnings("ignore")                  # as compute_finite_t_sscha does
+    import cellconstructor as CC
+    import cellconstructor.Phonons  # noqa: F401
+    import sscha
+    import sscha.Ensemble
+    import sscha.SchaMinimizer
+    import sscha.Relax
+    from mlip_dynstab.finite_t import _cc_dyn_from_phonopy
+    from mlip_dynstab.harmonic import _relax
+
+    R, calc = ctx["recipe"], ctx["calc"]
+    T, sc, tol = float(ctx["T"]), tuple(int(x) for x in ctx["supercell"]), R["imag_tol_thz"]
+    ry = float(CC.Units.RY_TO_CM * C_THZ_PER_CM)
+    work = sp["work"]
+    work.mkdir(parents=True, exist_ok=True)
+    tm = out.setdefault("timings_s", {})
+    out["julia_ext_available"] = bool(getattr(sscha.Ensemble, "__JULIA_EXT__", False))
+    t_all = t = time.time()
+
+    prim = ctx["atoms"].copy()
+    prim.calc = calc
+    if R["relax"]:
+        prim = _relax(prim, fmax=R["fmax"])
+    out["relaxed_cellpar"] = [float(x) for x in prim.cell.cellpar()]
+    dyn_harm = _cc_dyn_from_phonopy(prim, calc, sc, R["disp"])
+    tm["relax_and_harmonic_fc"] = time.time() - t
+    w_harm, p_harm = dyn_freqs(dyn_harm)
+    out["harmonic_pre_fpd"] = freq_summary(w_harm, ry, tol)
+    dyn, out["start_construction"] = build_start(dyn_harm, start, R["start_b_thz"], ry)
+    dyn_start = dyn.Copy()
+    w_start, p_start = dyn_freqs(dyn_start)
+    out["start"] = freq_summary(w_start, ry, tol)
+    out["dyn_meta"] = {"nqirr": int(dyn.nqirr), "nq": len(dyn.q_tot),
+                       "nat_prim": int(dyn.structure.N_atoms),
+                       "nat_supercell": int(dyn.structure.N_atoms * len(dyn.q_tot))}
+    ctx["flush"]()
+
+    out["global_seed"] = conv_global_seed(R, start)
+    np.random.seed(out["global_seed"])
+    grad_log: list = []
+    Ens = real_error_ensemble_class(sscha.Ensemble.Ensemble, grad_log, R["converge_min_kl_ratio"])
+    ens = Ens(dyn.Copy(), T, supercell=dyn.GetSupercell())
+    minim = sscha.SchaMinimizer.SSCHA_Minimizer(ens, root_representation=R["root_representation"])
+    minim.use_julia = bool(R["use_julia"])           # False: the gradient goes through Ens
+    minim.min_step_dyn = R["min_step_dyn"]
+    minim.meaningful_factor = R["meaningful_factor"]
+    minim.kong_liu_ratio = R["kong_liu_ratio"]
+    # Backstop only: the controller replaces it at every population's first step.
+    minim.max_ka = int(R["max_steps_per_pop"]) * int(R["max_pop"]) + 1
+    relaxer = sscha.Relax.SSCHA(minim, ase_calculator=calc, N_configs=R["n_configs"],
+                                max_pop=R["max_pop"], save_ensemble=False)
+    rec, ctrl = wire_conv_hooks(relaxer, ry, grad_log, R, ctx, out)
+    out["stopping_criteria"] = conv_stopping_criteria(minim, relaxer, R)
+    t = time.time()
+    with chdir(work):
+        converged = bool(relaxer.relax(get_stress=False))
+    tm["sscha_relax"] = time.time() - t
+    final_dyn = relaxer.minim.dyn
+    n_pops = int(relaxer.start_pop) - 1                     # Relax.py:412,419; starts at 1
+    pop_end = population_end_dyns(work, n_pops, final_dyn.nqirr, dyn_start, ry, tol)
+    out["relax"] = conv_relax_block(rec, ctrl, pop_end, converged, n_pops, R, grad_log)
+    raw = {k: [_scalar(x) for x in getattr(relaxer.minim, f"__{k}__")]
+           for k in ("fe", "fe_err", "gc", "gc_err", "gw", "gw_err", "KL")}
+    raw["good_kasteps"] = [int(i) for i in getattr(relaxer.minim, "__good_kasteps__")]
+    out["relax"]["minimizer_raw_histories"] = raw
+    out.pop("relax_partial", None)
+    w_aux, p_aux = dyn_freqs(final_dyn)
+    out["final_aux"] = freq_summary(w_aux, ry, tol)
+    final_dyn.save_qe(str(work / "dyn_final_aux_"))
+    ctx["flush"]()
+
+    t = time.time()
+    with chdir(work):
+        he = sscha.Ensemble.Ensemble(final_dyn, T, supercell=final_dyn.GetSupercell())
+        he.generate(int(R["n_hessian"]))
+        he.get_energy_forces(calc, compute_stress=False)
+    tm["hessian_ensemble"] = time.time() - t
+    try:
+        # KL of the gradient that converged (>= converge_min_kl_ratio by the guard). An
+        # unconverged run's last gradient may be a rejected low-KL trial point, which would
+        # inflate R_expected, so it is judged as if KL = 1 (the strictest reference).
+        kl_ref = out["relax"].get("kl_ratio_at_gradient_end") if converged else 1.0
+        out["fresh_gradient_check"] = fresh_gradient_check(
+            he, final_dyn, np.random.default_rng([CONV_SALT, out["global_seed"], ord(start), 1]),
+            int(R["n_configs"]), kl_ref, int(R["fresh_splits"]))
+    except Exception as exc:                  # a diagnostic; never costs the Hessian
+        out["fresh_gradient_check"] = {"error": f"{type(exc).__name__}: {exc}",
+                                       "traceback": traceback.format_exc()}
+    he.save_bin(str(sp["ensemble"]), 1)
+    out["ensemble_dir"] = rel(sp["ensemble"])
+    t = time.time()
+    hess = he.get_free_energy_hessian(include_v4=False)
+    tm["hessian"] = time.time() - t
+    w_hess, p_hess = dyn_freqs(hess)
+    out["hessian"] = freq_summary(w_hess, ry, tol)
+    out["hessian"]["dynamically_stable"] = bool(out["hessian"]["min_nonac_thz"] >= tol)
+    out["echo"] = {
+        "rel_change_final_aux_vs_start": dyn_rel_change(final_dyn, dyn_start),
+        "rel_change_hessian_vs_final_aux": dyn_rel_change(hess, final_dyn),
+        "rel_change_hessian_vs_start": dyn_rel_change(hess, dyn_start),
+        "harmonic_along_hessian_softmode": freq_along_softmode(w_hess, p_hess, w_harm, p_harm, ry),
+        "start_along_hessian_softmode": freq_along_softmode(w_hess, p_hess, w_start, p_start, ry),
+        "final_aux_along_hessian_softmode": freq_along_softmode(w_hess, p_hess, w_aux, p_aux, ry),
+    }
+    files = {}
+    for name, d in (("dyn_harmonic_", dyn_harm), (f"dyn_start{start}_", dyn_start),
+                    ("dyn_hessian_", hess)):
+        d.save_qe(str(work / name))
+    for name in ("dyn_harmonic_", f"dyn_start{start}_", "dyn_final_aux_", "dyn_hessian_"):
+        files[name] = rel(work / f"{name}1")
+    out["dyn_files"] = files
+    ctx["flush"]()
+
+    t = time.time()
+    out["bootstrap"] = hessian_uncertainty(
+        he, ctx["n_boot"], ctx["n_splits"],
+        np.random.default_rng([BOOT_SALT, CONV_SALT, out["global_seed"], ord(start)]), ry, tol,
+        out["hessian"]["min_nonac_thz"])
+    tm["bootstrap"] = time.time() - t
+    tm["total"] = time.time() - t_all
+
+
+class _DryGradEnsemble:
+    """--dry-run base for RealErrorEnsemble: sscha.Ensemble.Ensemble's two gradient entry points
+    with the library's return conventions (the parallel one returns the ones placeholder,
+    Ensemble.py:2657; the serial one returns (grad, err), :2830-2831) and its fixed attribute set
+    (:276-304), so a subclass that set an instance attribute fails here as it would there. The
+    gradient is a synthetic 'distance to the minimum'."""
+
+    def __init__(self, n, w_ry, dist, err_elem, target_ry):
+        self.N = int(n)
+        self.w_0 = np.asarray(w_ry, dtype=float).copy()
+        self.current_w = self.w_0.copy()
+        self.target_ry = np.asarray(target_ry, dtype=float).copy()
+        self.start_ry = self.w_0.copy()
+        self.kl = float(n)
+        self.dist = float(dist)
+        self.dist0 = float(dist)
+        self.err_elem = float(err_elem)
+        self.supercell = np.array([2, 2, 2])
+        self.shape = (8, 15, 15)
+        self.__total_attributes__ = list(self.__dict__)
+        self.fixed_attributes = True
+
+    def __setattr__(self, name, value):
+        if "fixed_attributes" in self.__dict__ and name not in self.__total_attributes__:
+            raise AttributeError(f"'{name}' is not a member of '{type(self).__name__}'")
+        object.__setattr__(self, name, value)
+
+    def get_effective_sample_size(self):
+        return self.kl
+
+    def get_preconditioned_gradient(self, subtract_sscha=True, return_error=False,
+                                    use_ups_supercell=True, preconditioned=1, fast_grad=False,
+                                    verbose=True, timer=None):
+        g = np.full(self.shape, self.dist / math.sqrt(float(np.prod(self.shape))),
+                    dtype=np.complex128)
+        e = np.full(self.shape, self.err_elem, dtype=np.complex128)
+        return (g, e) if return_error else g
+
+    def get_preconditioned_gradient_parallel(self, *args, timer=None, **kwargs):
+        g, _ = self.get_preconditioned_gradient(*args, timer=timer, **kwargs)
+        return g, np.zeros_like(g) + 1
+
+
+class _DryLine:
+    def __init__(self):
+        self.step = 0.5
+
+    def is_new_direction(self):
+        return True
+
+
+class _DryMinim:
+    """--dry-run stand-in for SSCHA_Minimizer: the attributes the hooks read and run()'s control
+    flow (SchaMinimizer.py:1282-1398): pre hook; gradient from the ensemble, error scaled as :456,
+    histories as :587-600; fe/KL appended (:1313-1332); check_stop (:1601-1661); max_ka (:1370);
+    post hook; restore on an unconverged stop (:1391-1397)."""
+
+    def __init__(self, ens, shrink=0.93, kl_decay=0.94, sleep_s=0.0):
+        for k in ("fe", "fe_err", "gc", "gc_err", "gw", "gw_err", "KL", "good_kasteps"):
+            setattr(self, f"__{k}__", [])
+        self.ensemble = ens
+        self.population = 0
+        self.max_ka = -1
+        self.kong_liu_ratio = 0.5
+        self.meaningful_factor = 0.2
+        self.abs_conv_thr = 1e-8
+        self.gradi_op = "all"
+        self.minim_struct = True
+        self.N_symmetries = 48
+        self.use_julia = False
+        self.minimizer = _DryLine()
+        self.shrink, self.kl_decay, self.sleep_s = float(shrink), float(kl_decay), float(sleep_s)
+        self._conv = False
+
+    def h(self, k):
+        return getattr(self, f"__{k}__")
+
+    def is_converged(self):
+        return self._conv
+
+    def init(self):
+        if len(self.h("fe")) == len(self.h("gc")):            # SchaMinimizer.py:1150-1156
+            self.h("fe").append(-1.0)
+            self.h("fe_err").append(1e-5)
+            self.h("KL").append(self.ensemble.kl)
+        self._conv = False
+
+    def _move(self, factor):
+        ens = self.ensemble
+        ens.dist *= factor
+        frac = ens.dist / ens.dist0 if ens.dist0 > 0 else 0.0
+        ens.current_w = ens.target_ry + frac * (ens.start_ry - ens.target_ry)
+
+    def run(self, custom_function_pre=None, custom_function_post=None,
+            custom_function_gradient=None):
+        self._conv = False
+        running = True
+        while running:
+            if custom_function_pre is not None:
+                custom_function_pre(self)
+            ens = self.ensemble
+            g, e = ens.get_preconditioned_gradient_parallel(True, True, preconditioned=1)
+            e = e / np.sqrt(self.N_symmetries * np.prod(ens.supercell))
+            self.h("gc").append(float(np.sqrt(np.sum(np.abs(g) ** 2))))
+            self.h("gc_err").append(float(np.sqrt(np.sum(np.abs(e) ** 2))))
+            self.h("gw").append(0.0)
+            self.h("gw_err").append(1e-5)
+            self._move(self.shrink)
+            ens.kl *= self.kl_decay
+            self.h("fe").append(-1.0 - 1e-3 * (1.0 - ens.dist))
+            self.h("fe_err").append(1e-5)
+            self.h("KL").append(ens.kl)
+            running = not self._check_stop()
+            if len(self.h("fe")) > self.max_ka and self.max_ka > 0:
+                running = False
+            if custom_function_post is not None:
+                custom_function_post(self)
+            if self.sleep_s:
+                time.sleep(self.sleep_s)
+        if not self._conv:
+            self._move(1.0 / self.shrink)
+
+    def _check_stop(self):
+        gc, gce = self.h("gc")[-1], self.h("gc_err")[-1]
+        gw, gwe = self.h("gw")[-1], self.h("gw_err")[-1]
+        gc_ok = gc < gce * self.meaningful_factor or gc < self.abs_conv_thr
+        gw_ok = gw < gwe * self.meaningful_factor or gw < self.abs_conv_thr
+        if gc_ok and gw_ok:
+            self._conv = True
+            return True
+        ens = self.ensemble
+        return bool(ens.kl / float(ens.N) < self.kong_liu_ratio
+                    and self.minimizer.is_new_direction())
+
+
+class _DryRelax:
+    """--dry-run stand-in for sscha.Relax.SSCHA: setup_custom_functions and relax()'s population
+    loop (Relax.py:284-295, 364-421): new ensemble at the current dyn, population set, init, run,
+    stop on convergence or when pop > max_pop (read afresh every population)."""
+
+    def __init__(self, minim, N_configs, max_pop):
+        self.minim = minim
+        self.N_configs = int(N_configs)
+        self.max_pop = int(max_pop)
+        self.start_pop = 1
+        self._pre = self._post = None
+
+    def setup_custom_functions(self, custom_function_pre=None, custom_function_gradient=None,
+                               custom_function_post=None):
+        self._pre, self._post = custom_function_pre, custom_function_post
+
+    def relax(self, get_stress=False):
+        pop, running = self.start_pop, True
+        while running:
+            ens = self.minim.ensemble
+            ens.w_0 = ens.current_w.copy()
+            ens.kl = float(ens.N)
+            self.minim.population = pop
+            self.minim.init()
+            self.minim.run(custom_function_pre=self._pre, custom_function_post=self._post)
+            running = not self.minim.is_converged()
+            pop += 1
+            if pop > self.max_pop:
+                running = False
+        self.start_pop = pop
+        return self.minim.is_converged()
+
+
+def run_converged_mock(ctx: dict, start: str, sp: dict, out: dict) -> None:
+    """--dry-run stand-in for run_converged_sscha: same schema, no sscha or cellconstructor.
+    The relax (unless the calculator is the LJ fallback) is real; the SSCHA is _DryRelax /
+    _DryMinim on a synthetic gradient, but the hooks, RealErrorEnsemble and its guard, the
+    per-population and wall caps, the population table and every JSON flush are the real code."""
+    from mlip_dynstab.harmonic import _relax
+    R, calc, tol = ctx["recipe"], ctx["calc"], ctx["recipe"]["imag_tol_thz"]
+    ry = RY_TO_CM_CC162 * C_THZ_PER_CM
+    rng = np.random.default_rng([MOCK_SALT, CONV_SALT, ord(start)])
+    tm = out.setdefault("timings_s", {})
+    t_all = time.time()
+    out["MOCK"] = ("dry-run: every SSCHA number here is synthetic; the hooks, the real-error "
+                   "subclass and its KL guard, the caps and the JSON flushes are the real code")
+    prim = ctx["atoms"].copy()
+    prim.calc = calc
+    if R["relax"] and not ctx.get("calc_is_fallback"):
+        prim = _relax(prim, fmax=R["fmax"])
+    out["relaxed_cellpar"] = [float(x) for x in prim.cell.cellpar()]
+    base = ctx["ledger"].get("min_eff_freq_thz") or 1.0
+    harm = -abs(base) - 1.0
+    start_thz = abs(harm) if start == "A" else float(R["start_b_thz"])
+    target = abs(base) * 0.5 + 0.2
+
+    def spectrum(v):
+        return np.array([0.0, 0.0, 0.0] + [v] * 3 + [v + 1.0] * 9) / ry
+
+    out["harmonic_pre_fpd"] = freq_summary(spectrum(harm), ry, tol)
+    out["start_construction"] = {"start": start, "MOCK": True,
+                                 "n_replaced": 0 if start == "A" else 3}
+    out["start"] = freq_summary(spectrum(start_thz), ry, tol)
+    out["dyn_meta"] = {"nqirr": 4, "nq": 8, "nat_prim": 5, "nat_supercell": 40}
+    ctx["flush"]()
+
+    grad_log: list = []
+    Ens = real_error_ensemble_class(_DryGradEnsemble, grad_log, R["converge_min_kl_ratio"])
+    ens = Ens(R["n_configs"], spectrum(start_thz), 1.0 if start == "A" else 0.3, 0.01,
+              spectrum(target))
+    out["global_seed"] = conv_global_seed(R, start)
+    minim = _DryMinim(ens, sleep_s=float(ctx.get("mock_step_sleep") or 0.0))
+    minim.use_julia = bool(R["use_julia"])
+    minim.meaningful_factor = R["meaningful_factor"]
+    minim.kong_liu_ratio = R["kong_liu_ratio"]
+    minim.max_ka = int(R["max_steps_per_pop"]) * int(R["max_pop"]) + 1
+    relaxer = _DryRelax(minim, R["n_configs"], R["max_pop"])
+    rec, ctrl = wire_conv_hooks(relaxer, ry, grad_log, R, ctx, out)
+    out["stopping_criteria"] = conv_stopping_criteria(minim, relaxer, R)
+    t = time.time()
+    converged = bool(relaxer.relax(get_stress=False))
+    tm["sscha_relax"] = time.time() - t
+    n_pops = int(relaxer.start_pop) - 1
+    pop_end = {p: {"end_aux_min_nonac_thz": None, "rel_change_vs_prev_end": None,
+                   "end_dyn_file": None} for p in range(1, n_pops + 1)}
+    out["relax"] = conv_relax_block(rec, ctrl, pop_end, converged, n_pops, R, grad_log)
+    out["relax"]["minimizer_raw_histories"] = {k: list(minim.h(k)) for k in
+                                               ("fe", "fe_err", "gc", "gc_err", "KL")}
+    out.pop("relax_partial", None)
+    out["final_aux"] = freq_summary(ens.current_w, ry, tol)
+    hmin = float(base) + (0.004 if start == "B" else 0.0)
+    out["hessian"] = {**freq_summary(spectrum(hmin), ry, tol),
+                      "dynamically_stable": bool(hmin >= tol)}
+    r_exp = 1.0 + int(R["n_hessian"]) / float(R["n_configs"])
+    out["fresh_gradient_check"] = {"MOCK": True, "gc_over_err": 1.1, "kl_ratio": 1.0,
+                                   "split_null": {"R": 1.2 * r_exp, "R_expected_if_converged": r_exp,
+                                                  "R_over_expected": 1.2,
+                                                  "threshold": FRESH_R_FACTOR_OK},
+                                   "consistent_with_minimum": True}
+    out["echo"] = {"MOCK": True}
+    out["bootstrap"] = {"method": "mock", "B": int(ctx["n_boot"]),
+                        "full_ensemble_min_nonac_thz": hmin,
+                        **boot_stats(rng.normal(hmin, 0.01, int(ctx["n_boot"])), tol)}
+    tm["total"] = time.time() - t_all
+
+
+def _start_digest(doc) -> dict:
+    r = (doc or {}).get("run") or {}
+
+    def g(*k):
+        return _dig(r, *k)
+
+    # hessian_uncertainty's disjoint-split fallback reports the spread of N/K-size ensembles as
+    # std_thz; the full ensemble's sd is std_full_estimate_thz there.
+    boot_sd = (g("bootstrap", "std_full_estimate_thz")
+               if g("bootstrap", "method") == "disjoint_splits" else g("bootstrap", "std_thz"))
+    return {"status": r.get("status"), "converged": g("relax", "converged"),
+            "stop_reason": g("relax", "stop_reason"), "n_populations": g("relax", "n_populations"),
+            "harmonic_min_thz": g("harmonic_pre_fpd", "min_nonac_thz"),
+            "start_min_thz": g("start", "min_nonac_thz"),
+            "final_aux_min_thz": g("final_aux", "min_nonac_thz"),
+            "final_aux_lowest6_thz": g("final_aux", "lowest6_thz"),
+            "hessian_min_thz": g("hessian", "min_nonac_thz"),
+            "hessian_lowest6_thz": g("hessian", "lowest6_thz"),
+            "boot_sd_thz": boot_sd, "boot_method": g("bootstrap", "method"),
+            "fresh_gc_over_err": g("fresh_gradient_check", "gc_over_err"),
+            "fresh_R_over_expected": g("fresh_gradient_check", "split_null", "R_over_expected"),
+            "fresh_consistent": g("fresh_gradient_check", "consistent_with_minimum"),
+            "global_seed": r.get("global_seed"),
+            "kl_ratio_at_gradient_end": g("relax", "kl_ratio_at_gradient_end"),
+            "model_version": g("provenance", "model_version"),
+            "julia_ext_available": r.get("julia_ext_available"), "wall_s": r.get("wall_s"),
+            "nqirr": g("dyn_meta", "nqirr"), "work_dir": r.get("work_dir")}
+
+
+def conv_compare(base: Path, tag: str, imag_tol: float) -> dict:
+    """Start A against start B for one unit, written to <tag>_AB.json (a derived file, rebuilt
+    whenever a start finishes or --summarize runs). Start-independent: |Hessian min A - B| within
+    AB_Z_TOL combined bootstrap sd. The bootstrap covers the Hessian ensemble only, not the noise
+    of the relaxed dyn, so a borderline z is read with that in mind."""
+    docs = {s: load_json(conv_paths(base, tag, s)["json"]) for s in CONV_STARTS}
+    dA, dB = _start_digest(docs["A"]), _start_digest(docs["B"])
+    out = {"schema": CONV_SCHEMA + "/compare", "unit_tag": tag, "utc": utc_now(),
+           "A": dA, "B": dB, "both_ok": dA["status"] == "ok" and dB["status"] == "ok"}
+    if not out["both_ok"]:
+        out["verdict"] = "incomplete"
+    else:
+        hA, hB = dA["hessian_min_thz"], dB["hessian_min_thz"]
+        comb = math.sqrt((dA["boot_sd_thz"] or 0.0) ** 2 + (dB["boot_sd_thz"] or 0.0) ** 2)
+        d = abs(hA - hB)
+        indep = bool(d <= AB_Z_TOL * comb) if comb > 0 else None
+        conv = bool(dA["converged"] and dB["converged"])
+        out.update(both_converged=conv, hessian_min_diff_thz=d, combined_boot_sd_thz=comb,
+                   z=(d / comb if comb > 0 else None), z_tol=AB_Z_TOL,
+                   z_note="combined_boot_sd covers the two Hessian ensembles only (independent "
+                          "seeds), not the sampling noise of the two relaxed dyns, so z "
+                          "overstates start dependence; read dyn_level and final_aux_min_diff "
+                          "with it",
+                   both_fresh_consistent=bool(dA["fresh_consistent"] and dB["fresh_consistent"]),
+                   hessian_start_independent=indep,
+                   same_stability_call=bool((hA >= imag_tol) == (hB >= imag_tol)),
+                   final_aux_min_diff_thz=abs(dA["final_aux_min_thz"] - dB["final_aux_min_thz"]),
+                   same_env=bool(dA["model_version"] == dB["model_version"]
+                                 and dA["julia_ext_available"] == dB["julia_ext_available"]))
+        if not conv:
+            v = "not converged (A: {}, B: {})".format(dA["stop_reason"], dB["stop_reason"])
+        elif indep is None:
+            v = "converged; start independence untested (no bootstrap sd)"
+        elif indep and out["same_stability_call"]:
+            v = "converged and start-independent"
+        else:
+            v = "converged but START-DEPENDENT"
+        if conv and not out["both_fresh_consistent"]:
+            v += "; fresh-ensemble gradient NOT shown consistent with a minimum for " + ",".join(
+                s for s, x in (("A", dA), ("B", dB)) if not x["fresh_consistent"])
+        out["verdict"] = v
+        try:
+            import cellconstructor.Phonons as CCP
+            lv = {}
+            for name in ("dyn_final_aux_", "dyn_hessian_"):
+                a, b = (CCP.Phonons(str(from_rel(x["work_dir"]) / name), int(x["nqirr"]))
+                        for x in (dA, dB))
+                lv[f"rel_diff_{name.strip('_')}"] = dyn_rel_change(a, b)
+            out["dyn_level"] = lv
+        except Exception as exc:
+            out["dyn_level"] = {"skipped": f"{type(exc).__name__}: {exc}"}
+    atomic_write_json(conv_paths(base, tag, "A")["compare"], out)
+    return out
+
+
+def run_converged_unit(unit: dict, args) -> dict:
+    """Starts A and/or B of one unit, one JSON per (unit, start). An 'ok' start is skipped, and
+    so is a 'failed' one unless --retry-failed; a 'running' one is recomputed if its process is
+    dead (dead box, timeout) and skipped as busy if another live process holds its lock."""
+    from mlip_dynstab.systems import get_spec, build_atoms
+    system, model, T = unit["system"], unit["model"], float(unit["T"])
+    sc = tuple(int(x) for x in unit["supercell"])
+    tag = unit_tag(system, model, T, sc)
+    base = conv_base_dir(args)
+    recipe = converged_recipe(args)
+    spec = get_spec(system)
+    ident = {"system": system, "model": model, "T": T, "supercell": list(sc)}
+    flags = {"failed": [], "done": [], "busy": []}
+
+    todo = []
+    for s in unit["starts"]:
+        ex = load_json(conv_paths(base, tag, s)["json"])
+        if ex is not None:
+            where = conv_paths(base, tag, s)["json"]
+            if bool(ex.get("dry_run")) != bool(args.dry_run):
+                raise SystemExit(f"{where} was written with dry_run={ex.get('dry_run')}; "
+                                 "refusing to mix mocked and real runs. Move it aside.")
+            if ex.get("unit") != ident or ex.get("start") != s:
+                raise SystemExit(f"{where} holds {ex.get('unit')} start {ex.get('start')}.")
+            if ex.get("recipe") != _clean(recipe):
+                raise SystemExit(f"{where} was computed with recipe {ex.get('recipe')}; this run "
+                                 f"is {recipe}. Refusing to mix; move it aside.")
+            st = (ex.get("run") or {}).get("status")
+            if st == "ok" or (st == "failed" and not args.retry_failed):
+                print(f"[skip] {tag} start {s}: {st}"
+                      + ("" if st == "ok" else " (--retry-failed to rerun)"))
+                continue
+        todo.append(s)
+    if not todo:
+        conv_compare(base, tag, recipe["imag_tol_thz"])
+        return flags
+    if not args.dry_run:
+        ok, why = env_can_run(model)
+        if not ok:
+            raise SystemExit(f"{tag}: {why}")
+    atoms = build_atoms(spec)
+    calc, model_version, fallback = load_calculator(model, args.device, args.dry_run, atoms)
+    led = ledger_lookup(system, model, T, sc)
+    prov = provenance(model, args.dry_run, args.device)
+    if not args.dry_run:
+        import sscha.Ensemble
+        prov["julia_ext_available"] = bool(getattr(sscha.Ensemble, "__JULIA_EXT__", False))
+        prov["julia_error"] = str(getattr(sscha.Ensemble, "__JULIA_ERROR__", ""))[:500]
+        prov["schamodules"] = schamodules_linkage()
+    prov["model_version"] = model_version
+
+    for s in todo:
+        sp = conv_paths(base, tag, s)
+        with start_lock(base / "locks" / f"{tag}_start{s}.lock") as held:
+            if not held:
+                print(f"[busy] {tag} start {s}: another live process is running it; skipped",
+                      flush=True)
+                flags["busy"].append((tag, s))
+                continue
+            # Re-read under the lock: another process may have finished it since the scan above.
+            st = ((load_json(sp["json"]) or {}).get("run") or {}).get("status")
+            if st == "ok" or (st == "failed" and not args.retry_failed):
+                print(f"[skip] {tag} start {s}: {st} (finished by another process)")
+                continue
+            _run_converged_start(unit, args, s, sp, ctx_base=dict(
+                system=system, model=model, T=T, supercell=sc, atoms=atoms, calc=calc,
+                recipe=recipe, ledger=led, calc_is_fallback=fallback, ident=ident, tag=tag,
+                prov=prov, model_version=model_version), flags=flags)
+    cmp_ = conv_compare(base, tag, recipe["imag_tol_thz"])
+    print(f"[{tag}] A vs B: {cmp_.get('verdict')}"
+          + (f" (dHess {cmp_['hessian_min_diff_thz']:.3f} THz, z {cmp_.get('z')})"
+             if cmp_.get("both_ok") else ""), flush=True)
+    return flags
+
+
+@contextlib.contextmanager
+def start_lock(path: Path):
+    """Advisory lock on one (unit, start), so two processes (say --preset converged and
+    --start B, launched by hand) cannot both run it: the second would rename the first's work
+    directory from under it and overwrite its JSON. flock is released by the kernel when its
+    holder dies, so a killed run leaves no stale lock and a relaunch resumes normally. Yields
+    True if held, False if a live process holds it. Without fcntl (Windows dry runs) no lock is
+    taken; the box is Linux."""
+    try:
+        import fcntl
+    except ImportError:
+        yield True
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fh = open(path, "a+", encoding="utf-8")
+    try:
+        try:
+            fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            yield False
+            return
+        fh.seek(0)
+        fh.truncate()
+        fh.write(json.dumps({"pid": os.getpid(), "host": socket.gethostname(), "utc": utc_now()}))
+        fh.flush()
+        yield True
+    finally:
+        fh.close()
+
+
+def _run_converged_start(unit: dict, args, s: str, sp: dict, ctx_base: dict, flags: dict) -> None:
+    """One (unit, start), called with its lock held: JSON set-up, the run, the final record."""
+    tag, ident, prov = ctx_base["tag"], ctx_base["ident"], ctx_base["prov"]
+    recipe, led, model_version = ctx_base["recipe"], ctx_base["ledger"], ctx_base["model_version"]
+    doc = load_json(sp["json"]) or {
+        "schema": CONV_SCHEMA, "study": "C1c converged SSCHA, start A vs B (R1.4)",
+        "dry_run": bool(args.dry_run), "unit": ident, "unit_tag": tag, "start": s,
+        "item": unit.get("item"), "why": unit.get("why"), "recipe": recipe,
+        "recipe_source": "production_recipe() + converged_recipe() (" + SCRIPT + ")",
+        "provenance_created": prov, "previous_runs": []}
+    doc.update(ledger=led, provenance_last_run=prov,
+               calculator_fallback=bool(ctx_base["calc_is_fallback"]))
+    stale = None
+    if sp["work"].exists():                    # a dead or failed attempt: keep it, aside
+        stale = sp["work"].with_name(f"{sp['work'].name}.stale-{int(time.time())}")
+        sp["work"].rename(stale)
+    if doc.get("run"):
+        # The whole previous run, including the relax_partial of a killed or timed-out one: its
+        # step history exists nowhere else. Its work dir now lives under the stale name.
+        old = dict(doc["run"])
+        old["work_dir_moved_to"] = rel(stale) if stale is not None else None
+        doc.setdefault("previous_runs", []).append(old)
+    entry = {"start": s, "status": "running", "utc_start": utc_now(),
+             "host": socket.gethostname(), "pid": os.getpid(), "work_dir": rel(sp["work"]),
+             "settings": {"n_boot": int(args.n_boot), "n_splits_fallback": int(args.n_splits),
+                          "unit_timeout_s": float(args.unit_timeout), "device": args.device}}
+    doc["run"] = entry
+
+    def flush(doc=doc, entry=entry, path=sp["json"]):
+        snap = dict(doc)
+        snap["run"] = {k: v for k, v in entry.items() if not str(k).startswith("_")}
+        snap["last_written_utc"] = utc_now()
+        atomic_write_json(path, snap)
+
+    flush()
+    ctx = {k: ctx_base[k] for k in ("system", "model", "T", "supercell", "atoms", "calc",
+                                    "recipe", "ledger", "calc_is_fallback")}
+    ctx.update(n_boot=int(args.n_boot), n_splits=int(args.n_splits),
+               unit_timeout=float(args.unit_timeout), flush=flush,
+               mock_step_sleep=float(args.dry_run_step_sleep))
+    print(f"===== {tag} start {s} {utc_now()} =====", flush=True)
+    t0 = time.time()
+    try:
+        (run_converged_mock if args.dry_run else run_converged_sscha)(ctx, s, sp, entry)
+        entry["status"] = "ok"
+    except Exception as exc:
+        entry["status"] = "failed"
+        entry["error"] = f"{type(exc).__name__}: {exc}"
+        entry["traceback"] = traceback.format_exc()
+        rec, ctrl = entry.get("_recorder"), entry.get("_controller")
+        if rec is not None:
+            entry["relax_partial"] = {"reason": "exception", "steps": rec.steps,
+                                      "hook_errors": rec.errors,
+                                      "pop_start_aux_min_nonac_thz": rec.pop_start,
+                                      "controller": ctrl.state() if ctrl else None}
+        flags["failed"].append((tag, s))
+        print(f"[FAIL] {tag} start {s}: {entry['error']}", flush=True)
+    entry.pop("_recorder", None)
+    entry.pop("_controller", None)
+    entry["wall_s"] = time.time() - t0
+    entry["utc_end"] = utc_now()
+    entry["provenance"] = {k: prov.get(k) for k in ("git_head", "host", "packages",
+                                                     "model_version", "device",
+                                                     "omp_num_threads")}
+    if entry["status"] == "ok":
+        lc = ledger_comparison(led, entry["hessian"]["min_nonac_thz"], float(args.ledger_tol),
+                               model_version)
+        lc["note"] = ("informational: the converged recipe is not the production recipe, so "
+                      "no reproduction of the ledger is expected")
+        entry["ledger_reference"] = lc
+    flush()
+    if entry["status"] == "ok":
+        flags["done"].append((tag, s))
+        rx, b = entry["relax"], entry.get("bootstrap") or {}
+        fr = _dig(entry, "fresh_gradient_check", "split_null", "R_over_expected")
+        print(f"[{tag} {s}] harm {entry['harmonic_pre_fpd']['min_nonac_thz']:+.3f} | "
+              f"start {entry['start']['min_nonac_thz']:+.3f} | "
+              f"aux {entry['final_aux']['min_nonac_thz']:+.3f} | "
+              f"hess {entry['hessian']['min_nonac_thz']:+.3f} THz (boot sd {b.get('std_thz')}) "
+              f"| npop {rx['n_populations']} conv {rx['converged']} stop {rx['stop_reason']} "
+              f"| fresh R/Rexp {fr} | {entry['wall_s']:.0f}s", flush=True)
+
+
+def summarize_converged(directory: Path) -> int:
+    files = sorted(Path(directory).glob("*_start[AB].json"))
+    if not files:
+        print(f"no converged-mode JSONs in {directory}")
+        return 1
+
+    def f(x, w=7, p=3):
+        return f"{x:+{w}.{p}f}" if isinstance(x, (int, float)) else f"{'-':>{w}}"
+
+    # fresh = R / R_expected of the fresh-ensemble gradient (fresh_gradient_check); ~1 when converged
+    hdr = (f"{'unit':34s} {'st':>2s} {'status':>7s} {'harm':>7s} {'start':>7s} {'aux':>7s} "
+           f"{'hess':>7s} {'bootsd':>6s} {'npop':>4s} {'stop':>9s} {'KLend':>5s} {'fresh':>5s} "
+           f"{'wall':>6s}")
+    print(hdr)
+    print("-" * len(hdr))
+    tags = {}
+    for fp in files:
+        doc = load_json(fp)
+        if not isinstance(doc, dict) or doc.get("schema") != CONV_SCHEMA:
+            continue
+        tags[doc["unit_tag"]] = (doc.get("recipe") or {}).get("imag_tol_thz", -0.1)
+        d = _start_digest(doc)
+
+        def num(x, fmt, w):
+            return format(x, fmt) if isinstance(x, (int, float)) else "-".rjust(w)
+
+        name = doc["unit_tag"] + (" [DRY]" if doc.get("dry_run") else "")
+        npop = "-" if d["n_populations"] is None else str(d["n_populations"])
+        print(f"{name:34s} {doc['start']:>2s} {str(d['status']):>7s} "
+              f"{f(d['harmonic_min_thz'])} {f(d['start_min_thz'])} "
+              f"{f(d['final_aux_min_thz'])} {f(d['hessian_min_thz'])} "
+              f"{num(d['boot_sd_thz'], '6.3f', 6)} {npop:>4s} {str(d['stop_reason'] or '-'):>9s} "
+              f"{num(d['kl_ratio_at_gradient_end'], '5.2f', 5)} "
+              f"{num(d['fresh_R_over_expected'], '5.2f', 5)} {num(d['wall_s'], '6.0f', 6)}")
+    for tag, itol in sorted(tags.items()):
+        c = conv_compare(Path(directory), tag, itol)
+        extra = (f": dHess {c['hessian_min_diff_thz']:.3f} THz, z {c['z']}, dAux "
+                 f"{c['final_aux_min_diff_thz']:.3f} THz, dyn {c.get('dyn_level')}"
+                 if c.get("both_ok") else "")
+        print(f"  {tag}: {c['verdict']}{extra}")
+    return 0
+
+
+def main_converged(args) -> int:
+    """--preset converged, or --converge for one unit. Never touches the seed-study paths."""
+    if args.out:
+        raise SystemExit("--out names one seed-study JSON; converged mode uses --out-dir")
+    base = conv_base_dir(args)
+    if args.summarize:
+        return summarize_converged(base)
+    starts = (args.start,) if args.start else CONV_STARTS
+    if args.preset == CONV_PRESET:
+        units = [dict(u, starts=starts) for u in CONVERGED_UNITS
+                 if (not args.model or u["model"] == args.model)
+                 and (not args.system or u["system"] == args.system)]
+    else:
+        if not (args.system and args.model and args.T is not None):
+            raise SystemExit("--converge needs --system, --model and --T (or --preset converged)")
+        units = [dict(system=args.system, model=args.model, T=args.T,
+                      supercell=tuple(args.supercell), starts=starts, item="manual",
+                      why="manual invocation")]
+    if args.list:
+        print(f"converged mode: {len(units)} units x starts {','.join(starts)} -> {rel(base)}")
+        for u in units:
+            sc = " ".join(map(str, u["supercell"]))
+            print(f"  [{u['item']}] {unit_tag(u['system'], u['model'], u['T'], u['supercell'])}"
+                  f"  env={MODEL_ENV[u['model']]}  -- {u['why']}")
+            for s in u["starts"]:
+                print(f"      python {SCRIPT} --converge --system {u['system']} --model "
+                      f"{u['model']} --T {t_tag(u['T'])} --supercell {sc} --start {s}")
+        return 0
+    runnable = []
+    for u in units:
+        # A single unit reaches run_converged_unit, which refuses loudly in the wrong env.
+        ok, why = ((True, "") if args.dry_run or args.preset != CONV_PRESET
+                   else env_can_run(u["model"]))
+        if ok:
+            runnable.append(u)
+        else:
+            print(f"[env] skipping {unit_tag(u['system'], u['model'], u['T'], u['supercell'])}: "
+                  f"{why}")
+    failed, busy = [], []
+    for u in runnable:
+        tag = unit_tag(u["system"], u["model"], u["T"], u["supercell"])
+        try:
+            fl = run_converged_unit(u, args)
+            failed += fl["failed"]
+            busy += fl["busy"]
+        except (Exception, SystemExit) as exc:
+            if args.preset != CONV_PRESET:
+                raise
+            print(f"[UNIT FAILED] {tag}: {type(exc).__name__}: {exc}\n{traceback.format_exc()}",
+                  flush=True)
+            failed.append((tag, "unit"))
+    if busy:
+        print(f"\n{len(busy)} start(s) left to the live process that holds them: {busy}.")
+    if failed:
+        print(f"\n{len(failed)} start(s)/unit(s) failed: {failed}. Tracebacks are in the JSONs "
+              "(or above, for a whole unit).")
+    return 2 if failed else 0
+
+
 # --------------------------------------------------------------------------- CLI ----
 
 def env_can_run(model: str) -> tuple[bool, str]:
@@ -1623,7 +2963,8 @@ def parse_args(argv=None):
     ap.add_argument("--out-dir", default=None,
                     help=f"study directory (default {rel(STUDY_DIR)}; --dry-run: "
                          f"{rel(STUDY_DIR / '_dryrun')})")
-    ap.add_argument("--preset", choices=sorted(PRESETS))
+    ap.add_argument("--preset", choices=sorted([*PRESETS, CONV_PRESET]),
+                    help=f"'{CONV_PRESET}' runs the C1c converged-SSCHA units (starts A and B)")
     ap.add_argument("--list", action="store_true", help="with --preset: print the plan and exit")
     ap.add_argument("--summarize", action="store_true",
                     help="print a table of every unit JSON in the study directory")
@@ -1633,11 +2974,29 @@ def parse_args(argv=None):
     ap.add_argument("--dry-run-v4-sleep", type=float, default=3.0, help=argparse.SUPPRESS)
     ap.add_argument("--retry-failed", action="store_true")
     ap.add_argument("--ledger-tol", type=float, default=LEDGER_TOL_THZ)
+    cg = ap.add_argument_group("converged mode (C1c)")
+    cg.add_argument("--converge", action="store_true",
+                    help="converged SSCHA for one unit (--system/--model/--T/--supercell), "
+                         f"written under {rel(CONV_DIR)}")
+    cg.add_argument("--start", choices=list(CONV_STARTS), default=None,
+                    help="A = production ForcePositiveDefinite start, B = imaginary modes set to "
+                         "--start-b-thz (default: both)")
+    cg.add_argument("--unit-timeout", type=float, default=CONV_DEFAULTS["unit_timeout_s"],
+                    help="wall-clock cap on each (unit, start) relaxation, seconds; <= 0 disables "
+                         f"(default {CONV_DEFAULTS['unit_timeout_s']:g})")
+    cg.add_argument("--start-b-thz", type=float, default=CONV_DEFAULTS["start_b_thz"])
+    cg.add_argument("--conv-n-configs", type=int, default=CONV_DEFAULTS["n_configs"])
+    cg.add_argument("--conv-max-pop", type=int, default=CONV_DEFAULTS["max_pop"])
+    cg.add_argument("--conv-n-hessian", type=int, default=CONV_DEFAULTS["n_hessian"])
+    cg.add_argument("--conv-steps-per-pop", type=int, default=CONV_DEFAULTS["max_steps_per_pop"])
+    cg.add_argument("--dry-run-step-sleep", type=float, default=0.0, help=argparse.SUPPRESS)
     return ap.parse_args(argv)
 
 
 def main(argv=None) -> int:
     args = parse_args(argv)
+    if args.converge or args.preset == CONV_PRESET:
+        return main_converged(args)
     if args.summarize:
         d = (Path(args.out).resolve().parent if args.out else
              Path(args.out_dir).resolve() if args.out_dir else
