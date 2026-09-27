@@ -265,7 +265,7 @@ numerical: 93 have the width solver's grid fallback (below) at a point of the fi
 stencil, and the other two are ORB-v2 modes of bcc Ti whose fitted polynomial has a positive
 quadratic term and a well only between sample points, a fit artefact of the kind described in
 §S1.4 (`scripts/curvature_identity_check.py` → `results/curvature_identity_check.json`). The
-negative values in Fig. 2 are therefore not physical curvatures, and the observable is not scored
+negative ω_eff values are therefore not physical curvatures, and the observable is not scored
 against SSCHA anywhere in this work (Table S16).
 
 **Solving it.** Substituting Ω(σ²) back gives a scalar fixed-point equation g(σ²) = σ²_sc(σ²) −

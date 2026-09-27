@@ -3,7 +3,7 @@ here from the ledger (through ``analysis.canonical``), independent of when or wh
 
 Figures, in the order the manuscript first cites them:
   Fig. 1  fig_tolerance_sweep     harmonic false-stable / false-unstable calls vs imaginary tolerance
-  Fig. 2  fig_softmode_heat       soft-mode screen at 100 K: symmetric-point curvature per unit
+  Fig. 2  fig_harmonic_heat       harmonic layer: minimum phonon frequency per unit, with its call
   Fig. 3  fig_sscha_bcc           SSCHA lowest free-energy-Hessian frequency vs T, bcc Ti/Zr/Hf
   Fig. 4  fig_method_agreement    screen curvature vs SSCHA Hessian frequency on the bcc metals
   Fig. 5  fig_displacive_recall   recall of the unstable cubic phase, FE perovskites, T <= 300 K
@@ -13,6 +13,12 @@ Each figure is written as a 600 dpi PNG (the copy embedded in the DOCX) and a 60
 both flattened to RGB on white, plus a numbered upload copy results/figures/upload/FigN.tif.
 The numbering is checked against the figure links in paper/manuscript.md before anything is
 written. Run from the repository root: python scripts/make_figures.py
+
+fig_softmode_heat (the screen's 100 K symmetric-point curvature map, formerly Fig. 2) is retired
+and no longer called: that curvature is positive by construction for a single even mode, so the
+map showed only numerical noise in its sign (scripts/curvature_identity_check.py). The function
+is kept for reference; its last outputs results/figures/fig_softmode_heat.{png,tiff} were left in
+place and are not part of the paper.
 """
 from __future__ import annotations
 import os
@@ -35,6 +41,7 @@ OUT = os.environ.get("FIGDIR", "results/figures")
 MANUSCRIPT = "paper/manuscript.md"
 SSCHA_GRID = "results/sscha_units_v1.csv"     # the attempted SSCHA grid (208 units)
 os.makedirs(OUT, exist_ok=True)
+from mlip_dynstab import DEFAULT_IMAG_TOL_THZ
 from mlip_dynstab import analysis as A
 from mlip_dynstab import stats as S
 from mlip_dynstab.systems import load_specs
@@ -59,7 +66,7 @@ DPI = 600
 N_RESAMPLE, SEED = 10000, 0                    # as scripts/stats_hardening.py
 
 # Upload numbering: order of first citation in the manuscript (checked by _check_numbering).
-FIG_NUMBER = {"fig_tolerance_sweep": 1, "fig_softmode_heat": 2, "fig_sscha_bcc": 3,
+FIG_NUMBER = {"fig_tolerance_sweep": 1, "fig_harmonic_heat": 2, "fig_sscha_bcc": 3,
               "fig_method_agreement": 4, "fig_displacive_recall": 5,
               "fig_ensemble_guardrail": 6}
 
@@ -171,8 +178,102 @@ def fig_sscha_bcc():
         _save(fig, "fig_sscha_bcc")
 
 
+def fig_harmonic_heat():
+    """Fig. 2. The harmonic layer (§2.3, §3.1): for every system and model, the minimum phonon
+    frequency over the Gamma-centred 12x12x12 mesh interpolated from 2x2x2 finite-displacement
+    force constants (negative = imaginary). The minimum includes the acoustic branch at Gamma,
+    so a system with no instability reads numerical zero (printed unsigned, 0.00) and no cell is
+    positive beyond it; the diverging scale is centred at 0 and only its negative half is drawn on
+    the colour bar.
+    Boxed cells are the harmonic calls 'unstable' at the production tolerance (minimum below
+    -0.1 THz). FS / FU mark calls that disagree with the reference label (false-stable /
+    false-unstable). The borderline KTaO3 is shown but not scored, so it carries no FS / FU mark.
+    Rows and columns keep the order and labels of the retired screen-curvature map."""
+    h = df[df["method"] == "harmonic"]
+    if h.empty:
+        return
+    if h.groupby(["system", "model"]).size().max() != 1:
+        raise SystemExit("[figures] more than one canonical harmonic row per (system, model)")
+    tol = abs(float(DEFAULT_IMAG_TOL_THZ))
+    stable = h["pred_stable"].astype(bool)
+    # The boxes are the ledger's calls; refuse to draw them if those are not the calls at the
+    # production tolerance that the caption describes.
+    if not (stable == (h["min_freq_thz"] >= -tol)).all():
+        raise SystemExit(f"[figures] harmonic pred_stable is not min_freq >= -{tol} THz")
+    h = h.assign(ps=stable.astype(float), gt=h["gt_stable"].astype(bool).astype(float))
+    rows = [s for s in _SPECS if s in set(h["system"])] + sorted(set(h["system"]) - set(_SPECS))
+    cols = [c for c in MODELS if c in set(h["model"])]
+    freq = h.pivot_table(index="system", columns="model", values="min_freq_thz").loc[rows, cols]
+    pred = h.pivot_table(index="system", columns="model", values="ps").loc[rows, cols]
+    label = h.pivot_table(index="system", columns="model", values="gt").loc[rows, cols]
+    borderline = A.borderline_systems()
+
+    # Diverging scale centred at 0, linear within +/- the tolerance and logarithmic out to
+    # +/-10 THz, so the calls just past the tolerance (about -0.2 to -0.3 THz) are already clearly
+    # red while the acoustic zero stays white. HfO2/CHGNet (-10.6 THz) sits at the saturated end;
+    # its printed value gives the true number.
+    vlim = 10.0
+    norm = SymLogNorm(linthresh=tol, linscale=1.0, vmin=-vlim, vmax=vlim, base=10)
+    cmap = plt.get_cmap("RdBu")                  # negative (imaginary) = red, 0 = white
+    fig, ax = plt.subplots(figsize=(6.5, 7.6))
+    im = ax.imshow(freq.values, aspect="auto", cmap=cmap, norm=norm)
+    ax.set_xticks(range(len(cols)))
+    ax.set_xticklabels([NAME[c] for c in cols], rotation=35, ha="right")
+    ax.set_yticks(range(len(rows)))
+    ax.set_yticklabels([sys_label(s) + ("*" if s in borderline else "") for s in rows], fontsize=8)
+    n_fs = n_fu = 0
+    for i, s in enumerate(rows):
+        for j in range(len(cols)):
+            v = freq.values[i, j]
+            if not np.isfinite(v):
+                continue
+            ink = "white" if abs(float(norm(v)) - 0.5) > 0.36 else "black"
+            # A value that rounds to zero is the acoustic zero at Gamma (|v| < 1e-5 THz in the
+            # ledger); its sign is numerical, so it prints as the unsigned 0.00 the caption quotes.
+            txt = f"{v:.2f}"
+            if float(txt) == 0.0:
+                txt = "0.00"
+            ax.text(j, i, txt.replace("-", "−"), ha="center", va="center",
+                    fontsize=6.5, color=ink)
+            called_stable = pred.values[i, j] == 1
+            if not called_stable:
+                ax.add_patch(Rectangle((j - 0.44, i - 0.42), 0.88, 0.84, fill=False,
+                                       ec="black", lw=1.3, zorder=3))
+            if s not in borderline and called_stable != (label.values[i, j] == 1):
+                tag = "FS" if called_stable else "FU"
+                n_fs += tag == "FS"
+                n_fu += tag == "FU"
+                ax.text(j + 0.33, i, tag, ha="center", va="center", fontsize=5.5,
+                        fontweight="bold", color=ink, zorder=4)
+    ax.set_title("Harmonic layer: minimum phonon frequency\n"
+                 "(2×2×2 force constants, 12×12×12 mesh; §2.3)",
+                 fontsize=10.5)
+    cb = fig.colorbar(im, ax=ax, extend="min", fraction=0.05, pad=0.03)
+    cb.ax.set_ylim(-vlim, 0.0)                   # the minimum cannot sit above the acoustic zero
+    cb.set_ticks([-10, -1, -tol, 0])
+    cb.set_ticklabels(["−10", "−1", f"−{tol:g}", "0"])
+    cb.ax.axhline(-tol, color="black", lw=0.9, ls="--")
+    cb.set_label("minimum harmonic frequency (THz)\n"
+                 f"negative = imaginary (red); dashed: −{tol:g} THz tolerance")
+    note = (f"Boxed: harmonic call unstable (minimum below −{tol:g} THz). "
+            "FS / FU: the call disagrees with the reference label\n"
+            "(false-stable / false-unstable).")
+    if any(s in borderline for s in rows):
+        note += " * borderline label, not scored (no FS / FU mark)."
+    fig.text(0.02, 0.01, note, fontsize=7.5, ha="left", va="bottom")
+    fig.tight_layout(rect=(0, 0.04, 1, 1))
+    _save(fig, "fig_harmonic_heat")
+    print(f"  harmonic heat map: {len(rows)} systems x {len(cols)} models, "
+          f"{int((pred.values == 0).sum())} boxed, {n_fs} FS, {n_fu} FU at tol {tol} THz")
+
+
 def fig_softmode_heat():
-    """Fig. 2. The soft-mode screen at the lowest ladder temperature (100 K): for every system
+    """RETIRED 2026-09-27, not called and not in the paper (kept for reference; it writes no
+    numbered upload copy because it is no longer in FIG_NUMBER). The symmetric-point curvature it
+    maps equals the trial stiffness M*Omega^2 for a single even mode, so it is positive by
+    construction and every negative cell was numerical (scripts/curvature_identity_check.py).
+
+    Formerly Fig. 2. The soft-mode screen at the lowest ladder temperature (100 K): for every system
     and model, the symmetric-point curvature frequency, i.e. the signed curvature of the
     single-mode SCHA free energy at Q = 0, minimised over the screened modes (negative =
     imaginary). This is the screen's curvature observable; it is neither a harmonic frequency
@@ -442,7 +543,7 @@ def fig_ensemble_guardrail():
 if __name__ == "__main__":
     _check_numbering()
     fig_tolerance_sweep()
-    fig_softmode_heat()
+    fig_harmonic_heat()
     fig_sscha_bcc()
     fig_method_agreement()
     fig_displacive_recall()

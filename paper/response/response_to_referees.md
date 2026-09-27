@@ -903,10 +903,13 @@ the guardrail), and the split in Tables S10, S13, S14, S15, S16, S17 and S18.
 **Response.** It was in the submitted manuscript, not the proof: Fig. 6 was placed before Fig. 5 in
 the source. All six figures now appear in order of first citation, with Fig. 5 placed after Fig. 4
 in §3.3, and they are also supplied as separate numbered TIFF files at 600 dpi in that order.
-Every caption except that of Fig. 1 changed in substance. Fig. 2 is now described as what it
-plots, the screen's 100 K curvature observable, with its negative values identified as numerical;
-the reviewed text cited it in §3.1 as though it showed harmonic frequencies, and its colour-bar
-label is corrected. Fig. 3 no longer says that the SSCHA margins discriminate the models, and marks
+Every caption except that of Fig. 1 changed in substance. Fig. 2 is a new figure: the reviewed
+Fig. 2 plotted the screen's 100 K curvature observable, which the reviewed text cited in §3.1 as
+though it showed harmonic frequencies; that observable is positive by construction (ESI §S1.3), so
+its negative values were numerical. The new Fig. 2 shows what §3.1 argues from, the harmonic
+minimum frequency of every system under every model, with the unstable calls boxed and the
+disagreements with the reference label marked; it also puts the per-system harmonic numbers behind
+Table S4 on the record (item 4). Fig. 3 no longer says that the SSCHA margins discriminate the models, and marks
 the units with nothing to stabilise. Fig. 4 no longer describes SSCHA as a "gold standard" or says
 the screen tracks it, and gives the call agreement. Fig. 5 no longer says SSCHA is less reliable
 than the screen, and gives both recalls as counts with intervals. Fig. 6 adds the panel without

@@ -148,7 +148,7 @@ transition, not a fitted T_c). The experimental labels mark thermodynamic, often
 phase transitions, whereas the screen and SSCHA probe the dynamic stability of the high-symmetry
 phase, so a label and a dynamic-stability call can differ near a transition without either being
 wrong; the six control labels come from the DFPT phonon database^3^ rather than from experiment.
-KTaO₃ is flagged borderline (incipient ferroelectric, DFT mode ≈0; four of five MLIPs call it
+KTaO₃ is flagged borderline (incipient ferroelectric, DFT mode ≈0; three of five MLIPs call it
 imaginary) and excluded from headline rates, which leaves 19 scored systems. CeO₂ and NaCl are
 retained as scored stable controls, since they are genuinely stable and only CHGNet marginally
 trips them (§3.1). The soft-mode screen and the harmonic baseline cover all 20 systems; the SSCHA
@@ -423,6 +423,25 @@ is a check on the harness rather than a finding.
 imaginary-frequency tolerance (§3.1). The default −0.1 THz sits in the stable basin between the
 false-unstable flood at strict tolerance and the false-stable inflation at loose tolerance.](../results/figures/fig_tolerance_sweep.png)
 
+Fig. 2 shows the minimum harmonic frequency behind each call at the default tolerance, so the
+division among the models can be read system by system. The five false-stable cells (bcc Zr and
+Hf for MACE-MP-0 and CHGNet, SrTiO₃ for ORB-v2) read 0.00 THz, the same numerical zero of the
+acoustic branch at Γ that the correctly called controls read: on those potentials no frequency on
+the mesh lies below that zero, so these misses are not near-threshold calls. The three false-unstable
+cells are CHGNet's CeO₂ (−0.27 THz) and NaCl (−0.24 THz) and ORB-v2's MgO (−1.07 THz).
+
+![**Fig. 2** Harmonic layer (§2.3, §3.1): the minimum phonon frequency of each system on each
+model's potential, over the Γ-centred 12×12×12 mesh interpolated from 2×2×2 finite-displacement
+force constants, with negative values imaginary. Boxed cells are the units called unstable at the
+production tolerance (minimum below −0.1 THz); FS and FU mark calls that disagree with the
+reference label (false-stable and false-unstable). The minimum includes the acoustic branch at Γ,
+so a system without an instability reads 0.00 THz and no cell lies above that numerical zero; the
+five false-stable cells read the same zero. The colour scale is diverging and centred at zero (red
+negative), linear within ±0.1 THz and logarithmic to −10 THz, and the colour bar shows only its
+negative half, with the tolerance dashed; printed values are unclipped (HfO₂ on CHGNet, −10.60 THz, lies beyond the end of the scale). The
+borderline KTaO₃ (*) is shown but not scored, so it carries no FS or FU
+mark.](../results/figures/fig_harmonic_heat.png)
+
 ### 3.2 Finite-temperature soft-mode screen (H2)
 
 On the ferroelectric perovskites at T ≤ 300 K, below every transition temperature, the label is
@@ -439,28 +458,16 @@ six harmonically-stable controls the screen is correct on all 120 model units (0
 [0.000, 0.031]; 0/96 without ORB-v2) and finds zero imaginary commensurate modes in every case.
 One qualification belongs with that number: the harmonic classifier reads an interpolated
 12×12×12 mesh while the screen reads only the **q** commensurate with the force-constant cell,
-so the three marginal harmonic false-unstables (ORB-v2 on MgO at −1.07 THz, CHGNet on CeO₂ and
-NaCl) have no commensurate counterpart for the screen to find. The control result is therefore
+so the three harmonic false-unstables (ORB-v2 on MgO at −1.07 THz, CHGNet on CeO₂ and NaCl at
+−0.27 and −0.24 THz) have no commensurate counterpart for the screen to find. The control result is therefore
 in part a consequence of approximation A2, and we report it as a consistency check rather than
 as proof that the screen cannot manufacture an instability.
 
-Fig. 2 shows the screen's curvature observable at 100 K for every unit, alongside its call. The
-two differ where §2.4 says they must: a unit can carry a positive symmetric-point curvature and
-still be called unstable, because a displaced minimum has dropped below a symmetric point that
-remains a local minimum. Its negative cells are numerical, not physical (§2.4).
-
-![**Fig. 2** The soft-mode screen at 100 K, per system and model: the symmetric-point curvature
-frequency ω_eff (§2.4), minimised over each unit's screened imaginary modes, with negative values
-imaginary. For a system with no imaginary commensurate mode the cell shows its softest commensurate
-harmonic frequency. This is the screen's curvature observable, neither a harmonic frequency nor the
-stability call. For a single mode it equals the self-consistent trial frequency and is positive
-wherever the width equation is solved, so the negative values shown are numerical (the width
-solver's grid fallback, or a fit artefact; ESI §S1.3) and not physical curvatures. Boxed cells are
-the units the screen calls unstable at 100 K; a boxed cell with a positive value is a
-first-order-like condensation that the curvature does not register (§2.4).
-Red is negative and blue positive, on a scale linear within ±1 THz and logarithmic to ±10 THz;
-printed values are unclipped. The borderline KTaO₃ is marked and excluded from
-scoring.](../results/figures/fig_softmode_heat.png)
+Only the screen's call is scored; its curvature observable cannot signal an instability (§2.4).
+For a single mode the symmetric-point curvature equals the self-consistent trial stiffness and is
+positive by construction, so it is positive on the units the screen calls unstable as well, where
+a displaced minimum has dropped below a symmetric point that remains a local minimum. The
+negative values that observable reports are numerical, not physical (ESI §S1.3).
 
 Multi-anchor comparison against experiment. Beyond the SrTiO₃ gate (§2.4) we compare the screen's
 predicted stabilisation temperature T* (the lowest ladder T at which the cubic phase is called
