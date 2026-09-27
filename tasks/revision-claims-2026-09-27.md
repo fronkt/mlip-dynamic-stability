@@ -95,7 +95,7 @@ interatomic potential for finite-temperature dynamic stability". Existence claim
 - Table S14 (`results/screen_sensitivity.md`), unit-level flips at T ≤ 300 K:
   fit window (3×/5×/8× × 30/60/120 meV): 0 unit flips (69% of modes have an identical kept point set
   across multipliers at 60 meV — say so); sampling range Q ≤ 0.25–0.40 Å: ≤ 1 unit flip (8 over all T
-  at 0.25 Å, CsSnBr₃-dominated); threshold 0.5–3 steps and box 1.2 Å: 0 flips.
+  at 0.25 Å over CsPbI₃ 2, CsSnBr₃ 3, CsSnI₃ 2, Ti 1); threshold 0.5–3 steps and box 1.2 Å: 0 flips.
   **Frozen-cell normalisation is outcome-determining**: FE recall 16/30 (production minimal cell) →
   28/30 (common FC supercell), 26/30 (doubled), 5/30 (per formula unit); SrTiO₃ gate 3/5 → 3/5, 2/5,
   0/5. Accuracy cannot choose among them (T ≤ 300 K: 127/150, 139/150, 136/150, 105/150; all-T:
@@ -106,7 +106,7 @@ interatomic potential for finite-temperature dynamic stability". Existence claim
   false (deciding-mode well depths at T ≤ 300 K: BaTiO₃ 28–43, KNbO₃ 25–59, PbTiO₃ 0–110, SrTiO₃
   0–27 meV per minimal cell). Split T1u triplets exist (BaTiO₃/CHGNet), so the "one irrep" claim goes.
   18 Ti/ORB-v2 modes and 1 PbTiO₃/ORB-v2 mode have fitted wells with no sampled well (fit artefacts,
-  34.6–799.0 meV); no unit call depends on them — disclose.
+  34.6–798.9 meV for Ti/ORB-v2 and 0.2 meV for PbTiO₃/ORB-v2); no unit call depends on them — disclose.
 
 ## 5. SSCHA (§2.5, §3.3, §3.5)
 
@@ -156,7 +156,7 @@ interatomic potential for finite-temperature dynamic stability". Existence claim
   600/900 K), CHGNet 1 (SrTiO₃ 900 K), SevenNet-0 1 (PbTiO₃ 900 K). Failed units (no row): 7 =
   ORB-v2 PbTiO₃ ×4, MatterSim PbTiO₃ 600/900 K, SevenNet-0 CsSnI₃ 600 K (a halide — "across the FE
   grid" is wrong). The "silent −2×10⁶ THz" value belongs to SrTiO₃/ORB-v2/600 K (v1), not to the
-  failed units; the v1 values of the failed units were −3.6 to −3653 THz.
+  failed units; the v1 values of the failed units were −0.3 to −3653 THz.
 - Zone-boundary convergence (R3.2): no convergence claim for R-point (SrTiO₃) or X-point (fluorite)
   systems. Within-cell fluorite control: in the same 2×2×2 cell the harmonic layer sees the
   instability (−3.8 to −10.6 THz) that SSCHA at 100 K calls stable (+1.9 to +3.3 THz) → the fluorite
@@ -166,8 +166,8 @@ interatomic potential for finite-temperature dynamic stability". Existence claim
 ## 6. Guardrail (§3.4) — Referee 2.2 and 3.5
 
 - Vote split (`orb_split_s3.guardrail`): all models split-vote error 8/14 vs unanimous 4/46,
-  AUC 0.762, clustered permutation p = 0.003 (exact enumeration 0.00303), cluster-bootstrap CI
-  [0.590, 0.934]; **ex-ORB 4/8 vs 8/52, AUC 0.628, p = 0.044 (exact 0.0438), CI [0.438, 0.839]
+  AUC 0.762, clustered permutation p = 0.0035 (10,000 permutations; exact enumeration 0.0030), cluster-bootstrap CI
+  [0.590, 0.934]; **ex-ORB 4/8 vs 8/52, AUC 0.628, p = 0.047 (10,000 permutations; exact 0.044), CI [0.438, 0.839]
   spanning 0.5**; 3 tied 2–2 units broken to "stable" (2 wrong). Frequency-std AUC 0.361
   (ex-ORB 0.299). Wording: "suggestive, not robust to removing ORB-v2". Naive vs clustered p differ
   by a factor of ~12 (0.0003 vs 0.0035), not four.
