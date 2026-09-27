@@ -74,6 +74,18 @@ Resumable per (unit, start) with the seed study's rules; --unit-timeout caps eac
 (between minimiser steps only: wrap every box process in `timeout` for true hangs). A flock per
 (unit, start) under <out>/locks/ keeps two processes off the same start; a killed run's partial
 history moves to previous_runs when it is recomputed.
+
+Converged grid (--preset grid, C1c over the units Sec. 3.3 scores; the paths above are untouched).
+The converged recipe, start A only, on every (system, model, T) the production SSCHA grid ran
+(results/sscha_units_v1.csv) among: the displacive non-bcc systems at 100 and 300 K (2x2x2),
+SrTiO3 at 100 and 300 K (2x2x2), and bcc Ti/Zr/Hf at 100, 300 and 600 K (3x3x3). Same JSON and
+work layout as converged mode, under results/revision/sscha_converged_grid/, plus summary.csv from
+--summarize. Defaults --n-boot 10, --unit-timeout 7200. Any number of processes per env may run it
+at once and share the units through the per-(unit, start) lock (see the grid comment block).
+    python scripts/sscha_seed_study.py --grid-list                    # plan: env, atoms, minutes
+    python scripts/sscha_seed_study.py --preset grid --model mace_mp0 --device cuda   # k copies
+    python scripts/sscha_seed_study.py --preset grid --summarize      # tables + summary.csv
+    python scripts/sscha_seed_study.py --preset grid --dry-run --device cpu --out-dir <scratch>
 """
 from __future__ import annotations
 
@@ -1737,6 +1749,8 @@ CONVERGED_UNITS = [
 def conv_base_dir(args) -> Path:
     if args.out_dir:
         return Path(args.out_dir).resolve()
+    if getattr(args, "preset", None) == GRID_PRESET:
+        return GRID_DIR / "_dryrun" if args.dry_run else GRID_DIR
     return CONV_DIR / "_dryrun" if args.dry_run else CONV_DIR
 
 
@@ -2833,7 +2847,9 @@ def _run_converged_start(unit: dict, args, s: str, sp: dict, ctx_base: dict, fla
               f"| fresh R/Rexp {fr} | {entry['wall_s']:.0f}s", flush=True)
 
 
-def summarize_converged(directory: Path) -> int:
+def summarize_converged(directory: Path, pairs_only: bool = False) -> int:
+    """Per-start table, then the A/B comparison of every unit (pairs_only: only of the units whose
+    two starts both have a JSON, so a start-A-only grid does not get an 'incomplete' file each)."""
     files = sorted(Path(directory).glob("*_start[AB].json"))
     if not files:
         print(f"no converged-mode JSONs in {directory}")
@@ -2868,6 +2884,9 @@ def summarize_converged(directory: Path) -> int:
               f"{num(d['kl_ratio_at_gradient_end'], '5.2f', 5)} "
               f"{num(d['fresh_R_over_expected'], '5.2f', 5)} {num(d['wall_s'], '6.0f', 6)}")
     for tag, itol in sorted(tags.items()):
+        if pairs_only and not all(conv_paths(Path(directory), tag, s)["json"].exists()
+                                  for s in CONV_STARTS):
+            continue
         c = conv_compare(Path(directory), tag, itol)
         extra = (f": dHess {c['hessian_min_diff_thz']:.3f} THz, z {c['z']}, dAux "
                  f"{c['final_aux_min_diff_thz']:.3f} THz, dyn {c.get('dyn_level')}"
@@ -2935,6 +2954,644 @@ def main_converged(args) -> int:
     return 2 if failed else 0
 
 
+# ============================================= C1c grid: converged SSCHA on the Sec. 3.3 units ====
+#
+# The production grid (results/sscha_units_v1.csv: 2x2x2, 256 configurations, the cumulative
+# max_ka = 20) never converged, so every SSCHA value Sec. 3.3 scores sits near its
+# ForcePositiveDefinite start. --preset grid re-runs those units with the converged recipe of
+# --preset converged (converged_recipe(): N_configs, max_pop, n_hessian, the per-population step
+# cap, meaningful_factor on the real error, the Kong-Liu guard), start A only (the six-unit A/B
+# study above measures start dependence), n_boot 10 (the bootstrap is the slowest post-relaxation
+# stage on the perovskites, and the A/B study already quantifies the noise) and a 7200 s cap on
+# each relaxation. The units:
+#   * the displacive non-bcc systems Sec. 3.3 scores (the ferroelectric oxides, the fluorites, and
+#     CsSnI3, the one halide perovskite in the production grid) at 100 and 300 K, 2x2x2;
+#   * SrTiO3 at 100 and 300 K, 2x2x2 (unstable label at 100 K, stable at 300 K);
+#   * bcc Ti, Zr, Hf at 100, 300 and 600 K (the 45 method-agreement units) in the 3x3x3 cell: the
+#     converged MatterSim Zr runs at 300 K change sign between 2x2x2 and 3x3x3.
+# Every model the production grid ran on a (system, T) is included, read from the production unit
+# list itself, the ones that failed there too (ORB-v2 on PbTiO3): a failure is recorded, not
+# dropped. Within each env the units run cheapest first: bcc (27 atoms), fluorite (24),
+# perovskite (40); the fluorite and perovskite wells are the deep ones.
+#
+# Sharing the work. Every process of an env walks the same ordered list. For each (unit, start) it
+# reads the JSON without the lock (a finished or failed unit is passed over at no cost), then tries
+# the unit's flock (start_lock, non-blocking): a unit a live process holds is passed over at once
+# ([busy]), before any model, ledger or git call. Under the lock the JSON is read again and
+# grid_should_run decides, so a unit another process finished meanwhile is not redone. flock is
+# released by the kernel when its holder dies, so a 'running' record whose lock is free belongs to
+# a dead process. --preset converged recomputes such a record whenever it meets one; the grid does
+# so only if the dead run began before this process started and is the unit's first dead run, so a
+# unit that kills its process (segfault, OOM killer, the outer `timeout`) is not handed from
+# process to process until all are dead. --retry-failed reruns failures and repeated dead runs,
+# again only those recorded before this process started, so two processes never both retry one.
+# After its pass a process revisits the units it found busy once, without waiting, and ends by
+# listing every start of its selection that is not ok, with its state: a 'running' one whose
+# process is gone is marked DEAD (--grid-list does the same), and such a unit stays for the next
+# launch, which recomputes it.
+#
+# Launching beside a running --preset converged (C1c): run a copy of this file under another name
+# (scripts/sscha_seed_study_grid.py). provenance() hashes the file on disk at every unit, so
+# replacing the file a running process was started from would stamp its later JSONs with the hash
+# of code it is not running; a copy records its own name and hash (see SCRIPT).
+
+GRID_PRESET = "grid"
+GRID_DIR = REPO / "results" / "revision" / "sscha_converged_grid"
+GRID_UNITS_CSV = REPO / "results" / "sscha_units_v1.csv"      # the production grid's unit list
+GRID_ITEM = "C1c-grid"
+GRID_STARTS = ("A",)
+GRID_DEFAULTS = {"n_boot": 10, "unit_timeout_s": 7200.0}
+GRID_SETS = (
+    dict(systems=("batio3_cubic", "knbo3_cubic", "pbtio3_cubic", "cssni3_cubic", "zro2_cubic",
+                  "hfo2_cubic"), T=(100.0, 300.0), supercell=(2, 2, 2),
+         why="Sec. 3.3 displacive set, scored at T <= 300 K; production SSCHA unconverged"),
+    dict(systems=("srtio3_cubic",), T=(100.0, 300.0), supercell=(2, 2, 2),
+         why="SrTiO3: unstable label at 100 K, stable at 300 K (AFD transition 105 K)"),
+    dict(systems=("ti_bcc", "zr_bcc", "hf_bcc"), T=(100.0, 300.0, 600.0), supercell=(3, 3, 3),
+         why="bcc method-agreement unit of Sec. 3.3, in the 3x3x3 cell"),
+)
+GRID_FAMILY_RANK = {"bcc": 0, "fluorite": 1, "cubic-perovskite": 2}   # spec.prototype, run order
+# --grid-list wall-time model, one process, no contention. Force calls: seconds per configuration
+# from the production ledger (wall_s over its 256 x 8 + 512 force calls, median over each model's
+# non-bcc units; steps and Hessian are folded in, so it errs high), t_force_s where the ledger has
+# none. Hessian: hess_c * n_hessian * atoms^3 s per evaluation (seed study: 12.9 s per
+# 512-configuration BaTiO3 replicate on the RTX 3090 box), n_boot + 2 of them (the Hessian, the
+# bootstrap's identity replicate, n_boot replicates). ASSUMED, not measured: steps_per_pop (the
+# box logs show 50-70 evaluations per KL-limited population, see the C1c block), t_step_40_s per
+# evaluation at 40 atoms (scaled by (atoms/40)^2) and pops. Finished converged runs replace pops
+# and hess_c per family by their median when there are any (marked '*').
+GRID_EST = {"pops": 8, "steps_per_pop": 60, "t_step_40_s": 0.4, "t_force_s": 0.08,
+            "hess_c": 3.9e-7, "overhead_s": 60.0}
+# Summary joins. Every production SSCHA ledger row is 2x2x2 (Sec. 2.5), so the production column
+# is read from that cell only and named for it: on bcc the grid cell is 3x3x3, and there a change
+# of call against production mixes the cell change with convergence (same_cell_as_prod). |f| above
+# GRID_BLOWUP_THZ is a numerical blow-up (Sec. 3.3; analysis.py uses the same 50 THz), left out
+# of the call counts as Sec. 3.3 leaves it out of its denominators. Sec. 3.3 scores the label on
+# the non-bcc units only (the bcc label is the thermodynamic one, False at every T); on bcc it
+# pairs SSCHA with the screen's call (softmode pred_stable, its free-energy comparison).
+GRID_PROD_SC = (2, 2, 2)
+GRID_BLOWUP_THZ = 50.0
+GRID_CSV_COLUMNS = (
+    "unit_tag", "system", "model", "T_K", "supercell", "env", "family", "n_atoms", "start",
+    "status", "recipe_matches", "converged", "stop_reason", "n_populations", "final_aux_min_thz",
+    "hessian_min_thz", "boot_sd_thz", "imag_tol_thz", "stable_call", "blowup", "gt_stable",
+    "label_scored", "call_matches_label", "screen_stable_call", "call_matches_screen",
+    "prod_sc222_hessian_min_thz", "prod_sc222_stable_call", "prod_sc222_blowup", "prod_status",
+    "same_cell_as_prod", "call_changed_vs_prod", "fresh_R_over_expected",
+    "kl_ratio_at_gradient_end", "wall_min", "n_boot", "utc_end", "error")
+
+
+def grid_units() -> list:
+    """The grid's units in run order: by env, then cheapest family first, then T and system.
+    (system, model, T) come from the production grid's unit list, so a model the production grid
+    ran on a (system, T) is here and one it never ran (ORB-v2 on CsSnI3) is not; atoms and family
+    come from the system registry."""
+    import csv
+    from mlip_dynstab.systems import get_spec, build_atoms
+    with open(GRID_UNITS_CSV, encoding="utf-8", newline="") as fh:
+        ran = sorted({(r["system"], r["model"], float(r["temperature_K"]))
+                      for r in csv.DictReader(fh)})
+    envs = list(dict.fromkeys(MODEL_ENV.values()))
+    reg, units = {}, []
+    for g in GRID_SETS:
+        for system, model, T in ran:
+            if system not in g["systems"] or not any(math.isclose(T, t) for t in g["T"]):
+                continue
+            if system not in reg:
+                spec = get_spec(system)
+                reg[system] = (len(build_atoms(spec)), spec.prototype)
+            nat, family = reg[system]
+            sc = tuple(int(x) for x in g["supercell"])
+            units.append(dict(system=system, model=model, T=T, supercell=sc, starts=GRID_STARTS,
+                              item=GRID_ITEM, why=g["why"], env=MODEL_ENV[model], family=family,
+                              n_atoms=nat * int(np.prod(sc))))
+    units.sort(key=lambda u: (envs.index(u["env"]), GRID_FAMILY_RANK.get(u["family"], 99),
+                              u["T"], u["system"], u["model"]))
+    tags = [unit_tag(u["system"], u["model"], u["T"], u["supercell"]) for u in units]
+    if len(tags) != len(set(tags)):
+        raise SystemExit(f"duplicate grid units in {rel(GRID_UNITS_CSV)}")
+    return units
+
+
+def grid_should_run(doc, ident: dict, start: str, recipe: dict, args, t0_utc: str,
+                    under_lock: bool) -> tuple:
+    """(run it?, why) for one grid (unit, start); see the grid comment block. Refuses a JSON of
+    another unit, recipe or dry-run mode, as run_converged_unit does. Without the lock a 'running'
+    record may belong to a live process, so the answer is 'try the lock'; under the lock it
+    belongs to a dead one. t0_utc is this process's start (utc_now strings sort as times)."""
+    if doc is None:
+        return True, "new"
+    where = doc.get("unit_tag", "?") + f" start {start}"
+    if bool(doc.get("dry_run")) != bool(args.dry_run):
+        raise SystemExit(f"{where} was written with dry_run={doc.get('dry_run')}; refusing to mix "
+                         "mocked and real runs. Move it aside.")
+    if doc.get("unit") != ident or doc.get("start") != start:
+        raise SystemExit(f"{where}: the JSON holds {doc.get('unit')} start {doc.get('start')}.")
+    if doc.get("recipe") != _clean(recipe):
+        raise SystemExit(f"{where} was computed with recipe {doc.get('recipe')}; this run is "
+                         f"{recipe}. Refusing to mix; move it aside.")
+    run = doc.get("run") or {}
+    st = run.get("status")
+    if st == "ok":
+        return False, "ok"
+    if st == "failed":
+        if not args.retry_failed:
+            return False, f"failed ({run.get('error')}); --retry-failed to rerun"
+        if str(run.get("utc_end") or "") >= t0_utc:
+            return False, "failed after this process started; not retried twice"
+        return True, "retrying a failure (--retry-failed)"
+    if st != "running" or not under_lock:
+        return True, f"status {st}"
+    dead = sum(1 for r in doc.get("previous_runs") or [] if r.get("status") == "running")
+    if str(run.get("utc_start") or "") >= t0_utc:
+        return False, (f"orphaned: its process (pid {run.get('pid')}) died after this one "
+                       "started; left for a relaunch")
+    if dead and not args.retry_failed:
+        return False, f"orphaned again ({dead} earlier dead run(s)); --retry-failed to rerun"
+    return True, f"orphaned by dead pid {run.get('pid')} on {run.get('host')}; recomputing"
+
+
+def run_grid_unit(unit: dict, args, t0_utc: str) -> dict:
+    """One grid unit. Unlike run_converged_unit, the lock is taken before the model, the ledger
+    and the provenance are loaded, so only the process that will run a unit pays for them."""
+    from mlip_dynstab.systems import get_spec, build_atoms
+    system, model, T = unit["system"], unit["model"], float(unit["T"])
+    sc = tuple(int(x) for x in unit["supercell"])
+    tag = unit_tag(system, model, T, sc)
+    base = conv_base_dir(args)
+    recipe = converged_recipe(args)
+    ident = {"system": system, "model": model, "T": T, "supercell": list(sc)}
+    flags = {"failed": [], "done": [], "busy": [], "skipped": []}
+    for s in unit["starts"]:
+        sp = conv_paths(base, tag, s)
+        go, why = grid_should_run(load_json(sp["json"]), ident, s, recipe, args, t0_utc, False)
+        if not go:
+            print(f"[skip] {tag} start {s}: {why}", flush=True)
+            flags["skipped"].append((tag, s))
+            continue
+        with start_lock(base / "locks" / f"{tag}_start{s}.lock") as held:
+            if not held:
+                print(f"[busy] {tag} start {s}: a live process holds it; moving on", flush=True)
+                flags["busy"].append((tag, s))
+                continue
+            go, why = grid_should_run(load_json(sp["json"]), ident, s, recipe, args, t0_utc, True)
+            if not go:
+                print(f"[skip] {tag} start {s}: {why}", flush=True)
+                flags["skipped"].append((tag, s))
+                continue
+            if why != "new":
+                print(f"[grid] {tag} start {s}: {why}", flush=True)
+            if not args.dry_run:
+                ok, msg = env_can_run(model)
+                if not ok:
+                    raise SystemExit(f"{tag}: {msg}")
+            atoms = build_atoms(get_spec(system))
+            calc, model_version, fallback = load_calculator(model, args.device, args.dry_run, atoms)
+            led = ledger_lookup(system, model, T, sc)
+            prov = provenance(model, args.dry_run, args.device)
+            if not args.dry_run:
+                import sscha.Ensemble
+                prov["julia_ext_available"] = bool(getattr(sscha.Ensemble, "__JULIA_EXT__", False))
+                prov["julia_error"] = str(getattr(sscha.Ensemble, "__JULIA_ERROR__", ""))[:500]
+                prov["schamodules"] = schamodules_linkage()
+            prov["model_version"] = model_version
+            _run_converged_start(unit, args, s, sp, ctx_base=dict(
+                system=system, model=model, T=T, supercell=sc, atoms=atoms, calc=calc,
+                recipe=recipe, ledger=led, calc_is_fallback=fallback, ident=ident, tag=tag,
+                prov=prov, model_version=model_version), flags=flags)
+    if all(conv_paths(base, tag, s)["json"].exists() for s in CONV_STARTS):
+        cmp_ = conv_compare(base, tag, recipe["imag_tol_thz"])
+        print(f"[{tag}] A vs B: {cmp_.get('verdict')}", flush=True)
+    return flags
+
+
+def _grid_t_step(nat: int) -> float:
+    return GRID_EST["t_step_40_s"] * (float(nat) / 40.0) ** 2
+
+
+def _grid_per_pop(t_force: float, nat: int, n_configs: int) -> float:
+    return int(n_configs) * t_force + GRID_EST["steps_per_pop"] * _grid_t_step(nat)
+
+
+def grid_cost_model(dirs) -> dict:
+    """Inputs of grid_estimate (see GRID_EST): per-model seconds per force call from the production
+    ledger and, from the finished real (not dry-run) converged runs in ``dirs``, the relaxation as
+    population-equivalents and the Hessian constant, per family. Never raises."""
+    tf = {}
+    try:
+        from mlip_dynstab.analysis import load_canonical
+        df = load_canonical()
+        s = df[(df["method"] == "sscha") & ~df["system"].astype(str).str.endswith("_bcc")]
+        calls = (s["ft_n_configs"] * s["ft_max_pop"] + s["ft_n_hessian"]).astype(float)
+        per = (s["wall_s"].astype(float) / calls).groupby(s["model"]).median()
+        tf = {str(m): float(v) for m, v in per.items() if np.isfinite(v) and v > 0}
+    except Exception as exc:
+        print(f"[grid-list] no ledger timings ({type(exc).__name__}: {exc}); "
+              f"{GRID_EST['t_force_s']} s per force call for every model")
+    pops, hc, n = {}, {}, 0
+    from mlip_dynstab.systems import get_spec
+    for d in dirs:
+        for fp in sorted(Path(d).glob("*_start[AB].json")):
+            try:
+                doc = load_json(fp)
+                run = doc.get("run") or {}
+                if doc.get("schema") != CONV_SCHEMA or doc.get("dry_run") or run.get("status") != "ok":
+                    continue
+                R, u = doc["recipe"], doc["unit"]
+                fam = get_spec(u["system"]).prototype
+                nat = int(_dig(run, "dyn_meta", "nat_supercell"))
+                relax = _dig(run, "timings_s", "sscha_relax")
+                rep = _dig(run, "bootstrap", "wall_s_per_replicate")
+                t_f = tf.get(u["model"], GRID_EST["t_force_s"])
+                if relax:
+                    pops.setdefault(fam, []).append(relax / _grid_per_pop(t_f, nat, R["n_configs"]))
+                if rep:
+                    hc.setdefault(fam, []).append(rep / (int(R["n_hessian"]) * nat ** 3))
+                n += 1
+            except Exception:
+                continue
+    return {"t_force": tf, "n_measured": n,
+            "pops": {f: float(np.median(v)) for f, v in pops.items()},
+            "hess_c": {f: float(np.median(v)) for f, v in hc.items()}}
+
+
+def grid_estimate(u: dict, cm: dict, R: dict, args) -> dict:
+    """Minutes for one unit: 'est' with the assumed (or measured) population count, 'cap' with the
+    relaxation running into the wall cap (or max_pop full populations if there is no cap)."""
+    tf = cm["t_force"].get(u["model"], GRID_EST["t_force_s"])
+    nat, n_cfg = int(u["n_atoms"]), int(R["n_configs"])
+    measured = u["family"] in cm["pops"]
+    relax = cm["pops"].get(u["family"], GRID_EST["pops"]) * _grid_per_pop(tf, nat, n_cfg)
+    full = int(R["max_pop"]) * (n_cfg * tf + int(R["max_steps_per_pop"]) * _grid_t_step(nat))
+    cap = min(float(args.unit_timeout), full) if float(args.unit_timeout) > 0 else full
+    th = cm["hess_c"].get(u["family"], GRID_EST["hess_c"]) * int(R["n_hessian"]) * nat ** 3
+    post = int(R["n_hessian"]) * tf + (int(args.n_boot) + 2) * th + GRID_EST["overhead_s"]
+    return {"est_min": (min(relax, cap) + post) / 60.0, "cap_min": (cap + post) / 60.0,
+            "measured": measured}
+
+
+def _pid_alive(host, pid):
+    """Whether the process a JSON names is alive: True/False when it ran on this host and /proc
+    can answer (Linux), None otherwise. Read-only: no signal (os.kill(pid, 0) would terminate the
+    process on Windows) and no lock (a probe of the flock would make a worker pass the unit
+    over as busy)."""
+    try:
+        if not pid or host != socket.gethostname() or not Path("/proc/self").is_dir():
+            return None
+        return Path(f"/proc/{int(pid)}").is_dir()
+    except Exception:
+        return None
+
+
+def _grid_start_state(base: Path, tag: str, s: str) -> str:
+    """One (unit, start) for --grid-list and a worker's final report: '-' (no JSON yet), 'ok
+    <min>m <conv|stop reason>', 'failed ...', or 'running pid P since T', marked DEAD when that
+    process is gone (what a relaunch or --retry-failed does with it: see grid_should_run)."""
+    doc = load_json(conv_paths(base, tag, s)["json"]) or {}
+    run = doc.get("run") or {}
+    st = run.get("status")
+    if st == "ok":
+        rx = run.get("relax") or {}
+        return (f"ok {(run.get('wall_s') or 0) / 60:.0f}m "
+                + ("conv" if rx.get("converged") else str(rx.get("stop_reason"))))
+    if st == "failed":
+        return f"failed ({str(run.get('error'))[:80]}); --retry-failed reruns it"
+    if st == "running":
+        out = f"running pid {run.get('pid')} since {run.get('utc_start')}"
+        if _pid_alive(run.get("host"), run.get("pid")) is False:
+            dead = sum(1 for r in doc.get("previous_runs") or [] if r.get("status") == "running")
+            out += (" DEAD: a relaunch recomputes it" if not dead else
+                    f" DEAD again ({dead} earlier dead run(s)): relaunch with --retry-failed")
+        return out
+    return str(st) if st else "-"
+
+
+def _grid_status(base: Path, u: dict) -> str:
+    tag = unit_tag(u["system"], u["model"], u["T"], u["supercell"])
+    return " ".join(f"{s}:{_grid_start_state(base, tag, s)}" for s in u["starts"])
+
+
+def grid_list(units: list, args, base: Path) -> int:
+    R = converged_recipe(args)
+    cm = grid_cost_model([] if args.dry_run else [base, CONV_DIR])
+    starts = sorted({s for u in units for s in u["starts"]})
+    print(f"converged grid (--preset {GRID_PRESET}): {len(units)} units x start "
+          f"{','.join(starts)} -> {rel(base)}")
+    print(f"  recipe: n_configs {R['n_configs']}, max_pop {R['max_pop']}, n_hessian "
+          f"{R['n_hessian']}, <= {R['max_steps_per_pop']} steps per population, meaningful_factor "
+          f"{R['meaningful_factor']} on the real error, Kong-Liu {R['kong_liu_ratio']}, KL guard "
+          f"{R['converge_min_kl_ratio']}, imag tol {R['imag_tol_thz']} THz; n_boot {args.n_boot}; "
+          f"relaxation cap {float(args.unit_timeout):g} s")
+    print(f"  minutes per unit, one process: est = relaxation as {GRID_EST['pops']} populations "
+          f"(* = measured median of the family, {cm['n_measured']} finished runs) + Hessian "
+          f"ensemble + {int(args.n_boot) + 2} Hessians; cap = the relaxation runs into its cap. "
+          f"Force s/config: " + ", ".join(f"{m} {v:.3f}" for m, v in sorted(cm["t_force"].items())))
+    envs = list(dict.fromkeys(u["env"] for u in units))
+    tot_all = [0.0, 0.0]
+    for env in envs:
+        us = [u for u in units if u["env"] == env]
+        est = [grid_estimate(u, cm, R, args) for u in us]
+        te, tc = sum(e["est_min"] for e in est), sum(e["cap_min"] for e in est)
+        tot_all[0] += te
+        tot_all[1] += tc
+        fams = {}
+        for u in us:
+            fams[u["family"]] = fams.get(u["family"], 0) + 1
+        models = sorted({u["model"] for u in us})
+        print(f"\n== env {env} ({', '.join(models)}): {len(us)} units ("
+              + ", ".join(f"{k} {v}" for k, v in fams.items())
+              + f"); serial est {te / 60:.1f} h, cap {tc / 60:.1f} h")
+        for m in models:
+            print(f"   /root/env-{env}/bin/python -u {SCRIPT} --preset {GRID_PRESET} --model {m} "
+                  "--device cuda      (one line per process)")
+        print(f"   {'#':>3s}  {'unit':34s} {'atoms':>5s}  {'family':16s} {'est':>6s} {'cap':>5s}  "
+              "status")
+        for i, (u, e) in enumerate(zip(us, est), 1):
+            print(f"   {i:3d}  {unit_tag(u['system'], u['model'], u['T'], u['supercell']):34s} "
+                  f"{u['n_atoms']:5d}  {u['family']:16s} {e['est_min']:5.0f}"
+                  f"{'*' if e['measured'] else ' '} {e['cap_min']:5.0f}  {_grid_status(base, u)}")
+    print(f"\ntotal {len(units)} units: serial est {tot_all[0] / 60:.1f} h, cap "
+          f"{tot_all[1] / 60:.1f} h (divide by the processes per env, GPU contention aside)")
+    return 0
+
+
+def _atomic_write_text(path: Path, text: str) -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + f".tmp{os.getpid()}")
+    tmp.write_text(text, encoding="utf-8", newline="")
+    for attempt in range(10):            # os.replace can race a reader on Windows
+        try:
+            os.replace(tmp, path)
+            return
+        except PermissionError:
+            if attempt == 9:
+                raise
+            time.sleep(0.2)
+
+
+def grid_rows(base: Path, units: list, recipe: dict) -> list:
+    """One row per grid (unit, start): start A, and B where a B JSON exists. From the canonical
+    ledger (read-only): the label gt_stable (per system and T), the screen's call (softmode
+    pred_stable) and the production SSCHA value of the 2x2x2 cell (see GRID_PROD_SC). A JSON made
+    with another recipe (e.g. a copied-in run) is shown as status 'other_recipe' and not used."""
+    imag_tol = recipe["imag_tol_thz"]
+    try:
+        from mlip_dynstab.analysis import load_canonical
+        df = load_canonical()
+    except Exception as exc:
+        print(f"[summary] ledger unavailable ({type(exc).__name__}: {exc}); label, screen and "
+              "production columns left empty")
+        df = None
+    rows = []
+    for u in units:
+        system, model, T, sc = u["system"], u["model"], float(u["T"]), u["supercell"]
+        tag = unit_tag(system, model, T, sc)
+        prod = gt = screen = None
+        prod_status = "ledger unavailable"
+        if df is not None:
+            at_T = df[(df["system"] == system)
+                      & np.isclose(df["temperature_K"].astype(float), T)]
+            if len(at_T):
+                gt = bool(at_T["gt_stable"].iloc[0])      # the label is per (system, T)
+            sm = at_T[(at_T["method"] == "softmode") & (at_T["model"] == model)]
+            if len(sm):
+                screen = bool(sm["pred_stable"].iloc[-1])
+            m = at_T[(at_T["method"] == "sscha") & (at_T["model"] == model)]
+            m = m[m["supercell"].map(lambda v: v is not None
+                                     and tuple(int(x) for x in v) == GRID_PROD_SC)]
+            if len(m):
+                prod = float(m["min_eff_freq_thz"].iloc[-1])
+                prod_status = "ok"
+            else:
+                prod_status = "no 2x2x2 ledger row (failed in production)"
+        label_scored = u["family"] != "bcc"
+        starts = ["A"] + [s for s in CONV_STARTS
+                          if s != "A" and conv_paths(base, tag, s)["json"].exists()]
+        for s in starts:
+            doc = load_json(conv_paths(base, tag, s)["json"])
+            run = (doc or {}).get("run") or {}
+            d = _start_digest(doc)
+            same_recipe = None if doc is None else doc.get("recipe") == _clean(recipe)
+            status = run.get("status") or "todo"
+            if same_recipe is False:
+                status = "other_recipe"
+            itol = imag_tol
+            h = d["hessian_min_thz"] if status == "ok" else None
+            call = None if h is None else bool(h >= itol)
+            pcall = None if prod is None else bool(prod >= itol)
+            npop = d["n_populations"]
+            if npop is None and status == "running":
+                npop = len(_dig(run, "relax_partial", "controller", "pops") or {}) or None
+            rows.append({
+                "unit_tag": tag, "system": system, "model": model, "T_K": T,
+                "supercell": "x".join(map(str, sc)), "env": u["env"], "family": u["family"],
+                "n_atoms": u["n_atoms"], "start": s, "status": status,
+                "recipe_matches": same_recipe,
+                "converged": d["converged"], "stop_reason": d["stop_reason"],
+                "n_populations": npop, "final_aux_min_thz": d["final_aux_min_thz"],
+                "hessian_min_thz": h, "boot_sd_thz": d["boot_sd_thz"], "imag_tol_thz": itol,
+                "stable_call": call,
+                "blowup": None if h is None else bool(abs(h) > GRID_BLOWUP_THZ),
+                "gt_stable": gt, "label_scored": label_scored,
+                "call_matches_label": (None if call is None or gt is None or not label_scored
+                                       else call == gt),
+                "screen_stable_call": screen,
+                "call_matches_screen": None if call is None or screen is None else call == screen,
+                "prod_sc222_hessian_min_thz": prod, "prod_sc222_stable_call": pcall,
+                "prod_sc222_blowup": None if prod is None else bool(abs(prod) > GRID_BLOWUP_THZ),
+                "prod_status": prod_status,
+                "same_cell_as_prod": tuple(int(x) for x in sc) == GRID_PROD_SC,
+                "call_changed_vs_prod": None if call is None or pcall is None else call != pcall,
+                "fresh_R_over_expected": d["fresh_R_over_expected"],
+                "kl_ratio_at_gradient_end": d["kl_ratio_at_gradient_end"],
+                "wall_min": (run["wall_s"] / 60.0 if isinstance(run.get("wall_s"), (int, float))
+                             else None),
+                "n_boot": _dig(run, "settings", "n_boot"), "utc_end": run.get("utc_end"),
+                "error": run.get("error")})
+    return rows
+
+
+def summarize_grid(base: Path, units: list, args) -> int:
+    """--preset grid --summarize: converged mode's per-start table for whatever has run, then one
+    compact row per grid unit (every unit of the plan, run or not), written to summary.csv."""
+    import csv
+    import io
+    if list(base.glob("*_start[AB].json")):
+        summarize_converged(base, pairs_only=True)
+        print()
+    recipe = converged_recipe(args)
+    imag_tol = recipe["imag_tol_thz"]
+    rows = grid_rows(base, units, recipe)
+
+    def num(x, w, p=2):
+        return f"{x:+{w}.{p}f}" if isinstance(x, (int, float)) else f"{'-':>{w}}"
+
+    def sflag(x):
+        return "-" if x is None else ("S" if x else "U")
+
+    def conv_word(r):
+        if r["status"] != "ok":
+            return "-"
+        if r["converged"]:
+            return "yes"
+        return "cap" if r["stop_reason"] == "wall_cap" else str(r["stop_reason"])
+
+    def note(r):
+        out = []
+        if r["blowup"]:
+            out.append("blow-up")
+        if r["prod_status"] != "ok":
+            out.append("prod failed" if r["prod_status"].startswith("no ") else r["prod_status"])
+        elif r["prod_sc222_blowup"]:
+            out.append("prod blow-up")
+        return ("  (" + "; ".join(out) + ")") if out else ""
+
+    hdr = (f"{'system':13s} {'model':9s} {'T':>4s} {'sc':>5s} {'st':>1s} {'status':>7s} "
+           f"{'conv':>7s} {'npop':>4s} {'aux':>7s} {'hess':>8s} {'call':>4s} {'label':>5s} "
+           f"{'scr':>3s} {'prod222':>8s} {'pcall':>5s}")
+    print(f"converged grid, per unit (call: Hessian min >= {imag_tol} THz, S = stable; label = "
+          "ledger gt_stable, n/s on bcc, which Sec. 3.3 does not score against it; scr = the "
+          "screen's call; prod222 = the production SSCHA value, always the unconverged 2x2x2 "
+          "cell, so on the 3x3x3 bcc rows cell and convergence both differ)")
+    print(hdr)
+    print("-" * len(hdr))
+    for r in rows:
+        lab = sflag(r["gt_stable"]) if r["label_scored"] else "n/s"
+        print(f"{r['system']:13s} {r['model']:9s} {r['T_K']:4.0f} {r['supercell']:>5s} "
+              f"{r['start']:>1s} {r['status']:>7s} {conv_word(r):>7s} "
+              f"{'-' if r['n_populations'] is None else str(r['n_populations']):>4s} "
+              f"{num(r['final_aux_min_thz'], 7)} {num(r['hessian_min_thz'], 8)} "
+              f"{sflag(r['stable_call']):>4s} {lab:>5s} {sflag(r['screen_stable_call']):>3s} "
+              f"{num(r['prod_sc222_hessian_min_thz'], 8)} {sflag(r['prod_sc222_stable_call']):>5s}"
+              + note(r))
+    st = {}
+    for r in rows:
+        st[r["status"]] = st.get(r["status"], 0) + 1
+    ok = [r for r in rows if r["status"] == "ok"]
+    conv = [r for r in ok if r["converged"]]
+    capped = sum(1 for r in ok if r["stop_reason"] == "wall_cap")
+    print(f"\n{len(units)} units, {len(rows)} rows: " + ", ".join(f"{k} {v}" for k, v in
+                                                            sorted(st.items()))
+          + f"; of the ok: converged {len(conv)}, wall cap {capped}, other "
+          f"{len(ok) - len(conv) - capped}")
+    if st.get("other_recipe"):
+        print(f"WARNING: {st['other_recipe']} JSON(s) were computed with another recipe and are "
+              "left out (recipe_matches = False in the CSV)")
+    if conv:
+        good = [r for r in conv if not r["blowup"]]
+
+        def frac(rs, key):
+            rs = [r for r in rs if r[key] is not None]
+            return f"{sum(bool(r[key]) for r in rs)}/{len(rs)}"
+
+        def flips(rs):
+            rs = [r for r in rs if r["call_changed_vs_prod"] is not None
+                  and not r["prod_sc222_blowup"]]
+            su = sum(1 for r in rs if r["prod_sc222_stable_call"] and not r["stable_call"])
+            us = sum(1 for r in rs if r["stable_call"] and not r["prod_sc222_stable_call"])
+            return f"{su + us}/{len(rs)} (S->U {su}, U->S {us})"
+
+        same = [r for r in good if r["same_cell_as_prod"]]
+        other = [r for r in good if not r["same_cell_as_prod"]]
+        print(f"converged rows ({len(conv) - len(good)} blow-ups left out): non-bcc call "
+              f"matches label {frac(good, 'call_matches_label')}; call agrees with the screen: "
+              f"non-bcc {frac([r for r in good if r['label_scored']], 'call_matches_screen')}, "
+              f"bcc {frac([r for r in good if not r['label_scored']], 'call_matches_screen')}")
+        print(f"call differs from the production 2x2x2 value (production blow-ups left out): "
+              f"same cell {flips(same)}; bcc 3x3x3 against 2x2x2, cell and convergence together "
+              f"{flips(other)}")
+    plan = {r["unit_tag"] for r in rows}
+    extra = sorted({fp.name for fp in base.glob("*_start[AB].json")
+                    if re.sub(r"_start[AB]\.json$", "", fp.name) not in plan})
+    if extra:
+        print(f"{len(extra)} JSON(s) in {rel(base)} are not grid units (in the per-start table "
+              f"above only): {extra}")
+    buf = io.StringIO()
+    w = csv.DictWriter(buf, fieldnames=list(GRID_CSV_COLUMNS), lineterminator="\n")
+    w.writeheader()
+    for r in rows:
+        w.writerow({k: ("" if r.get(k) is None else r[k]) for k in GRID_CSV_COLUMNS})
+    out = base / "summary.csv"
+    _atomic_write_text(out, buf.getvalue())
+    print(f"wrote {rel(out)} ({len(rows)} rows)")
+    return 0
+
+
+def main_grid(args) -> int:
+    """--preset grid (or --grid-list). Never touches the seed-study or converged-mode paths."""
+    if args.out:
+        raise SystemExit("--out names one seed-study JSON; the grid uses --out-dir")
+    t0 = utc_now()
+    base = conv_base_dir(args)
+    units = grid_units()
+    if args.summarize:                        # always the whole plan, so summary.csv is complete
+        return summarize_grid(base, units, args)
+    starts = (args.start,) if args.start else GRID_STARTS
+    sel = [dict(u, starts=starts) for u in units
+           if (not args.model or u["model"] == args.model)
+           and (not args.system or u["system"] == args.system)
+           and (args.T is None or math.isclose(u["T"], float(args.T)))]
+    if args.list or args.grid_list:
+        return grid_list(sel, args, base)
+    if not args.dry_run:
+        for m in sorted({u["model"] for u in sel}):
+            ok, why = env_can_run(m)
+            if not ok:
+                print(f"[env] skipping the {sum(u['model'] == m for u in sel)} {m} units: {why}")
+                sel = [u for u in sel if u["model"] != m]
+                if args.model:                # asked for by name: an env error, not "finished"
+                    print(f"[env] ERROR: --model {m} cannot run in this env ({sys.executable})",
+                          flush=True)
+                    return 4
+    print(f"[grid] pid {os.getpid()} on {socket.gethostname()}, started {t0}: {len(sel)} units, "
+          f"start {','.join(starts)}, n_boot {args.n_boot}, relaxation cap "
+          f"{float(args.unit_timeout):g} s -> {rel(base)}", flush=True)
+    tally = {"failed": [], "done": [], "skipped": []}
+    busy = _grid_pass(sel, args, t0, tally)
+    if busy:
+        # Once more, without waiting, over what was busy: its holder may have finished it since
+        # (skipped) or died, and grid_should_run then applies the dead-run rules under the lock.
+        print(f"\n[grid] revisiting the {len(busy)} start(s) that were busy", flush=True)
+        busy = _grid_pass(busy, args, t0, tally)
+    left = []
+    for u in sel:
+        tag = unit_tag(u["system"], u["model"], u["T"], u["supercell"])
+        for s in u["starts"]:
+            state = _grid_start_state(base, tag, s)
+            if not state.startswith("ok"):
+                left.append(f"{tag} start {s}: {state}")
+    failed = tally["failed"]
+    print(f"\n[grid] pid {os.getpid()} finished {utc_now()}: {len(tally['done'])} run here, "
+          f"{len(failed)} failed, {len(busy)} still held by other processes, "
+          f"{len(tally['skipped'])} skipped" + (f"; failed: {failed}" if failed else ""),
+          flush=True)
+    print(f"[grid] {len(left)} of the {sum(len(u['starts']) for u in sel)} start(s) of this "
+          "selection are not ok yet" + (":" if left else ""), flush=True)
+    for x in left:
+        print(f"   {x}", flush=True)
+    return 2 if failed else 0
+
+
+def _grid_pass(units: list, args, t0: str, tally: dict) -> list:
+    """run_grid_unit over ``units`` (a failing unit costs only itself); adds to ``tally`` and
+    returns the busy (unit, start)s as one-start units, ready for another pass."""
+    busy = []
+    for u in units:
+        tag = unit_tag(u["system"], u["model"], u["T"], u["supercell"])
+        try:
+            fl = run_grid_unit(u, args, t0)
+        except (Exception, SystemExit) as exc:
+            print(f"[UNIT FAILED] {tag}: {type(exc).__name__}: {exc}\n{traceback.format_exc()}",
+                  flush=True)
+            tally["failed"].append((tag, "unit"))
+            continue
+        for k in ("failed", "done", "skipped"):
+            tally[k].extend(fl[k])
+        busy += [dict(u, starts=(s,)) for _tag, s in fl["busy"]]
+    return busy
+
+
 # --------------------------------------------------------------------------- CLI ----
 
 def env_can_run(model: str) -> tuple[bool, str]:
@@ -2957,8 +3614,9 @@ def parse_args(argv=None):
     ap.add_argument("--seeds", default="0,1,2,3", help="comma-separated (default 0,1,2,3)")
     ap.add_argument("--supercell", type=int, nargs=3, default=[2, 2, 2])
     ap.add_argument("--device", default="cuda")
-    ap.add_argument("--n-boot", type=int, default=30,
-                    help="bootstrap replicates of the Hessian ensemble (default 30)")
+    ap.add_argument("--n-boot", type=int, default=None,
+                    help="bootstrap replicates of the Hessian ensemble (default 30; "
+                         f"{GRID_DEFAULTS['n_boot']} with --preset {GRID_PRESET})")
     ap.add_argument("--n-splits", type=int, default=4,
                     help="disjoint splits if a bootstrap replicate cannot be built (default 4)")
     ap.add_argument("--save-configs", type=int, default=16,
@@ -2974,11 +3632,14 @@ def parse_args(argv=None):
     ap.add_argument("--out-dir", default=None,
                     help=f"study directory (default {rel(STUDY_DIR)}; --dry-run: "
                          f"{rel(STUDY_DIR / '_dryrun')})")
-    ap.add_argument("--preset", choices=sorted([*PRESETS, CONV_PRESET]),
-                    help=f"'{CONV_PRESET}' runs the C1c converged-SSCHA units (starts A and B)")
+    ap.add_argument("--preset", choices=sorted([*PRESETS, CONV_PRESET, GRID_PRESET]),
+                    help=f"'{CONV_PRESET}' runs the C1c converged-SSCHA units (starts A and B); "
+                         f"'{GRID_PRESET}' the converged grid over the Sec. 3.3 units (start A), "
+                         f"written under {rel(GRID_DIR)}")
     ap.add_argument("--list", action="store_true", help="with --preset: print the plan and exit")
     ap.add_argument("--summarize", action="store_true",
-                    help="print a table of every unit JSON in the study directory")
+                    help="print a table of every unit JSON in the study directory; with --preset "
+                         f"{GRID_PRESET} also one row per grid unit, written to summary.csv there")
     ap.add_argument("--dry-run", action="store_true",
                     help="no sscha/cellconstructor import; SSCHA numbers mocked, relax and MLIP "
                          "calls real (a Lennard-Jones stand-in if the model is not installed)")
@@ -2992,20 +3653,37 @@ def parse_args(argv=None):
     cg.add_argument("--start", choices=list(CONV_STARTS), default=None,
                     help="A = production ForcePositiveDefinite start, B = imaginary modes set to "
                          "--start-b-thz (default: both)")
-    cg.add_argument("--unit-timeout", type=float, default=CONV_DEFAULTS["unit_timeout_s"],
+    cg.add_argument("--unit-timeout", type=float, default=None,
                     help="wall-clock cap on each (unit, start) relaxation, seconds; <= 0 disables "
-                         f"(default {CONV_DEFAULTS['unit_timeout_s']:g})")
+                         f"(default {CONV_DEFAULTS['unit_timeout_s']:g}; "
+                         f"{GRID_DEFAULTS['unit_timeout_s']:g} with --preset {GRID_PRESET})")
+    cg.add_argument("--grid-list", action="store_true",
+                    help=f"print the --preset {GRID_PRESET} plan (unit, env, atoms, estimated "
+                         "minutes, status) and exit; --model/--system/--T narrow it")
     cg.add_argument("--start-b-thz", type=float, default=CONV_DEFAULTS["start_b_thz"])
     cg.add_argument("--conv-n-configs", type=int, default=CONV_DEFAULTS["n_configs"])
     cg.add_argument("--conv-max-pop", type=int, default=CONV_DEFAULTS["max_pop"])
     cg.add_argument("--conv-n-hessian", type=int, default=CONV_DEFAULTS["n_hessian"])
     cg.add_argument("--conv-steps-per-pop", type=int, default=CONV_DEFAULTS["max_steps_per_pop"])
     cg.add_argument("--dry-run-step-sleep", type=float, default=0.0, help=argparse.SUPPRESS)
-    return ap.parse_args(argv)
+    args = ap.parse_args(argv)
+    if args.grid_list:
+        if args.preset not in (None, GRID_PRESET):
+            ap.error(f"--grid-list lists --preset {GRID_PRESET}, not --preset {args.preset}")
+        args.preset = GRID_PRESET
+    grid = args.preset == GRID_PRESET
+    if args.n_boot is None:
+        args.n_boot = GRID_DEFAULTS["n_boot"] if grid else 30
+    if args.unit_timeout is None:
+        args.unit_timeout = (GRID_DEFAULTS["unit_timeout_s"] if grid
+                             else CONV_DEFAULTS["unit_timeout_s"])
+    return args
 
 
 def main(argv=None) -> int:
     args = parse_args(argv)
+    if args.preset == GRID_PRESET:
+        return main_grid(args)
     if args.converge or args.preset == CONV_PRESET:
         return main_converged(args)
     if args.summarize:

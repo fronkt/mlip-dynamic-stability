@@ -9,6 +9,58 @@ each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ..
 **Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
 false.
 
+## ▶ RESUME HERE — paused 2026-09-27 at Frank's request ("pause after the runs are done, save everything")
+
+**Done and pushed (branch `rsc-figure-fixes`):** Phase 2 stats; Phase 3 text (manuscript, ESI S1–S18, figures,
+TOC, README, DAS); response letter rewritten + 3 referee-simulation critiques + fact-check; packaging tools
+(`build_docx.py`, `build_marked_changes.py`, `renumber_refs.py`); C2, C4, C1, C1c, C5 results; Fig. 2 replaced.
+Everything that feeds the paper is in `tasks/revision-claims-2026-09-27.md` (§9 = later corrections).
+
+**Compute results (all committed under `results/revision/`):**
+- C2 force spread (R2.2): pre-registered primary AUC 0.681, CI [0.416, 0.908] → NOT shown; committees 0.72–0.73;
+  no-overlap check 0.314 → the signal is extrapolation on overlapping configs. Folded into §3.4/§4/§5 + Table S18.
+- C4 displacement sweep, all five models: MACE/MatterSim/SevenNet no flips; CHGNet controls only; ORB-v2 test systems.
+- C1 (production SSCHA recipe, 4 seeds): NONE converged; `max_ka=20` is a CUMULATIVE cap in python-sscha 1.6.1,
+  and the library passes a placeholder gradient error (Ensemble.py:2657). BaTiO3 Hessian +2.87 ≈ its
+  ForcePositiveDefinite start +2.88. SrTiO3 600 K seeds −15.8…−20.3. MACE Zr 2×2×2 +1.80 → 3×3×3 +1.55.
+- **C1c converged SSCHA (real error, per-population cap, two starts):**
+  BaTiO3/MACE 100 K +2.03 (A) / +1.85 (B at 1.0 THz) → STILL stable vs unstable label;
+  SrTiO3/MACE 100 K +1.13 / +1.02 → stable vs label (T_c 105 K; production had −0.49);
+  ZrO2/MACE 100 K −22.4 / −26.0 → UNSTABLE, correct (production +3.09 was the non-convergence);
+  MatterSim Zr 2×2×2: 50 K +0.41/+0.41, 300 K +0.92/+0.93; **3×3×3 300 K −0.92/−0.95** (bcc 2×2×2 stability is a
+  finite-size effect). BaTiO3 start B at 0.3 THz fails (complex-dyn assertion) — the 1.0 THz retry is in `_b1/`.
+- C3a PBE along the screen paths (6 systems incl. KNbO3, CsSnBr3) and C3b PBE on SSCHA configs: see the
+  bottom of this block for completion status. Outputs: `results/revision/dft/` (analyze locally:
+  `python scripts/dft_reference.py analyze`).
+- **Found by the letter integrator:** the screen's symmetric-point curvature is positive BY CONSTRUCTION (= trial
+  stiffness), so "52/57" was circular; the informative count is the screen CALL (46/57). Fixed everywhere; lesson
+  in `tasks/lessons.md`. H2's 17 v 4 depends on the frozen-cell convention (7 v 4 to 24 v 4).
+
+**Next session, in order:**
+1. `python scripts/dft_reference.py analyze` on the pulled C3a/C3b outputs → R1.1 (does the PBE-backed screen reproduce
+   the MLIP calls on BaTiO3/KNbO3/CsSnBr3? decides whether the H2 counterexamples are screen error or model error) and
+   R1.2 (MLIP force error on SSCHA-sampled vs near-equilibrium configs). Adversarially verify before writing.
+2. Decide the converged-SSCHA GRID (`--preset grid`, ~105 units, start A, ~5–7 GPU-h, ~$4): needed if §3.3 keeps a
+   screen-vs-SSCHA comparison; the paper's SSCHA numbers are otherwise unconverged. **Code ready, NOT run**
+   (`--preset grid`, reviewed; 113 units = 58 displacive T<=300 K + 10 SrTiO3 + 45 bcc 3x3x3 at 100/300/600 K;
+   start A; `scripts/box/grid_run.sh` runs a COPY `scripts/sscha_seed_study_grid.py`; est. ~40 serial GPU-h =
+   ~4-5 h wall with 14 workers (3 per env, 2 for ORB; check GPU memory on a 24 GB card), worst case much longer at
+   the 7200 s unit cap; all five envs on the old box had SSCHA, a rebuilt box must too). NOT covered by the grid:
+   non-bcc 600/900 K and bcc 50/200 K, which §3.3's false-unstable counts, the 57-unit ladder and Fig. 3 use —
+   decide whether to extend or to scope the claims to what is re-measured. Copy the 4 overlapping C1c startA
+   JSONs only if their recipe matches (the summary flags `other_recipe`).
+3. **Title (Frank):** the second clause "nor a default SSCHA cross-check" now rests on: converged SSCHA still calls
+   BaTiO3/SrTiO3 stable at 100 K but gets ZrO2 right; the production "default" failure was partly our step cap.
+   Bring Frank a concrete proposal with the grid numbers.
+4. Phase 4 fold-in: all PENDING markers (manuscript 23, ESI 16, letter 23); rebuild Figs. 3, 4, 5 from converged SSCHA
+   (Fig. 4's x-axis is the positive-by-construction curvature — redesign or drop).
+5. Phase 6 package: `renumber_refs.py --letter`, `build_docx.py --pdf`, `build_marked_changes.py --pdf`, CRediT
+   (done), AI-use (Frank's choice: `paper/response/ai_use_statement_DRAFT.md`), DAS, merge to main + tag, Zenodo
+   (include `C:\Users\frank\mlip-rsc-revision-raw\` archives).
+6. Phase 7 fresh adversarial re-audit; Phase 8 Frank uploads by 9 Oct.
+
+**Frank's open decisions:** title (after the grid), AI-use wording, gmail vs cai485@purdue.edu.
+
 ## Decisions (Frank, 2026-09-26)
 
 - [x] **Title approved:** "Neither harmonic benchmarks nor a default SSCHA cross-check certifies a
