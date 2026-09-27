@@ -114,8 +114,8 @@ elif [ "$NJOBS" -gt "$MAXJ" ]; then
   NJOBS=$MAXJ
 fi
 # Pools for one job: pw.x needs the pool count to divide the ranks, and every pool to get at
-# least one k-point. nk_irr_spglib (job.json) is the lower bound on pw.x's own count; a job
-# without it gets one pool, which is always legal.
+# least one k-point. nk_irr_spglib (job.json) is normally at most pw.x's own count (pw.x also
+# drops symmetries its FFT grid cannot carry); a job without it gets one pool, always legal.
 job_pools() {
   local d=$1 want nk p
   nk=$(sed -n 's/.*"nk_irr_spglib": *\([0-9][0-9]*\).*/\1/p' "$d/job.json" 2>/dev/null | head -n 1)
