@@ -1691,6 +1691,7 @@ FRESH_SPLITS = 8             # disjoint antithetic-pair splits for the fresh-gra
 # components (a handful for bcc Zr, tens for the perovskites); 2.5 is its ~97% point at d = 5.
 FRESH_R_FACTOR_OK = 2.5
 AB_Z_TOL = 3.0               # |Hessian min A - B| within 3 combined bootstrap sd: start-independent
+AB_ABS_TOL_THZ = 0.05   # THz; see conv_compare
 IMAG_REPLACE_TOL_THZ = 1e-3  # start B replaces only modes below -1e-3 THz (not numerical zeros)
 FLUSH_EVERY_STEPS = 50
 
@@ -2074,6 +2075,12 @@ def soften_imaginary_modes(dyn, w_small_ry: float, ry_to_thz: float):
                                  "harmonic_thz": float(w[i] * ry_to_thz),
                                  "start_thz": float(w_small_ry * ry_to_thz)})
         out.dynmats[iq] = np.einsum("i, ji, ki", w2, pols, np.conj(pols)) * msq
+        # At q = -q + G the dynamical matrix is real, but DyagDinQ may return complex
+        # eigenvectors inside a degenerate subspace; if the replacement does not act uniformly
+        # on that subspace the rebuilt matrix picks up an imaginary part and cellconstructor's
+        # DiagonalizeSupercell asserts (seen on BaTiO3 start B). Keep it real where the input was.
+        if np.max(np.abs(np.imag(dyn.dynmats[iq]))) < 1e-12:
+            out.dynmats[iq] = np.real(out.dynmats[iq]) + 0j
     return out, replaced
 
 
@@ -2594,10 +2601,14 @@ def conv_compare(base: Path, tag: str, imag_tol: float) -> dict:
         hA, hB = dA["hessian_min_thz"], dB["hessian_min_thz"]
         comb = math.sqrt((dA["boot_sd_thz"] or 0.0) ** 2 + (dB["boot_sd_thz"] or 0.0) ** 2)
         d = abs(hA - hB)
-        indep = bool(d <= AB_Z_TOL * comb) if comb > 0 else None
+        # Absolute floor: on bcc the Hessian minimum does not depend on the configurations at all
+        # (bootstrap sd ~1e-16 THz), so the z test alone calls a 0.002 THz A/B difference
+        # "start-dependent". Differences below AB_ABS_TOL_THZ are agreement at any sd.
+        indep = (bool(d <= max(AB_Z_TOL * comb, AB_ABS_TOL_THZ)) if comb > 0
+                 else (bool(d <= AB_ABS_TOL_THZ) or None))
         conv = bool(dA["converged"] and dB["converged"])
         out.update(both_converged=conv, hessian_min_diff_thz=d, combined_boot_sd_thz=comb,
-                   z=(d / comb if comb > 0 else None), z_tol=AB_Z_TOL,
+                   z=(d / comb if comb > 0 else None), z_tol=AB_Z_TOL, abs_tol_thz=AB_ABS_TOL_THZ,
                    z_note="combined_boot_sd covers the two Hessian ensembles only (independent "
                           "seeds), not the sampling noise of the two relaxed dyns, so z "
                           "overstates start dependence; read dyn_level and final_aux_min_diff "
