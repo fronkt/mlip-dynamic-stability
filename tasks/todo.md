@@ -27,7 +27,7 @@ false.
 ## Phase 0 — Setup (09-26)
 
 - [x] 0.1 Archive the old plan; write this one.
-- [ ] 0.2 Commit the audit file and this plan on `rsc-figure-fixes`.
+- [x] 0.2 Commit the audit file and this plan on `rsc-figure-fixes` (6717c4b).
 
 ## Phase 1 — Compute on the rented box (critical path, 09-26 → ~09-29)
 
@@ -45,7 +45,7 @@ Every study writes its own JSON/parquet under `results/revision/` and records th
   of the final ensemble (positions + MLIP forces/energies) for C3b.
 - [ ] **C1b include_v4=True** on batio3/MACE/100 K with a hard time cap (try the julia backend). If it
   finishes, it is the only direct test of "the truncation is what goes wrong"; report either way.
-- [ ] **C2 Force-level ensemble uncertainty (R2.2).** `scripts/force_spread.py`. Quantum
+- [x] **C2 Force-level ensemble uncertainty (R2.2).** DONE 09-27 (5ad84cd): pre-registered primary AUC 0.681, CI [0.416, 0.908] → NOT SHOWN; committees 0.72-0.73 (CI just above 0.5) but the no-overlap check (g) gives 0.314 on 43 units → the signal is extrapolation onto overlapping configurations, not wrong calls. `scripts/force_spread.py`. Quantum
   phonon-rattled configurations at each ladder T from ensemble-mean harmonic FCs (|ω| for imaginary
   modes); evaluate all five models plus two within-architecture committees (MACE-MP-0
   small/medium/large, MatterSim 1M/5M). Scores: cross-model force RMS deviation per (system, T) for
@@ -58,32 +58,37 @@ Every study writes its own JSON/parquet under `results/revision/` and records th
 - [ ] **C3b PBE forces on SSCHA-sampled configurations (R1.2).** 12–16 configurations per C1 unit.
   MLIP-vs-PBE force and energy error on thermally sampled configurations, against a near-equilibrium
   baseline. This is the out-of-distribution test R1.2 asks for.
-- [ ] **C4 Displacement sweep, remaining four models.** `scripts/run_disp_sweep.py --device cuda`.
+- [x] **C4 Displacement sweep, remaining four models.** DONE 09-27 (a27e1e3): MACE/MatterSim/SevenNet no flips; CHGNet controls only; ORB-v2 flips test systems. `scripts/run_disp_sweep.py --device cuda`.
 - [ ] **C5 bcc finite-size, re-measured.** zr_bcc SSCHA 2×2×2 vs 3×3×3 at 100 and 300 K for
   MatterSim and MACE-MP-0 in the current envs (the deposited 3×3×3 rows are June v1).
 - [ ] C6 Pull everything back; destroy the box the moment it is idle.
 
 ## Phase 2 — Zero-compute statistics and sensitivity (parallel with Phase 1)
 
-- [ ] **S1 H2 clustered.** System-clustered exact paired test at every ladder T, with and without
+- [x] **S1 H2 clustered.** (e81c904) System-clustered exact paired test at every ladder T, with and without
   ORB-v2, per-system discordance counts, and a leave-one-system-out check. Into
   `stats_hardening.py` / `.json` and `verify_claims.py`. (R1.6, R3.1, R3.3-H2)
-- [ ] **S2 bcc call agreement** on `pred_stable` (31/45, ex-ORB 25/36), with the 12 trivially
+- [x] **S2 bcc call agreement** on `pred_stable` (31/45, ex-ORB 25/36), with the 12 trivially
   agreeing MACE/CHGNet pairs split out (23/33) and MatterSim's 3/9. Curvature-sign agreement kept,
   labelled as such. (R1.1 residue, R3.5)
-- [ ] **S3 ORB-v2 split everywhere (R3.5):** four-model guardrail (AUC 0.628, CI spanning 0.5, tie
+- [x] **S3 ORB-v2 split everywhere (R3.5):** four-model guardrail (AUC 0.628, CI spanning 0.5, tie
   rule stated), H2 ladder, family recalls, controls, tolerance sweep, SSCHA blow-ups and failures per
   model.
-- [ ] **S4 SSCHA high-T false-unstables** table (0/5/10/15 by T; SrTiO3 all above-Tc units; the 14/23
+- [x] **S4 SSCHA high-T false-unstables** table (0/5/10/15 by T; SrTiO3 all above-Tc units; the 14/23
   sign reversals). (R1.2)
-- [ ] **S5 Screen sensitivity (R1.5).** `scripts/screen_sensitivity.py` → `results/screen_sensitivity.json`
+- [x] **S5 Screen sensitivity (R1.5).** `scripts/screen_sensitivity.py` → `results/screen_sensitivity.json`
   and one ESI table: fit-window multiplier and floor, sampling-range truncation, frozen-cell
   normalisation convention (minimal / common FC cell / per f.u. / doubled), with mode flips, unit
   flips, FE recall and the SrTiO3 gate as columns. Plus unbracketed wells and scan-edge Q0 counts.
-- [ ] **S6 Literature (verified before use):** fine-tuning refs for R2.1; ACR 59, 103 and AEM
+- [x] **S6 Literature (verified before use):** `tasks/refs-2026-09-26.md` fine-tuning refs for R2.1; ACR 59, 103 and AEM
   10.1002/aenm.71046 on their merits for R1.3; published PBE values to cross-check C3a.
 
 ## Phase 3 — Manuscript and ESI text (after Phase 2, ~09-28 → 10-01)
+
+DONE 09-27 (4decd1b) from `tasks/revision-claims-2026-09-27.md`; T1–T11 all applied and adversarially
+reviewed (manuscript, ESI Tables S14–S17, figures 600 dpi RGB + upload/Fig1–6.tif, TOC 8×4 cm + 235-char blurb,
+README, DAS). Added: S7 local-vs-global criterion (`criterion_blindness`, da7cf29): SSCHA false-stables
+reproduced by the screen's own curvature on 52/57. PENDING markers remain for C1/C1b/C2/C3a/C3b/C5/P5.
 
 - [ ] T1 H2 reworded everywhere: large and one-directional in unit counts, not significant at
   system level (clustered p 0.15 at 300 K, 0.07 at 600 K); the screen-T* confound stated.
