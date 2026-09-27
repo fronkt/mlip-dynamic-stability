@@ -620,7 +620,7 @@ Two quantities are tabulated from the six lowest recorded Hessian frequencies. *
 | perovskite | ORB-v2 | 12 | 4/12 | 1.5e-06 | 8 | 96–104 |
 | perovskite | SevenNet-0 | 17 | 9/17 | 3.5e-07 | 8 | 190–228 |
 
-**Table S13** Sensitivity of the harmonic layer to the finite-displacement amplitude, the one axis ESI §S1.2's v1/v2 replicate cannot probe. **Partial: CHGNet only.** The remaining four models require compute not available for this revision and are not reported. Deviations are against the same model's production 0.01 Å row.
+**Table S13** Sensitivity of the harmonic layer to the finite-displacement amplitude (0.005, 0.02 and 0.03 Å against the production 0.01 Å), all five models: the one axis ESI §S1.2's v1/v2 replicate cannot probe. Deviations are against the same model's production 0.01 Å row.
 
 | Model | Amplitude (Å) | n | Median \|Δ\| (THz) | Max \|Δ\| (THz) | Call flips | Harmonic accuracy [95% CI] |
 |---|---|---|---|---|---|---|
@@ -628,12 +628,24 @@ Two quantities are tabulated from the six lowest recorded Hessian frequencies. *
 | CHGNet | 0.01 (production) | 20 | -- | -- | 0 | 15/19 = 0.789 [0.567, 0.915] |
 | CHGNet | 0.02 | 19 | 0.0559 | 2.5497 | 1 | 16/19 = 0.842 [0.624, 0.945] |
 | CHGNet | 0.03 | 19 | 0.1282 | 2.4710 | 2 | 17/19 = 0.895 [0.686, 0.971] |
+| MACE-MP-0 | 0.005 | 19 | 0.0000 | 0.0251 | 0 | 17/19 = 0.895 [0.686, 0.971] |
+| MACE-MP-0 | 0.01 (production) | 20 | -- | -- | 0 | 17/19 = 0.895 [0.686, 0.971] |
+| MACE-MP-0 | 0.02 | 19 | 0.0002 | 0.1032 | 0 | 17/19 = 0.895 [0.686, 0.971] |
+| MACE-MP-0 | 0.03 | 19 | 0.0004 | 0.2413 | 0 | 17/19 = 0.895 [0.686, 0.971] |
+| MatterSim | 0.005 | 19 | 0.0002 | 0.0111 | 0 | 19/19 = 1.000 [0.832, 1.000] |
+| MatterSim | 0.01 (production) | 20 | -- | -- | 0 | 19/19 = 1.000 [0.832, 1.000] |
+| MatterSim | 0.02 | 19 | 0.0008 | 0.0367 | 0 | 19/19 = 1.000 [0.832, 1.000] |
+| MatterSim | 0.03 | 19 | 0.0022 | 0.1000 | 0 | 19/19 = 1.000 [0.832, 1.000] |
+| ORB-v2 | 0.005 | 19 | 0.1930 | 5.7574 | 5 | 16/19 = 0.842 [0.624, 0.945] |
+| ORB-v2 | 0.01 (production) | 20 | -- | -- | 0 | 17/19 = 0.895 [0.686, 0.971] |
+| ORB-v2 | 0.02 | 19 | 0.1095 | 2.0425 | 3 | 16/19 = 0.842 [0.624, 0.945] |
+| ORB-v2 | 0.03 | 19 | 0.1510 | 2.9324 | 3 | 16/19 = 0.842 [0.624, 0.945] |
+| SevenNet-0 | 0.005 | 19 | 0.0001 | 0.0098 | 0 | 19/19 = 1.000 [0.832, 1.000] |
+| SevenNet-0 | 0.01 (production) | 20 | -- | -- | 0 | 19/19 = 1.000 [0.832, 1.000] |
+| SevenNet-0 | 0.02 | 19 | 0.0006 | 0.0417 | 0 | 19/19 = 1.000 [0.832, 1.000] |
+| SevenNet-0 | 0.03 | 19 | 0.0015 | 0.1050 | 0 | 19/19 = 1.000 [0.832, 1.000] |
 
-Two things follow, and they point in opposite directions.
-
-**The result that matters for this paper's claims is negative: no anharmonic test system changes its call at any amplitude.** Every flip is on a harmonically-stable control, and they are the same marginal units §3.1 identifies from the tolerance sweep: ceo2_cubic at 0.03 Å (-0.267 → -0.000 THz); cu_fcc at 0.005 Å (-0.000 → -0.476 THz); nacl_rocksalt at 0.02 Å (-0.238 → -0.000 THz); nacl_rocksalt at 0.03 Å (-0.238 → -0.000 THz). The soft-mode detection that the finite-temperature analysis rests on is therefore amplitude-robust across a six-fold range of displacement.
-
-**The result that goes against us is that CHGNet's harmonic accuracy is amplitude-dependent**, running from 0.737 at 0.005 Å through 0.789 at the production 0.01 Å to 0.895 at 0.03 Å. That is a wider swing than the tolerance band already reported in §3.2, and it runs through the same three marginal control units in both cases. We therefore extend the conclusion already drawn there: CHGNet's harmonic accuracy is not a robust number and should not be read as one, under either knob. Its two matched-set harmonic errors (CeO₂, NaCl) are precisely the units that move, so the matched-set comparison in §3.2 inherits the same caveat and is reported as an illustration rather than a measurement. `scripts/run_disp_sweep.py`.
+**MACE-MP-0, MatterSim, SevenNet-0 change no stability call at any amplitude**; their harmonic accuracies are MACE-MP-0 17/19, MatterSim 19/19, SevenNet-0 19/19 at every amplitude. CHGNet changes calls only on harmonically stable controls, the same marginal units §3.1 identifies from the tolerance sweep (ceo2_cubic at 0.03 Å (-0.267 → -0.000 THz); cu_fcc at 0.005 Å (-0.000 → -0.476 THz); nacl_rocksalt at 0.02 Å (-0.238 → -0.000 THz); nacl_rocksalt at 0.03 Å (-0.238 → -0.000 THz)), so its harmonic accuracy runs from 14/19 to 17/19 across amplitudes and is not a robust number under either knob. ORB-v2 changes calls on test systems as well as controls (cssni3_cubic at 0.005 Å (-0.316 → -0.089 THz); hf_bcc at 0.005 Å (-0.194 → -0.084 THz); hf_bcc at 0.02 Å (-0.194 → +0.000 THz); hf_bcc at 0.03 Å (-0.194 → -0.000 THz); hfo2_cubic at 0.005 Å (-5.757 → -0.000 THz); mgo_rocksalt at 0.005 Å (-1.065 → -0.000 THz); srtio3_cubic at 0.005 Å (+0.000 → -0.162 THz); srtio3_cubic at 0.02 Å (+0.000 → -0.588 THz); srtio3_cubic at 0.03 Å (+0.000 → -1.050 THz); ti_bcc at 0.02 Å (-0.434 → -0.000 THz); ti_bcc at 0.03 Å (-0.434 → -0.000 THz)); its accuracy runs 16/19 to 17/19. Its harmonic calls are amplitude-dependent. Of the five models it is the only one whose forces are predicted directly rather than as gradients of an energy (non-conservative), which is the likely cause; CHGNet, SevenNet-0 and MatterSim also return float32 forces as run and do not show it, so precision alone does not explain it. Its harmonic calls should be read with that caveat. `scripts/run_disp_sweep.py`.
 
 <!-- END GENERATED TABLES -->
 

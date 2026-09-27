@@ -135,8 +135,10 @@ def main() -> int:
           f"[3.2] matched-set harmonic: 3 models at 1.000, CHGNet and ORB-v2 at "
           f"{macc['chgnet']:.3f} (13/15)")
 
-    # [3.2] Displacement-amplitude sweep (CHGNet). Pins the two reported outcomes: no
-    # anharmonic system flips at any amplitude, and CHGNet's accuracy spans 0.737-0.895.
+    # [3.2] Displacement-amplitude sweep, all five models (0.005/0.02/0.03 A vs production
+    # 0.01 A). Pins the reported outcomes per model: MACE-MP-0, MatterSim and SevenNet-0 flip
+    # no call; CHGNet flips only controls and its accuracy spans 14/19-17/19; ORB-v2 flips
+    # test systems too.
     raw = pd.read_parquet("results/ledger.parquet")
     sw = raw[raw.method == "harmonic_dispsweep"]
     if len(sw):
@@ -144,11 +146,19 @@ def main() -> int:
             ["system", "model", "pred_stable", "gt_stable"]]
         mm = sw.merge(pr, on=["system", "model"], suffixes=("", "_prod"))
         flipped = mm[mm.pred_stable.astype(bool) != mm.pred_stable_prod.astype(bool)]
-        check(set(flipped.system) <= set(CONTROLS),
-              f"[3.2] disp sweep: every call flip is a control ({sorted(set(flipped.system))})")
+        fl = {m: sorted(set(flipped.system[flipped.model == m])) for m in sorted(sw.model.unique())}
+        check(sorted(sw.model.unique()) == sorted(["chgnet", "mace_mp0", "mattersim", "orb_v2",
+                                                   "sevennet0"])
+              and not fl["mace_mp0"] and not fl["mattersim"] and not fl["sevennet0"],
+              "[3.2] disp sweep: all five models swept; MACE-MP-0, MatterSim, SevenNet-0 flip no call")
+        check(set(fl["chgnet"]) <= set(CONTROLS),
+              f"[3.2] disp sweep: CHGNet flips only controls ({fl['chgnet']})")
+        check(any(s not in CONTROLS for s in fl["orb_v2"]),
+              f"[3.2] disp sweep: ORB-v2 flips test systems too ({fl['orb_v2']})")
         bl2 = A.borderline_systems()
         accs = {}
-        for dd, g in mm[~mm.system.isin(bl2)].groupby("disp_ang"):
+        ch = mm[(mm.model == "chgnet") & (~mm.system.isin(bl2))]
+        for dd, g in ch.groupby("disp_ang"):
             accs[float(dd)] = (g.pred_stable.astype(bool) == g.gt_stable_prod.astype(bool)).mean()
         check(abs(min(accs.values()) - 14 / 19) < 1e-9 and abs(max(accs.values()) - 17 / 19) < 1e-9,
               f"[3.2] disp sweep: CHGNet accuracy spans {min(accs.values()):.3f}-{max(accs.values()):.3f}")

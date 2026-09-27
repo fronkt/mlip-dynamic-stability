@@ -35,6 +35,7 @@ import pandas as pd                     # noqa: E402
 
 from mlip_dynstab import analysis as A   # noqa: E402
 from mlip_dynstab import stats as S      # noqa: E402
+from mlip_dynstab.systems import load_specs  # noqa: E402
 
 LEDGER = REPO / "results" / "ledger.parquet"
 STATS = REPO / "results" / "stats_hardening.json"
@@ -47,6 +48,7 @@ PRETTY = {"chgnet": "CHGNet", "mace_mp0": "MACE-MP-0", "mattersim": "MatterSim",
           "orb_v2": "ORB-v2", "sevennet0": "SevenNet-0"}
 FE = ["batio3_cubic", "knbo3_cubic", "pbtio3_cubic"]
 FLUORITE = ["zro2_cubic", "hfo2_cubic"]
+CONTROL_SYSTEMS = [s.id for s in load_specs() if s.klass == "control"]
 
 
 def md(rows: list[list[str]], header: list[str]) -> str:
@@ -357,33 +359,54 @@ def table_s13_disp_sweep(raw: pd.DataFrame) -> str:
     rows.sort(key=lambda r: (r[0], r[1]))
 
     flips = m[m["flip"]][["system", "model", "disp_ang", "min_freq_thz_prod", "min_freq_thz"]]
-    flip_lines = "; ".join(
-        f"{r.system} at {r.disp_ang:g} Å ({r.min_freq_thz_prod:+.3f} → {r.min_freq_thz:+.3f} THz)"
-        for r in flips.itertuples())
 
-    return (
-        "**Table S13** Sensitivity of the harmonic layer to the finite-displacement amplitude, "
-        "the one axis ESI §S1.2's v1/v2 replicate cannot probe. **Partial: CHGNet only.** The "
-        "remaining four models require compute not available for this revision and are not "
-        "reported. Deviations are against the same model's production 0.01 Å row.\n\n"
+    def flip_lines(model: str) -> str:
+        f = flips[flips["model"] == model]
+        return "; ".join(
+            f"{r.system} at {r.disp_ang:g} Å ({r.min_freq_thz_prod:+.3f} → {r.min_freq_thz:+.3f} THz)"
+            for r in f.itertuples())
+
+    def acc_range(model: str) -> str:
+        ks = []
+        for _, g in m[m["model"] == model].groupby("disp_ang"):
+            sc = g[~g["system"].isin(bl)]
+            ks.append((int((sc["pred_stable"].astype(bool) == sc["gt_stable_prod"].astype(bool)).sum()), len(sc)))
+        p = prod[(prod["model"] == model) & ~prod["system"].isin(bl)]
+        ks.append((int((p["pred_stable"].astype(bool) == p["gt_stable"].astype(bool)).sum()), len(p)))
+        lo, hi = min(ks), max(ks)
+        return f"{lo[0]}/{lo[1]}" if lo == hi else f"{lo[0]}/{lo[1]} to {hi[0]}/{hi[1]}"
+
+    models = sorted(m["model"].unique())
+    invariant = [mm for mm in models if not flips["model"].eq(mm).any()]
+    ctrl_only = [mm for mm in models if mm not in invariant
+                 and set(flips.loc[flips["model"] == mm, "system"]) <= set(CONTROL_SYSTEMS)]
+    other = [mm for mm in models if mm not in invariant and mm not in ctrl_only]
+    names = lambda ms: ", ".join(PRETTY.get(x, x) for x in ms)
+
+    text = (
+        "**Table S13** Sensitivity of the harmonic layer to the finite-displacement amplitude "
+        "(0.005, 0.02 and 0.03 Å against the production 0.01 Å), all five models: the one axis "
+        "ESI §S1.2's v1/v2 replicate cannot probe. Deviations are against the same model's "
+        "production 0.01 Å row.\n\n"
         + md(rows, ["Model", "Amplitude (Å)", "n", r"Median \|Δ\| (THz)", r"Max \|Δ\| (THz)",
                     "Call flips", "Harmonic accuracy [95% CI]"])
-        + "\n\nTwo things follow, and they point in opposite directions.\n\n"
-        "**The result that matters for this paper's claims is negative: no anharmonic test "
-        "system changes its call at any amplitude.** Every flip is on a harmonically-stable "
-        "control, and they are the same marginal units §3.1 identifies from the tolerance "
-        f"sweep: {flip_lines}. The soft-mode detection that the finite-temperature analysis "
-        "rests on is therefore amplitude-robust across a six-fold range of displacement.\n\n"
-        "**The result that goes against us is that CHGNet's harmonic accuracy is amplitude-"
-        "dependent**, running from 0.737 at 0.005 Å through 0.789 at the production 0.01 Å to "
-        "0.895 at 0.03 Å. That is a wider swing than the tolerance band already reported in "
-        "§3.2, and it runs through the same three marginal control units in both cases. We "
-        "therefore extend the conclusion already drawn there: CHGNet's harmonic accuracy is not "
-        "a robust number and should not be read as one, under either knob. Its two matched-set "
-        "harmonic errors (CeO₂, NaCl) are precisely the units that move, so the matched-set "
-        "comparison in §3.2 inherits the same caveat and is reported as an illustration rather "
-        "than a measurement. `scripts/run_disp_sweep.py`."
-    )
+        + f"\n\n**{names(invariant)} change no stability call at any amplitude**; their harmonic "
+        "accuracies are " + ", ".join(f"{PRETTY.get(x, x)} {acc_range(x)}" for x in invariant)
+        + " at every amplitude. ")
+    for x in ctrl_only:
+        text += (f"{PRETTY.get(x, x)} changes calls only on harmonically stable controls, the same "
+                 f"marginal units §3.1 identifies from the tolerance sweep ({flip_lines(x)}), so its "
+                 f"harmonic accuracy runs from {acc_range(x)} across amplitudes and is not a robust "
+                 "number under either knob. ")
+    for x in other:
+        text += (f"{PRETTY.get(x, x)} changes calls on test systems as well as controls "
+                 f"({flip_lines(x)}); its accuracy runs {acc_range(x)}. Its harmonic calls are "
+                 "amplitude-dependent. Of the five models it is the only one whose forces are "
+                 "predicted directly rather than as gradients of an energy (non-conservative), "
+                 "which is the likely cause; CHGNet, SevenNet-0 and MatterSim also return float32 "
+                 "forces as run and do not show it, so precision alone does not explain it. Its "
+                 "harmonic calls should be read with that caveat. ")
+    return text + "`scripts/run_disp_sweep.py`."
 
 
 def build() -> str:
