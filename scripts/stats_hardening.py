@@ -773,13 +773,15 @@ def criterion_blindness(df: pd.DataFrame) -> dict:
 
     The screen reports two things per unit from one E(Q) map: a stability CALL (does any
     displaced centroid have lower single-mode SCHA free energy than Q0 = 0, a global
-    comparison) and a CURVATURE (the free-energy curvature at the symmetric point, the
-    single-mode analogue of the SSCHA free-energy Hessian, a local test). Where SSCHA calls a
-    non-bcc phase stable against an unstable label, this asks which of the screen's two
-    observables agrees with it. If the screen's own curvature is positive there, the SSCHA
-    false-stable is reproduced by a local criterion evaluated on the same MLIP energies, and
-    the disagreement with the screen's call is a local-versus-global criterion difference, not
-    a force-engine difference. Descriptive counts; no test.
+    comparison) and a CURVATURE (the free-energy curvature at the symmetric point).
+
+    CAUTION, and the reason the curvature counts below are not evidence: for a single mode with
+    an even potential the symmetric-point curvature equals the trial stiffness M*Omega^2, so it
+    is positive by construction whenever a bound Gaussian exists; negative values are numerical
+    (width-solver fallbacks, fit artefacts). See scripts/curvature_identity_check.py. The
+    informative count is `screen_call_unstable`: on how many SSCHA false-stables the screen's
+    free-energy comparison finds a lower displaced minimum on the same MLIP energies.
+    Descriptive counts; no test.
     """
     keep = ["system", "model", "temperature_K"]
     sm = df[df["method"] == "softmode"][keep + ["min_eff_freq_thz", "pred_stable", "gt_stable"]]

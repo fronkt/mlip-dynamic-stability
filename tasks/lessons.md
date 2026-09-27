@@ -235,3 +235,29 @@ inflate every harmonic denominator in the paper.
 ` inside Python written through a bash heredoc lands as a
 real newline and breaks the string. Use Write/Edit for any Python containing escapes; `ast.parse`
 before running.
+
+---
+
+## 2026-09-27 — RSC revision, compute + rewrite session
+
+**An observable that is positive by construction is not evidence.** I promoted "the screen's own
+symmetric-point curvature is positive on 52/57 SSCHA false-stables" to the §3.3 mechanism, the claims
+ledger and verify_claims. For one mode with an even potential that curvature equals the SCHA trial
+stiffness MΩ², so it is positive whenever a bound Gaussian exists; the negatives are solver fallbacks.
+The August audit (audit-2026-08-16.md:146-152) had already written this down; a letter-integrator agent
+caught it. **Rule: before an agreement/count becomes evidence, ask what it would be under the null, and
+whether the quantity can take the other value at all. Re-read the project's own audits for the identity.**
+
+**Check convergence before interpreting a stochastic solver's number.** The production SSCHA never
+converged: `max_ka` is a CUMULATIVE step cap in python-sscha 1.6.1 (SchaMinimizer.py:1370), so after
+population 1 each population takes one discarded step, and the Hessian sits at the ForcePositiveDefinite
+start (BaTiO3: start +2.88, final +2.87 THz). The library also passes a placeholder gradient error
+(Ensemble.py:2657 returns ones), so `meaningful_factor` is an absolute threshold. The 2026-06-22 lesson
+above already said "don't trust a converged SSCHA freq without checking the aux dyn moved off the
+ForcePositiveDefinite start" — and the paper headlined it anyway for three months. **Rule: every
+reported stochastic-solver value carries its convergence flag and its distance from the start; a
+headline without them is not a result.**
+
+**Seed agreement is not convergence.** Four seeds agreeing to 0.007 THz looked like robustness; they
+agreed because all four stopped at the same deterministic start. Report start-dependence (two different
+starts), not just seed spread.

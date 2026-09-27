@@ -373,10 +373,11 @@ def main() -> int:
           f"[3.3] SSCHA: {reversals(nb)[1]} of {reversals(nb)[0]} non-bcc units stable at 100 K "
           f"turn negative by 600-900 K (ex-ORB {reversals(nbx)[1]} of {reversals(nbx)[0]})")
 
-    # [3.3] Local vs global criterion on the SAME PES: on the non-bcc units SSCHA calls stable
-    # against an unstable label, the screen's own symmetric-point curvature (the single-mode
-    # analogue of the SSCHA Hessian) is positive on 52/57, and on 41/57 it is positive while the
-    # screen's free-energy comparison calls the phase unstable. Recomputed from the ledger.
+    # [3.3] On the non-bcc units SSCHA calls stable against an unstable label, the screen's
+    # free-energy comparison finds a lower displaced minimum on 46/57 (the informative count).
+    # The 52/57 'curvature positive' count is pinned only as a true number: the symmetric-point
+    # curvature is positive by construction (scripts/curvature_identity_check.py), so it is not
+    # evidence of anything. Recomputed from the ledger.
     kk = ["system", "model", "temperature_K"]
     cb = d[d.method == "softmode"][kk + ["min_eff_freq_thz", "pred_stable", "gt_stable"]].merge(
         d[d.method == "sscha"][kk + ["min_eff_freq_thz", "pred_stable"]], on=kk,
@@ -385,9 +386,10 @@ def main() -> int:
     cfs = cb[cb.pred_stable_ss.astype(bool) & ~cb.gt_stable.astype(bool)]
     cpos = int((cfs.min_eff_freq_thz_scr > 0).sum())
     cblind = int(((cfs.min_eff_freq_thz_scr > 0) & ~cfs.pred_stable_scr.astype(bool)).sum())
-    check(len(cfs) == 57 and cpos == 52 and cblind == 41,
-          f"[3.3] SSCHA false-stables: screen curvature positive on {cpos}/{len(cfs)}, "
-          f"curvature-positive-but-condensed on {cblind}/{len(cfs)}")
+    ccall = int((~cfs.pred_stable_scr.astype(bool)).sum())
+    check(len(cfs) == 57 and ccall == 46 and cpos == 52 and cblind == 41,
+          f"[3.3] SSCHA false-stables: screen call finds a displaced minimum on {ccall}/{len(cfs)} "
+          f"(curvature positive by construction on {cpos}; {cblind} both)")
 
     print()
     if _fails:
