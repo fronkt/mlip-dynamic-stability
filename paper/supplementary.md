@@ -3,13 +3,16 @@
 *Supplementary information for* "Neither harmonic benchmarks nor a default SSCHA cross-check
 certifies a foundation machine-learning interatomic potential for finite-temperature dynamic
 stability", F. Cai, *RSC Advances*. Section numbers without an S (§2.4, §3.3 and so on) and
-numbered references refer to the main article. Tables S4-S11 and S13-S17 are generated from the
+numbered references refer to the main article. Tables S4-S11 and S13-S18 are generated from the
 deposited ledger (`results/ledger.parquet`) and the deposited analysis outputs
-(`results/stats_hardening.json`, `results/screen_sensitivity.json`) by
+(`results/stats_hardening.json`, `results/screen_sensitivity.json`,
+`results/curvature_identity_check.json`, `results/revision/force_spread/summary.json`) by
 `scripts/build_esi_tables.py`; figures by `scripts/make_figures.py`.
+<!-- PENDING-C1 / PENDING-C3a: the seed-study table (C1) and the PBE soft-mode table (C3a) extend
+these ranges when they land (S19 and on); update both sentences here. -->
 
 *Citation convention: **sections** of this document are cited as §S1-§S4 and **tables** as
-Table S1-Table S17. The two sequences are independent; a cross-reference to "Table S1" means the
+Table S1-Table S18. The two sequences are independent; a cross-reference to "Table S1" means the
 table, not the section.*
 
 ## S1. Finite-T method development and discarded routes
@@ -180,9 +183,17 @@ real crystal is correlated over a length that a single frozen mode does not cont
 shows the consequence. Taking the cell per formula unit, as the minimal cell, doubled, or as the
 common force-constant supercell gives a ferroelectric-oxide recall of 5/30, 16/30, 26/30 and
 28/30, and the SrTiO₃ gate passes for 0, 3, 2 and 3 of the five models. Accuracy on the scored
-set cannot choose among these conventions (Table S14 notes). The screen's T* and its
-ferroelectric recall are therefore conditional on the minimal-cell convention; we state that as
-a limitation of the single-mode screen, not as a setting we could defend on the data.
+set cannot choose among these conventions (Table S14 notes). The H2 transfer count moves with the
+convention too. At 300 K b v c is 17 v 4 in the minimal cell, 7 v 4 in the common force-constant
+supercell, 10 v 4 in the doubled cell, 11 v 4 in the eight-fold cell and 24 v 4 per formula unit,
+with system-clustered p from 0.06 to 0.89; at 100 K b does not exceed c in the common supercell
+(3 v 3), the doubled cell (3 v 3) or the eight-fold cell (2 v 3). Over the 20 convention and
+temperature combinations the clustered p runs from 0.03 to 1.0, and two fall below 0.05 (per
+formula unit at 100 K, 0.045; the eight-fold cell at 900 K, 0.031), which after twenty looks we do
+not read as evidence (`scripts/h2_by_convention.py` → `results/h2_by_convention.json`). The
+screen's T*, its ferroelectric recall and the size of the H2 count are therefore conditional on
+the minimal-cell convention; we state that as a limitation of the single-mode screen, not as a
+setting we could defend on the data.
 
 **Sampling, fit and scan: the implementation constants.** Each map is sampled at ten points
 Q_k = 0.45 (k/9)² Å, k = 0, …, 9, spaced quadratically so that most points fall at small Q, where
@@ -194,7 +205,9 @@ stays bounded below; on the production maps every refitted quartic has b > 0. Th
 energy is minimised over the centroid on 121 points spanning 0 ≤ Q₀ ≤ 0.6 Å (step 0.005 Å), and
 the mode is called condensed when the minimising Q₀ exceeds 1.5 steps, 0.0075 Å. The
 symmetric-point curvature reported as ω_eff is a fourth-order finite difference of 𝓕(Q₀) with
-step 0.005 Å; because 𝓕 is even in Q₀ the one-sided stencil is central. Table S14 varies the fit
+step 0.005 Å; because 𝓕 is even in Q₀ the one-sided stencil is central. At the symmetric point
+that curvature equals the self-consistent trial stiffness (shown after the stationarity step
+below), which limits what it can report. Table S14 varies the fit
 window, the sampling range, the threshold and the scan; apart from the cell convention, none of
 them changes more than one unit call at T ≤ 300 K.
 
@@ -235,6 +248,26 @@ one available at that centroid, and the call compares these bounds across centro
 For the sextic V(Q) = aQ² + bQ⁴ + cQ⁶ the Gaussian moments give
 ⟨V″⟩ = 2a + 12b⟨Q²⟩ + 30c⟨Q⁴⟩ with ⟨Q²⟩ = Q₀² + σ² and ⟨Q⁴⟩ = Q₀⁴ + 6Q₀²σ² + 3σ⁴.
 
+**What the symmetric-point curvature is.** Write F(Q₀) for 𝓕 at its stationary Ω. Because Ω is
+stationary, dF/dQ₀ = ∂𝓕/∂Q₀ = ⟨V′⟩_{Q₀,σ}. Differentiating again, F″ = ⟨V″⟩ +
+(∂⟨V′⟩/∂σ²)(dσ²/dQ₀). At Q₀ = 0 the second term vanishes for an even V, since ⟨V′⟩ is then zero
+for every width and σ² is even in Q₀, so F″(0) = ⟨V″⟩_{0,σ} = MΩ²: the curvature of the screen's
+free energy at the symmetric point is the self-consistent trial stiffness there. It is positive
+whenever a bound Gaussian solves the width equation at Q₀ = 0, however deep the well, so it cannot
+register condensation; only the comparison of 𝓕 across centroids, the screen's call, can. This is
+the single-mode counterpart of the statement that the SSCHA auxiliary matrix is positive definite
+by construction. In the multi-mode SSCHA Hessian the bubble term, built from third-order couplings
+between the soft mode and other modes, need not vanish at the symmetric point, so the SSCHA
+Hessian can be negative there where the single-mode curvature cannot. Numerically, over the 1512
+mode-temperature evaluations of the production maps the reported ω_eff agrees with Ω/2π at
+Q₀ = 0 to a median relative difference of 7 × 10⁻⁷, and every negative ω_eff (95 evaluations) is
+numerical: 93 have the width solver's grid fallback (below) at a point of the finite-difference
+stencil, and the other two are ORB-v2 modes of bcc Ti whose fitted polynomial has a positive
+quadratic term and a well only between sample points, a fit artefact of the kind described in
+§S1.4 (`scripts/curvature_identity_check.py` → `results/curvature_identity_check.json`). The
+negative values in Fig. 2 are therefore not physical curvatures, and the observable is not scored
+against SSCHA anywhere in this work (Table S16).
+
 **Solving it.** Substituting Ω(σ²) back gives a scalar fixed-point equation g(σ²) = σ²_sc(σ²) −
 σ² = 0, solved in σ² rather than Ω because the physical branch is easier to bracket there. A
 damped iteration on this equation can run away to a large-σ spurious root, so the implementation
@@ -244,7 +277,9 @@ state exists, since Ω would be imaginary); the first downward sign change of g 
 refined by Brent's method to a tolerance of 10⁻¹⁰. If the grid has no sign change, or Brent's
 method fails, the solver keeps the grid point at which |g| is smallest. That fallback fires on
 8441 of 182,952 centroid evaluations (4.6%) and on none of the 1512 evaluations that decide a
-call, the minimising centroid of each mode and temperature (Table S14). If the admissible
+call, the minimising centroid of each mode and temperature (Table S14). It does reach the
+reported curvature, whose stencil uses Q₀ = 0, 0.005 and 0.010 Å: that is the source of 93 of the
+95 negative ω_eff values above. If the admissible
 sub-interval is empty, no bound Gaussian exists at that centroid, and the centroid is rejected
 with 𝓕 = +∞ so the outer minimisation moves to a displaced, bound centroid rather than
 reporting a spurious value; on the production maps this never happens. The outer minimisation
@@ -276,6 +311,15 @@ screened modes all belong to different representations: deduplication matches fr
 screened as separate modes of one representation (the T1u triplet of BaTiO₃ under CHGNet is an
 example). The cubic and trilinear terms are therefore not excluded, and they, like a negative λ,
 can drive a joint condensation that no single mode shows alone.
+
+Inside a degenerate eigenspace the screened direction is also not unique. The pattern is the
+eigenvector the eigensolver returns, and any direction in the degenerate span is equally an
+eigenvector, but the one-dimensional problem along it is not the same: regenerating the Γ
+triplet of BaTiO₃ under MACE-MP-0 for the first-principles comparison gave a direction whose well
+is 16.8 meV deep with M = 41 amu, against 20.9 meV and 53 amu along the production direction
+(`scripts/dft_reference.py`, which therefore searches the degenerate span for the production
+direction before comparing). The screen's call on a degenerate mode is thus a call along one
+arbitrary direction of the span, and the anisotropy of the well within the span is not explored.
 
 Keeping only the biquadratic term, a mean-field reading gives mode *k* an effective quadratic
 coefficient
@@ -310,8 +354,7 @@ The multi-mode SSCHA retains the couplings, but here it cannot bound their effec
 for three reasons. It runs on the same MLIP potential, so any PES error is common to both
 methods. On the displacive systems its default criterion is local (§3.3, Table S16), so it
 answers a different question from the screen's free-energy comparison. And on bcc, where both
-apply, the agreement is weaker than a bound would need. The curvature signs agree in 35/45 paired
-units (0.78 [0.64, 0.87]; 30/36 without ORB-v2), but the stability calls agree in 31/45
+apply, the agreement is weaker than a bound would need: the stability calls agree in 31/45
 (0.69 [0.54, 0.80]; 25/36 without ORB-v2). Twelve of the agreeing units are CHGNet and
 MACE-MP-0 on Zr and Hf, which have no harmonic instability to stabilise; without them the calls
 agree in 19/33. MatterSim, whose bcc harmonic instabilities are the deepest of the five models,
@@ -386,15 +429,28 @@ section, pointed to from here -->
 ### S2.1 Minimizer step cap
 
 Multi-mode SSCHA on the 40-atom perovskite cells initially appeared to hang (CPU busy, GPU idle,
-a per-population step counter climbing past 1000). The cause was an uncapped per-population
-reweighting loop: with a noisy stochastic gradient on a large soft cell, one population chases
-the gradient below its own stochastic-noise floor indefinitely instead of regenerating a fresh
-ensemble. Capping the per-population steps (`minim.max_ka = 20`) forces ensemble regeneration;
-with the cap SrTiO₃ converged in 231 s and 27 steps, against 1835 steps and a timeout without
-it. Small cells (8-atom bcc) converge under the cap and are unchanged. The cap is not the
-stopping criterion: the relaxation ends when python-sscha's convergence test, with threshold
-`meaningful_factor = 1e-4`, is met, or when the population limit (8) is reached. Which of the two
-ended each production unit was not recorded (Table S11).
+a step counter climbing past 1000): with a noisy stochastic gradient on a large soft cell, the
+minimiser chased the gradient below its own stochastic-noise floor without stopping. A step cap
+(`minim.max_ka = 20`; the python-sscha default, −1, is no cap) ended that: with it the SrTiO₃ run
+finished in 231 s after 27 steps, against 1835 steps and a timeout without it. The cap was
+introduced on the understanding that it limits the steps within each population. It does not.
+python-sscha 1.6.1 keeps the minimiser's step history across populations and compares `max_ka`
+with the accumulated count (`SchaMinimizer.py`, line 1370 of the 1.6.1 source), so the cap bounds
+the total number of steps over the whole relaxation. The relaxation otherwise ends when
+python-sscha's convergence test, with threshold `meaningful_factor = 1e-4`, is met, or when the
+population limit (8) is reached. Which of these ended each production unit was not recorded
+(Table S11).
+<!-- PENDING-C1: the seed study's step records show, for every completed seed, how many steps were
+kept, how many populations moved the auxiliary matrix and whether the convergence test was met
+(results/revision/sscha_seeds/: 19 steps kept, only the first of 8 populations moving the matrix,
+converged = false on all 16 seeds of the four units, commit 2fdbb61). Report it here, in §2.5 and in the new seed-study
+table, whichever way the finished study falls, and state what the converged-mode runs (C1c,
+results/revision/sscha_converged/) show for the same units. -->
+
+The stopping behaviour matters for how the SSCHA numbers are read. A relaxation that stops early
+leaves the auxiliary matrix near its `ForcePositiveDefinite` start, in which imaginary harmonic
+modes have been made real, and a free-energy Hessian evaluated there is not evaluated at the SCHA
+minimum.
 
 ### S2.2 Stage-by-stage diagnostic (cubic BaTiO₃, MACE-MP-0, 100 K)
 
@@ -409,14 +465,15 @@ comparable with the canonical ledger values for this unit.
 |---|---|
 | harmonic (MLIP, finite displacement) | −5.635 |
 | after `ForcePositiveDefinite` (the SSCHA starting point) | +2.882 |
-| converged SCHA auxiliary dynamical matrix | +2.892 |
+| SCHA auxiliary dynamical matrix at the end of the relaxation | +2.892 |
 | free-energy Hessian, bubble level, `include_v4=False` (production) | +2.872 |
 | free-energy Hessian, `include_v4=True` | did not finish (> 18 min on this one unit, against ≈ 200 s with `include_v4=False`) |
 
 What the table shows is limited, and it is worth saying exactly what. The auxiliary SCHA matrix is
 positive definite by construction (a normalisable Gaussian trial state requires it), so the
-+2.88 THz after `ForcePositiveDefinite` and the +2.89 THz at convergence say nothing about
-stability: the auxiliary matrix cannot soften (refs 21, 22). The object that could detect the
++2.88 THz after `ForcePositiveDefinite` and the +2.89 THz at the end of the relaxation say
+nothing about stability: the auxiliary matrix cannot soften (refs 21, 22). The two differ by
+0.01 THz, so the relaxation left the matrix close to its positive-definite start (§S2.1). The object that could detect the
 instability is the free-energy Hessian, and at bubble level it lands within 0.02 THz of the
 positive auxiliary curvature, so it reports the symmetric phase stable against a harmonic
 instability of −5.6 THz on the same MLIP. No two rows differ in the truncation order alone: the
@@ -428,9 +485,12 @@ the curvature of the SSCHA free energy at the high-symmetry reference, so it ans
 question: is the symmetric phase a local minimum of the free energy? For a deep double well the
 free energy can keep a local minimum at the symmetric point while a displaced minimum lies lower
 (the first-order-like case of §2.4), and a curvature at the reference then reports stable at any
-order of the expansion. The screen's own symmetric-point curvature, computed on the same MLIP
-energies, behaves this way on 52 of the 57 non-bcc units SSCHA false-stabilises (Table S16),
-including this one (screen curvature +2.03 THz, SSCHA +2.87 THz, screen call unstable). Adding
+order of the expansion. On the same MLIP energies the screen finds that situation on most of the
+57 non-bcc units SSCHA false-stabilises: its free-energy comparison finds a displaced minimum
+below the symmetric point on 46 of them (Table S16), including this one. The screen's own
+symmetric-point curvature cannot add to that, because for a single mode it is positive by
+construction (§S1.3), and neither shows that SSCHA's positive Hessian has this origin rather than
+a relaxation that stopped near its start (§S2.1). Adding
 the fourth-order term changes the estimate of the curvature but not the question it answers. It
 could flip the sign only where the bubble-level value overstates a curvature that is in fact
 negative, and whether that happens here is untested.
@@ -480,9 +540,9 @@ calls every one of the ten fluorite units stable at 100 K, at +1.9 to +3.3 THz i
 cell used throughout, although cubic
 ZrO₂ and HfO₂ are the high-temperature phases (above about 2570 K and 2800 K) and the label is
 unstable. The screen's free-energy comparison calls all 20 fluorite units at T ≤ 300 K unstable.
-Over the whole ladder SSCHA false-stabilises 31 fluorite units, and on 27 of them the screen's
-own symmetric-point curvature is positive too (Table S16): the same local-versus-global
-difference as on the perovskites, on a numerically well-behaved instability. Three of the five models
+Over the whole ladder SSCHA false-stabilises 31 fluorite units, and the screen's free-energy
+comparison calls all 31 unstable (Table S16): the same local-versus-global difference as on the
+perovskites, on a numerically well-behaved instability. Three of the five models
 then *destabilise* with temperature, which is the wrong trend (the fluorite labels are unstable
 at every temperature, so those high-temperature negatives are right in sign; Table S17). That a
 numerically well-behaved instability is lost the same way shows the fluorite false-stable is not
@@ -509,9 +569,14 @@ print to the run log rather than to a ledger).
   come from the June v1 generation (unpinned environment, before the phonopy initialiser), and
   they are again MACE-MP-0 on Zr, a unit with no harmonic instability. The soft-mode rows of the
   same study were produced by the earlier single-mode selection, before the correction described
-  in §2.4, and are retained for audit only.
+  in §2.4, and are retained for audit only. The two cells are also not nested: the bcc N point
+  is commensurate only with even cells and the ω point, q = ⅔⟨111⟩, only with multiples of
+  three, so going from 2×2×2 to 3×3×3 changes the set of q-points the cell contains as well as
+  its size, and the comparison is not a convergence test even on a unit with an instability.
   <!-- PENDING-C5: 2x2x2 vs 3x3x3 SSCHA re-measured in the pinned environment on bcc-Zr for
-  MatterSim and MACE-MP-0; replace or confirm the numbers in this bullet -->
+  MatterSim and MACE-MP-0; replace or confirm the numbers in this bullet, and report it as a
+  change of q-set (N in 2x2x2 only, omega in 3x3x3 only), or add a nested 4x4x4 (and 6x6x6) run;
+  a different call at 3x3x3 may reflect the omega mode entering the cell rather than finite size -->
 - **Zone-boundary systems: no convergence claim.** The SrTiO₃ antiferrodistortive instability is
   at the R point (½,½,½), commensurate only with even supercells, so a 3×3×3 cell cannot contain
   it and a 2×2×2-versus-3×3×3 comparison is not a convergence test for it. The fluorite
@@ -565,12 +630,13 @@ rest are collected here in numerical order:
 - Table S14, sensitivity of the soft-mode screen (fit window, sampling range, frozen-cell
   normalisation, solver constants).
 - Table S15, the H2 transfer asymmetry at every temperature, clustered by system.
-- Table S16, screen-versus-SSCHA agreement on bcc scored as curvature sign and as the call, and
-  the same-energy comparison behind the SSCHA false-stables.
+- Table S16, screen-versus-SSCHA agreement on bcc scored on the call, and the same-energy
+  comparison behind the SSCHA false-stables.
 - Table S17, SSCHA high-temperature false-unstables, the SrTiO₃ units above its transition, and
   SSCHA blow-ups and failures per model.
-<!-- PENDING-C1 / PENDING-C2 / PENDING-C3a: the seed-study table (C1), the force-level ensemble
-spread table (C2) and the PBE soft-mode comparison (C3a) are added to this list when they land -->
+- Table S18, the pre-registered force-level ensemble test, every score it names.
+<!-- PENDING-C1 / PENDING-C3a: the seed-study table (C1) and the PBE soft-mode comparison (C3a)
+are added to this list when they land -->
 
 <!-- BEGIN GENERATED TABLES -->
 
@@ -788,7 +854,7 @@ The 15 systems are: `batio3_cubic`, `c_diamond`, `ceo2_cubic`, `cspbi3_cubic`, `
 | zro2_cubic | 600 | 5 | 0.220 | 0.00 | unanimous | unstable | unstable | yes |
 | zro2_cubic | 900 | 5 | 0.253 | 0.00 | unanimous | unstable | unstable | yes |
 
-**Table S9** Every pooled rate that ORB-v2 could plausibly drive, with and without it. ORB-v2 is the only one of the five models whose forces are predicted directly rather than as the gradient of an energy (non-conservative). As run, CHGNet, SevenNet-0, MatterSim and ORB-v2 all return float32 forces and only MACE-MP-0 returns float64, so precision does not single ORB-v2 out, and the design cannot separate its architecture from anything else about it. For reference: ORB-v2 is the only model that calls MgO harmonically unstable (−1.07 THz); its most negative bcc screen curvatures are −6.2 THz (Ti, 100 K) and −8.9 THz (Ti, 900 K), with Hf at −0.09 THz; and it accounts for 3 of the 8 SSCHA blow-ups and 4 of the 7 failed SSCHA units (all on pbtio3_cubic). Per-model rates (Tables S4 and S5) cannot change when another model is removed, so only pooled quantities are split here. The guardrail is where removing ORB-v2 changes the reading: without it the vote-split AUC falls from 0.762 to 0.628 and its cluster-bootstrap interval spans 0.5, so the guardrail is suggestive and not robust to removing ORB-v2. The frequency spread is the cross-model standard deviation of the screen's effective frequency, a potential-energy-surface proxy that is only partly force-derived (the mode patterns come from force constants; E(Q) is energy-only); it is not a force-level ensemble uncertainty. <!-- PENDING-C2: force-level ensemble spread (five-model spread plus MACE small/medium/large and MatterSim 1M/5M committees; clustered AUC; overlap-artifact check), with and without ORB-v2; new ESI table, one sentence here --> Four-model consensus uses the same rule as five-model consensus (stable when at least half the votes are stable), so a 2–2 split is called stable; this decides 3 units, 2 of them wrong. Removing ORB-v2 raises the bcc curvature-sign agreement from 0.78 to 0.83 but leaves the stability-call agreement at 0.69. Permutation p-values and bootstrap intervals resample whole systems (10,000 permutations and 10,000 bootstrap draws, seed 0; the 9,998 bootstrap draws that contain both outcomes are used), so each p carries Monte Carlo error. The H2 ladder without ORB-v2 is in Table S15, the paired screen-versus-SSCHA tests in Table S10, the bcc agreement by model in Table S16, and the SSCHA high-temperature false-unstables, blow-ups and failures by model in Table S17. `scripts/stats_hardening.py` (`orb_split_s3`, `bcc_agreement`); pooled finite-T accuracy from `scripts/screen_sensitivity.py`.
+**Table S9** Every pooled rate that ORB-v2 could plausibly drive, with and without it. ORB-v2 is the only one of the five models whose forces are predicted directly rather than as the gradient of an energy (non-conservative). As run, CHGNet, SevenNet-0, MatterSim and ORB-v2 all return float32 forces and only MACE-MP-0 returns float64, so precision does not single ORB-v2 out, and the design cannot separate its architecture from anything else about it. For reference: ORB-v2 is the only model that calls MgO harmonically unstable (−1.07 THz); its most negative bcc screen curvatures are −6.2 THz (Ti, 100 K) and −8.9 THz (Ti, 900 K), both on fitted polynomials whose quadratic term is positive (fit artefacts of the kind described in §S1.4), with Hf at −0.09 THz, the softest commensurate harmonic value of a model with no screened imaginary mode there; and it accounts for 3 of the 8 SSCHA blow-ups and 4 of the 7 failed SSCHA units (all on pbtio3_cubic). Per-model rates (Tables S4 and S5) cannot change when another model is removed, so only pooled quantities are split here. The guardrail is where removing ORB-v2 changes the reading: without it the vote-split AUC falls from 0.762 to 0.628 and its cluster-bootstrap interval spans 0.5, so the guardrail is suggestive and not robust to removing ORB-v2. The frequency spread is the cross-model standard deviation of the screen's effective frequency, a potential-energy-surface proxy that is only partly force-derived (the mode patterns come from force constants; E(Q) is energy-only); it is not a force-level ensemble uncertainty; the force-level spread, pre-registered and given with and without ORB-v2, is in Table S18. Four-model consensus uses the same rule as five-model consensus (stable when at least half the votes are stable), so a 2–2 split is called stable; this decides 3 units, 2 of them wrong. Removing ORB-v2 leaves the bcc stability-call agreement at 0.69. Permutation p-values and bootstrap intervals resample whole systems (10,000 permutations and 10,000 bootstrap draws, seed 0; the 9,998 bootstrap draws that contain both outcomes are used), so each p carries Monte Carlo error. The H2 ladder without ORB-v2 is in Table S15, the paired screen-versus-SSCHA tests in Table S10, the bcc agreement by model in Table S16, and the SSCHA high-temperature false-unstables, blow-ups and failures by model in Table S17. `scripts/stats_hardening.py` (`orb_split_s3`, `bcc_agreement`); pooled finite-T accuracy from `scripts/screen_sensitivity.py`.
 
 | Quantity | All five models | Excluding ORB-v2 |
 |---|---|---|
@@ -811,7 +877,6 @@ The 15 systems are: `batio3_cubic`, `c_diamond`, `ceo2_cubic`, `cspbi3_cubic`, `
 | SSCHA recall of the unstable class, SrTiO₃, T ≤ 300 K | 5/5 = 1.000 [0.566, 1.000] | 4/4 = 1.000 [0.510, 1.000] |
 | SSCHA numerical blow-ups (\|f\| > 50 THz), of returned units | 8 of 201 | 5 of 166 |
 | SSCHA failed units (no number returned), of the attempted grid | 7 of 208 | 3 of 169 |
-| bcc screen-vs-SSCHA curvature-sign agreement | 35/45 = 0.778 [0.637, 0.875] | 30/36 = 0.833 [0.681, 0.921] |
 | bcc screen-vs-SSCHA stability-call agreement | 31/45 = 0.689 [0.543, 0.805] | 25/36 = 0.694 [0.531, 0.820] |
 | bcc frequency Spearman ρ (descriptive, no test) | +0.113 | −0.003 |
 | Guardrail: consensus error on split-vote units | 8/14 = 0.571 [0.326, 0.786] | 4/8 = 0.500 [0.215, 0.785] |
@@ -820,7 +885,7 @@ The 15 systems are: `batio3_cubic`, `c_diamond`, `ceo2_cubic`, `cspbi3_cubic`, `
 | Guardrail: frequency-spread AUC [cluster-bootstrap 95% CI], clustered permutation p | 0.361 [0.046, 0.625], clustered p = 0.2748 | 0.299 [0.076, 0.516], clustered p = 0.1030 |
 | Guardrail: 2–2 tied units (broken to 'stable'), of which wrong | 0, 0 wrong | 3, 2 wrong |
 
-**Table S10** The central screen-versus-SSCHA contrast, tested as the paired comparison it is. Both methods see the same (system, model, temperature) units, so comparing their two marginal Wilson intervals would ignore the pairing. Two p-values are given and **the unit-level one should not be quoted**: an exact McNemar over discordant units also assumes those units are independent, and they cluster by system. The clustered column randomises the method label over whole systems and is exact at this size. Its resolution floor, 2/2^k, is given alongside, because with five displacive systems no arrangement of the data can reach p < 0.0625 and with two fluorite systems none can go below 0.5. The reportable content of this table is the size and the consistency of the effect (4 of 5 systems favour the screen, with per-system net discordances +6, +6, −1, +9, +10) rather than a significance claim. Why SSCHA loses these units is examined separately, on the same MLIP energies, in Table S16 (lower part) and §3.3: the screen's own symmetric-point curvature, the single-mode analogue of the SSCHA free-energy Hessian, is positive on most of them too. `scripts/stats_hardening.py`.
+**Table S10** The central screen-versus-SSCHA contrast, tested as the paired comparison it is. Both methods see the same (system, model, temperature) units, so comparing their two marginal Wilson intervals would ignore the pairing. Two p-values are given and **the unit-level one should not be quoted**: an exact McNemar over discordant units also assumes those units are independent, and they cluster by system. The clustered column randomises the method label over whole systems and is exact at this size. Its resolution floor, 2/2^k, is given alongside, because with five displacive systems no arrangement of the data can reach p < 0.0625 and with two fluorite systems none can go below 0.5. The reportable content of this table is the size and the consistency of the effect (4 of 5 systems favour the screen, with per-system net discordances +6, +6, −1, +9, +10) rather than a significance claim. Why SSCHA loses these units is examined separately, on the same MLIP energies, in Table S16 (lower part) and §3.3: on most of them the screen's free-energy comparison finds a displaced minimum below the symmetric point, which a criterion read at the symmetric reference does not see. `scripts/stats_hardening.py`.
 
 | System set | Model set | n paired | Discordant (screen/SSCHA) | Unit-level p (do not quote) | Systems favouring screen | Clustered p | Floor |
 |---|---|---|---|---|---|---|---|
@@ -831,7 +896,7 @@ The 15 systems are: `batio3_cubic`, `c_diamond`, `ceo2_cubic`, `cspbi3_cubic`, `
 | displacive combined | all models | 47 | 33/3 | 2e-07 | 4/5 | 0.1250 | 0.0625 |
 | displacive combined | excl orb v2 | 39 | 26/3 | 1.5e-05 | 4/5 | 0.1250 | 0.0625 |
 
-**Table S11** SSCHA numerical quality, aggregated per family and model (not per unit). The SSCHA settings are identical for all 201 returned units and are therefore stated once here rather than tabulated. The starting dynamical matrix is built from phonopy full force constants at a 0.03 Å finite displacement, made positive definite (`ForcePositiveDefinite`) and symmetrised. The auxiliary dynamical matrix is relaxed in the root2 representation with `min_step_dyn = 0.5`; the convergence threshold is `meaningful_factor = 1e-4`. Each population of 256 configurations allows at most `max_ka = 20` reweighting steps, a cap that forces a fresh ensemble rather than a stopping criterion (§S2.1), and at most 8 populations are drawn (2048 configurations). The free-energy Hessian is then evaluated at bubble level (`include_v4 = False`) on a dedicated 512-configuration ensemble at the relaxed auxiliary matrix. The harness did not record how many populations each unit used or whether it met the convergence threshold before the population cap, so 2560 configurations is the configured maximum per unit, not a count. The SSCHA here inherits the MLIP potential-energy surface; nothing in this table tests that surface.
+**Table S11** SSCHA numerical quality, aggregated per family and model (not per unit). The SSCHA settings are identical for all 201 returned units and are therefore stated once here rather than tabulated. The starting dynamical matrix is built from phonopy full force constants at a 0.03 Å finite displacement, made positive definite (`ForcePositiveDefinite`) and symmetrised. The auxiliary dynamical matrix is relaxed in the root2 representation with `min_step_dyn = 0.5`; the convergence threshold is `meaningful_factor = 1e-4`. The minimiser's steps are capped at `max_ka = 20`, a cap that python-sscha 1.6.1 applies to the step count accumulated over all populations, not to each population (§S2.1); populations hold 256 configurations and at most 8 are drawn (2048 configurations). The free-energy Hessian is then evaluated at bubble level (`include_v4 = False`) on a dedicated 512-configuration ensemble at the final auxiliary matrix. The harness did not record how many populations each unit used or whether it met the convergence threshold before the population cap, so 2560 configurations is the configured maximum per unit, not a count. The SSCHA here inherits the MLIP potential-energy surface; nothing in this table tests that surface.
 
 Two quantities are tabulated from the six lowest recorded Hessian frequencies. *Acoustic zeros resolved* counts units in which all three translational zeros (|ω| < 0.001 THz) appear within that window, and the residual column gives the largest of their magnitudes over those units. This is a check that the Hessian was symmetrised correctly; it is not a bound on the stochastic noise of the soft mode (§S2.4 gives the only seed spread measured). *Swamped* counts the opposite case: units with **no** recorded mode near zero, meaning at least six modes lie below the acoustic branches. Swamping is not itself an error: a deeply unstable phase genuinely has many imaginary modes, and the reported minimum frequency excludes the acoustic branches from the full spectrum rather than from this window. It does separate the families sharply. Read swamping as a fraction rather than a count, because the per-model denominators differ: on the perovskites it runs from 8/19 = 0.42 for MACE-MP-0 to 14/20 = 0.70 for CHGNet, so it is present for every architecture but is not uniform across them. On the fluorites it is **not** architecture-neutral, being 4/8 for ORB-v2 and 2/8 for MACE-MP-0 against 0/8 for the other three.
 
@@ -930,56 +995,39 @@ Two quantities are tabulated from the six lowest recorded Hessian frequencies. *
 
 Leave-one-system-out: with all five models, dropping any single system never brings the clustered p below 0.05 at any temperature (lowest 0.059, at 600 K); excluding ORB-v2 at 600 K, dropping ceo2_cubic or nacl_rocksalt gives 0.047. Where one system's removal is enough to move p across 0.05, the value cannot carry a significance claim either way.
 
-**Table S16** Screen-versus-SSCHA agreement on the bcc metals scored two ways, and the same-energy comparison behind the SSCHA false-stables on the displacive systems. *Curvature-sign agreement* compares the sign of the screen's symmetric-point free-energy curvature with the sign of the lowest SSCHA Hessian frequency. *Stability-call agreement* compares the two methods' calls. For SSCHA the call and the sign coincide on every row; for the screen the call is the variational argmin of §2.4, which can differ from the curvature sign. Both methods run on the same MLIP potential-energy surface, so agreement between them is a consistency check and says nothing about agreement with first principles. *Trivial* pairs are (system, model) combinations whose harmonic layer has no instability, so both methods agree without any thermal stabilisation having been tested. bcc pairs are Ti, Zr and Hf at 100, 300 and 600 K. `scripts/stats_hardening.py` (`bcc_agreement`, `criterion_blindness`).
+**Table S16** Screen-versus-SSCHA agreement on the bcc metals, scored on the stability call, and the same-energy comparison behind the SSCHA false-stables on the displacive systems. For SSCHA the call is the sign of the lowest free-energy-Hessian frequency; for the screen it is the variational argmin of §2.4. Both methods run on the same MLIP potential-energy surface, so agreement between them is a consistency check and says nothing about agreement with first principles. *Trivial* pairs are (system, model) combinations whose harmonic layer has no instability, so both methods agree without any thermal stabilisation having been tested. bcc pairs are Ti, Zr and Hf at 100, 300 and 600 K. The screen's symmetric-point curvature is not scored against SSCHA. For a single mode with an even potential it equals the self-consistent trial stiffness at Q₀ = 0 (§S1.3), so it is positive wherever the width equation has a root and cannot register condensation; over all 1512 mode-temperature evaluations the positive values agree with the trial frequency to a median relative difference of 7 × 10⁻⁷ (95th percentile 1.0%). Of the 45 paired bcc units, 10 carry a negative screen value, and none of them is a physical curvature: 1 where the fitted polynomial has a positive quadratic term and a well only between sample points, a fit artefact of the kind described in §S1.4 (Ti/ORB-v2 100 K); 3 where the model has no screened imaginary mode and the value recorded is the softest commensurate harmonic frequency, not a curvature (Hf/ORB-v2 100 K, Hf/ORB-v2 300 K, Hf/ORB-v2 600 K); 6 where the width solver fell back to its nearest grid value at a point of the finite-difference stencil (Ti/MatterSim 100 K, Ti/MatterSim 300 K, Zr/MatterSim 100 K, Zr/MatterSim 300 K, Hf/MatterSim 100 K, Hf/MatterSim 300 K). `scripts/curvature_identity_check.py`. `scripts/stats_hardening.py` (`bcc_agreement`, `criterion_blindness`).
 
-| Subset | Curvature-sign agreement [95% CI] | Stability-call agreement [95% CI] |
-|---|---|---|
-| all pairs, all five models | 35/45 = 0.778 [0.637, 0.875] | 31/45 = 0.689 [0.543, 0.805] |
-| all pairs, excluding ORB-v2 | 30/36 = 0.833 [0.681, 0.921] | 25/36 = 0.694 [0.531, 0.820] |
-| trivial pairs (CHGNet and MACE-MP-0 on Zr and Hf) | 12/12 = 1.000 [0.758, 1.000] | 12/12 = 1.000 [0.758, 1.000] |
-| non-trivial pairs, all five models | 23/33 = 0.697 [0.527, 0.826] | 19/33 = 0.576 [0.408, 0.728] |
-| non-trivial pairs, excluding ORB-v2 | 18/24 = 0.750 [0.551, 0.880] | 13/24 = 0.542 [0.351, 0.721] |
-| CHGNet | 9/9 = 1.000 [0.701, 1.000] | 7/9 = 0.778 [0.453, 0.937] |
-| MACE-MP-0 | 9/9 = 1.000 [0.701, 1.000] | 9/9 = 1.000 [0.701, 1.000] |
-| MatterSim | 3/9 = 0.333 [0.121, 0.646] | 0/9 = 0.000 [0.000, 0.299] |
-| ORB-v2 | 5/9 = 0.556 [0.267, 0.811] | 6/9 = 0.667 [0.354, 0.879] |
-| SevenNet-0 | 9/9 = 1.000 [0.701, 1.000] | 9/9 = 1.000 [0.701, 1.000] |
-
-The 10 bcc units on which the two scores differ:
-
-| System | Model | T (K) | Screen curvature (THz) | Screen call | SSCHA frequency (THz) | SSCHA call |
-|---|---|---|---|---|---|---|
-| hf_bcc | MatterSim | 600 | +0.276 | unstable | +1.683 | stable |
-| hf_bcc | ORB-v2 | 100 | −0.092 | stable | +0.190 | stable |
-| hf_bcc | ORB-v2 | 300 | −0.092 | stable | +0.093 | stable |
-| hf_bcc | ORB-v2 | 600 | −0.092 | stable | +0.080 | stable |
-| ti_bcc | CHGNet | 100 | +0.163 | unstable | +1.077 | stable |
-| ti_bcc | CHGNet | 300 | +0.267 | unstable | +1.137 | stable |
-| ti_bcc | MatterSim | 600 | +0.330 | unstable | +2.104 | stable |
-| ti_bcc | ORB-v2 | 300 | +0.646 | unstable | +0.269 | stable |
-| ti_bcc | ORB-v2 | 600 | +0.883 | unstable | +0.221 | stable |
-| zr_bcc | MatterSim | 600 | +0.347 | unstable | +1.962 | stable |
+| Subset | Stability-call agreement [95% CI] |
+|---|---|
+| all pairs, all five models | 31/45 = 0.689 [0.543, 0.805] |
+| all pairs, excluding ORB-v2 | 25/36 = 0.694 [0.531, 0.820] |
+| trivial pairs (CHGNet and MACE-MP-0 on Zr and Hf) | 12/12 = 1.000 [0.758, 1.000] |
+| non-trivial pairs, all five models | 19/33 = 0.576 [0.408, 0.728] |
+| non-trivial pairs, excluding ORB-v2 | 13/24 = 0.542 [0.351, 0.721] |
+| CHGNet | 7/9 = 0.778 [0.453, 0.937] |
+| MACE-MP-0 | 9/9 = 1.000 [0.701, 1.000] |
+| MatterSim | 0/9 = 0.000 [0.000, 0.299] |
+| ORB-v2 | 6/9 = 0.667 [0.354, 0.879] |
+| SevenNet-0 | 9/9 = 1.000 [0.701, 1.000] |
 
 The frequency magnitudes are given descriptively only, because the pairs cluster by system and model and no test is attached: Spearman ρ = +0.113 (n = 45), −0.003 without ORB-v2 (n = 36).
 
-Lower part: on every non-bcc unit where SSCHA calls the phase stable against an unstable label, the screen's own symmetric-point curvature, the single-mode analogue of the SSCHA free-energy Hessian, is compared with the screen's call. Where the curvature is positive and the call is unstable, the screen's free energy has a local minimum at the symmetric point and a deeper one at a displaced centroid, so a criterion evaluated at the symmetric reference reports stable on the same energies.
+Lower part: on every non-bcc unit where SSCHA calls the phase stable against an unstable label, the screen's call on the same MLIP energies. Where the screen calls the phase unstable, its free energy has a displaced minimum below the symmetric point, while the symmetric point of the single-mode problem keeps a positive curvature, so a criterion read at the symmetric reference would report stable. That shows the local and the global question have different answers on these energies. It does not show that SSCHA's positive Hessian has the same origin (§3.3).
 
 | Quantity | All five models | Excluding ORB-v2 |
 |---|---|---|
 | non-bcc units SSCHA calls stable against an unstable label | 57 | 50 |
-| screen's symmetric-point curvature positive | 52/57 = 0.912 [0.811, 0.962] | 47/50 = 0.940 [0.838, 0.979] |
 | screen's free-energy comparison calls the phase unstable | 46/57 = 0.807 [0.687, 0.889] | 39/50 = 0.780 [0.648, 0.872] |
-| both: curvature positive and call unstable | 41/57 = 0.719 [0.592, 0.819] | 36/50 = 0.720 [0.583, 0.825] |
-|   of which batio3_cubic (n; curvature > 0; call unstable) | 10; 10; 6 | 8; 8; 4 |
-|   of which cssni3_cubic (n; curvature > 0; call unstable) | 1; 0; 1 | 1; 0; 1 |
-|   of which hfo2_cubic (n; curvature > 0; call unstable) | 16; 13; 16 | 14; 12; 14 |
-|   of which knbo3_cubic (n; curvature > 0; call unstable) | 13; 13; 6 | 11; 11; 4 |
-|   of which pbtio3_cubic (n; curvature > 0; call unstable) | 2; 2; 2 | 2; 2; 2 |
-|   of which zro2_cubic (n; curvature > 0; call unstable) | 15; 14; 15 | 14; 14; 14 |
-| all paired non-bcc units at T ≤ 300 K: SSCHA sign = screen curvature sign | 40/66 | 34/56 |
+| screen's symmetric-point curvature positive (by construction where the width equation is solved; §S1.3) | 52/57 = 0.912 [0.811, 0.962] | 47/50 = 0.940 [0.838, 0.979] |
+|   of which batio3_cubic (n; call unstable) | 10; 6 | 8; 4 |
+|   of which cssni3_cubic (n; call unstable) | 1; 1 | 1; 1 |
+|   of which hfo2_cubic (n; call unstable) | 16; 16 | 14; 14 |
+|   of which knbo3_cubic (n; call unstable) | 13; 6 | 11; 4 |
+|   of which pbtio3_cubic (n; call unstable) | 2; 2 | 2; 2 |
+|   of which zro2_cubic (n; call unstable) | 15; 15 | 14; 14 |
 | all paired non-bcc units at T ≤ 300 K: SSCHA call = screen call | 21/66 | 20/56 |
 
-**Table S17** Where SSCHA calls a phase unstable that its label calls stable, and where it fails numerically. Upper part: non-bcc SSCHA false-unstables by temperature, over the units whose label is stable at that temperature; numerical blow-ups (|f| > 50 THz) are included in the counts and also tallied separately. The count grows with temperature partly because more labels are stable at high temperature; the direct evidence is the per-unit trend below the table, in which units SSCHA calls stable at 100 K turn negative by 600 to 900 K. An instability that grows with thermal amplitude on a fixed potential-energy surface is the opposite of entropy stabilisation. It is what an MLIP extrapolating on large-amplitude thermal configurations would produce, and an instability of the stochastic sampling itself is the other candidate; these data do not separate the two. <!-- PENDING-C3b: PBE forces and energies on SSCHA-sampled configurations (SrTiO3 and the other high-T false-unstables) decide between MLIP extrapolation error and sampling instability; result goes in §3.3 and in a sentence here --> `scripts/stats_hardening.py` (`sscha_high_t`, `orb_split_s3`).
+**Table S17** Where SSCHA calls a phase unstable that its label calls stable, and where it fails numerically. Upper part: non-bcc SSCHA false-unstables by temperature, over the units whose label is stable at that temperature; numerical blow-ups (|f| > 50 THz) are included in the counts and also tallied separately. The count grows with temperature partly because more labels are stable at high temperature; the direct evidence is the per-unit trend below the table, in which units SSCHA calls stable at 100 K turn negative by 600 to 900 K. An instability that grows with thermal amplitude on a fixed potential-energy surface is the opposite of entropy stabilisation. It is what an MLIP extrapolating on large-amplitude thermal configurations would produce; an instability of the stochastic sampling itself, and a free-energy Hessian evaluated at an auxiliary matrix that has not reached the SCHA minimum, are the other candidates, and these data do not separate them. <!-- PENDING-C3b: PBE forces and energies on SSCHA-sampled configurations (SrTiO3 and the other high-T false-unstables) decide between MLIP extrapolation error and sampling instability; result goes in §3.3 and in a sentence here. PENDING-C1: the SrTiO3/MACE-MP-0 600 K seed study records whether the relaxation reached the SCHA minimum (the third candidate); one clause here, whichever way it falls --> `scripts/stats_hardening.py` (`sscha_high_t`, `orb_split_s3`).
 
 | T (K) | Model set | Non-bcc units returned | False-unstable / stable-labelled [95% CI] | Of which blow-ups | By system |
 |---|---|---|---|---|---|
@@ -1025,6 +1073,31 @@ Blow-ups and failed units by model. A failed unit is one of the 208-unit attempt
 | *total, all five* | 208 | 201 | 7 |  | 8 |  |
 | *total, excluding ORB-v2* | 169 | 166 | 3 |  | 5 |  |
 
+**Table S18** Force-level ensemble spread as a predictor of unreliable finite-temperature calls, the test pre-registered at the head of `scripts/force_spread.py` (block hash 504d6031, recorded in the output). Units are the 60 consensus (system, temperature) units of Table S8, or the 300 per-model units behind them. For each unit, 16 thermally displaced configurations are drawn from the quantum harmonic distribution of the five models' mean force constants in the 2×2×2 supercell of the unrelaxed reference cell, the same configurations for every model. S is the median over configurations of the root-mean-square over atoms and components of the standard deviation of the forces across the models in the set. AUCs are for predicting the outcome in the Label column; intervals are cluster-bootstrap 95% intervals over systems and p is the system-clustered permutation p (10,000 draws each, seed 0); for (g) the blocks are unequal and only the interval is defined. The rule fixed in advance: the spread is reported as flagging untrustworthy calls only if the primary interval lies entirely above 0.5 and the four-model estimate (a) is also above 0.5. Verdict: not shown, because the primary interval spans 0.5. Of the 19 secondary scores, 5 have a lower bound above 0.5: (b) S, MACE-MP-0 small/medium/large; (c) S, MatterSim 1M/5M; (e) leave-one-out deviation of MACE-MP-0 from the mean of the other three, ORB-v2 excluded; (e) leave-one-out deviation of SevenNet-0 from the mean of the other three, ORB-v2 excluded; (f) S, MACE-MP-0 committee. None is adjusted for multiple comparisons, all use the same configurations, and the overlap restriction (g) was pre-registered for the primary only, so it was not applied to them. Restricted by (g), 43 units remain and hold 4 of the 12 consensus errors: the soft halide and ferroelectric spectra that carry most errors are the ones whose thermal draws bring A-site cations into the anions, where every model is extrapolating. The configurations sit near the unrelaxed reference cell rather than each model's relaxed cell, and the committees differ in size and training run, so they are family committees and not a deep ensemble of one model. Per-temperature primary AUCs (15 units each, descriptive only): 100 K 0.64 (1 wrong), 300 K 0.48 (4 wrong), 600 K 0.80 (5 wrong), 900 K 0.96 (2 wrong). `scripts/force_spread.py` → `results/revision/force_spread/summary.json`.
+
+| Pre-registered score | Spread | Label | Units (wrong) | AUC [95% CI] | Clustered p |
+|---|---|---|---|---|---|
+| primary | force spread S, five models | consensus wrong | 60 (12) | 0.681 [0.416, 0.908] | 0.104 |
+| (a) | S, four models (no ORB-v2) | four-model consensus wrong | 60 (12) | 0.684 [0.413, 0.916] | 0.103 |
+| (b) | S, MACE-MP-0 small/medium/large | consensus wrong | 60 (12) | 0.717 [0.535, 0.902] | 0.040 |
+| (c) | S, MatterSim 1M/5M | consensus wrong | 60 (12) | 0.726 [0.516, 0.901] | 0.054 |
+| (d) | normalised S, five models | consensus wrong | 60 (12) | 0.578 [0.335, 0.795] | 0.541 |
+| (d) | normalised S, four models | four-model consensus wrong | 60 (12) | 0.576 [0.323, 0.798] | 0.554 |
+| (e) | leave-one-out deviation, pooled over five models | that model's call wrong | 300 (57) | 0.654 [0.425, 0.832] | 0.094 |
+| (e) | leave-one-out deviation, pooled over four models | that model's call wrong | 240 (47) | 0.689 [0.438, 0.882] | 0.063 |
+| (e) | leave-one-out deviation of MACE-MP-0 from the mean of the other four | MACE-MP-0's call wrong | 60 (14) | 0.699 [0.465, 0.907] | 0.082 |
+| (e) | leave-one-out deviation of MACE-MP-0 from the mean of the other three, ORB-v2 excluded | MACE-MP-0's call wrong | 60 (14) | 0.731 [0.502, 0.927] | 0.041 |
+| (e) | leave-one-out deviation of CHGNet from the mean of the other four | CHGNet's call wrong | 60 (11) | 0.681 [0.286, 0.931] | 0.152 |
+| (e) | leave-one-out deviation of CHGNet from the mean of the other three, ORB-v2 excluded | CHGNet's call wrong | 60 (11) | 0.688 [0.307, 0.936] | 0.133 |
+| (e) | leave-one-out deviation of ORB-v2 from the mean of the other four | ORB-v2's call wrong | 60 (10) | 0.542 [0.290, 0.768] | 0.736 |
+| (e) | leave-one-out deviation of SevenNet-0 from the mean of the other four | SevenNet-0's call wrong | 60 (11) | 0.750 [0.481, 0.932] | 0.066 |
+| (e) | leave-one-out deviation of SevenNet-0 from the mean of the other three, ORB-v2 excluded | SevenNet-0's call wrong | 60 (11) | 0.761 [0.502, 0.941] | 0.048 |
+| (e) | leave-one-out deviation of MatterSim from the mean of the other four | MatterSim's call wrong | 60 (11) | 0.586 [0.331, 0.834] | 0.447 |
+| (e) | leave-one-out deviation of MatterSim from the mean of the other three, ORB-v2 excluded | MatterSim's call wrong | 60 (11) | 0.584 [0.309, 0.844] | 0.453 |
+| (f) | S, MACE-MP-0 committee | MACE-MP-0's call wrong | 60 (14) | 0.722 [0.564, 0.873] | 0.034 |
+| (f) | S, MatterSim committee | MatterSim's call wrong | 60 (11) | 0.686 [0.473, 0.873] | 0.120 |
+| (g) | primary, units with no atomic overlap in any configuration | consensus wrong | 43 (4) | 0.314 [0.146, 0.529] | -- |
+
 <!-- END GENERATED TABLES -->
 
 ## S4. Threats to validity (pre-registered, with outcomes)
@@ -1038,29 +1111,34 @@ Blow-ups and failed units by model. A failed unit is one of the 208-unit attempt
   (Table S13): MACE-MP-0, MatterSim and SevenNet-0 change no call, CHGNet changes calls only on
   controls, and ORB-v2 changes calls on test systems.*
 - **Single-mode vs multi-mode** → SSCHA cross-check. *Outcome: both methods run on the same MLIP
-  surface, so their agreement is a consistency check. On bcc the curvature signs agree in 35/45
-  paired units (0.78 [0.64, 0.87]; 30/36 without ORB-v2) and the stability calls in 31/45
+  surface, so their agreement is a consistency check. On bcc the stability calls agree in 31/45
   (0.69 [0.54, 0.80]; 25/36 without ORB-v2); 12 of the agreeing units have no harmonic
   instability, and MatterSim agrees on the call in 0/9 (Table S16). The frequency magnitudes
   give Spearman ρ = 0.11 (−0.003 without ORB-v2), reported descriptively with no test. On the
   displacive systems the two diverge because they answer different questions: the default SSCHA
   criterion is the curvature of the free energy at the symmetric reference, a local test, and
   it cannot see condensation into a deeper displaced minimum, which the screen's free-energy
-  comparison does see. On the same MLIP energies the screen's own symmetric-point curvature is
-  positive on 52/57 of the units SSCHA false-stabilises (Table S16; §3.3). Whether an MLIP error
-  on the thermally sampled configurations also contributes is not settled by these data.*
+  comparison does see. On the same MLIP energies that comparison finds a displaced minimum below
+  the symmetric point on 46/57 of the units SSCHA false-stabilises (Table S16; §3.3). Whether
+  that is why SSCHA's Hessian is positive there, rather than a relaxation that stopped near its
+  positive-definite start (§S2.1) or an MLIP error on the thermally sampled configurations, is
+  not settled by these data.*
+  <!-- PENDING-C1: whether the converged-mode relaxations (C1c) keep the false-stables; outcome
+  sentence here -->
   <!-- PENDING-C3b: PBE forces/energies on SSCHA-sampled configurations; outcome sentence here -->
 - **Single-mode approximation itself** → derivation and sensitivity analysis (§S1.3, Table S14).
   *Outcome: varying the fit window, sampling range, condensation threshold and scan range changes
   at most one unit call at T ≤ 300 K, but the frozen-cell normalisation is outcome-determining
-  (ferroelectric recall 5/30 to 28/30 across conventions), and mode–mode coupling is unbounded. The screen's T* and
-  ferroelectric recall are conditional on the minimal-cell convention.*
+  (ferroelectric recall 5/30 to 28/30 across conventions; the H2 count at 300 K, 17 v 4 in the
+  production cell, runs from 7 v 4 to 24 v 4; §S1.3), and mode–mode coupling is unbounded. The
+  screen's T*, its ferroelectric recall and the H2 count are conditional on the minimal-cell
+  convention.*
   <!-- PENDING-C3a: PBE-backed screen calls; outcome sentence here -->
 - **MLIP relaxation moving off the soft-mode geometry** → both at-reference and at-relaxed
   geometries recorded; relaxation hiding an instability is itself reported.
 - **Supercell / cell-size convergence** → SSCHA at 2×2×2. *Outcome: the only cell-size test, bcc
   Zr 2×2×2 against 3×3×3, holds, but it was run on MACE-MP-0, which has no harmonic bcc-Zr
-  instability, and in the v1 environment. No convergence claim is made for the zone-boundary
+  instability, and in the v1 environment, and the two cells are not nested (§S2.4). No convergence claim is made for the zone-boundary
   (R-point and X-point) systems; the within-cell fluorite control rules out a missing q-point there
   and nothing more (§S2.4). For the screen, the q-points searched are those commensurate with
   the force-constant supercell (2×2×2, and 6×6×6 for the bcc metals), and the screen was not

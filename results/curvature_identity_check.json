@@ -1,0 +1,105 @@
+{
+ "script": "scripts/curvature_identity_check.py",
+ "identity": "F''(0) = <V''>_{0,sigma} = M Omega^2 for a single even mode",
+ "n_mode_T_evaluations": 1512,
+ "positive_omega_eff_vs_trial_frequency_rel_diff": {
+  "n": 1417,
+  "median": 6.576417089375133e-07,
+  "p95": 0.0095620466655111,
+  "max": 62.36350175905663
+ },
+ "n_negative_omega_eff": 95,
+ "n_negative_with_width_fallback_at_a_stencil_point": 93,
+ "negative_with_root_at_every_stencil_point": [
+  {
+   "unit": "ti_bcc_orb_v2",
+   "T": 900.0,
+   "harm_thz": -0.15443938392360482,
+   "omega_eff_thz": -8.887378824432021,
+   "a": 1713.1073640676414,
+   "b": -2702903.413977933,
+   "c": 836173562.340351
+  },
+  {
+   "unit": "ti_bcc_orb_v2",
+   "T": 100.0,
+   "harm_thz": -0.12300311557550242,
+   "omega_eff_thz": -6.2047260682344625,
+   "a": 464.9730526117116,
+   "b": -766470.4767080303,
+   "c": 242323849.92158833
+  }
+ ],
+ "bcc_sscha_paired_units_with_negative_screen_curvature": [
+  {
+   "system": "ti_bcc",
+   "model": "orb_v2",
+   "T": 100.0,
+   "ledger_min_eff_freq_thz": -6.2047260682344625,
+   "cause": "root found at every stencil point (see a, b, c)"
+  },
+  {
+   "system": "hf_bcc",
+   "model": "orb_v2",
+   "T": 100.0,
+   "ledger_min_eff_freq_thz": -0.09192520158458899,
+   "cause": "no screened imaginary mode: ledger shows the softest commensurate harmonic value"
+  },
+  {
+   "system": "hf_bcc",
+   "model": "orb_v2",
+   "T": 300.0,
+   "ledger_min_eff_freq_thz": -0.09192520158458899,
+   "cause": "no screened imaginary mode: ledger shows the softest commensurate harmonic value"
+  },
+  {
+   "system": "hf_bcc",
+   "model": "orb_v2",
+   "T": 600.0,
+   "ledger_min_eff_freq_thz": -0.09192520158458899,
+   "cause": "no screened imaginary mode: ledger shows the softest commensurate harmonic value"
+  },
+  {
+   "system": "ti_bcc",
+   "model": "mattersim",
+   "T": 100.0,
+   "ledger_min_eff_freq_thz": -1.3198323372380887,
+   "cause": "width-solver fallback at a stencil point"
+  },
+  {
+   "system": "ti_bcc",
+   "model": "mattersim",
+   "T": 300.0,
+   "ledger_min_eff_freq_thz": -0.9410276176449499,
+   "cause": "width-solver fallback at a stencil point"
+  },
+  {
+   "system": "zr_bcc",
+   "model": "mattersim",
+   "T": 100.0,
+   "ledger_min_eff_freq_thz": -1.4096095965660005,
+   "cause": "width-solver fallback at a stencil point"
+  },
+  {
+   "system": "zr_bcc",
+   "model": "mattersim",
+   "T": 300.0,
+   "ledger_min_eff_freq_thz": -0.6102324412171182,
+   "cause": "width-solver fallback at a stencil point"
+  },
+  {
+   "system": "hf_bcc",
+   "model": "mattersim",
+   "T": 100.0,
+   "ledger_min_eff_freq_thz": -1.1471677497221713,
+   "cause": "width-solver fallback at a stencil point"
+  },
+  {
+   "system": "hf_bcc",
+   "model": "mattersim",
+   "T": 300.0,
+   "ledger_min_eff_freq_thz": -0.606570867502964,
+   "cause": "width-solver fallback at a stencil point"
+  }
+ ]
+}

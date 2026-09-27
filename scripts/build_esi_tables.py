@@ -7,7 +7,9 @@ document. This script renders them, and adds the tables the rest of the revision
 S4-S11 and S13 from the ledger and results/stats_hardening.json, S14 (screen sensitivity,
 Referee 1.5) from results/screen_sensitivity.json, and S15-S17 (H2 clustered ladder, bcc
 agreement and criterion blindness, SSCHA high-T false-unstables and failures) from
-results/stats_hardening.json. Tables S1-S3 and S12 are hand-written in their own sections.
+results/stats_hardening.json, and S18 (the pre-registered force-level ensemble test,
+Referee 2.2) from results/revision/force_spread/summary.json. Tables S1-S3 and S12 are
+hand-written in their own sections.
 
 It rewrites the block between the sentinels
 
@@ -44,6 +46,8 @@ from mlip_dynstab.systems import load_specs  # noqa: E402
 LEDGER = REPO / "results" / "ledger.parquet"
 STATS = REPO / "results" / "stats_hardening.json"
 SENS = REPO / "results" / "screen_sensitivity.json"
+CURV = REPO / "results" / "curvature_identity_check.json"
+FSPREAD = REPO / "results" / "revision" / "force_spread" / "summary.json"
 ESI = REPO / "paper" / "supplementary.md"
 
 BEGIN = "<!-- BEGIN GENERATED TABLES -->"
@@ -57,6 +61,13 @@ BCC = ["ti_bcc", "zr_bcc", "hf_bcc"]
 ELEMENT = {"ti_bcc": "Ti", "zr_bcc": "Zr", "hf_bcc": "Hf"}
 CONTROL_SYSTEMS = [s.id for s in load_specs() if s.klass == "control"]
 MINUS = "−"
+
+
+def _sci(x: float) -> str:
+    """1.2e-07 -> '1.2 × 10⁻⁷' for prose."""
+    m, ex = f"{x:.0e}".split("e")
+    sup = str.maketrans("-0123456789", "⁻⁰¹²³⁴⁵⁶⁷⁸⁹")
+    return f"{m} × 10{str(int(ex)).translate(sup)}"
 
 
 def md(rows: list[list[str]], header: list[str]) -> str:
@@ -294,8 +305,9 @@ def table_s9_orb(df: pd.DataFrame, st: dict, sens: dict) -> str:
         lambda t: f"{bf[t]['n_blowup']} of {bf[t]['n_returned']}")
     row("SSCHA failed units (no number returned), of the attempted grid",
         lambda t: f"{bf[t]['n_failed']} of {bf[t]['n_grid']}")
-    row("bcc screen-vs-SSCHA curvature-sign agreement",
-        lambda t: ba[t]["curvature_sign_agreement"]["fmt"])
+    # The curvature-sign agreement is not tabulated: for a single even mode the screen's
+    # symmetric-point curvature equals its self-consistent trial stiffness, so it is positive by
+    # construction and its bcc negatives are numerical (scripts/curvature_identity_check.py).
     row("bcc screen-vs-SSCHA stability-call agreement",
         lambda t: ba[t]["call_agreement"]["fmt"])
     row("bcc frequency Spearman ρ (descriptive, no test)",
@@ -341,7 +353,10 @@ def table_s9_orb(df: pd.DataFrame, st: dict, sens: dict) -> str:
         f"{signed(pr['orb_softmode_bcc_min_eff_freq_thz']['min_on_sscha_paired_T']['min_eff_freq_thz'], 1)} THz "
         f"(Ti, {pr['orb_softmode_bcc_min_eff_freq_thz']['min_on_sscha_paired_T']['T']:.0f} K) and "
         f"{signed(bccmin['min_full_ladder']['min_eff_freq_thz'], 1)} THz "
-        f"(Ti, {bccmin['min_full_ladder']['T']:.0f} K), with Hf at {signed(bccmin['hf_bcc_min'])} THz; "
+        f"(Ti, {bccmin['min_full_ladder']['T']:.0f} K), both on fitted polynomials whose quadratic "
+        "term is positive (fit artefacts of the kind described in §S1.4), with Hf at "
+        f"{signed(bccmin['hf_bcc_min'])} THz, the softest commensurate harmonic value of a model "
+        "with no screened imaginary mode there; "
         f"and it accounts for {pr['sscha_blowups']['orb_v2']} of the {pr['sscha_blowups']['all_models']} "
         f"SSCHA blow-ups and {n_orb_fail} of the {n_fail} failed SSCHA units "
         f"(all on {', '.join(orb_fail_sys)}). Per-model rates (Tables S4 and S5) cannot change when "
@@ -352,17 +367,13 @@ def table_s9_orb(df: pd.DataFrame, st: dict, sens: dict) -> str:
         "robust to removing ORB-v2. The frequency spread is the cross-model standard deviation "
         "of the screen's effective frequency, a potential-energy-surface proxy that is only "
         "partly force-derived (the mode patterns come from force constants; E(Q) is energy-only); "
-        "it is not a force-level ensemble uncertainty. "
-        "<!-- PENDING-C2: force-level ensemble spread (five-model spread plus MACE "
-        "small/medium/large and MatterSim 1M/5M committees; clustered AUC; overlap-artifact "
-        "check), with and without ORB-v2; new ESI table, one sentence here --> "
+        "it is not a force-level ensemble uncertainty; the force-level spread, pre-registered and "
+        "given with and without ORB-v2, is in Table S18. "
         "Four-model consensus uses the same rule as five-model "
         "consensus (stable when at least half the votes are stable), so a 2–2 split is called "
         f"stable; this decides {ties['n_tied_units']} units, {ties['n_tied_units_in_error']} of them "
-        "wrong. Removing ORB-v2 raises the bcc curvature-sign agreement from "
-        f"{ba['all_models']['curvature_sign_agreement']['p']:.2f} to "
-        f"{ba['excl_orb_v2']['curvature_sign_agreement']['p']:.2f} but leaves the stability-call "
-        f"agreement at {ba['excl_orb_v2']['call_agreement']['p']:.2f}. Permutation p-values and "
+        "wrong. Removing ORB-v2 leaves the bcc stability-call agreement at "
+        f"{ba['excl_orb_v2']['call_agreement']['p']:.2f}. Permutation p-values and "
         f"bootstrap intervals resample whole systems ({ga['n_perm']:,} permutations and "
         f"{ga['n_perm']:,} bootstrap draws, seed 0; the {n_boot_txt} bootstrap draws that "
         "contain both outcomes are used), so each p carries Monte Carlo error. The H2 "
@@ -407,9 +418,10 @@ def table_s10_paired(st: dict) -> str:
         f"size and the consistency of the effect ({comb['clusters_favouring_a']} of "
         f"{comb['n_clusters']} systems favour the screen, with per-system net discordances "
         f"{nets}) rather than a significance claim. Why SSCHA loses these units is examined "
-        "separately, on the same MLIP energies, in Table S16 (lower part) and §3.3: the screen's "
-        "own symmetric-point curvature, the single-mode analogue of the SSCHA free-energy "
-        "Hessian, is positive on most of them too. `scripts/stats_hardening.py`.\n\n"
+        "separately, on the same MLIP energies, in Table S16 (lower part) and §3.3: on most of "
+        "them the screen's free-energy comparison finds a displaced minimum below the symmetric "
+        "point, which a criterion read at the symmetric reference does not see. "
+        "`scripts/stats_hardening.py`.\n\n"
         + md(rows, ["System set", "Model set", "n paired", "Discordant (screen/SSCHA)",
                     "Unit-level p (do not quote)", "Systems favouring screen",
                     "Clustered p", "Floor"])
@@ -496,11 +508,12 @@ def table_s11_sscha_diag(df: pd.DataFrame) -> str:
         "phonopy full force constants at a 0.03 Å finite displacement, made positive definite "
         "(`ForcePositiveDefinite`) and symmetrised. The auxiliary dynamical matrix is relaxed in "
         "the root2 representation with `min_step_dyn = 0.5`; the convergence threshold is "
-        "`meaningful_factor = 1e-4`. Each population of 256 configurations allows at most "
-        "`max_ka = 20` reweighting steps, a cap that forces a fresh ensemble rather than a "
-        "stopping criterion (§S2.1), and at most 8 populations are drawn (2048 configurations). "
+        "`meaningful_factor = 1e-4`. The minimiser's steps are capped at `max_ka = 20`, a cap "
+        "that python-sscha 1.6.1 applies to the step count accumulated over all populations, "
+        "not to each population (§S2.1); populations hold 256 configurations and at most 8 are "
+        "drawn (2048 configurations). "
         "The free-energy Hessian is then evaluated at bubble level (`include_v4 = False`) on a "
-        "dedicated 512-configuration ensemble at the relaxed auxiliary matrix. The harness did "
+        "dedicated 512-configuration ensemble at the final auxiliary matrix. The harness did "
         "not record how many populations each unit used or whether it met the convergence "
         "threshold before the population cap, so 2560 configurations is the configured maximum "
         "per unit, not a count. The SSCHA here inherits the MLIP potential-energy surface; "
@@ -839,91 +852,110 @@ def table_s15_h2_clustered(st: dict) -> str:
 
 
 def table_s16_bcc_agreement(st: dict) -> str:
-    """bcc agreement scored as curvature sign and as the call, plus the same-PES comparison
-    behind the SSCHA false-stables on the displacive systems (criterion_blindness)."""
+    """bcc agreement scored on the call, plus the same-PES comparison behind the SSCHA
+    false-stables on the displacive systems (criterion_blindness).
+
+    The screen's symmetric-point curvature is not scored against SSCHA. For a single even mode
+    it equals the self-consistent trial stiffness at Q0 = 0 (scripts/curvature_identity_check.py),
+    so it is positive wherever the width equation is solved and cannot register condensation;
+    its negative bcc values are numerical and are accounted for in the caption from
+    results/curvature_identity_check.json."""
     ba = st["bcc_agreement"]
     a, x = ba["all_models"], ba["excl_orb_v2"]
     triv_pairs = a["trivial_split"]["trivial_pairs"]
     triv_names = sorted({PRETTY.get(p.split("/")[1], p) for p in triv_pairs})
     triv_sys = [ELEMENT[s] for s in BCC if any(p.startswith(s) for p in triv_pairs)]
     rows = [
-        ["all pairs, all five models", a["curvature_sign_agreement"]["fmt"], a["call_agreement"]["fmt"]],
-        ["all pairs, excluding ORB-v2", x["curvature_sign_agreement"]["fmt"], x["call_agreement"]["fmt"]],
+        ["all pairs, all five models", a["call_agreement"]["fmt"]],
+        ["all pairs, excluding ORB-v2", x["call_agreement"]["fmt"]],
         [f"trivial pairs ({' and '.join(triv_names)} on {' and '.join(triv_sys)})",
-         a["trivial_split"]["trivial"]["curvature_sign"]["fmt"],
          a["trivial_split"]["trivial"]["call"]["fmt"]],
-        ["non-trivial pairs, all five models", a["trivial_split"]["non_trivial"]["curvature_sign"]["fmt"],
-         a["trivial_split"]["non_trivial"]["call"]["fmt"]],
-        ["non-trivial pairs, excluding ORB-v2", x["trivial_split"]["non_trivial"]["curvature_sign"]["fmt"],
-         x["trivial_split"]["non_trivial"]["call"]["fmt"]],
+        ["non-trivial pairs, all five models", a["trivial_split"]["non_trivial"]["call"]["fmt"]],
+        ["non-trivial pairs, excluding ORB-v2", x["trivial_split"]["non_trivial"]["call"]["fmt"]],
     ]
     for m in sorted(a["per_model"]):
-        pm = a["per_model"][m]
-        rows.append([PRETTY.get(m, m), pm["curvature_sign"]["fmt"], pm["call"]["fmt"]])
-
-    drows = []
-    for u in a["units_where_scores_differ"]:
-        drows.append([u["system"], PRETTY.get(u["model"], u["model"]), f"{u['T']:.0f}",
-                      signed(u["screen_curvature_thz"], 3),
-                      "stable" if u["screen_call_stable"] else "unstable",
-                      signed(u["sscha_freq_thz"], 3),
-                      "stable" if u["sscha_call_stable"] else "unstable"])
+        rows.append([PRETTY.get(m, m), a["per_model"][m]["call"]["fmt"]])
     fc, fx = a["frequency_correlation_DESCRIPTIVE"], x["frequency_correlation_DESCRIPTIVE"]
+
+    # account for every negative bcc screen curvature on the 45 paired units
+    neg_txt = ""
+    if CURV.exists():
+        cc = json.loads(CURV.read_text(encoding="utf-8"))
+        units = cc["bcc_sscha_paired_units_with_negative_screen_curvature"]
+        groups: dict[str, list[str]] = {}
+        for u in units:
+            groups.setdefault(u["cause"], []).append(
+                f"{ELEMENT.get(u['system'], u['system'])}/{PRETTY.get(u['model'], u['model'])} "
+                f"{u['T']:.0f} K")
+        label = {
+            "width-solver fallback at a stencil point":
+                "the width solver fell back to its nearest grid value at a point of the "
+                "finite-difference stencil",
+            "root found at every stencil point (see a, b, c)":
+                "the fitted polynomial has a positive quadratic term and a well only between "
+                "sample points, a fit artefact of the kind described in §S1.4",
+            "no screened imaginary mode: ledger shows the softest commensurate harmonic value":
+                "the model has no screened imaginary mode and the value recorded is the softest "
+                "commensurate harmonic frequency, not a curvature",
+        }
+        parts = [f"{len(v)} where {label.get(k, k)} ({', '.join(v)})" for k, v in groups.items()]
+        pr = cc["positive_omega_eff_vs_trial_frequency_rel_diff"]
+        neg_txt = (
+            "The screen's symmetric-point curvature is not scored against SSCHA. For a single "
+            "mode with an even potential it equals the self-consistent trial stiffness at "
+            "Q₀ = 0 (§S1.3), so it is positive wherever the width equation has a root and cannot "
+            "register condensation; over all "
+            f"{cc['n_mode_T_evaluations']} mode-temperature evaluations the positive values agree "
+            f"with the trial frequency to a median relative difference of {_sci(pr['median'])} "
+            f"(95th percentile {pr['p95']:.1%}). Of the {a['call_agreement']['n']} paired bcc "
+            f"units, {len(units)} carry a negative screen value, and none of them is a physical "
+            "curvature: " + "; ".join(parts) + ". `scripts/curvature_identity_check.py`. "
+        )
 
     cb = st["criterion_blindness"]
     ca, cx = cb["all_models"], cb["excl_orb_v2"]
     crows = [
         ["non-bcc units SSCHA calls stable against an unstable label",
          str(ca["n_sscha_false_stable_nonbcc"]), str(cx["n_sscha_false_stable_nonbcc"])],
-        ["screen's symmetric-point curvature positive", ca["screen_curvature_positive"]["fmt"],
+        ["screen's free-energy comparison calls the phase unstable",
+         ca["screen_call_unstable"]["fmt"], cx["screen_call_unstable"]["fmt"]],
+        ["screen's symmetric-point curvature positive (by construction where the width "
+         "equation is solved; §S1.3)", ca["screen_curvature_positive"]["fmt"],
          cx["screen_curvature_positive"]["fmt"]],
-        ["screen's free-energy comparison calls the phase unstable", ca["screen_call_unstable"]["fmt"],
-         cx["screen_call_unstable"]["fmt"]],
-        ["both: curvature positive and call unstable",
-         ca["curvature_positive_and_call_unstable"]["fmt"],
-         cx["curvature_positive_and_call_unstable"]["fmt"]],
     ]
     for s in sorted(ca["by_system"]):
         v, w = ca["by_system"][s], cx["by_system"].get(s, {"n": 0, "screen_curv_pos": 0,
                                                             "screen_call_unstable": 0})
-        crows.append([f"  of which {s} (n; curvature > 0; call unstable)",
-                      f"{v['n']}; {v['screen_curv_pos']}; {v['screen_call_unstable']}",
-                      f"{w['n']}; {w['screen_curv_pos']}; {w['screen_call_unstable']}"])
+        crows.append([f"  of which {s} (n; call unstable)",
+                      f"{v['n']}; {v['screen_call_unstable']}",
+                      f"{w['n']}; {w['screen_call_unstable']}"])
     pa, px = ca["paired_nonbcc_T_le_300"], cx["paired_nonbcc_T_le_300"]
-    crows.append(["all paired non-bcc units at T ≤ 300 K: SSCHA sign = screen curvature sign",
-                  f"{pa['sscha_sign_eq_screen_curvature_sign']}/{pa['n']}",
-                  f"{px['sscha_sign_eq_screen_curvature_sign']}/{px['n']}"])
     crows.append(["all paired non-bcc units at T ≤ 300 K: SSCHA call = screen call",
                   f"{pa['sscha_call_eq_screen_call']}/{pa['n']}",
                   f"{px['sscha_call_eq_screen_call']}/{px['n']}"])
 
     return (
-        "**Table S16** Screen-versus-SSCHA agreement on the bcc metals scored two ways, and the "
-        "same-energy comparison behind the SSCHA false-stables on the displacive systems. "
-        "*Curvature-sign agreement* compares the sign of the screen's symmetric-point "
-        "free-energy curvature with the sign of the lowest SSCHA Hessian frequency. "
-        "*Stability-call agreement* compares the two methods' calls. For SSCHA the call and the "
-        "sign coincide on every row; for the screen the call is the variational argmin of §2.4, "
-        "which can differ from the curvature sign. Both methods run on the same MLIP "
+        "**Table S16** Screen-versus-SSCHA agreement on the bcc metals, scored on the stability "
+        "call, and the same-energy comparison behind the SSCHA false-stables on the displacive "
+        "systems. For SSCHA the call is the sign of the lowest free-energy-Hessian frequency; for "
+        "the screen it is the variational argmin of §2.4. Both methods run on the same MLIP "
         "potential-energy surface, so agreement between them is a consistency check and says "
         "nothing about agreement with first principles. *Trivial* pairs are (system, model) "
         "combinations whose harmonic layer has no instability, so both methods agree without "
         "any thermal stabilisation having been tested. bcc pairs are Ti, Zr and Hf at 100, 300 "
-        "and 600 K. `scripts/stats_hardening.py` (`bcc_agreement`, `criterion_blindness`).\n\n"
-        + md(rows, ["Subset", "Curvature-sign agreement [95% CI]",
-                    "Stability-call agreement [95% CI]"])
-        + f"\n\nThe {len(drows)} bcc units on which the two scores differ:\n\n"
-        + md(drows, ["System", "Model", "T (K)", "Screen curvature (THz)", "Screen call",
-                     "SSCHA frequency (THz)", "SSCHA call"])
+        "and 600 K. " + neg_txt
+        + "`scripts/stats_hardening.py` (`bcc_agreement`, `criterion_blindness`).\n\n"
+        + md(rows, ["Subset", "Stability-call agreement [95% CI]"])
         + "\n\nThe frequency magnitudes are given descriptively only, because the pairs cluster "
         f"by system and model and no test is attached: Spearman ρ = {signed(fc['spearman'], 3)} "
         f"(n = {fc['n']}), {signed(fx['spearman'], 3)} without ORB-v2 (n = {fx['n']}).\n\n"
         "Lower part: on every non-bcc unit where SSCHA calls the phase stable against an "
-        "unstable label, the screen's own symmetric-point curvature, the single-mode analogue "
-        "of the SSCHA free-energy Hessian, is compared with the screen's call. Where the "
-        "curvature is positive and the call is unstable, the screen's free energy has a local "
-        "minimum at the symmetric point and a deeper one at a displaced centroid, so a "
-        "criterion evaluated at the symmetric reference reports stable on the same energies.\n\n"
+        "unstable label, the screen's call on the same MLIP energies. Where the screen calls the "
+        "phase unstable, its free energy has a displaced minimum below the symmetric point, "
+        "while the symmetric point of the single-mode problem keeps a positive curvature, so a "
+        "criterion read at the symmetric reference would report stable. That shows the local "
+        "and the global question have different answers on these energies. It does not show "
+        "that SSCHA's positive Hessian has the same origin (§3.3).\n\n"
         + md(crows, ["Quantity", "All five models", "Excluding ORB-v2"])
     )
 
@@ -995,12 +1027,15 @@ def table_s17_sscha_high_t(st: dict) -> str:
         "evidence is the per-unit trend below the table, in which units SSCHA calls stable at "
         "100 K turn negative by 600 to 900 K. An instability that grows with thermal amplitude "
         "on a fixed potential-energy surface is the opposite of entropy stabilisation. It is what "
-        "an MLIP extrapolating on large-amplitude thermal configurations would produce, and an "
-        "instability of the stochastic sampling itself is the other candidate; these data do not "
-        "separate the two. "
+        "an MLIP extrapolating on large-amplitude thermal configurations would produce; an "
+        "instability of the stochastic sampling itself, and a free-energy Hessian evaluated at an "
+        "auxiliary matrix that has not reached the SCHA minimum, are the other candidates, and "
+        "these data do not separate them. "
         "<!-- PENDING-C3b: PBE forces and energies on SSCHA-sampled configurations (SrTiO3 and "
         "the other high-T false-unstables) decide between MLIP extrapolation error and sampling "
-        "instability; result goes in §3.3 and in a sentence here --> "
+        "instability; result goes in §3.3 and in a sentence here. PENDING-C1: the SrTiO3/MACE-MP-0 "
+        "600 K seed study records whether the relaxation reached the SCHA minimum (the third "
+        "candidate); one clause here, whichever way it falls --> "
         "`scripts/stats_hardening.py` (`sscha_high_t`, `orb_split_s3`).\n\n"
         + md(rows, ["T (K)", "Model set", "Non-bcc units returned",
                     "False-unstable / stable-labelled [95% CI]", "Of which blow-ups", "By system"])
@@ -1032,6 +1067,88 @@ def table_s17_sscha_high_t(st: dict) -> str:
     )
 
 
+def table_s18_force_spread() -> str:
+    """The pre-registered force-level ensemble test (Referee 2.2; scripts/force_spread.py).
+
+    Every score the pre-registration names is listed, primary first, whatever it shows; the
+    numbers are read from results/revision/force_spread/summary.json, whose block hash ties them
+    to the pre-registration text at the head of the script."""
+    if not FSPREAD.exists():
+        return ""
+    fs = json.loads(FSPREAD.read_text(encoding="utf-8"))
+    cl, pm = fs["consensus_level"], fs["per_model_level"]
+
+    def ci_txt(v: dict) -> str:
+        return f"{v['auc']:.3f} [{v['ci_lo']:.3f}, {v['ci_hi']:.3f}]"
+
+    def p_txt(v: dict) -> str:
+        p = v.get("p_perm_clustered")
+        return "--" if p is None else f"{p:.3f}"
+
+    spec = [
+        ("primary", cl["primary_S_5model"], "force spread S, five models", "consensus wrong"),
+        ("(a)", cl["a_S_ex_orb_4model"], "S, four models (no ORB-v2)", "four-model consensus wrong"),
+        ("(b)", cl["b_S_mace_committee"], "S, MACE-MP-0 small/medium/large", "consensus wrong"),
+        ("(c)", cl["c_S_mattersim_committee"], "S, MatterSim 1M/5M", "consensus wrong"),
+        ("(d)", cl["d_Snorm_5model"], "normalised S, five models", "consensus wrong"),
+        ("(d)", cl["d_Snorm_ex_orb_4model"], "normalised S, four models", "four-model consensus wrong"),
+        ("(e)", pm["e_loo_pooled_5model"], "leave-one-out deviation, pooled over five models",
+         "that model's call wrong"),
+        ("(e)", pm["e_loo_pooled_ex_orb_4model"], "leave-one-out deviation, pooled over four models",
+         "that model's call wrong"),
+    ]
+    for m in ("mace_mp0", "chgnet", "orb_v2", "sevennet0", "mattersim"):
+        for tag, lab in (("5model", "mean of the other four"), ("ex_orb", "mean of the other three, ORB-v2 excluded")):
+            k = f"e_loo_{m}_{tag}"
+            if k in pm:
+                spec.append(("(e)", pm[k], f"leave-one-out deviation of {PRETTY[m]} from the "
+                             f"{lab}", f"{PRETTY[m]}'s call wrong"))
+    spec += [
+        ("(f)", pm["f_committee_mace_mp0_own_call"], "S, MACE-MP-0 committee", "MACE-MP-0's call wrong"),
+        ("(f)", pm["f_committee_mattersim_own_call"], "S, MatterSim committee", "MatterSim's call wrong"),
+        ("(g)", cl["g_S_5model_no_overlap"], "primary, units with no atomic overlap in any "
+         "configuration", "consensus wrong"),
+    ]
+    rows = [[tag, score, label, f"{v['n_units']} ({v['n_wrong']})", ci_txt(v), p_txt(v)]
+            for tag, v, score, label in spec]
+    sec = [v for tag, v, _, _ in spec if tag != "primary"]
+    above = [f"{tag} {score}" for tag, v, score, _ in spec if tag != "primary" and v["ci_lo"] > 0.5]
+    pri, g = cl["primary_S_5model"], cl["g_S_5model_no_overlap"]
+    per_t = fs["per_temperature_primary__descriptive"]
+    per_t_txt = ", ".join(f"{T} K {v['auc']:.2f} ({v['n_wrong']} wrong)" for T, v in per_t.items())
+    return (
+        "**Table S18** Force-level ensemble spread as a predictor of unreliable finite-temperature "
+        "calls, the test pre-registered at the head of `scripts/force_spread.py` (block hash "
+        f"{fs['preregistration']['block_sha256'][:8]}, recorded in the output). Units are the "
+        "60 consensus (system, temperature) units of Table S8, or the 300 per-model units behind "
+        "them. For each unit, 16 thermally displaced configurations are drawn from the quantum "
+        "harmonic distribution of the five models' mean force constants in the 2×2×2 supercell of "
+        "the unrelaxed reference cell, the same configurations for every model. S is the median "
+        "over configurations of the root-mean-square over atoms and components of the standard "
+        "deviation of the forces across the models in the set. AUCs are for predicting the "
+        "outcome in the Label column; intervals are cluster-bootstrap 95% intervals over systems and "
+        "p is the system-clustered permutation p (10,000 draws each, seed 0); for (g) the blocks are "
+        "unequal and only the interval is defined. The rule fixed in advance: the spread is "
+        "reported as flagging untrustworthy calls only if the primary interval lies entirely above "
+        f"0.5 and the four-model estimate (a) is also above 0.5. Verdict: "
+        f"{fs['verdict'].split(':')[0]}, because the primary interval spans 0.5. "
+        f"Of the {len(sec)} secondary scores, {len(above)} have a lower bound above 0.5"
+        f": {'; '.join(above)}. None is adjusted for multiple comparisons, all use the same "
+        "configurations, and the overlap restriction (g) was pre-registered for the primary only, "
+        f"so it was not applied to them. Restricted by (g), {g['n_units']} units remain and hold "
+        f"{g['n_wrong']} of the {pri['n_wrong']} consensus errors: the soft halide and "
+        "ferroelectric spectra that carry most errors are the ones whose thermal draws bring "
+        "A-site cations into the anions, where every model is extrapolating. The configurations "
+        "sit near the unrelaxed reference cell rather than each model's relaxed cell, and the "
+        "committees differ in size and training run, so they are family committees and not a "
+        "deep ensemble of one model. Per-temperature primary AUCs (15 units each, descriptive "
+        f"only): {per_t_txt}. `scripts/force_spread.py` → "
+        "`results/revision/force_spread/summary.json`.\n\n"
+        + md(rows, ["Pre-registered score", "Spread", "Label", "Units (wrong)",
+                    "AUC [95% CI]", "Clustered p"])
+    )
+
+
 def build() -> str:
     raw = pd.read_parquet(LEDGER)
     df = A.canonical(raw)
@@ -1055,6 +1172,7 @@ def build() -> str:
         table_s15_h2_clustered(st),
         table_s16_bcc_agreement(st),
         table_s17_sscha_high_t(st),
+        table_s18_force_spread(),
     ]
     blocks = [b for b in blocks if b]
     return "\n\n".join(blocks)

@@ -80,8 +80,11 @@ interatomic potential for finite-temperature dynamic stability". Existence claim
   its 292 K T_c). Without them 4 v 4. At 600 K five systems hold 22 of 23. So the counterexamples
   largely measure the single-mode screen's own approximation (A1), shared across models, not
   model-specific PES error. PENDING-C3a (PBE-backed screen on BaTiO₃ etc.) decides which.
-- φ moved from +0.11 (as reviewed) to −0.129 (300 K); McNemar from 0.34 to 0.007; clustered φ
-  permutation p 0.31 at 300 K (estimator_noise.json). The association is not significant at any T.
+- The reviewed φ = +0.11 and McNemar p = 0.34 were the **100 K** values (7 v 3; the reviewed text did
+  not say so). Now at 100 K: φ +0.149, McNemar 0.727 (5 v 3). On the reviewed data φ was already
+  negative at 300 K and above (−0.114, 14 v 4, McNemar 0.031 at 300 K). Never write that the
+  re-measurement removed the positive correlation. Current 300 K: φ −0.129, McNemar 0.007, clustered
+  φ permutation p 0.31 (estimator_noise.json). The association is not significant at any T.
 
 ## 4. Screen definition and sensitivity (§2.4, ESI §S1.3–S1.4, new Table S14) — Referee 1.5
 
@@ -112,14 +115,17 @@ interatomic potential for finite-temperature dynamic stability". Existence claim
 
 - §2.5 facts: initialiser = phonopy full force constants at **0.03 Å** displacement (not ASE),
   ForcePositiveDefinite + Symmetrize; root2 representation; min_step_dyn 0.5; meaningful_factor 1e-4
-  (the convergence threshold); max_ka = 20 reweighting steps per population (a cap, not the stopping
-  criterion); up to max_pop = 8 populations of N = 256 configurations (2,048 max) then a dedicated
+  (the convergence threshold); max_ka = 20 steps, **cumulative over all populations** in python-sscha
+  1.6.1 (SchaMinimizer.py:1370; its default is −1, no cap) — NOT per population (integrator 09-27); up to max_pop = 8 populations of N = 256 configurations (2,048 max) then a dedicated
   512-configuration ensemble for the free-energy Hessian (include_v4 = False). The number of
   populations used and the per-unit convergence flag were not recorded in the production grid —
   say so; the new seed study records them (PENDING-C1). SSCHA here inherits the MLIP PES (say it).
 - bcc agreement (`bcc_agreement`): screen-vs-SSCHA **curvature-sign** agreement 35/45 = 0.78
   [0.637, 0.875] (ex-ORB 30/36 = 0.83); **stability-call** agreement 31/45 = 0.69 [0.543, 0.805]
-  (ex-ORB 25/36 = 0.69). 12 pairs agree trivially (MACE-MP-0/CHGNet on Zr/Hf, no harmonic
+  (ex-ORB 25/36 = 0.69). **Integrator 09-27: curvature-sign agreement is withdrawn everywhere** — for
+  a single even mode the screen's symmetric-point curvature = MΩ² > 0 by construction; all 10 bcc
+  sign disagreements are numerical (6 width-solver fallback, 1 Ti/ORB fit artefact, 3 Hf/ORB with no
+  screened mode; `scripts/curvature_identity_check.py`). Report call agreement only. 12 pairs agree trivially (MACE-MP-0/CHGNet on Zr/Hf, no harmonic
   instability); non-trivial: 23/33 sign, 19/33 call; MatterSim agrees in 3/9. Frequency Spearman
   0.113 (ex-ORB −0.003), descriptive only. Kill "clean gold standard", "tracks", "call agreement 0.78".
   The earlier bcc-Zr four-seed and 3×3×3 tests used MACE-MP-0 Zr, which has no harmonic instability
@@ -130,6 +136,11 @@ interatomic potential for finite-temperature dynamic stability". Existence claim
   on the combined displacive set: 33 v 3 units, **system-clustered p = 0.125** (4 of 5 systems favour
   the screen; floor 0.0625); ex-ORB 26 v 3, clustered 0.125; FE oxides alone clustered p 0.5. Never
   quote the unit-level p (0.013, 0.092, 2e-5, 2e-7) as evidence.
+- **Integrator 09-27: the 52/57 below is positive BY CONSTRUCTION (F''(0) = MΩ²), so it is not
+  evidence.** The informative number is the screen's call: unstable on 46/57 [0.687, 0.889] (ex-ORB
+  39/50). And the seed study shows the production SSCHA relaxations never converged (converged =
+  false, one population moving the matrix, 19 steps; max_ka is cumulative in python-sscha 1.6.1), so
+  the local-criterion account is 'consistent with', not 'therefore'; C1c decides.
 - **Mechanism (`criterion_blindness`)**: of the 57 non-bcc units where SSCHA calls stable against an
   unstable label, the screen's own symmetric-point curvature is positive on 52/57 [0.811, 0.962]
   (ex-ORB 47/50), and on 41/57 it is positive while the screen's free-energy comparison says the phase
@@ -173,8 +184,15 @@ interatomic potential for finite-temperature dynamic stability". Existence claim
   by a factor of ~12 (0.0003 vs 0.0035), not four.
 - The frequency spread is a PES-level proxy partly derived from forces (mode patterns come from
   force constants; E(Q) is energy-only) — not "exactly the force-level disagreement".
-- Force-level ensemble uncertainty (R2.2): PENDING-C2 (pre-registered; five-model spread + MACE
-  small/medium/large and MatterSim 1M/5M committees; clustered AUC; overlap-artifact check g).
+- Force-level ensemble uncertainty (R2.2), DONE (`results/revision/force_spread/summary.json`, ESI
+  Table S18): primary 0.681 [0.416, 0.908], clustered p 0.104; ex-ORB 0.684 [0.413, 0.916]; verdict
+  "not shown". Report ALL secondaries (a)–(g): committees 0.717 [0.535, 0.902], 0.726 [0.516, 0.901];
+  (d) normalised 0.578 [0.335, 0.795] / 0.576; (e) LOO pooled 0.654 [0.425, 0.832] / 0.689 ex-ORB,
+  per model 0.542–0.761; (f) own-call MACE 0.722 [0.564, 0.873] p 0.034, MatterSim 0.686
+  [0.473, 0.873]; (g) 43 units, 4 of 12 errors, 0.314 [0.146, 0.529]. 5 of 19 secondaries have lower
+  bound > 0.5 (b, c, f-MACE, e-MACE ex-ORB, e-SevenNet ex-ORB at 0.502); unadjusted, same configs,
+  (g) restriction not applied to them. Pre-registration: written before any config; amended once
+  after a CPU smoke test, before any production config.
 - H3's pre-registered comparator (a single model's self-reported signal) was not run — say so.
 - Fine-tuning (R2.1): the paper tests models as shipped (the generative-CSP screening regime with no
   target data). Cite verified refs from `tasks/refs-2026-09-26.md` (F1 Deng npj 11, 9; F5 Radova
@@ -203,3 +221,24 @@ letter carries the history).
 - C3b PBE forces/energies on SSCHA-sampled configurations → §3.3; closes R1.2.
 - C5 bcc 2×2×2 vs 3×3×3 re-measured → §3.5.
 Report each whichever way it falls.
+
+## 9. Integrator corrections, 2026-09-27 (after the round-2 referee simulations)
+
+- H2 count depends on the frozen-cell convention (`scripts/h2_by_convention.py` →
+  `results/h2_by_convention.json`): 300 K b v c = 17 v 4 minimal (production), 7 v 4 common FC
+  supercell (p 0.89), 10 v 4 doubled (0.50), 11 v 4 ×8 (0.42), 24 v 4 per f.u. (0.063). At 100 K
+  b ≤ c in three conventions. Two of 20 convention×T combinations have clustered p < 0.05 (per f.u.
+  100 K 0.045; ×8 900 K 0.031) — not evidence after twenty looks. Always qualify 17 v 4 with the
+  production convention.
+- At 300 K without BaTiO₃/KNbO₃/CsSnBr₃ (4 v 4): b = PbTiO₃ ×3 (MACE, MatterSim, ORB) + CsSnI₃/ORB;
+  c = CeO₂/CHGNet, NaCl/CHGNet, MgO/ORB (interpolated-mesh false-unstables, A2) + SrTiO₃/ORB.
+- Fine-tuning (R2.1): do not say fine-tuning "could not change the SSCHA result" — it can change
+  which units are deep wells, not the locality of the criterion. Do not say there is "no target
+  data to fine-tune with" — broad phonon fine-tunes exist (ref 41). New ref 43 = F4 (Hänseroth et
+  al., JPCL 2026, 17, 3152; no phonons tested).
+- Degenerate eigenspace: the screened direction is arbitrary (MACE BaTiO₃ Γ: production 20.9 meV,
+  53 amu vs 16.8 meV, 41 amu along the LAPACK direction); disclosed in ESI §S1.3.
+- bcc 2×2×2 vs 3×3×3 cells are not nested (N even cells only, ω multiples of 3 only).
+- Add to §7 banned list: "curvature-sign agreement" as evidence; "max_ka per population";
+  "the re-measurement removed the positive correlation"; "no target data to fine-tune with".
+
