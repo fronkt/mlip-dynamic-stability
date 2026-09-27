@@ -1,0 +1,400 @@
+{
+ "paths": {
+  "srtio3_cubic_mattersim_q0-0-0-b0": {
+   "role": "mode",
+   "n_atoms": 5,
+   "check": {
+    "pass": true,
+    "max_abs_diff_meV": 0.00762939453125,
+    "tol_meV": 1.0,
+    "max_abs_diff_window_meV": 0.00762939453125,
+    "pass_window": true,
+    "diff_meV": [
+     0.0,
+     0.003814697265625,
+     0.003814697265625,
+     0.00762939453125,
+     0.003814697265625,
+     0.0,
+     0.00762939453125,
+     0.003814697265625,
+     0.0,
+     0.003814697265625
+    ],
+    "depth_regen_meV": 3.5552978515625,
+    "depth_cache_meV": 3.56292724609375,
+    "recovery": {
+     "bands": [
+      0,
+      1,
+      2
+     ],
+     "subspace_dim": 3,
+     "coeffs": [
+      -0.7493422382323282,
+      0.07824036409596655,
+      0.657544413273427
+     ],
+     "max_abs_resid_meV": 0.003814697265625,
+     "n_candidates_meff": 48,
+     "n_single_points": 330,
+     "m_eff_found": 144.26986722719275,
+     "phonopy_pattern_check": {
+      "pass": false,
+      "max_abs_diff_meV": 1869.9951171875,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 6.923675537109375,
+      "pass_window": false,
+      "diff_meV": [
+       0.0,
+       0.026702880859375,
+       0.35858154296875,
+       0.598907470703125,
+       6.923675537109375,
+       48.53057861328125,
+       156.49032592773438,
+       260.8146667480469,
+       63.07220458984375,
+       1869.9951171875
+      ],
+      "depth_regen_meV": 2.964019775390625,
+      "depth_cache_meV": 3.56292724609375
+     },
+     "recovered_check": {
+      "pass": true,
+      "max_abs_diff_meV": 0.00762939453125,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 0.00762939453125,
+      "pass_window": true,
+      "diff_meV": [
+       0.0,
+       0.003814697265625,
+       0.003814697265625,
+       0.00762939453125,
+       0.003814697265625,
+       0.0,
+       0.00762939453125,
+       0.003814697265625,
+       0.0,
+       0.003814697265625
+      ],
+      "depth_regen_meV": 3.5552978515625,
+      "depth_cache_meV": 3.56292724609375
+     },
+     "adopted": true
+    },
+    "m_eff_regen": 144.26986722719275,
+    "m_eff_cache": 144.2739568306745,
+    "m_eff_rel_diff": 2.8346096354444327e-05,
+    "harm_regen_thz": -3.359505216199968,
+    "harm_cache_thz": -3.3586769598733737,
+    "harm_drift": false,
+    "dim_regen": [
+     1,
+     1,
+     1
+    ],
+    "dim_cache": [
+     1,
+     1,
+     1
+    ],
+    "dim_match": true
+   },
+   "decide_T": [],
+   "decide_lowest_T": false,
+   "cache_index": 0
+  },
+  "srtio3_cubic_mattersim_q1d2-1d2-1d2-b0": {
+   "role": "decide",
+   "n_atoms": 40,
+   "check": {
+    "pass": false,
+    "max_abs_diff_meV": 1.40380859375,
+    "tol_meV": 1.0,
+    "max_abs_diff_window_meV": 1.40380859375,
+    "pass_window": false,
+    "diff_meV": [
+     0.0,
+     0.030517578125,
+     0.18310546875,
+     0.06103515625,
+     0.0,
+     0.48828125,
+     1.40380859375,
+     1.251220703125,
+     0.213623046875,
+     0.274658203125
+    ],
+    "depth_regen_meV": 17.15087890625,
+    "depth_cache_meV": 17.63916015625,
+    "recovery": {
+     "bands": [
+      0,
+      1,
+      2
+     ],
+     "subspace_dim": 6,
+     "coeffs": [
+      -0.37096745063431286,
+      -0.13728706468200066,
+      -0.9182935381482261,
+      -0.010628310147016878,
+      -0.008659804155740624,
+      -0.009188963570194447
+     ],
+     "max_abs_resid_meV": 1.434326171875,
+     "n_candidates_meff": 48,
+     "n_single_points": 3561,
+     "m_eff_found": 387.475622352629,
+     "phonopy_pattern_check": {
+      "pass": false,
+      "max_abs_diff_meV": 1792.78564453125,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 42.877197265625,
+      "pass_window": false,
+      "diff_meV": [
+       0.0,
+       0.06103515625,
+       0.1220703125,
+       1.89208984375,
+       3.23486328125,
+       2.044677734375,
+       42.877197265625,
+       201.72119140625,
+       662.689208984375,
+       1792.78564453125
+      ],
+      "depth_regen_meV": 19.683837890625,
+      "depth_cache_meV": 17.63916015625
+     },
+     "recovered_check": {
+      "pass": false,
+      "max_abs_diff_meV": 1.40380859375,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 1.40380859375,
+      "pass_window": false,
+      "diff_meV": [
+       0.0,
+       0.030517578125,
+       0.18310546875,
+       0.06103515625,
+       0.0,
+       0.48828125,
+       1.40380859375,
+       1.251220703125,
+       0.213623046875,
+       0.274658203125
+      ],
+      "depth_regen_meV": 17.15087890625,
+      "depth_cache_meV": 17.63916015625
+     },
+     "adopted": true
+    },
+    "m_eff_regen": 387.475622352629,
+    "m_eff_cache": 384.675038502989,
+    "m_eff_rel_diff": 0.0072803888199733085,
+    "harm_regen_thz": -1.8602392895413862,
+    "harm_cache_thz": -1.86086559516895,
+    "harm_drift": false,
+    "dim_regen": [
+     2,
+     2,
+     2
+    ],
+    "dim_cache": [
+     2,
+     2,
+     2
+    ],
+    "dim_match": true
+   },
+   "decide_T": [
+    100.0,
+    300.0,
+    600.0,
+    900.0
+   ],
+   "decide_lowest_T": true,
+   "cache_index": 1
+  }
+ },
+ "system": "srtio3_cubic",
+ "model": "mattersim",
+ "status": "done",
+ "cache_file": "results/cache/softmode_v3m24_srtio3_cubic_mattersim_sc222.json",
+ "cache_sha256": "c8e9fd90b2bb97931fa67e331ef0feb7a4acb96bb6b11f8c4a38ce7dd5c81fc5",
+ "fc_supercell": [
+  2,
+  2,
+  2
+ ],
+ "relaxed_prim_cell": [
+  [
+   3.943736462003723,
+   2.4972996815990024e-09,
+   6.541244339306427e-08
+  ],
+  [
+   2.497299978156593e-09,
+   3.9437364592296635,
+   -1.3745991263685211e-08
+  ],
+  [
+   6.541243934673377e-08,
+   -1.3745987870749885e-08,
+   3.943736530671091
+  ]
+ ],
+ "harmonically_stable_in_cache": false,
+ "deciding": {
+  "by_T": {
+   "100": {
+    "T": 100.0,
+    "idx": 1,
+    "idx_cache_solve": 1,
+    "idx_ledger": 1,
+    "pred_stable_ledger": false,
+    "stable_cache_solve": false,
+    "agree": true
+   },
+   "300": {
+    "T": 300.0,
+    "idx": 1,
+    "idx_cache_solve": 1,
+    "idx_ledger": 1,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "600": {
+    "T": 600.0,
+    "idx": 1,
+    "idx_cache_solve": 1,
+    "idx_ledger": 1,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "900": {
+    "T": 900.0,
+    "idx": 1,
+    "idx_cache_solve": 1,
+    "idx_ledger": 1,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   }
+  },
+  "lowest_T": 100.0,
+  "idx_lowest": 1,
+  "idx_all": [
+   1
+  ],
+  "all_agree": true
+ },
+ "mode_list": {
+  "n_imag_total_regen": 2,
+  "n_imag_total_cache": 2,
+  "regen": [
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "band": 0,
+    "harm_thz": -3.359505216199968
+   },
+   {
+    "q": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "band": 0,
+    "harm_thz": -1.8602392895413862
+   }
+  ],
+  "cache": [
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "band": 0,
+    "harm_thz": -3.3586769598733737
+   },
+   {
+    "q": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "band": 0,
+    "harm_thz": -1.86086559516895
+   }
+  ]
+ },
+ "wall_s": 246.6,
+ "provenance": {
+  "script": "scripts/dft_reference.py",
+  "stage": "geom",
+  "git_head": "5531546",
+  "versions": {
+   "numpy": "2.5.2",
+   "scipy": "1.18.0",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.5",
+   "torch": "2.13.0",
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": "1.2.5",
+   "python-sscha": "1.6.1",
+   "cellconstructor": "1.6.2"
+  },
+  "python": "3.12.14",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T06:58:52Z",
+  "settings": {
+   "stage": "geom",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "srtio3_cubic",
+    "batio3_cubic",
+    "zr_bcc",
+    "zro2_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "model": "mattersim",
+   "device": "cuda",
+   "force": false,
+   "no_recover": false,
+   "recover_max_atoms": 12,
+   "harm_tol": 0.02
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "model": "mattersim",
+  "env_lock": {
+   "lock": "envs/lock-mattersim-2026-08-17.txt",
+   "mismatches": {}
+  },
+  "model_version": "mattersim=1.2.5;ckpt=mattersim-v1.0.0-5m",
+  "device": "cuda"
+ }
+}

@@ -1,0 +1,1 @@
+rerun with nosym=.true.: QE d_matrix error 14 (D_S l=2 not orthogonal) on the CHGNet-relaxed, slightly off-cubic cell; full k-mesh unchanged, energies equal to convergence

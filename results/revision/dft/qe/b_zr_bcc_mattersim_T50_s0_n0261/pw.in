@@ -1,0 +1,43 @@
+&CONTROL
+  ! job b_zr_bcc_mattersim_T50_s0_n0261, written by scripts/dft_reference.py
+  ! pseudo_dir is taken from $ESPRESSO_PSEUDO (exported by scripts/box/qe_queue.sh)
+  calculation = 'scf'
+  prefix = 'pwscf'
+  outdir = './scratch'
+  disk_io = 'none'
+  tprnfor = .true.
+  tstress = .false.
+  verbosity = 'low'
+/
+&SYSTEM
+  ibrav = 0
+  nat = 8
+  ntyp = 1
+  ecutwfc = 30.0
+  ecutrho = 240.0
+  occupations = 'smearing'
+  smearing = 'mv'
+  degauss = 0.02
+/
+&ELECTRONS
+  conv_thr = 8.000d-10
+  mixing_beta = 0.4
+  electron_maxstep = 200
+/
+ATOMIC_SPECIES
+Zr 91.2240 Zr_pbe_v1.uspp.F.UPF
+CELL_PARAMETERS angstrom
+  -3.5849042388 3.5849044340 3.5849041907
+  3.5849042548 -3.5849044049 3.5849041775
+  3.5849042370 3.5849044031 -3.5849041615
+ATOMIC_POSITIONS angstrom
+Zr 0.0392602000 -0.0064934500 -0.0165665900
+Zr 1.8582321100 1.8105423000 -1.8118205500
+Zr 1.7851424500 -1.7665878100 1.8020337900
+Zr 3.5745074900 0.0357107800 -0.0434176900
+Zr -1.7899755400 1.6763612700 1.8618872900
+Zr -0.0986693400 3.5904211500 0.0348080300
+Zr 0.0292104100 -0.0457405000 3.6351812000
+Zr 1.7721007200 1.8755951200 1.7077029100
+K_POINTS automatic
+9 9 9 0 0 0

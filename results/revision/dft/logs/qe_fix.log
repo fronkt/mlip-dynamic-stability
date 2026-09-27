@@ -1,0 +1,8 @@
+2026-09-27T14:41:21Z QUEUE start: 3 jobs, 1 x 8 ranks on 61 cores (cgroup quota)
+2026-09-27T14:41:21Z START a_batio3_cubic_chgnet_q0-0-0-b0_i00 nat=5 kpts=343 np=8 nk_pools=8
+2026-09-27T14:42:07Z END   a_batio3_cubic_chgnet_q0-0-0-b0_i00 status=ok wall=46s
+2026-09-27T14:42:07Z START a_batio3_cubic_chgnet_q1d2-1d2-0-b0_i00 nat=20 kpts=112 np=8 nk_pools=8
+2026-09-27T14:50:19Z END   a_batio3_cubic_chgnet_q1d2-1d2-0-b0_i00 status=ok wall=492s
+2026-09-27T14:50:19Z START a_batio3_cubic_chgnet_q1d2-1d2-0-b0_i01 nat=20 kpts=112 np=8 nk_pools=8
+2026-09-27T14:57:16Z END   a_batio3_cubic_chgnet_q1d2-1d2-0-b0_i01 status=ok wall=417s
+2026-09-27T14:57:16Z QUEUE end: 3 ok, 0 scf-not-converged, 0 failed (re-run to retry failed)

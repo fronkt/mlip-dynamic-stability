@@ -1,0 +1,202 @@
+{
+ "paths": {
+  "zr_bcc_sevennet0_q1d3-2d3-0-b0-refmattersim": {
+   "role": "ref",
+   "n_atoms": 9,
+   "check": {
+    "pass": null,
+    "note": "reference path: no cached map for this coordinate under this model",
+    "stable_model_check": {
+     "softest_regen_thz": 0.3440600064679044,
+     "softest_cache_thz": 0.34400390743709736,
+     "q_regen": [
+      0.0,
+      0.8333333333333334,
+      0.16666666666666666
+     ],
+     "q_cache": [
+      0.8333333333333334,
+      0.0,
+      0.0
+     ],
+     "pass": true
+    }
+   },
+   "ref_pattern_stem": "zr_bcc_mattersim_q1d3-2d3-0-b0",
+   "lattice_scale": 1.0004209789187333,
+   "lattice_transform_offdiag_max": 1.6186889552720992e-08,
+   "this_model_freqs_at_q_thz": [
+    0.782460964325154,
+    2.6136627742216487,
+    2.745464691633317
+   ],
+   "ref_pattern_check": true,
+   "ref_pattern_standin": false
+  }
+ },
+ "system": "zr_bcc",
+ "model": "sevennet0",
+ "status": "done",
+ "cache_file": "results/cache/softmode_v3m24_zr_bcc_sevennet0_sc666.json",
+ "cache_sha256": "a1a18fff34ebfb6a62caa105b2da798a3f745f367ef5ff56ab93d50fd2201f5b",
+ "fc_supercell": [
+  6,
+  6,
+  6
+ ],
+ "relaxed_prim_cell": [
+  [
+   -1.7932067624326042,
+   1.793206683731386,
+   1.793206738389752
+  ],
+  [
+   1.7932067601460888,
+   -1.793206716173594,
+   1.7932067685454438
+  ],
+  [
+   1.7932067635324196,
+   1.7932067172734087,
+   -1.7932067708319603
+  ]
+ ],
+ "harmonically_stable_in_cache": true,
+ "deciding": {
+  "by_T": {
+   "100": {
+    "T": 100.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "300": {
+    "T": 300.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "600": {
+    "T": 600.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "900": {
+    "T": 900.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   }
+  },
+  "lowest_T": 100.0,
+  "idx_lowest": 0,
+  "idx_all": [
+   0
+  ],
+  "all_agree": true
+ },
+ "mode_list": {
+  "n_imag_total_regen": 0,
+  "n_imag_total_cache": 0,
+  "regen": [],
+  "cache": [
+   {
+    "q": [
+     0.8333333333333334,
+     0.0,
+     0.0
+    ],
+    "band": -1,
+    "harm_thz": 0.34400390743709736
+   }
+  ],
+  "stable_check": {
+   "softest_regen_thz": 0.3440600064679044,
+   "softest_cache_thz": 0.34400390743709736,
+   "q_regen": [
+    0.0,
+    0.8333333333333334,
+    0.16666666666666666
+   ],
+   "q_cache": [
+    0.8333333333333334,
+    0.0,
+    0.0
+   ],
+   "pass": true
+  }
+ },
+ "wall_s": 5.1,
+ "provenance": {
+  "script": "scripts/dft_reference.py",
+  "stage": "geom",
+  "git_head": "5531546",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.5",
+   "torch": "2.6.0+cu124",
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": "0.13.0",
+   "mattersim": null,
+   "python-sscha": "1.6.1",
+   "cellconstructor": "1.6.2"
+  },
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T07:37:24Z",
+  "settings": {
+   "stage": "geom",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "srtio3_cubic",
+    "batio3_cubic",
+    "zr_bcc",
+    "zro2_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "model": "sevennet0",
+   "device": "cuda",
+   "force": false,
+   "no_recover": false,
+   "recover_max_atoms": 12,
+   "harm_tol": 0.02
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "model": "sevennet0",
+  "env_lock": {
+   "lock": "envs/lock-sevennet-2026-08-17.txt",
+   "mismatches": {}
+  },
+  "model_version": "sevenn=0.13.0;ckpt=7net-0",
+  "device": "cuda"
+ }
+}

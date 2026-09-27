@@ -1,0 +1,339 @@
+{
+ "paths": {
+  "cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0": {
+   "role": "decide",
+   "n_atoms": 40,
+   "check": {
+    "pass": true,
+    "max_abs_diff_meV": 5.6843418860808015e-11,
+    "tol_meV": 1.1683164701403825,
+    "max_abs_diff_window_meV": 5.6843418860808015e-11,
+    "pass_window": true,
+    "diff_meV": [
+     0.0,
+     1.4210854715202004e-11,
+     0.0,
+     0.0,
+     5.6843418860808015e-11,
+     4.263256414560601e-11,
+     2.8421709430404007e-11,
+     0.0,
+     1.4210854715202004e-11,
+     0.0
+    ],
+    "depth_regen_meV": 116.83164701403825,
+    "depth_cache_meV": 116.83164701403825,
+    "recovery": {
+     "bands": [
+      0,
+      1,
+      2
+     ],
+     "subspace_dim": 3,
+     "coeffs": [
+      0.5579044585156264,
+      -0.8176194835434571,
+      -0.14227085189354832
+     ],
+     "max_abs_resid_meV": 4.263256414560601e-11,
+     "n_candidates_meff": 48,
+     "n_single_points": 156,
+     "m_eff_found": 1473.4286401151417,
+     "phonopy_pattern_check": {
+      "pass": false,
+      "max_abs_diff_meV": 21.78147296800148,
+      "tol_meV": 1.1683164701403825,
+      "max_abs_diff_window_meV": 21.78147296800148,
+      "pass_window": false,
+      "diff_meV": [
+       0.0,
+       0.013086845527254809,
+       0.20867943011637635,
+       1.0408402944932504,
+       3.1565440160790104,
+       7.035059596219639,
+       12.203160412681768,
+       15.779910856480228,
+       9.972711211474916,
+       21.78147296800148
+      ],
+      "depth_regen_meV": 110.15597899901763,
+      "depth_cache_meV": 116.83164701403825
+     },
+     "recovered_check": {
+      "pass": true,
+      "max_abs_diff_meV": 5.6843418860808015e-11,
+      "tol_meV": 1.1683164701403825,
+      "max_abs_diff_window_meV": 5.6843418860808015e-11,
+      "pass_window": true,
+      "diff_meV": [
+       0.0,
+       1.4210854715202004e-11,
+       0.0,
+       0.0,
+       5.6843418860808015e-11,
+       4.263256414560601e-11,
+       2.8421709430404007e-11,
+       0.0,
+       1.4210854715202004e-11,
+       0.0
+      ],
+      "depth_regen_meV": 116.83164701403825,
+      "depth_cache_meV": 116.83164701403825
+     },
+     "adopted": true
+    },
+    "m_eff_regen": 1473.4286401151417,
+    "m_eff_cache": 1473.4286401155891,
+    "m_eff_rel_diff": 3.0369397002977827e-13,
+    "harm_regen_thz": -0.665887243564172,
+    "harm_cache_thz": -0.6658872435642766,
+    "harm_drift": false,
+    "dim_regen": [
+     2,
+     2,
+     2
+    ],
+    "dim_cache": [
+     2,
+     2,
+     2
+    ],
+    "dim_match": true
+   },
+   "decide_T": [
+    300.0,
+    600.0,
+    900.0
+   ],
+   "decide_lowest_T": false,
+   "cache_index": 0
+  },
+  "cssnbr3_cubic_mace_mp0_q1d2-1d2-0-b0": {
+   "role": "decide",
+   "n_atoms": 20,
+   "check": {
+    "pass": true,
+    "max_abs_diff_meV": 7.105427357601002e-12,
+    "tol_meV": 1.0,
+    "max_abs_diff_window_meV": 7.105427357601002e-12,
+    "pass_window": true,
+    "diff_meV": [
+     0.0,
+     7.105427357601002e-12,
+     0.0,
+     7.105427357601002e-12,
+     0.0,
+     0.0,
+     0.0,
+     7.105427357601002e-12,
+     7.105427357601002e-12,
+     7.105427357601002e-12
+    ],
+    "depth_regen_meV": 55.73749048624421,
+    "depth_cache_meV": 55.73749048623711,
+    "m_eff_regen": 639.2319999999992,
+    "m_eff_cache": 639.2319999999997,
+    "m_eff_rel_diff": 8.892455143173064e-16,
+    "harm_regen_thz": -0.6606955048283176,
+    "harm_cache_thz": -0.6606955048288254,
+    "harm_drift": false,
+    "dim_regen": [
+     2,
+     2,
+     1
+    ],
+    "dim_cache": [
+     2,
+     2,
+     1
+    ],
+    "dim_match": true
+   },
+   "decide_T": [
+    100.0
+   ],
+   "decide_lowest_T": true,
+   "cache_index": 1
+  }
+ },
+ "system": "cssnbr3_cubic",
+ "model": "mace_mp0",
+ "status": "done",
+ "cache_file": "results/cache/softmode_v3m24_cssnbr3_cubic_mace_mp0_sc222.json",
+ "cache_sha256": "63db3d03050373c54058ca34452c8929cdfaf46d1de4637e1bd6d967135c81e1",
+ "fc_supercell": [
+  2,
+  2,
+  2
+ ],
+ "relaxed_prim_cell": [
+  [
+   5.894712192246894,
+   -1.1814115872212614e-17,
+   -2.6176284015189033e-17
+  ],
+  [
+   -5.45868705640348e-17,
+   5.8947121922468995,
+   4.00128117519434e-15
+  ],
+  [
+   1.260780357925986e-16,
+   1.0822495453577254e-15,
+   5.894712192246903
+  ]
+ ],
+ "harmonically_stable_in_cache": false,
+ "deciding": {
+  "by_T": {
+   "100": {
+    "T": 100.0,
+    "idx": 1,
+    "idx_cache_solve": 1,
+    "idx_ledger": 1,
+    "pred_stable_ledger": false,
+    "stable_cache_solve": false,
+    "agree": true
+   },
+   "300": {
+    "T": 300.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": false,
+    "stable_cache_solve": false,
+    "agree": true
+   },
+   "600": {
+    "T": 600.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": false,
+    "stable_cache_solve": false,
+    "agree": true
+   },
+   "900": {
+    "T": 900.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   }
+  },
+  "lowest_T": 100.0,
+  "idx_lowest": 1,
+  "idx_all": [
+   0,
+   1
+  ],
+  "all_agree": true
+ },
+ "mode_list": {
+  "n_imag_total_regen": 2,
+  "n_imag_total_cache": 2,
+  "regen": [
+   {
+    "q": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "band": 0,
+    "harm_thz": -0.665887243564172
+   },
+   {
+    "q": [
+     0.5,
+     0.5,
+     0.0
+    ],
+    "band": 0,
+    "harm_thz": -0.6606955048283176
+   }
+  ],
+  "cache": [
+   {
+    "q": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "band": 0,
+    "harm_thz": -0.6658872435642766
+   },
+   {
+    "q": [
+     0.5,
+     0.5,
+     0.0
+    ],
+    "band": 0,
+    "harm_thz": -0.6606955048288254
+   }
+  ]
+ },
+ "wall_s": 12.8,
+ "provenance": {
+  "script": "scripts/dft_reference.py",
+  "stage": "geom",
+  "git_head": "5531546",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.5",
+   "torch": "2.6.0+cu124",
+   "mace-torch": "0.3.16",
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": "1.6.1",
+   "cellconstructor": "1.6.2"
+  },
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T07:09:17Z",
+  "settings": {
+   "stage": "geom",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "srtio3_cubic",
+    "batio3_cubic",
+    "zr_bcc",
+    "zro2_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "model": "mace_mp0",
+   "device": "cuda",
+   "force": false,
+   "no_recover": false,
+   "recover_max_atoms": 12,
+   "harm_tol": 0.02
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "model": "mace_mp0",
+  "env_lock": {
+   "lock": "envs/lock-mace-2026-08-17.txt",
+   "mismatches": {}
+  },
+  "model_version": "mace-torch=0.3.16;ckpt=medium",
+  "device": "cuda"
+ }
+}

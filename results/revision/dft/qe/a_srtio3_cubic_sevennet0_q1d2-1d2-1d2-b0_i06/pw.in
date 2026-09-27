@@ -1,0 +1,47 @@
+&CONTROL
+  ! job a_srtio3_cubic_sevennet0_q1d2-1d2-1d2-b0_i06, written by scripts/dft_reference.py
+  ! pseudo_dir is taken from $ESPRESSO_PSEUDO (exported by scripts/box/qe_queue.sh)
+  calculation = 'scf'
+  prefix = 'pwscf'
+  outdir = './scratch'
+  disk_io = 'none'
+  tprnfor = .true.
+  tstress = .false.
+  verbosity = 'low'
+/
+&SYSTEM
+  ibrav = 0
+  nat = 10
+  ntyp = 3
+  ecutwfc = 50.0
+  ecutrho = 400.0
+  occupations = 'smearing'
+  smearing = 'mv'
+  degauss = 0.005
+/
+&ELECTRONS
+  conv_thr = 1.000d-09
+  mixing_beta = 0.4
+  electron_maxstep = 200
+/
+ATOMIC_SPECIES
+Sr 87.6200 Sr_pbe_v1.uspp.F.UPF
+Ti 47.8670 ti_pbe_v1.4.uspp.F.UPF
+O 15.9990 O.pbe-n-kjpaw_psl.0.1.UPF
+CELL_PARAMETERS angstrom
+  -3.9441333201 -3.9441332967 -0.0000000014
+  -0.0000000064 -3.9441332889 3.9441333307
+  -3.9441333129 -0.0000000058 3.9441333313
+ATOMIC_POSITIONS angstrom
+Sr -0.0000001401 -3.9441332267 3.9441333286
+Sr -3.9441334568 -3.9441332203 3.9441333278
+Ti -1.9720668701 -1.9720665567 1.9720666986
+Ti -5.9162001931 -5.9161998592 5.9162000285
+O -3.9441332001 -2.1720666567 1.9793737986
+O -3.9441332002 -5.7161999933 1.9647595073
+O -2.1720665165 -3.9441333656 5.9265260893
+O -5.7161998931 -3.9441333692 5.9058738585
+O -1.9647594301 -1.9823927967 3.9441332786
+O -1.9793737202 -5.9058738633 3.9441332773
+K_POINTS automatic
+6 6 6 0 0 0
