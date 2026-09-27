@@ -1,236 +1,153 @@
-# RSC Advances major revision — plan
+# RSC Advances major revision: phased plan (rewritten 2026-09-26)
 
-**Manuscript** RA-ART-07-2026-006452, *Finite-temperature dynamic stability is a blind spot of
-foundation machine-learning interatomic potentials* (submitted title; the working title has since
-changed — see D1 below).
-**Decision** Major revision, 2026-09-11, Assoc. Ed. Dr Lydia Rhyman. Three referees: R1 major,
-R2 reject-leaning, R3 minor.
-**Deadline** None stated ("as soon as possible", automatic reminders).
-**Predecessor** `tasks/todo-archive-2026-09-11.md` (superseded Aug-17 snapshot).
+**Manuscript** RA-ART-07-2026-006452. **Decision** major revision, 2026-09-11 (Assoc. Ed. Dr Lydia
+Rhyman). Referees: R1 major, R2 reject-leaning, R3 minor.
+**Committed date: 9 October 2026.** Frank emailed advances@rsc.org on 2026-09-26 07:04 UTC asking
+for time to that date. If it slips, send a follow-up before 9 Oct, not after.
+**Source of truth for what is open:** `tasks/audit-2026-09-26-rsc-revision.md` (18-agent audit,
+each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ...) refer to it.
+**Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
+false.
 
----
+## Decisions (Frank, 2026-09-26)
 
-## D. The three disclosures that must lead the response
-
-These are not referee items. They are things the referees do not know, and burying any of them
-would be worse than any criticism in the reports.
-
-- [x] **D1 — The referees reviewed a superseded version.** They read commit `76d3a84` (submitted
-  2026-07-13). In August an internal audit found the deposited data was not reproducible by the
-  deposited code (a stale q-search grid skipped because the unit hash carried no algorithm version;
-  two inverted acoustic masks that deleted the very instabilities under test). Everything was
-  re-measured in pinned environments. **Headline numbers moved, and they moved against the paper:**
-
-  | Quantity | As reviewed (Jul) | Now | Direction |
-  |---|---|---|---|
-  | FE-perovskite screen recall | 23/30 = 0.77 | 16/30 = 0.53 | **worse** |
-  | SSCHA FE recall | 7/30 = 0.23 | 5/27 = 0.19 | worse |
-  | CHGNet finite-T accuracy | 0.933 | 0.867 | worse |
-  | MACE-MP-0 finite-T accuracy | 0.933 | 0.833 | worse |
-  | SevenNet-0 finite-T accuracy | 0.867 | 0.900 | better |
-  | ORB-v2 finite-T accuracy | 0.700 | 0.800 | better |
-  | ORB-v2 harmonic accuracy | 0.842 | 0.895 | better |
-  | Freq-spread AUC | 0.52 | 0.36 | (below chance either way) |
-  | Vote-split AUC | 0.75 | 0.76 | ~same |
-
-  The consequence that matters: **in the reviewed version the harmonic leaders were not the
-  finite-T leaders — a clean inversion. That inversion is gone.** SevenNet-0 now leads both
-  layers. R3's entire reading of H2 ("CHGNet and MACE-MP-0 reaching 0.933 while MatterSim falls to
-  0.833") describes a result that no longer exists. Lead with this; the numbers moving against the
-  author's own story is the evidence that the correction was honest.
-- [x] **D2 — The title has changed.** "Blind spot" asserts nobody is looking, which two 2025/2026
-  papers (refs 19, 20) falsify in print. Current title: *"Finite-temperature dynamic stability
-  separates foundation MLIPs that harmonic benchmarks rank equally."* R3 independently asks for the
-  title framing to be brought into line with §3.2, so this is convergent, but the change predates
-  the reports and must be declared as such.
-- [x] **D3 — Several referee items were already addressed before the reports arrived**, for
-  independent reasons (the August audit and a 2026-09-10 estimator-noise revision): the §2.4
-  variational derivation (R1-5), the clustered-statistics correction (R1-6, R3-1, R3-3), and the
-  measured harmonic noise floor. Say so plainly with commit references rather than presenting them
-  as new responses to review.
+- [x] **Title approved:** "Neither harmonic benchmarks nor a default SSCHA cross-check certifies a
+  foundation machine-learning interatomic potential for finite-temperature dynamic stability".
+  The title is an existence claim (harmonically correct models that are wrong at finite T exist),
+  so it survives the clustering result below. The *significance* wording under it does not.
+- [x] **Rent a machine** for the compute arm (Phase 1). vast.ai credit was $11.63 on 09-26; Frank
+  to top up if the run needs more.
+- [x] **Transparent peer review: opt in** ("sure, or your call"). Precondition: the R1.3 decline
+  paragraph is rewritten neutrally before upload (Phase 5).
+- [ ] Corresponding e-mail: gmail or cai485@purdue.edu (Purdue RSC read-and-publish, APC). Open.
+- [ ] AI-use statement wording. I draft it, Frank confirms. Open.
 
 ---
 
-## Phase A — Foundations (compute-free)
+## Phase 0 — Setup (09-26)
 
-- [x] A1 Archive the superseded `tasks/todo.md` with a provenance header.
-- [x] A2 Baseline `scripts/verify_claims.py` — 27/27 pass before any change.
-- [x] A3 Snapshot the as-reviewed manuscript to `paper/submissions/rsc-advances-2026-07/` from
-  `76d3a84`, so every later diff is against what the referees actually read.
-- [x] A4 `scripts/reviewed_version_delta.py` — mechanically extract and compare every headline
-  number between the as-reviewed and current versions; emit the D1 table rather than hand-copying
-  it. Output `paper/response/number_changes.md`.
+- [x] 0.1 Archive the old plan; write this one.
+- [ ] 0.2 Commit the audit file and this plan on `rsc-figure-fixes`.
 
-## Phase B — Statistics hardening (R3-3, R1-6) — the largest technical phase
+## Phase 1 — Compute on the rented box (critical path, 09-26 → ~09-29)
 
-New module `mlip_dynstab/stats.py`. No scipy (deliberately absent from the pinned envs); hand-roll.
+One box: GPU for the MLIPs and SSCHA, ≥30 real cores (read `cpu.max`, not `nproc`) for DFT.
+Nothing writes to `results/ledger.parquet` except C4 (which uses method `harmonic_dispsweep`).
+Every study writes its own JSON/parquet under `results/revision/` and records the env lock.
 
-- [x] B1 Wilson score intervals `wilson(k, n, alpha)`. Every rate in the paper becomes *k/n with an
-  interval*, not a bare decimal: harmonic accuracies (currently 1.000 / 0.895 / 0.789 = 19/19,
-  17/19, 15/19), finite-T accuracies, per-family recalls, false-stable rates, consensus error rates.
-- [x] B2 **System-level permutation test for both AUCs.** R3's sharpest statistical point: the
-  n = 60 consensus units are repeated measurements over a much smaller number of systems, the five
-  model votes are already collapsed into each unit, so they are not independent. Permute whole
-  systems; report a clustered p and a cluster-bootstrap CI for AUC 0.76 and AUC 0.36.
-- [x] B3 Demote the five-model Spearman. ρ is computed on **n = 5** (+0.645 at 100 K, −0.667 at
-  300 K — it flips sign with temperature, which is itself the argument). Report as descriptive with
-  the n stated inline, add a system-level permutation companion, and never let it carry an inference.
-- [x] B4 **State the composition of n = 60 and n = 75 explicitly** — the system list and the
-  temperature ladder behind each. R3 notes the n = 60 composition "is never stated". Emit as ESI
-  tables, not prose.
-- [x] B5 Keep McNemar, but ensure no sentence anywhere reads a failure to reject as positive
-  evidence. The surviving marginal claim (17 vs 4, p = 0.007) is a difference in layer difficulty
-  and must be labelled as such every time it appears.
-- [x] B6 ~~Factor the clustered machinery out of `scripts/estimator_noise.py:184-256` and have it
-  import from `stats.py`.~~ **Deliberately NOT done, after checking.** The deposited
-  `results/estimator_noise.json` is byte-reproducible from its own seed (verified at all four
-  temperatures), and its numbers are quoted in ESI §S1.2. That script shares one RNG across the
-  temperature ladder while `stats.py` seeds per call, so importing would silently move published
-  p-values and interval endpoints for no gain. Both docstrings now record the duplication and the
-  reason. If ever unified, re-deposit the JSON and re-propagate the ESI in the same commit.
-- [x] B7 Emit `results/stats_hardening.json`; extend `verify_claims.py` to pin every new number.
+- [ ] **C1 SSCHA seeds + diagnostics (R1.4).** `scripts/sscha_seed_study.py`. Four seeds each on
+  batio3/MACE/100 K (the Table S2 false-stable), zro2/MACE/100 K (fluorite false-stable),
+  zr_bcc/MatterSim/50 K (a bcc unit that HAS a harmonic instability; the old study used MACE Zr,
+  which has none), srtio3/MACE/600 K (high-T false-unstable runaway). Per run, persist: number of
+  populations, per-population gradient and free-energy history, converged flag, lowest frequency
+  after ForcePositiveDefinite (the start), final Hessian lowest-6, and a bootstrap-over-configs
+  spread of the lowest Hessian eigenvalue (the Hessian uncertainty R1.4 asks for). Save a subsample
+  of the final ensemble (positions + MLIP forces/energies) for C3b.
+- [ ] **C1b include_v4=True** on batio3/MACE/100 K with a hard time cap (try the julia backend). If it
+  finishes, it is the only direct test of "the truncation is what goes wrong"; report either way.
+- [ ] **C2 Force-level ensemble uncertainty (R2.2).** `scripts/force_spread.py`. Quantum
+  phonon-rattled configurations at each ladder T from ensemble-mean harmonic FCs (|ω| for imaginary
+  modes); evaluate all five models plus two within-architecture committees (MACE-MP-0
+  small/medium/large, MatterSim 1M/5M). Scores: cross-model force RMS deviation per (system, T) for
+  the consensus test, and per-model deviation from the ensemble mean for the per-unit test. Clustered
+  AUC, with and without ORB-v2.
+- [ ] **C3a PBE along the soft-mode coordinates (R1.1).** `scripts/dft_reference.py` + QE (conda-forge),
+  SSSP pseudopotentials. SrTiO3 R tilt, BaTiO3 Γ/deciding mode (each model's pattern), bcc-Zr N
+  point, ZrO2 X point. All five MLIPs re-evaluated on the identical geometries. Outputs: E(Q) curves,
+  well depths, and the single-mode screen's call re-solved on the PBE-fitted potential.
+- [ ] **C3b PBE forces on SSCHA-sampled configurations (R1.2).** 12–16 configurations per C1 unit.
+  MLIP-vs-PBE force and energy error on thermally sampled configurations, against a near-equilibrium
+  baseline. This is the out-of-distribution test R1.2 asks for.
+- [ ] **C4 Displacement sweep, remaining four models.** `scripts/run_disp_sweep.py --device cuda`.
+- [ ] **C5 bcc finite-size, re-measured.** zr_bcc SSCHA 2×2×2 vs 3×3×3 at 100 and 300 K for
+  MatterSim and MACE-MP-0 in the current envs (the deposited 3×3×3 rows are June v1).
+- [ ] C6 Pull everything back; destroy the box the moment it is idle.
 
-## Phase C — ORB-v2 with/without split throughout (R3-5)
+## Phase 2 — Zero-compute statistics and sensitivity (parallel with Phase 1)
 
-- [x] C1 `analysis.py` contains no ORB handling at all — every split in the repo is ad hoc at the
-  call site. Add an `exclude_models` parameter to `per_model_table`, `low_t_false_stable`,
-  `displacive_recall`, `h3_guardrail_summary`, `sscha_reliability`.
-- [x] C2 Recompute every headline rate with and without ORB-v2; paired columns in the ESI, compact
-  in the main text.
-- [x] C3 **Disclose the ρ discrepancy found while planning:** §3.3 quotes the bcc frequency
-  Spearman ρ = 0.11, which is the all-model value; excluding ORB-v2 it is ≈ −0.003. The manuscript
-  reports the sign-agreement split (0.78 / 0.83) but not the ρ split. Report both.
+- [ ] **S1 H2 clustered.** System-clustered exact paired test at every ladder T, with and without
+  ORB-v2, per-system discordance counts, and a leave-one-system-out check. Into
+  `stats_hardening.py` / `.json` and `verify_claims.py`. (R1.6, R3.1, R3.3-H2)
+- [ ] **S2 bcc call agreement** on `pred_stable` (31/45, ex-ORB 25/36), with the 12 trivially
+  agreeing MACE/CHGNet pairs split out (23/33) and MatterSim's 3/9. Curvature-sign agreement kept,
+  labelled as such. (R1.1 residue, R3.5)
+- [ ] **S3 ORB-v2 split everywhere (R3.5):** four-model guardrail (AUC 0.628, CI spanning 0.5, tie
+  rule stated), H2 ladder, family recalls, controls, tolerance sweep, SSCHA blow-ups and failures per
+  model.
+- [ ] **S4 SSCHA high-T false-unstables** table (0/5/10/15 by T; SrTiO3 all above-Tc units; the 14/23
+  sign reversals). (R1.2)
+- [ ] **S5 Screen sensitivity (R1.5).** `scripts/screen_sensitivity.py` → `results/screen_sensitivity.json`
+  and one ESI table: fit-window multiplier and floor, sampling-range truncation, frozen-cell
+  normalisation convention (minimal / common FC cell / per f.u. / doubled), with mode flips, unit
+  flips, FE recall and the SrTiO3 gate as columns. Plus unbracketed wells and scan-edge Q0 counts.
+- [ ] **S6 Literature (verified before use):** fine-tuning refs for R2.1; ACR 59, 103 and AEM
+  10.1002/aenm.71046 on their merits for R1.3; published PBE values to cross-check C3a.
 
-## Phase D — ESI rebuild (R3-4)
+## Phase 3 — Manuscript and ESI text (after Phase 2, ~09-28 → 10-01)
 
-- [x] D-1 **Generate the missing tables.** Confirmed: §S3 of the ESI is thirteen lines of bullets,
-  each ending in a Python function call, and contains no table content at all. All four generator
-  functions exist and run (`per_model_table` :96, `low_t_false_stable` :115, `predicted_tstar` :148,
-  `h3_ensemble_guardrail` :337). This is a rendering omission, not a data gap. New script
-  `scripts/build_esi_tables.py`.
-- [x] D-2 **Fix the S-numbering collision.** The ESI numbers its *sections* S1–S4 and its *tables*
-  S1–S4. A referee scanning for "Table S1" lands on "§S1 Finite-T method development". Give every
-  table a number and caption and disambiguate section references in text.
-- [x] D-3 Number and caption the three tables that *do* have content but are currently bare
-  (§S1.2 noise floor, §S2.2 v4 diagnostic, §S2.3 reliability by family).
-- [x] D-4 Correct the Table S2 caption: it promises "over the full T-ladder" but the call given
-  (`low_t_false_stable(df, exclude_bcc=...)`) takes the `t_max = 300.0` default. Report both the
-  T ≤ 300 K restriction and the full ladder.
-- [x] D-5 Fold in the Phase B4 composition tables and the Phase C ORB tables.
-- [x] D-6 Fix the `ordering_invariant: false` flag in `results/estimator_noise.json`, which sits
-  next to prose claiming the ordering is never reversed. Both are true (at tol = 0 the models tie,
-  so a strict `<` fails) but a referee reading the deposited JSON sees a contradiction.
+- [ ] T1 H2 reworded everywhere: large and one-directional in unit counts, not significant at
+  system level (clustered p 0.15 at 300 K, 0.07 at 600 K); the screen-T* confound stated.
+- [ ] T2 bcc: call vs curvature agreement relabelled in §3.3, Fig. 4, §S1.3, §S4; "clean gold standard"
+  and "tracks" removed; the MACE-Zr robustness tests described as what they are until C5 lands.
+- [ ] T3 §3.3 mechanism: "consistent with the truncation predicted in ref 22"; Table S2 described
+  correctly; the v4 contradiction (583-593 vs 600-605) resolved; OOD hypothesis stated.
+- [ ] T4 High-T SSCHA false-unstables reported and discussed (§3.3/§4), including SrTiO3.
+- [ ] T5 R1.5: ESI derivation fixes (cell normalisation, Q definition, threshold 0.0075 Å, root
+  fallback, parity assumption), coupling premise ("hundreds of meV" is false), sensitivity table.
+- [ ] T6 R1.4 text: §2.5 initialiser (phonopy FCs, 0.03 Å), real stopping criteria, sample sizes.
+- [ ] T7 ESI §S2.4 rewritten to match §3.5 (R3.2); §S4 tolerance outcome; stale numbers (Zr −0.47,
+  hf_bcc flip direction, the −2×10⁶ attribution, float64 attribution, factor ≈12, "absent at 100 K",
+  "ORB weakest", "the reordering").
+- [ ] T8 R2.1 fine-tuning paragraph cited, and it says which findings fine-tuning could and could not
+  change; scope in abstract and Conclusions.
+- [ ] T9 R1.3 wording fixes (GAP, GNoME, Matbench), refs renumbered in citation order, style.
+- [ ] T10 Figures: Fig. 2 recaptioned (screen curvature, not harmonic) + colorbar fixed; Fig. 4
+  caption and −35 THz annotation; model names in legends; numbered 600-dpi RGB TIFFs.
+- [ ] T11 Abstract ≤ 250 words; every rate with k/n and an interval.
 
-## Phase E — Complete the SCHA derivation in the ESI (R1-5)
+## Phase 4 — Fold compute results (~09-30 → 10-02)
 
-The derivation exists but is in the main text (§2.4, ~24 lines) and covers only one of R1's three
-asks properly.
+- [ ] F1 C1/C1b → §3.3, §3.5, §S2.4, Table S11 (+ new seed table). Report whichever way it falls.
+- [ ] F2 C2 → §3.4, §4, Table S9. C3a/C3b → new §3.x paragraph + ESI section + table.
+- [ ] F3 C4 → Table S13 complete; C5 → §3.5 finite-size sentence.
+- [ ] F4 `verify_claims.py` assertions for every new number; `build_esi_tables.py --check` green.
 
-- [x] E1 Mass-weighting: `M = Σᵢ mᵢ|uᵢ|²` is currently a bare formula, and the normalisation
-  convention for **u** (unit pattern vs mass-weighted eigenvector) is never pinned. Derive it and
-  pin the convention.
-- [x] E2 Gaussian-width self-consistency: substantially complete, but the stationarity step is
-  asserted rather than shown and the bracketing interval is unspecified. Show both.
-- [x] E3 Mode–mode coupling: currently one table cell (Table 1 row A1). Give an explicit statement
-  of the neglected term and an estimate or bound of its size — this is the approximation R1 is
-  actually worried about, and PbTiO₃'s T* failure is the measured symptom.
-- [x] E4 Systematic sensitivity table: fit window (already measured, 3×/8× vs production 5×),
-  sampling range, cell commensurability — collected in one place as R1-5 asks.
+## Phase 5 — Response letter (~10-02 → 10-03)
 
-## Phase F — SSCHA convergence diagnostics (R1-4, R3-2)
+- [ ] L1 Rewrite on the final numbers: every audit letter-slip fixed; the moved numbers disclosed
+  (H2 clustering, bcc label, ex-ORB guardrail, R3's ORB premises); no [PENDING], no internal
+  checklist, no DRAFT banner.
+- [ ] L2 R1.3 paragraph rewritten neutrally (transparent review), ACR/AEM considered on merits.
 
-- [x] F1 Report the diagnostics **already in the ledger** — `ft_n_configs`, `ft_max_pop`,
-  `ft_n_hessian` per unit — as an ESI table, plus the stopping criteria and the per-population step
-  cap (§S2.1). Much of R1-4 needs no new compute.
-- [ ] F2 Extend the four-seed stochastic test beyond bcc-Zr to BaTiO₃ and one fluorite, as R1-4
-  explicitly asks. Cheap MLIP compute.
-- [x] F3 Zone-boundary convergence: **take R3's offered alternative and narrow the claim**, which
-  it explicitly accepts, as the primary route. The 4×4×4 SrTiO₃ SSCHA (~320 atoms) is a bonus if
-  the measured cost turns out tolerable — decide from a costed pilot, not from optimism.
+## Phase 6 — Package (~10-03 → 10-05)
 
-## Phase G — Referee 2's two asks (the reject-leaning report)
+- [ ] P1 Clean manuscript.docx + supplementary.docx from the .md (figures embedded at 600 dpi).
+- [ ] P2 Marked-changes manuscript against `manuscript-as-reviewed.md` (and ESI).
+- [ ] P3 TOC graphic regenerated from the ledger (no ranking claim) + blurb ≤ 250 characters.
+- [ ] P4 CRediT roles; AI-use statement; affiliation; corresponding e-mail per Frank.
+- [ ] P5 DAS names the new scripts/outputs; merge `rsc-figure-fixes` → `main`; tag; new Zenodo version.
+- [ ] P6 Short cover note to Dr Rhyman; response letter exported to .docx/.pdf; stale PDF/cover
+  letter quarantined.
 
-- [x] G1 **Fine-tuning.** The word appears nowhere in the manuscript — R2 is simply right. New
-  scoped subsection: the paper tests foundation models *as shipped*, which is precisely the
-  generative-CSP screening regime where no target-specific training data exists; fine-tuning is the
-  obvious remedy and its absence is a scope boundary, not an oversight. Cite the relevant work.
-- [~] G2 **Ensemble force uncertainty.** Two-part answer. (i) §3.4 *already* tests ensemble
-  disagreement as a trust metric and finds the continuous version carries no usable signal
-  (AUC 0.36, below chance) while the discrete vote split works (AUC 0.76) — R2 appears to have
-  missed this, and it is a direct measured answer to the exact proposal. (ii) The on-target
-  addition is the *force-level* version: cross-model force spread on the displaced configurations
-  along E(Q). Cheap MLIP compute.
+## Phase 7 — Verification before done (~10-05 → 10-06)
 
-## Phase H — Displacement-amplitude sweep (self-declared open gap)
+- [ ] V1 Fresh adversarial re-audit of the final package against the verbatim reports.
+- [ ] V2 Every number in manuscript + ESI + letter traced to the ledger or a deposited JSON.
+- [ ] V3 Built .docx files re-scanned for stale phrases and the old title.
 
-Not asked for by any referee, but it is the one axis the paper's own revision note names as
-uncovered, and it hardens B1–B3 against "your estimator is just noisy".
+## Phase 8 — Frank (~10-06 → 10-09)
 
-- [x] H1 `disp` is hardcoded at `harmonic.py:40` and is **not in the unit hash** (`cli.py:54`).
-  Add it to the settings dict and bump `METHOD_VERSION`, or `has_unit()` silently skips every
-  re-run unit. This trap is recorded; do not walk into it.
-- [~] H2 Run the grid 0.005 / 0.01 / 0.02 / 0.03 Å over the 95 scored units.
-- [~] H3 Report as an ESI table plus one sentence in §3.2.
-
-## Phase I — Citations (R1-3)
-
-- [x] I1 R1's citation request is **citation stacking**: it names "Adv Energy Mater 2026",
-  "Chem Phys Rev 2024, 2025", "PRB 2021", "JPCL 2021", "Acc Chem Res 2026" with no titles and no
-  authors. The editor pre-empted it in her own comments ("only include those you think are
-  relevant"). Identify what genuinely exists in sparse-GP / on-the-fly / active-learning MLIPs and
-  in ML-driven high-throughput screening, and cite only what actually bears on this work.
-- [x] I2 **Adversarial verification pass on every candidate** before it enters the bibliography —
-  DOI, authors, title, and that the claim attributed is actually the paper's. Prior measured rate
-  of unusable LLM-sourced findings on this account: 17%.
-- [x] I3 Record the declined suggestions and the reason, for the response letter.
-- [x] I4 Fix ref 20, which currently has a title and DOI but no authors.
-
-## Phase J — Text alignment (R3-1, R1-6) — cheapest, highest value
-
-Do this **after** B and C, because the numbers move.
-
-- [x] J1 §4 Discussion still says the results "support H2" and that harmonic accuracy is
-  "non-predictive". §3.2 says the association is not significant at any temperature and the design
-  cannot resolve its sign. "Non-predictive" asserts a null from a failure to reject. Carry §3.2's
-  formulation into §4 verbatim in substance.
-- [x] J2 Abstract and §5 Conclusions: same alignment.
-- [x] J3 Intro H2 bullet: already hedged; confirm consistency with the final J1 wording.
-- [x] J4 **Figure order** (R3-6): Fig. 5 is first cited at line 422 but placed at line 501, after
-  Fig. 6 at 491. Move it to just after the Fig. 4 block so placement order matches citation order.
-
-## Phase K — Package and response
-
-- [x] K1 Point-by-point response letter, leading with D1–D3, then R1/R2/R3 in order, every item
-  numbered to match the report.
-- [ ] K2 Tracked-changes manuscript + clean manuscript, both .docx (RSC requires both).
-- [ ] K3 Rebuild figures (600 dpi) and all DOCX; TOC entry (8 × 4 cm, ≤250 characters).
-- [ ] K4 CRediT author contributions section; link ORCID at submission.
-- [ ] K5 Decide on RSC's transparent-peer-review option — Frank's call, flag it.
-- [ ] K6 Mint a new Zenodo version and update the concept-DOI reference.
-- [ ] K7 **APC**: confirm whether Purdue's RSC read-and-publish agreement covers Frank as
-  submitting author before final acceptance. RSC Advances is fully open access; list APC ~£1,600.
-
-## Phase L — Verification before done
-
-- [x] L1 `verify_claims.py` green (32/32) plus `build_esi_tables.py --check`, including every new assertion from B, C, F, H.
-- [ ] L2 Independent read-through: every number in the manuscript and ESI traced to the ledger.
-- [x] L3 Adversarial self-review: walk all three referee reports item by item and confirm each
-  numbered point has a located, specific response. No item silently dropped.
-- [x] L4 Confirm no claim anywhere reads a non-significant result as positive evidence.
+- [ ] Read-through; confirm AI-use wording and e-mail; upload; opt in to transparent review; link
+  ORCID. If anything slips past 9 Oct, e-mail the editor before 9 Oct.
 
 ---
-
-## Compute budget (decided 2026-09-11)
-
-No new DFT. R1-1 and R1-2 are answered from published first-principles results plus the
-experimental gate the design already uses. Cheap MLIP compute (~$20–60, rented box; no local GPU,
-8 CPUs) covers F2, G2(ii) and H2. ACCESS CHE260157 is **STS-scope only and must not be used for
-this paper.**
 
 ## Standing traps for this repo
 
-- `disp` is not in the unit hash — bump `METHOD_VERSION` or re-runs are silently skipped (H1).
-- The matched set's `str.contains("bcc")` also drops the superionic `agi_bcc`, so n = 15 systems
-  not 16. Documented in §3.2, deliberately not fixed; do not "fix" it without re-running everything.
+- `disp` is not in the unit hash; sweep rows must use method `harmonic_dispsweep`.
+- The matched set's `str.contains("bcc")` also drops `agi_bcc` (n = 15). Documented; do not "fix".
 - `h3_ensemble_guardrail` defaults to `method="tdep"`, for which no rows exist.
-- Figures and claims must regenerate through `analysis.canonical()`, never `load_ledger()` raw.
+- Regenerate through `analysis.canonical()`, never raw `load_ledger()`.
+- Unit-level p-values on the clustered sets are not quotable as evidence (R3.3); every new test
+  clusters by system.
+- ACCESS CHE260157 is STS-only: never for this paper.
