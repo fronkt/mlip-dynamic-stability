@@ -358,10 +358,11 @@ outside what this benchmark can speak to.
 I also considered the other works the comment points to, and the paper cites those that bear
 directly on its subject, the finite-temperature dynamic stability of the crystal families studied
 here, or on the uncertainty and screening questions it raises. Against the version the referees
-read, the reference list has grown from 18 entries to 42. The additions made before the reports
+read, the reference list has grown from 18 entries to 46. The additions made before the reports
 are the two finite-temperature studies behind the title change, the two analyses of the SSCHA
-Hessian, and the four sources of the §2.4 derivation; the rest were added for this comment and for
-Referee 2's first point.
+Hessian, and the four sources of the §2.4 derivation; three cite the codes of the new
+first-principles reference (R1.1); the rest were added for this comment and for Referee 2's first
+point.
 
 **Changes.** §1 (third and fourth paragraphs); §4 ("On model-reported uncertainty"); refs 27–39.
 

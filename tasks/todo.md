@@ -211,7 +211,7 @@ reproduced by the screen's own curvature on 52/57. PENDING markers remain for C1
 - [ ] L1 Rewrite on the final numbers: every audit letter-slip fixed; the moved numbers disclosed
   (H2 clustering, bcc label, ex-ORB guardrail, R3's ORB premises); no [PENDING], no internal
   checklist, no DRAFT banner.
-- [ ] L2 R1.3 paragraph rewritten neutrally (transparent review), ACR/AEM considered on merits.
+- [x] L2 R1.3 paragraph rewritten neutrally (transparent review), ACR/AEM considered on merits. (checked 10-03; ref count -> 46)
 
 ## Phase 6 — Package (~10-03 → 10-05)
 
