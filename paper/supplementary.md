@@ -438,12 +438,16 @@ the total number of steps over the whole relaxation. The relaxation otherwise en
 python-sscha's convergence test, with threshold `meaningful_factor = 1e-4`, is met, or when the
 population limit (8) is reached. Which of these ended each production unit was not recorded
 (Table S11).
-<!-- PENDING-C1: the seed study's step records show, for every completed seed, how many steps were
-kept, how many populations moved the auxiliary matrix and whether the convergence test was met
-(results/revision/sscha_seeds/: 19 steps kept, only the first of 8 populations moving the matrix,
-converged = false on all 16 seeds of the four units, commit 2fdbb61). Report it here, in §2.5 and in the new seed-study
-table, whichever way the finished study falls, and state what the converged-mode runs (C1c,
-results/revision/sscha_converged/) show for the same units. -->
+The seed study records it (Table S21): on all 16 seeds of the four units the convergence test was
+not met, the cap ended population 1 after 19 kept steps, and populations 2 to 8 each took one
+step and discarded it, changing the auxiliary matrix by less than 2 × 10⁻¹⁴ (relative); the final
+dynamical-matrix gradient sat 7.3 × 10² to 1.0 × 10⁴ times above the threshold, having fallen by
+a factor of only 1.1 to 2.8 from the first step. The threshold is itself built on a placeholder:
+python-sscha 1.6.1 passes a constant in place of the stochastic error of the gradient
+(`Ensemble.py`, line 2657), recorded as 0.433 per primitive-cell atom at every step of every run.
+In the two C5 runs where MACE-MP-0's harmonic matrix is already positive in bcc Zr (3×3×3, 100 and
+300 K) the start is the harmonic matrix and one population of 17 and 20 steps meets the test.
+<!-- PENDING-C1c/GRID: state what the converged-mode runs and the converged grid change (per-population cap, real error), with the table number. -->
 
 The stopping behaviour matters for how the SSCHA numbers are read. A relaxation that stops early
 leaves the auxiliary matrix near its `ForcePositiveDefinite` start, in which imaginary harmonic
@@ -560,9 +564,16 @@ print to the run log rather than to a ledger).
   than it looks: MACE-MP-0 finds no harmonic instability in bcc Zr (−0.000 THz), so this unit
   probes the stochastic noise of SSCHA on a surface with nothing to stabilise, and says nothing
   about the noise on a unit near a sign change. It is the only seed study in the production data.
-  <!-- PENDING-C1: four-seed results (spread of the lowest Hessian eigenvalue, gradient/error
-  history, populations used, convergence flag) for BaTiO3/MACE-MP-0 100 K, ZrO2/MACE-MP-0 100 K,
-  Zr/MatterSim 50 K and SrTiO3/MACE-MP-0 600 K; new ESI table referenced here -->
+    The revision adds four units with four seeds each, run with the production recipe and full
+  diagnostics (Table S21). Every seed gives the same call. The seed spread of the lowest Hessian
+  frequency is 0.007 THz for BaTiO₃/MACE-MP-0 at 100 K (+2.867 to +2.881), 0.009 THz for
+  ZrO₂/MACE-MP-0 at 100 K (+3.069 to +3.087) and 0.075 THz for bcc-Zr/MatterSim at 50 K (+1.636 to
+  +1.786), all within 0.24 THz of the positive-definite start, against 2.0 THz for
+  SrTiO₃/MACE-MP-0 at 600 K (−15.8 to −20.3), where seed 0 gives −18.7 against the ledger's −20.2
+  and the ledger value lies inside the seed range. The bootstrap over the Hessian ensemble gives a
+  comparable uncertainty for BaTiO₃, ZrO₂ and SrTiO₃ (median 0.003, 0.009 and 3.0 THz) and none for
+  bcc Zr, whose lowest Hessian frequency is the final auxiliary matrix's own; there the seed spread
+  comes from the unconverged relaxation alone. None of the 16 seeds converged (§S2.1).
 - **Finite size, bcc.** For bcc-Zr / MACE-MP-0 the SSCHA stability call holds from 2×2×2 to
   3×3×3 (+1.80 to +1.56 THz at 100 K, +1.80 to +1.55 THz at 300 K). Two caveats apply. These rows
   come from the June v1 generation (unpinned environment, before the phonopy initialiser), and
@@ -904,7 +915,7 @@ The 15 systems are: `batio3_cubic`, `c_diamond`, `ceo2_cubic`, `cspbi3_cubic`, `
 
 Two quantities are tabulated from the six lowest recorded Hessian frequencies. *Acoustic zeros resolved* counts units in which all three translational zeros (|ω| < 0.001 THz) appear within that window, and the residual column gives the largest of their magnitudes over those units. This is a check that the Hessian was symmetrised correctly; it is not a bound on the stochastic noise of the soft mode (§S2.4 gives the only seed spread measured). *Swamped* counts the opposite case: units with **no** recorded mode near zero, meaning at least six modes lie below the acoustic branches. Swamping is not itself an error: a deeply unstable phase genuinely has many imaginary modes, and the reported minimum frequency excludes the acoustic branches from the full spectrum rather than from this window. It does separate the families sharply. Read swamping as a fraction rather than a count, because the per-model denominators differ: on the perovskites it runs from 8/19 = 0.42 for MACE-MP-0 to 14/20 = 0.70 for CHGNet, so it is present for every architecture but is not uniform across them. On the fluorites it is **not** architecture-neutral, being 4/8 for ORB-v2 and 2/8 for MACE-MP-0 against 0/8 for the other three.
 
-**What the harness did not retain**, and what would therefore need a re-run to supply: the per-iteration free-energy gradient history, and a per-unit uncertainty on the Hessian eigenvalues. The only uncertainty probe in the production data is the independent-seed study of §S2.4, which covers one unit, bcc-Zr/MACE-MP-0 at 100 K, on which the harmonic layer finds no bcc instability. <!-- PENDING-C1: four-seed SSCHA with recorded gradient/error history, population count and convergence flag for BaTiO3/MACE-MP-0 100 K, ZrO2/MACE-MP-0 100 K, Zr/MatterSim 50 K and SrTiO3/MACE-MP-0 600 K; the seed spread of the lowest Hessian eigenvalue is the Hessian uncertainty; results go in a new ESI table referenced here and in §S2.4 -->
+**What the production harness did not retain:** the per-iteration free-energy gradient history, and a per-unit uncertainty on the Hessian eigenvalues. The only uncertainty probe in the production data is the independent-seed study of §S2.4 on bcc-Zr/MACE-MP-0 at 100 K, where the harmonic layer finds no bcc instability. The revision re-ran four units that do carry an instability, four seeds each, with both recorded (Table S21): no seed converged, the seed spread of the lowest Hessian frequency is 0.007 to 0.075 THz on BaTiO₃, ZrO₂ and bcc Zr and 2.0 THz on SrTiO₃ at 600 K, and every seed gives the same call.
 
 | Family | Model | n units | Acoustic zeros resolved | Max zero residual (THz) | Swamped | Wall time (s) |
 |---|---|---|---|---|---|---|

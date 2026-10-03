@@ -370,7 +370,17 @@ frequency, excluding the three acoustic modes (taken as those nearest zero in ma
 unstable below the same −0.1 THz tolerance as the harmonic layer. The production grid did not
 record how many populations each unit used, or whether each unit met the convergence threshold
 before reaching the population cap, so neither is reported for it.
-<!-- PENDING-C1: cite the seed study's recorded diagnostics here (populations used and per-unit convergence flag, per-population gradient history, spread of the lowest Hessian eigenvalue across seeds / Hessian bootstrap) for BaTiO3/MACE-MP-0 100 K, ZrO2/MACE-MP-0 100 K, Zr/MatterSim 50 K and SrTiO3/MACE-MP-0 600 K, with the new ESI table number; report whichever way it falls. Complete at 2fdbb61: all 16 seeds (four units x four seeds) have converged = false, 19 steps kept in total and only the first of 8 populations moving the auxiliary matrix; seed 0 reproduces the ledger for BaTiO3, ZrO2 and Zr but not SrTiO3 600 K (-18.7 against -20.2 THz; seeds -15.8 to -20.3), so the production Hessian is evaluated near the ForcePositiveDefinite start; say so here, and add what the converged-mode runs (C1c) show. -->
+A re-run of four units with four seeds each that records them (BaTiO₃ and ZrO₂ with MACE-MP-0 at
+100 K, bcc Zr with MatterSim at 50 K, SrTiO₃ with MACE-MP-0 at 600 K; ESI Table S21) shows that
+no seed met the threshold. The cumulative cap ended the first population after 19 steps, each later
+population took one step and discarded it, so only the first population moved the auxiliary
+matrix, and the final gradient sat 7 × 10² to 10⁴ times above the threshold. The free-energy
+Hessian was therefore evaluated close to the positive-definite start: within 0.24 THz of it for
+BaTiO₃, ZrO₂ and bcc Zr, with a seed spread of 0.007–0.075 THz. SrTiO₃ at 600 K is the exception,
+at −15.8 to −20.3 THz across seeds (standard deviation 2.0 THz) from a start of +0.90 THz. The
+gradient error python-sscha records is a constant placeholder (ESI §S2.1), so the convergence test
+it feeds is not a stochastic one.
+<!-- PENDING-C1c/GRID: one or two sentences on the converged recipe (per-population cap, real gradient error) and what the converged grid shows, with its ESI table number. -->
 Because this Hessian is evaluated at the fixed high-symmetry reference, its sign answers a local
 question: whether the symmetric phase is a local minimum of the free energy. §3.3 shows why that
 matters for deep double wells. Unlike the free-energy screen, which treats each imaginary mode

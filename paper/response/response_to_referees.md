@@ -291,7 +291,10 @@ It is what an MLIP extrapolating on large-amplitude configurations would produce
 the stochastic sampling itself, and a free-energy Hessian evaluated at an auxiliary matrix that has
 not reached the SCHA minimum, are the other candidates, and MLIP-only data cannot separate them.
 The SrTiO₃ unit at 600 K in the PBE benchmark above was chosen to test the first.
-<!-- PENDING-C1: one sentence on the SrTiO3/MACE-MP-0/600 K seed study (all four seeds converged = false; lowest Hessian frequency -15.8 to -20.3 THz, bootstrap SD about 2-3 THz; seed 0 gives -18.7 against the ledger's -20.2 THz), bearing on the third candidate, whichever way C1c falls. -->
+In the seed study this unit is the one where the finite-temperature correction, not the start,
+sets the answer: the start is +0.90 THz and the four seeds give −15.8 to −20.3 THz, none of them
+converged, so the third candidate is not excluded by the production recipe.
+<!-- PENDING-C1c/GRID: whether the converged recipe keeps SrTiO3 600/900 K unstable (the grid includes SrTiO3 units). -->
 
 **Changes.** §3.3 ("Why the default criterion misses these wells", "SSCHA false-unstables that grow
 with temperature", "Numerical failures"); §4 (Limitations); ESI §S2.1, §S2.2 (Table S2), §S2.3,
@@ -391,7 +394,11 @@ from iterating indefinitely, on the understanding that it counts the steps withi
 population, and the reviewed text described it that way. It does not: python-sscha 1.6.1 keeps
 the minimiser's step history across populations and compares `max_ka` with the accumulated count,
 so the cap bounds the steps over the whole relaxation. §2.5, ESI §S2.1 and Table S11 now say so.
-<!-- PENDING-C1: report here what the recorded step histories show under this cap (complete at commit 2fdbb61: on all 16 seeds of the four units the relaxation kept 19 steps in total, only the first of 8 populations moved the auxiliary matrix, and the convergence test was never met, so the Hessian was evaluated close to the ForcePositiveDefinite start), and what the converged-mode runs (C1c) show for the same units; whichever way C1c falls, carry the consequence into R1.1, R1.2, the summary and §3.3. -->
+The re-run with recorded histories (R1.4 below) shows what the cap did: on all 16 seeds of the
+four units the first population was ended after 19 steps, each later population took one step and
+discarded it, and the convergence test was never met, so the free-energy Hessian was evaluated
+close to the positive-definite starting matrix (within 0.24 THz of it on BaTiO₃, ZrO₂ and bcc Zr).
+<!-- PENDING-C1c/GRID: what the converged recipe (per-population cap, real gradient error) shows for the same units and across the grid; carry the consequence into R1.1, R1.2, the summary and §3.3. -->
 
 *What the production grid did not record.* It did not record how many populations each unit used,
 whether each unit met the convergence threshold before the population cap, the gradient history,
@@ -409,11 +416,21 @@ used, the per-population free-energy and gradient histories, the stopping test t
 lowest frequency of the positive-definite starting matrix against the final Hessian value, and
 the lowest Hessian eigenvalue, whose spread over the seeds is the Hessian uncertainty. Seed 0 is the
 production computation, so the study also checks that the deposited value is reproduced.
-<!-- PENDING-C1: two or three sentences from results/revision/sscha_seeds/ (complete at 2fdbb61), whichever way they fall: per unit, the seed spread of the lowest Hessian frequency (BaTiO3 +2.867 to +2.881, ZrO2 +3.069 to +3.087, Zr/MatterSim +1.636 to +1.786, SrTiO3 -15.8 to -20.3 THz) and its bootstrap over configurations; whether seed 0 reproduces the ledger value (yes for the first three, no for SrTiO3: -18.7 against -20.2 THz); populations used and which stopping test fired (converged = false everywhere; one population moving the matrix); the starting value against the final Hessian (BaTiO3 +2.881 against +2.873 mean); no call changes across seeds. Then the converged-mode result (C1c). -->
+The outcome (ESI Table S21) is unfavourable to the production recipe and I report it as such. No
+seed of any unit met the convergence test: the cumulative step cap stopped the first population,
+and later populations did not move the auxiliary matrix. The seed spread of the lowest Hessian
+frequency is small where the start dominates (BaTiO₃ +2.867 to +2.881 THz, ZrO₂ +3.069 to +3.087,
+bcc Zr +1.636 to +1.786, against starts of +2.881, +2.962 and +1.880) and large for SrTiO₃ at
+600 K (−15.8 to −20.3 THz, standard deviation 2.0 THz, with a bootstrap over the Hessian ensemble
+of 2.2–3.7 THz per seed). Seed 0 reproduces the deposited value for the first three units and not
+for SrTiO₃ (−18.7 against −20.2 THz), whose deposited value lies inside the seed range. No call
+changes across seeds. The recorded gradient error turned out to be a constant placeholder passed
+by python-sscha 1.6.1, so the library's own convergence test is not a stochastic one (ESI §S2.1).
+<!-- PENDING-C1c/GRID: then the converged recipe's result for these units and the grid. -->
 
 **Changes.** §2.5; §3.3; §3.5 ("Stochastic reproducibility"); §4 (Limitations); ESI §S2.1,
 §S2.2 (Table S2), §S2.4, Table S11.
-<!-- PENDING-C1: add the new ESI table number for the seed study. -->
+ESI Table S21 (new: the seed study and the bcc cell-size re-measurement).
 
 ## R1.5 Formalisation and sensitivity of the soft-mode screen
 

@@ -540,15 +540,14 @@ def table_s11_sscha_diag(df: pd.DataFrame) -> str:
         "spectrum rather than from this window. It does separate the families sharply. Read "
         "swamping as a fraction rather than a count, because the per-model denominators differ: "
         + swamp_txt + "\n\n"
-        "**What the harness did not retain**, and what would therefore need a re-run to supply: "
-        "the per-iteration free-energy gradient history, and a per-unit uncertainty on the "
-        "Hessian eigenvalues. The only uncertainty probe in the production data is the "
-        "independent-seed study of §S2.4, which covers one unit, bcc-Zr/MACE-MP-0 at 100 K, "
-        "on which the harmonic layer finds no bcc instability. "
-        "<!-- PENDING-C1: four-seed SSCHA with recorded gradient/error history, population count "
-        "and convergence flag for BaTiO3/MACE-MP-0 100 K, ZrO2/MACE-MP-0 100 K, Zr/MatterSim "
-        "50 K and SrTiO3/MACE-MP-0 600 K; the seed spread of the lowest Hessian eigenvalue is the "
-        "Hessian uncertainty; results go in a new ESI table referenced here and in §S2.4 -->\n\n"
+        "**What the production harness did not retain:** the per-iteration free-energy gradient "
+        "history, and a per-unit uncertainty on the Hessian eigenvalues. The only uncertainty "
+        "probe in the production data is the independent-seed study of §S2.4 on "
+        "bcc-Zr/MACE-MP-0 at 100 K, where the harmonic layer finds no bcc instability. The "
+        "revision re-ran four units that do carry an instability, four seeds each, with both "
+        "recorded (Table S21): no seed converged, the seed spread of the lowest Hessian "
+        "frequency is 0.007 to 0.075 THz on BaTiO₃, ZrO₂ and bcc Zr and 2.0 THz on SrTiO₃ at "
+        "600 K, and every seed gives the same call.\n\n"
         + md(rows, ["Family", "Model", "n units", "Acoustic zeros resolved",
                     "Max zero residual (THz)", "Swamped", "Wall time (s)"])
     )
