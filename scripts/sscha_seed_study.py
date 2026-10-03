@@ -3014,6 +3014,13 @@ GRID_SETS = (
          why="SrTiO3: unstable label at 100 K, stable at 300 K (AFD transition 105 K)"),
     dict(systems=("ti_bcc", "zr_bcc", "hf_bcc"), T=(100.0, 300.0, 600.0), supercell=(3, 3, 3),
          why="bcc method-agreement unit of Sec. 3.3, in the 3x3x3 cell"),
+    # Added 2026-10-03, while the sets above were running: without it the grid could not speak
+    # to the 15 of Sec. 3.3's 57 false-stables at 600/900 K (ZrO2, HfO2, KNbO3) or to the
+    # high-temperature false-unstables of Table S17. Run from a second copy of this file
+    # (sscha_seed_study_grid2.py) beside the first; the per-unit locks are shared.
+    dict(systems=("batio3_cubic", "knbo3_cubic", "pbtio3_cubic", "cssni3_cubic", "zro2_cubic",
+                  "hfo2_cubic", "srtio3_cubic"), T=(600.0, 900.0), supercell=(2, 2, 2),
+         why="Sec. 3.3 false-stables and Table S17 false-unstables at 600/900 K"),
 )
 GRID_FAMILY_RANK = {"bcc": 0, "fluorite": 1, "cubic-perovskite": 2}   # spec.prototype, run order
 # --grid-list wall-time model, one process, no contention. Force calls: seconds per configuration
