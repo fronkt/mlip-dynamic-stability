@@ -12,6 +12,7 @@ Usage:  python scripts/verify_claims.py        # exit 0 if every claim holds
 """
 from __future__ import annotations
 
+import json
 import os
 import sys
 
@@ -479,6 +480,123 @@ def main() -> int:
           f"[R1.2] C3b SrTiO3/MACE 600 K: owner relative force RMSE {c3_sr.rel_force_rmse:.3f} = "
           f"{c3_ratio:.2f}x baseline, u_rms {c3_sr.u_rms_mean_A:.3f} A, energy error RMS "
           f"{c3_sr.e_err_rms_meV_per_atom:.1f} / max {c3_sr.e_err_maxabs_meV_per_atom:.1f} meV/atom")
+
+    # ==== Revision C1 / C5 (R1.4): the SSCHA seed study with the PRODUCTION recipe (Table S21).
+    # Recomputed from the unit JSONs that scripts/sscha_seed_study.py wrote under
+    # results/revision/sscha_seeds/ (not from their stored 'summary' blocks), and the ledger values
+    # the JSONs carry are cross-checked against the deposited ledger. None of these runs is a
+    # converged SSCHA; the converged-recipe numbers (C1c) are pinned where that table lands.
+    seed_dir = "results/revision/sscha_seeds/"
+
+    def seed_unit(tag):
+        with open(seed_dir + tag + ".json", encoding="utf-8") as fh:
+            doc = json.load(fh)
+        return doc, [doc["seeds"][k] for k in sorted(doc["seeds"], key=int)]
+
+    def hess_of(runs, key="hessian"):
+        return np.array([s[key]["min_nonac_thz"] for s in runs])
+
+    def ledger_row(system, model, temp):
+        x = ss[(ss.system == system) & (ss.model == model) & (ss.temperature_K == temp)]
+        return float(x.min_eff_freq_thz.iloc[0]) if len(x) == 1 else None
+
+    d_ba, s_ba = seed_unit("batio3_cubic_mace_mp0_100K_sc222")
+    d_zo, s_zo = seed_unit("zro2_cubic_mace_mp0_100K_sc222")
+    d_zb, s_zb = seed_unit("zr_bcc_mattersim_50K_sc222")
+    d_sr, s_sr = seed_unit("srtio3_cubic_mace_mp0_600K_sc222")
+    c1_runs = s_ba + s_zo + s_zb + s_sr
+    c1_shape = [(s["relax"]["n_populations"], s["relax"]["n_populations_moving_dyn"],
+                 s["relax"]["n_steps_total"], s["relax"]["n_steps_kept_total"]) for s in c1_runs]
+    check(len(c1_runs) == 16 and all(s["status"] == "ok" for s in c1_runs)
+          and not any(s["relax"]["converged"] for s in c1_runs)
+          and c1_shape == [(8, 1, 27, 19)] * 16
+          and all(p["stop_reason"] == "max_ka_cumulative" for s in c1_runs
+                  for p in s["relax"]["populations"])
+          and all(s["stopping_criteria"]["max_ka"] == 20
+                  and s["stopping_criteria"]["n_configs_per_population"] == 256 for s in c1_runs),
+          "[R1.4] seed study: 0 of 16 production-recipe runs converged (4 seeds x 4 units); each "
+          "draws 8 populations of 256, takes 27 steps, keeps 19, and only population 1 moves the "
+          "matrix; every population ends at the cumulative max_ka = 20")
+    placeholder = all(
+        len({round(x["gc_err"], 9) for x in s["relax"]["steps"]}) == 1
+        and abs(s["relax"]["steps"][-1]["gc_err"] - s["dyn_meta"]["nat_prim"] * np.sqrt(3) / 4) < 1e-8
+        for s in c1_runs)
+    ratio = [s["relax"]["steps"][-1]["gc"] / (s["relax"]["steps"][-1]["gc_err"] * 1e-4) for s in c1_runs]
+    check(placeholder and min(ratio) > 700 and max(ratio) < 1.1e4,
+          f"[R1.4] the recorded gradient error is a constant 0.433 per primitive-cell atom (the "
+          f"library placeholder); the last gradient is {min(ratio):.0f}-{max(ratio):.0f} times the "
+          f"convergence threshold on all 16 runs")
+
+    # BaTiO3 / MACE 100 K: the Hessian is the FPD start (the Table S2 false-stable).
+    h_ba, st_ba = hess_of(s_ba), hess_of(s_ba, "start_post_fpd")
+    check(abs(h_ba.min() - 2.867) < 5e-4 and abs(h_ba.max() - 2.881) < 5e-4
+          and abs(h_ba.mean() - 2.874) < 5e-4 and np.ptp(st_ba) < 1e-9 and abs(st_ba[0] - 2.881) < 1e-3
+          and np.abs(h_ba - st_ba).max() < 0.02 and bool((h_ba >= -0.1).all())
+          and all(abs(s["harmonic_pre_fpd"]["min_nonac_thz"] + 6.299) < 1e-3 for s in s_ba),
+          f"[R1.4] BaTiO3/MACE 100 K: Hessian {h_ba.min():+.3f} to {h_ba.max():+.3f} THz (mean "
+          f"{h_ba.mean():+.3f}) against the FPD start {st_ba[0]:+.3f} (harmonic -6.299); all four "
+          f"seeds stable")
+    # SrTiO3 / MACE 600 K: the opposite case, the Hessian is nowhere near the start.
+    h_sr, st_sr = hess_of(s_sr), hess_of(s_sr, "start_post_fpd")
+    led_sr = d_sr["ledger"]["min_eff_freq_thz"]
+    check(abs(h_sr.min() + 20.264) < 5e-3 and abs(h_sr.max() + 15.774) < 5e-3
+          and bool((h_sr < -0.1).all()) and np.ptp(st_sr) < 1e-9 and abs(st_sr[0] - 0.904) < 1e-3
+          and abs(h_sr[0] + 18.714) < 5e-3 and abs(led_sr + 20.229) < 5e-3
+          and h_sr.min() <= led_sr <= h_sr.max()
+          and np.abs(h_sr - st_sr).min() > 16.0,
+          f"[R1.4] SrTiO3/MACE 600 K: seeds {h_sr.min():+.2f} to {h_sr.max():+.2f} THz, all unstable, "
+          f"{np.abs(h_sr - st_sr).min():.0f}+ THz from the FPD start {st_sr[0]:+.2f}; seed 0 "
+          f"{h_sr[0]:+.2f} against ledger {led_sr:+.2f} (inside the seed range)")
+    h_zo, st_zo = hess_of(s_zo), hess_of(s_zo, "start_post_fpd")
+    h_zb, ax_zb = hess_of(s_zb), hess_of(s_zb, "final_aux")
+    check(abs(h_zo.min() - 3.069) < 5e-4 and abs(h_zo.max() - 3.087) < 5e-4
+          and abs(st_zo[0] - 2.962) < 1e-3 and bool((h_zo >= -0.1).all())
+          and abs(h_zb.min() - 1.636) < 5e-4 and abs(h_zb.max() - 1.786) < 5e-4
+          and float(np.abs(h_zb - ax_zb).max()) < 1e-9
+          and all(s["bootstrap"]["std_thz"] < 1e-12 for s in s_zb)
+          and abs(float(h_zb.std(ddof=1)) - 0.0754) < 5e-4,
+          f"[R1.4] ZrO2/MACE 100 K Hessian {h_zo.min():+.3f} to {h_zo.max():+.3f} (start "
+          f"{st_zo[0]:+.3f}); bcc-Zr/MatterSim 50 K {h_zb.min():+.3f} to {h_zb.max():+.3f} (seed SD "
+          f"{float(h_zb.std(ddof=1)):.4f}), equal to the final auxiliary matrix's with bootstrap SD "
+          f"< 1e-12 (the bootstrap is uninformative)")
+    # Seed 0 against the deposited ledger: reproduced for three units, not for SrTiO3 600 K.
+    repro = [bool(d["seeds"]["0"]["ledger_comparison"]["reproduces_ledger"])
+             for d in (d_ba, d_zo, d_zb, d_sr)]
+    led_xc = [ledger_row("batio3_cubic", "mace_mp0", 100.0), ledger_row("zro2_cubic", "mace_mp0", 100.0),
+              ledger_row("zr_bcc", "mattersim", 50.0), ledger_row("srtio3_cubic", "mace_mp0", 600.0)]
+    check(repro == [True, True, True, False]
+          and all(x is not None and abs(x - d["ledger"]["min_eff_freq_thz"]) < 1e-9
+                  for x, d in zip(led_xc, (d_ba, d_zo, d_zb, d_sr))),
+          f"[R1.4] seed 0 reproduces the deposited ledger on BaTiO3, ZrO2 and bcc-Zr (50 K) but not "
+          f"SrTiO3 600 K (ledger values {', '.join(f'{x:+.3f}' for x in led_xc)} match the parquet)")
+
+    # C5: bcc-Zr cell size, 3x3x3 re-measured (seed 0) against the canonical 2x2x2 ledger rows.
+    c5 = {(m, t): seed_unit(f"zr_bcc_{m}_{t}K_sc333") for m in ("mace_mp0", "mattersim") for t in (100, 300)}
+    c5_h = {k: v[1][0]["hessian"]["min_nonac_thz"] for k, v in c5.items()}
+    c5_l = {k: ledger_row("zr_bcc", k[0], float(k[1])) for k in c5}
+    check(all(len(v[1]) == 1 and v[1][0]["status"] == "ok" for v in c5.values())
+          and abs(c5_h[("mace_mp0", 100)] - 1.562) < 1e-3 and abs(c5_h[("mace_mp0", 300)] - 1.547) < 1e-3
+          and abs(c5_h[("mattersim", 100)] - 1.320) < 1e-3
+          and abs(c5_h[("mattersim", 300)] + 2.106) < 1e-3
+          and abs(c5_l[("mace_mp0", 100)] - 1.800) < 1e-3 and abs(c5_l[("mace_mp0", 300)] - 1.797) < 1e-3
+          and abs(c5_l[("mattersim", 100)] - 1.846) < 1e-3 and abs(c5_l[("mattersim", 300)] - 1.953) < 1e-3
+          and all(c5_h[k] < c5_l[k] for k in c5),
+          "[R1.4] C5 bcc-Zr 3x3x3 against 2x2x2 ledger: MACE-MP-0 " + ", ".join(
+              f"{t} K {c5_l[('mace_mp0', t)]:+.3f} -> {c5_h[('mace_mp0', t)]:+.3f}" for t in (100, 300))
+          + "; MatterSim " + ", ".join(
+              f"{t} K {c5_l[('mattersim', t)]:+.3f} -> {c5_h[('mattersim', t)]:+.3f}" for t in (100, 300))
+          + " THz (production recipe)")
+    c5_conv = {k: bool(v[1][0]["relax"]["converged"]) for k, v in c5.items()}
+    check(c5_conv == {("mace_mp0", 100): True, ("mace_mp0", 300): True,
+                      ("mattersim", 100): False, ("mattersim", 300): False}
+          and all(c5[("mace_mp0", t)][1][0]["relax"]["n_populations"] == 1 for t in (100, 300))
+          and all((c5[("mattersim", t)][1][0]["relax"]["n_populations"],
+                   c5[("mattersim", t)][1][0]["relax"]["n_populations_moving_dyn"],
+                   c5[("mattersim", t)][1][0]["relax"]["n_steps_kept_total"]) == (8, 1, 19)
+                  for t in (100, 300)),
+          "[R1.4] C5: the two MACE-MP-0 3x3x3 runs satisfy the library's test in one population "
+          "(harmonic matrix already positive); the two MatterSim 3x3x3 runs end at the cumulative cap "
+          "(8 populations, 19 kept steps) like the C1 units")
 
     print()
     if _fails:

@@ -11,7 +11,10 @@ results/stats_hardening.json, and S18 (the pre-registered force-level ensemble t
 Referee 2.2) from results/revision/force_spread/summary.json, and S19-S20 (PBE along the
 screen's coordinates, Referee 1.1; MLIP-versus-PBE errors on SSCHA configurations, Referee 1.2)
 from the C3a/C3b tables that ``scripts/dft_reference.py analyze`` writes under
-results/revision/dft/. Tables S1-S3 and S12 are hand-written in their own sections.
+results/revision/dft/, and S21 (the SSCHA seed study with the production recipe, Referee 1.4:
+sample sizes, gradient history, stopping criteria, Hessian uncertainty, seeds beyond bcc-Zr; and
+the bcc-Zr cell-size re-measurement) from the unit JSONs that scripts/sscha_seed_study.py writes
+under results/revision/sscha_seeds/. Tables S1-S3 and S12 are hand-written in their own sections.
 
 It rewrites the block between the sentinels
 
@@ -53,6 +56,7 @@ FSPREAD = REPO / "results" / "revision" / "force_spread" / "summary.json"
 C3A_UNITS = REPO / "results" / "revision" / "dft" / "c3a_unit_calls.csv"
 C3A_PATHS = REPO / "results" / "revision" / "dft" / "c3a_paths.csv"
 C3B_UNITS = REPO / "results" / "revision" / "dft" / "c3b_units.csv"
+SEED_DIR = REPO / "results" / "revision" / "sscha_seeds"
 ESI =REPO / "paper" / "supplementary.md"
 
 BEGIN = "<!-- BEGIN GENERATED TABLES -->"
@@ -1381,6 +1385,318 @@ def table_s20_c3b() -> str:
     )
 
 
+# ------------------------------------ revision table S21 (SSCHA seed study, C1 and C5) ----
+
+# C1: four seeds on each of these units (the order of PRESETS["revision"] in
+# scripts/sscha_seed_study.py). C5 is every 3x3x3 unit JSON in the same directory (seed 0).
+S21_C1 = [("batio3_cubic", "mace_mp0", 100.0), ("zro2_cubic", "mace_mp0", 100.0),
+          ("zr_bcc", "mattersim", 50.0), ("srtio3_cubic", "mace_mp0", 600.0)]
+# The converged-recipe grid (C1c) is a later table; its number is set here and nowhere else.
+CONVERGED_TABLE = "Table S22"
+STOP_LABEL = {"converged": "converged", "max_ka_cumulative": "max_ka (cumulative)",
+              "kong_liu": "Kong-Liu", "other": "other"}
+NEAR_START_THZ = 0.5      # a Hessian is "near its start" when the largest |Hessian - start| is below this
+BOOT_NA_THZ = 1e-6        # a bootstrap SD below this carries no information to divide by
+
+
+def _sig(x: float, nd: int = 2) -> str:
+    """x to nd significant figures; 10^e form outside 1e-3 <= |x| < 1e2 (typographic signs)."""
+    x = float(x)
+    if x == 0.0:
+        return "0"
+    m, e = f"{abs(x):.{nd - 1}e}".split("e")
+    e = int(e)
+    sign = MINUS if x < 0 else ""
+    if -3 <= e < 2:
+        return sign + f"{abs(x):.{max(nd - 1 - e, 0)}f}"
+    return f"{sign}{m} × 10{str(e).translate(str.maketrans('-0123456789', '⁻⁰¹²³⁴⁵⁶⁷⁸⁹'))}"
+
+
+def _span(vals, fmt=str) -> str:
+    """'lo to hi', or one number when they are equal."""
+    lo, hi = min(vals), max(vals)
+    return fmt(lo) if lo == hi else f"{fmt(lo)} to {fmt(hi)}"
+
+
+def _and(items) -> str:
+    """'a', 'a and b', 'a, b and c'."""
+    items = list(items)
+    return items[0] if len(items) == 1 else ", ".join(items[:-1]) + " and " + items[-1]
+
+
+def _seed_docs() -> dict:
+    """The real (not dry-run) unit JSONs of the seed study, keyed (system, model, T, supercell)."""
+    docs = {}
+    for p in sorted(SEED_DIR.glob("*.json")):
+        d = json.loads(p.read_text(encoding="utf-8"))
+        if d.get("schema") != "sscha_seed_study/v1" or d.get("dry_run"):
+            continue
+        u = d["unit"]
+        docs[(u["system"], u["model"], float(u["T"]), tuple(int(x) for x in u["supercell"]))] = d
+    return docs
+
+
+def _ok_seeds(d: dict) -> list:
+    """[(seed, record)] for the seeds that finished, in seed order."""
+    return [(int(k), d["seeds"][k]) for k in sorted(d["seeds"], key=int)
+            if d["seeds"][k].get("status") == "ok"]
+
+
+def _run_facts(s: dict) -> dict:
+    """The numbers one finished seed contributes to Table S21, all read from its record.
+
+    Refuses (rather than printing a caption the data no longer support) if the recorded gradient
+    error is not the library's constant placeholder of 0.433 per primitive-cell atom."""
+    r, sc = s["relax"], s["stopping_criteria"]
+    st, pops, mf = r["steps"], r["populations"], sc["meaningful_factor"]
+    errs = {round(x["gc_err"], 9) for x in st}
+    nat = s["dyn_meta"]["nat_prim"]
+    if len(errs) != 1 or abs(next(iter(errs)) - nat * float(np.sqrt(3)) / 4) > 1e-8:
+        raise SystemExit("Table S21: the recorded gradient error is no longer the constant "
+                         "0.433-per-atom placeholder; rewrite the caption")
+    reasons: dict = {}
+    for p in pops:
+        reasons[p["stop_reason"]] = reasons.get(p["stop_reason"], 0) + 1
+    err, gw = st[-1]["gc_err"], st[-1]
+    return dict(
+        n_pop=r["n_populations"], moved=r["n_populations_moving_dyn"], n_cfg=sc["n_configs_per_population"],
+        steps=r["n_steps_total"], kept=r["n_steps_kept_total"], cap=sc["max_ka"],
+        converged=bool(r["converged"]),
+        stop="; ".join(f"{STOP_LABEL.get(k, k)} ×{n}" for k, n in reasons.items()),
+        gc0=st[0]["gc"], gc1=st[-1]["gc"], err=err, ratio=st[-1]["gc"] / (err * mf),
+        thr=err * mf, gw_ok=bool(gw["gw"] <= max(gw["gw_err"] * mf, sc["abs_conv_thr"])),
+        rel_max=max([p["rel_change_vs_prev_end"] for p in pops if p["pop"] >= 2], default=None),
+        harm=s["harmonic_pre_fpd"]["min_nonac_thz"], start=s["start_post_fpd"]["min_nonac_thz"],
+        aux=s["final_aux"]["min_nonac_thz"], hess=s["hessian"]["min_nonac_thz"],
+        boot=s["bootstrap"]["std_thz"], boot_B=s["bootstrap"]["B"], n_hess=s["bootstrap"]["n_configs"])
+
+
+def table_s21_sscha_seeds() -> str:
+    """Referee 1.4 (plan items C1 and C5): what the SSCHA numbers never carried.
+
+    Sample sizes, populations, steps against the cap, stopping reason, gradient history,
+    Hessian uncertainty, and the four-seed test on units beyond bcc-Zr (BaTiO3, ZrO2, SrTiO3 at
+    600 K, bcc-Zr/MatterSim at 50 K), with the 3x3x3 re-measurement of bcc-Zr beneath. The
+    production recipe, re-run once per seed: no C1 seed converges, and the caption says so. Every
+    number is read from results/revision/sscha_seeds/*.json (scripts/sscha_seed_study.py
+    --preset revision); the converged-recipe values belong to a later table."""
+    if not SEED_DIR.exists():
+        return ""
+    docs = _seed_docs()
+    c1 = [docs.get((s, m, T, (2, 2, 2))) for s, m, T in S21_C1]
+    c5 = [d for k, d in sorted(docs.items(), key=lambda kv: (kv[0][1], kv[0][2])) if k[3] == (3, 3, 3)]
+    if None in c1 or not c5:
+        raise SystemExit("Table S21: results/revision/sscha_seeds/ lacks a C1 or a C5 unit JSON")
+    recipe = c1[0]["recipe"]
+    if any(d["recipe"] != recipe for d in c1 + c5):
+        raise SystemExit("Table S21: the unit JSONs were computed with different recipes")
+
+    def cell(d: dict) -> str:
+        return "×".join(str(x) for x in d["unit"]["supercell"])
+
+    def pops_txt(f: dict) -> str:
+        return f"{f['n_pop']} × {f['n_cfg']} ({f['moved']})"
+
+    def steps_txt(f: dict) -> str:
+        return f"{f['steps']} ({f['kept']}) / {f['cap']}"
+
+    # ---- upper part: one row per (unit, seed)
+    facts = {d["unit_tag"]: [(seed, _run_facts(s)) for seed, s in _ok_seeds(d)] for d in c1 + c5}
+    seeds_of = {d["unit_tag"]: dict(_ok_seeds(d)) for d in c1 + c5}
+    up = []
+    for d in c1:
+        u = d["unit"]
+        for seed, f in facts[d["unit_tag"]]:
+            lc = seeds_of[d["unit_tag"]][seed].get("ledger_comparison") or {}
+            ledger = (f"{signed(lc['ledger_thz'], 3)}; Δ {lc['abs_diff_thz']:.3f} "
+                      f"({'reproduced' if lc['reproduces_ledger'] else 'not reproduced'})"
+                      if lc.get("ledger_thz") is not None else "--")
+            up.append([SHORT[u["system"]], PRETTY[u["model"]], f"{u['T']:.0f}", cell(d), seed,
+                       pops_txt(f), steps_txt(f), "yes" if f["converged"] else "no", f["stop"],
+                       f"{_sig(f['gc0'])} → {_sig(f['gc1'])}", f"{f['err']:.3f}", _sig(f["ratio"]),
+                       signed(f["start"], 3), signed(f["hess"], 3), _sig(f["boot"]), ledger])
+
+    # ---- middle part: one row per C1 unit
+    mid, near, far, eq_aux, sames, repro, notrepro = [], [], [], [], [], [], []
+    for d in c1:
+        u, tag = d["unit"], d["unit_tag"]
+        fs = [f for _, f in facts[tag]]
+        h, st, ax, hm = (np.array([f[k] for f in fs]) for k in ("hess", "start", "aux", "harm"))
+        bs = np.array([f["boot"] for f in fs])
+        tol, n = d["recipe"]["imag_tol_thz"], len(fs)
+        n_stable = int((h >= tol).sum())
+        sd, med = float(h.std(ddof=1)), float(np.median(bs))
+        dstart = float(np.abs(h - st).max())
+        name = SHORT[u["system"]]
+        (near if dstart < NEAR_START_THZ else far).append(
+            (name, u["T"], dstart, float(st.mean()), float(h.min()), float(h.max())))
+        if float(np.abs(h - ax).max()) < 1e-9:
+            eq_aux.append((name, u["model"], u["T"], float(np.abs(h - ax).max()), bs, sd))
+        sames.append((name, n_stable in (0, n)))
+        lc = seeds_of[tag][0].get("ledger_comparison") or {}
+        if lc.get("ledger_thz") is not None:
+            (repro if lc["reproduces_ledger"] else notrepro).append(
+                (name, u["T"], lc["this_thz"], lc["ledger_thz"], float(h.min()), float(h.max())))
+        mid.append([name, PRETTY[u["model"]], f"{u['T']:.0f}", cell(d),
+                    signed(float(hm.mean()), 3), signed(float(st.mean()), 3),
+                    f"{signed(float(ax.min()), 3)} to {signed(float(ax.max()), 3)}",
+                    f"{signed(float(h.min()), 3)} to {signed(float(h.max()), 3)}",
+                    signed(float(h.mean()), 3), _sig(sd), _sig(med),
+                    _sig(sd / med) if med > BOOT_NA_THZ else "n/a", _sig(dstart),
+                    f"{sum(f['converged'] for f in fs)} of {n}",
+                    (f"stable, {n} of {n} seeds" if n_stable == n else
+                     f"unstable, {n} of {n} seeds" if n_stable == 0 else
+                     f"mixed, {n_stable} of {n} stable")])
+
+    # ---- lower part: C5, one row per (model, T)
+    low, c5f = [], []
+    for d in c5:
+        u = d["unit"]
+        f = facts[d["unit_tag"]][0][1]
+        two = next((o for o in d["ledger"]["other_supercells"] if o["supercell"] == [2, 2, 2]), None)
+        t2 = two["min_eff_freq_thz"] if two else None
+        c5f.append((u, f, t2))
+        low.append([PRETTY[u["model"]], f"{u['T']:.0f}", signed(t2, 3) if two else "--",
+                    signed(f["hess"], 3), _sig(f["boot"]),
+                    signed(f["hess"] - t2, 3) if two else "--",
+                    signed(f["start"], 3), signed(f["harm"], 3), pops_txt(f), steps_txt(f),
+                    "yes" if f["converged"] else "no", f["stop"],
+                    f"{_sig(f['gc0'])} → {_sig(f['gc1'])}", _sig(f["ratio"])])
+
+    # ---- caption facts, read from the data
+    f1 = [f for tag in (d["unit_tag"] for d in c1) for _, f in facts[tag]]
+    f5 = [f for u, f, _ in c5f]
+    unconv = [f for f in f1 + f5 if not f["converged"]]
+    n_seeds = len(facts[c1[0]["unit_tag"]])
+    conv5 = [f"{PRETTY[u['model']]} {u['T']:.0f} K" for u, f, _ in c5f if f["converged"]]
+    B, nh = f1[0]["boot_B"], f1[0]["n_hess"]
+    gfall = [f["gc0"] / f["gc1"] for f in f1]
+
+    near_txt = (f"{_sig(max(x[2] for x in near))} THz or less for "
+                + _and(x[0] for x in near))
+    far_txt = "; ".join(
+        f"for {x[0]} at {x[1]:.0f} K it is {_sig(x[2])} THz (start {signed(x[3], 2)}, Hessian "
+        f"{signed(x[5], 1)} to {signed(x[4], 1)}), so there the finite-temperature correction, "
+        "not the starting matrix, sets the lowest frequency" for x in far)
+    eq_txt = "".join(
+        f"For {x[0]}/{PRETTY[x[1]]} at {x[2]:.0f} K the lowest Hessian frequency is the final auxiliary "
+        f"matrix's own in every seed ({'identical in the recorded digits' if x[3] == 0 else 'largest difference ' + _sig(x[3], 1) + ' THz'}) "
+        "and the bootstrap SD is "
+        f"{_span(list(x[4]), _sig)}, so the bootstrap says nothing there and the {_sig(x[5])} THz "
+        "seed spread comes entirely from the relaxation. " for x in eq_aux)
+    repro_txt = (
+        "*Ledger* is the deposited canonical SSCHA value for the unit, compared for seed 0 only "
+        f"(tolerance {seeds_of[c1[0]['unit_tag']][0]['ledger_comparison']['tol_thz']:g} THz): "
+        "seed 0 reproduces it for "
+        + _and(x[0] for x in repro)
+        + "".join(f", but not for {x[0]} at {x[1]:.0f} K, where seed 0 gives {signed(x[2], 2)} THz "
+                  f"against {signed(x[3], 2)} and the ledger value "
+                  + ("lies inside" if x[4] <= x[3] <= x[5] else "lies outside")
+                  + f" the four-seed range ({signed(x[4], 2)} to {signed(x[5], 2)})" for x in notrepro)
+        + ".")
+    ma = [(u, f, t2) for u, f, t2 in c5f if u["model"] == "mace_mp0" and f["converged"]]
+    ms = [(u, f, t2) for u, f, t2 in c5f if u["model"] == "mattersim"]
+    ma_txt = ""
+    if ma:
+        harm_is_start = all(abs(f["harm"] - f["start"]) < 1e-6 for _, f, _ in ma)
+        ma_T = _and(f"{u['T']:.0f}" for u, _, _ in ma) + " K"
+        ma_txt = (
+            f"The {len(ma)} runs that the library's test calls converged are MACE-MP-0 at {ma_T}: "
+            + ("its harmonic matrix is already positive there, so the start is the harmonic matrix, and "
+               if harm_is_start else "")
+            + f"one population ({_and(str(f['steps']) for _, f, _ in ma)} steps) takes the gradient from "
+            f"{_and(_sig(f['gc0']) for _, f, _ in ma)} to {_and(_sig(f['gc1']) for _, f, _ in ma)}, "
+            f"below the threshold of {_sig(ma[0][1]['thr'])}. ")
+    ms_txt = ""
+    if ms:
+        flips = [(u["T"], t2, f["hess"]) for u, f, t2 in ms if t2 is not None and (t2 >= 0) != (f["hess"] >= 0)]
+        ms_txt = (
+            f"The {len(ms)} MatterSim runs end at the cumulative cap as the C1 units do (final gradient "
+            f"{_span([f['ratio'] for _, f, _ in ms], _sig)} times its threshold; the Hessian lies "
+            f"{_span([abs(f['hess'] - f['aux']) for _, f, _ in ms], _sig)} THz from the final auxiliary "
+            "matrix). "
+            + "".join(f"The MatterSim value changes sign with cell size at {T:.0f} K "
+                      f"({signed(t2, 2)} THz in 2×2×2, {signed(h3, 2)} in 3×3×3). " for T, t2, h3 in flips))
+    diffs = {m: [f["hess"] - t2 for u, f, t2 in c5f if u["model"] == m and t2 is not None]
+             for m in ("mace_mp0", "mattersim")}
+
+    caption = (
+        "**Table S21** SSCHA with the production recipe, re-run once per seed (Referee 1.4, plan items "
+        "C1 and C5; `scripts/sscha_seed_study.py --preset revision`). "
+        f"**This is the production recipe, and no seed converged: {sum(f['converged'] for f in f1)} of "
+        f"{len(f1)} runs ({n_seeds} seeds on each of {len(c1)} units) satisfy the minimiser's own "
+        f"stopping test.** Converged values are in the converged-recipe grid ({CONVERGED_TABLE}), not here. "
+        f"Recipe: {recipe['n_configs']} configurations per population, at most {recipe['max_pop']} "
+        f"populations, `max_ka` = {recipe['max_ka']}, `meaningful_factor` = {recipe['meaningful_factor']:g}, "
+        f"then a separate Hessian ensemble of {nh} configurations ({nh // 2} antithetic pairs) at the final "
+        "auxiliary matrix, without the fourth-order term. Seed 0 replays the production computation; the "
+        "other seeds change only the random seed. *Populations × configs (moved)* is the populations drawn, "
+        "the configurations in each and, in brackets, the populations whose kept steps changed the auxiliary "
+        "matrix; *Steps taken (kept) / cap* counts the minimiser's steps over all populations, those not "
+        "discarded when a population stops unconverged, and `max_ka`. "
+        f"**`max_ka` is a cumulative cap in python-sscha 1.6.1** (SchaMinimizer.py:1370 compares it with "
+        f"the step history accumulated over populations). In all {len(unconv)} unconverged runs (these "
+        f"{len(f1)} and the {len(f5) - len(conv5)} MatterSim runs of the lower part) the cap ended "
+        f"population 1 after {_span([f['kept'] for f in unconv])} kept steps and each of populations 2 to "
+        f"{_span([f['n_pop'] for f in unconv])} took one step and discarded it: the auxiliary matrix changes "
+        f"by less than {_sig(max(f['rel_max'] for f in unconv), 1)} (relative) in populations 2 and later, so only "
+        "the first population moved it. "
+        "**The recorded gradient error is the library's placeholder.** python-sscha passes a constant in "
+        "place of the stochastic error of the gradient (Ensemble.py:2657): the recorded value is the same "
+        "at every step of every run of a unit and equals 0.433 per primitive-cell atom, so *Recorded gc "
+        "error* is not a measurement. The convergence threshold is that value times `meaningful_factor`, "
+        f"and *Final gc ÷ threshold* is how far the last gradient sits above it: {_span([f['ratio'] for f in f1], _sig)} "
+        f"on the C1 units, while the gradient falls by a factor of only {_span(gfall, lambda v: f'{v:.1f}')} "
+        "from the first step to the last. "
+        + ("The structure gradient is at or below its threshold at the last step of every run, so the "
+           "dynamical-matrix gradient alone is unconverged. " if all(f["gw_ok"] for f in f1 + f5) else "")
+        + f"**The Hessian lies close to the start on {len(near)} of {len(c1)} units.** The start is the "
+        "matrix after ForcePositiveDefinite (FPD), where the relaxation begins; the largest difference "
+        f"between it and the lowest Hessian frequency is {near_txt}"
+        + (f"; {far_txt}" if far else "") + ". "
+        f"*Bootstrap SD* is the standard deviation of the lowest non-acoustic Hessian frequency over {B} "
+        "resamples of the Hessian ensemble's antithetic pairs at the fixed final matrix. It measures the "
+        "finite size of that ensemble only, whereas the seed spread (middle part) also contains the "
+        "unconverged relaxation. " + eq_txt + repro_txt
+        + " `results/revision/sscha_seeds/*.json`.")
+
+    all_same = all(ok for _, ok in sames)
+    return (
+        caption + "\n\n"
+        + md(up, ["System", "Model", "T (K)", "Cell", "Seed", "Populations × configs (moved)",
+                  "Steps taken (kept) / cap", "Converged", "Stop reason", "gc, first → final step",
+                  "Recorded gc error (placeholder)", "Final gc ÷ threshold",
+                  "Start, after FPD (THz)", "Hessian lowest (THz)", "Bootstrap SD (THz)",
+                  "Ledger (THz), seed 0"])
+        + "\n\nMiddle part: the seed spread per unit. *SD* is the sample standard deviation (n − 1) of "
+        "the lowest Hessian frequency over the seeds and *Seed SD ÷ bootstrap SD* its ratio to the "
+        f"median bootstrap SD (n/a where that is below {_sig(BOOT_NA_THZ, 1)} THz). *Call* is the sign rule "
+        "used throughout: stable if the lowest non-acoustic frequency is at or above "
+        f"{signed(c1[0]['recipe']['imag_tol_thz'], 1)} THz. "
+        + ("All seeds give the same call on every unit. " if all_same else
+           "The seeds disagree on the call for "
+           + ", ".join(n for n, ok in sames if not ok) + ". ")
+        + "None converged.\n\n"
+        + md(mid, ["System", "Model", "T (K)", "Cell", "Harmonic, before FPD (THz)",
+                   "Start, after FPD (THz)", "Final auxiliary matrix, min to max (THz)",
+                   "Hessian, min to max (THz)", "Hessian mean (THz)", "SD over seeds (THz)",
+                   "Median bootstrap SD (THz)", "Seed SD ÷ bootstrap SD", "Largest Hessian − start difference (THz)",
+                   "Seeds converged", "Call"])
+        + "\n\nLower part: bcc-Zr cell size (plan item C5). The 3×3×3 cell was run once (seed 0) with the "
+        "same production recipe in the current environments; the 2×2×2 value is the deposited canonical "
+        "ledger row, not a re-run. The 3×3×3 minus 2×2×2 difference is "
+        + " and ".join(f"{_span(v, lambda t: signed(t, 2))} THz for {PRETTY[m]}"
+                       for m, v in diffs.items() if v)
+        + ". " + ma_txt + ms_txt
+        + f"These are the production recipe's values and are not converged; {CONVERGED_TABLE} has the "
+        "converged ones.\n\n"
+        + md(low, ["Model", "T (K)", "2×2×2, ledger (THz)", "3×3×3 Hessian (THz)", "Bootstrap SD (THz)",
+                   "3×3×3 − 2×2×2 (THz)", "Start, after FPD (THz)", "Harmonic, before FPD (THz)",
+                   "Populations × configs (moved)", "Steps taken (kept) / cap", "Converged",
+                   "Stop reason", "gc, first → final step", "Final gc ÷ threshold"])
+    )
+
+
 def build() -> str:
     raw = pd.read_parquet(LEDGER)
     df = A.canonical(raw)
@@ -1407,6 +1723,7 @@ def build() -> str:
         table_s18_force_spread(),
         table_s19_c3a_pbe(),
         table_s20_c3b(),
+        table_s21_sscha_seeds(),
     ]
     blocks = [b for b in blocks if b]
     return "\n\n".join(blocks)
