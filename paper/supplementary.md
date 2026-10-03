@@ -3,16 +3,15 @@
 *Supplementary information for* "Neither harmonic benchmarks nor a default SSCHA cross-check
 certifies a foundation machine-learning interatomic potential for finite-temperature dynamic
 stability", F. Cai, *RSC Advances*. Section numbers without an S (§2.4, §3.3 and so on) and
-numbered references refer to the main article. Tables S4-S11 and S13-S18 are generated from the
+numbered references refer to the main article. Tables S4-S11 and S13-S20 are generated from the
 deposited ledger (`results/ledger.parquet`) and the deposited analysis outputs
 (`results/stats_hardening.json`, `results/screen_sensitivity.json`,
-`results/curvature_identity_check.json`, `results/revision/force_spread/summary.json`) by
-`scripts/build_esi_tables.py`; figures by `scripts/make_figures.py`.
-<!-- PENDING-C1 / PENDING-C3a: the seed-study table (C1) and the PBE soft-mode table (C3a) extend
-these ranges when they land (S19 and on); update both sentences here. -->
+`results/curvature_identity_check.json`, `results/revision/force_spread/summary.json`,
+`results/revision/dft/`) by `scripts/build_esi_tables.py`; figures by `scripts/make_figures.py`.
+<!-- PENDING-C1: the seed-study and converged-grid tables extend these ranges when they land. -->
 
-*Citation convention: **sections** of this document are cited as §S1-§S4 and **tables** as
-Table S1-Table S18. The two sequences are independent; a cross-reference to "Table S1" means the
+*Citation convention: **sections** of this document are cited as §S1-§S5 and **tables** as
+Table S1-Table S20. The two sequences are independent; a cross-reference to "Table S1" means the
 table, not the section.*
 
 ## S1. Finite-T method development and discarded routes
@@ -346,9 +345,10 @@ rather than an error specific to one model's PES; a feature of the surface that 
 inherit from similar training data would look the same, and a screen run on a first-principles
 surface separates the two. T* is reported as a diagnostic (Table S6) and not as a prediction for
 the same reason.
-<!-- PENDING-C3a: PBE E(Q) along the deciding soft-mode coordinates and PBE-backed screen calls
-for BaTiO3, KNbO3, CsSnBr3 (and SrTiO3 R, bcc-Zr, ZrO2) decide whether these shared mis-calls
-come from the single-mode approximation or from the MLIP surfaces; one sentence here -->
+That test was run (§S5, Table S19): the shared BaTiO₃ and KNbO₃ mis-calls at 300 K disappear on
+PBE energies along the same coordinates, where the MLIP wells are 0.32–0.76 of the PBE depth, so
+they are surface errors that four models share; the CsSnBr₃ mis-calls and KNbO₃ at 600 K persist
+and belong to the screen, the functional or the label.
 
 The multi-mode SSCHA retains the couplings, but here it cannot bound their effect on the call,
 for three reasons. It runs on the same MLIP potential, so any PES error is common to both
@@ -420,9 +420,7 @@ removed (`scripts/screen_sensitivity.py`, diagnostics).
 Neither result speaks to the accuracy of the underlying potential-energy surface. The
 experimental anchors of §2.4 and §3.2 test the surface and the screen together; a first-principles
 energy profile along the same coordinates is the direct test of the surface.
-<!-- PENDING-C3a: PBE E(Q) along the deciding soft-mode coordinates (SrTiO3 R, BaTiO3, KNbO3,
-CsSnBr3, bcc-Zr, ZrO2) against the MLIP maps, and the screen re-run on the PBE maps; new ESI
-section, pointed to from here -->
+That profile, for six systems, and the screen re-run on it are in §S5 (Table S19).
 
 ## S2. SSCHA harness and the displacive-instability failure
 
@@ -497,8 +495,9 @@ negative, and whether that happens here is untested.
 <!-- PENDING-C1b: include_v4 = True free-energy Hessian on BaTiO3/MACE-MP-0/100 K; one sentence
 here and in §3.3, whichever way it falls -->
 Whether an MLIP error on the thermally sampled configurations contributes as well is a separate
-question that these MLIP-only data cannot settle (§3.3).
-<!-- PENDING-C3b: PBE forces and energies on the SSCHA-sampled configurations; one sentence here -->
+question, which PBE forces on those configurations address (§S5, Table S20): for BaTiO₃ and
+ZrO₂ at 100 K the MLIP's relative force error is 0.10 and 0.18 there against 0.10 and 0.23 near
+equilibrium, so they give no sign of it.
 
 ### S2.3 Numerical outcome by family (complete grid)
 
@@ -597,7 +596,10 @@ print to the run log rather than to a ledger).
   commensurate mode in SrTiO₃; Table S17). A missing zone-boundary q-point could only hide an
   instability, so it cannot explain this; the divergence at high temperature is the SrTiO₃
   result to explain, and §3.3 discusses it.
-  <!-- PENDING-C3b: PBE check on SrTiO3 SSCHA-sampled configurations; one sentence here -->
+  PBE forces on twelve configurations of the MACE-MP-0 600 K ensemble (0.34 Å root-mean-square
+  displacement; §S5, Table S20) put MACE-MP-0's relative force error at 0.19 against 0.11 near
+  equilibrium, with energy errors to 44 meV per atom and all five models at 0.12–0.20: the MLIPs
+  are extrapolating there, though twelve configurations cannot show that this drives the runaway.
 - **BaTiO₃.** Its ferroelectric instability includes the zone-centre (Γ) mode, which every
   supercell contains, so a missing q-point cannot produce its false-stable either. Like the
   fluorite control, this rules out one explanation and is not a convergence test.
@@ -635,8 +637,10 @@ rest are collected here in numerical order:
 - Table S17, SSCHA high-temperature false-unstables, the SrTiO₃ units above its transition, and
   SSCHA blow-ups and failures per model.
 - Table S18, the pre-registered force-level ensemble test, every score it names.
-<!-- PENDING-C1 / PENDING-C3a: the seed-study table (C1) and the PBE soft-mode comparison (C3a)
-are added to this list when they land -->
+- Table S19, the screen's calls on PBE energies along the same coordinates, and the MLIP against
+  PBE well depths path by path (§S5).
+- Table S20, MLIP force and energy errors against PBE on SSCHA-sampled configurations (§S5).
+<!-- PENDING-C1: the seed-study and converged-grid tables are added to this list when they land -->
 
 <!-- BEGIN GENERATED TABLES -->
 
@@ -1027,7 +1031,7 @@ Lower part: on every non-bcc unit where SSCHA calls the phase stable against an 
 |   of which zro2_cubic (n; call unstable) | 15; 15 | 14; 14 |
 | all paired non-bcc units at T ≤ 300 K: SSCHA call = screen call | 21/66 | 20/56 |
 
-**Table S17** Where SSCHA calls a phase unstable that its label calls stable, and where it fails numerically. Upper part: non-bcc SSCHA false-unstables by temperature, over the units whose label is stable at that temperature; numerical blow-ups (|f| > 50 THz) are included in the counts and also tallied separately. The count grows with temperature partly because more labels are stable at high temperature; the direct evidence is the per-unit trend below the table, in which units SSCHA calls stable at 100 K turn negative by 600 to 900 K. An instability that grows with thermal amplitude on a fixed potential-energy surface is the opposite of entropy stabilisation. It is what an MLIP extrapolating on large-amplitude thermal configurations would produce; an instability of the stochastic sampling itself, and a free-energy Hessian evaluated at an auxiliary matrix that has not reached the SCHA minimum, are the other candidates, and these data do not separate them. <!-- PENDING-C3b: PBE forces and energies on SSCHA-sampled configurations (SrTiO3 and the other high-T false-unstables) decide between MLIP extrapolation error and sampling instability; result goes in §3.3 and in a sentence here. PENDING-C1: the SrTiO3/MACE-MP-0 600 K seed study records whether the relaxation reached the SCHA minimum (the third candidate); one clause here, whichever way it falls --> `scripts/stats_hardening.py` (`sscha_high_t`, `orb_split_s3`).
+**Table S17** Where SSCHA calls a phase unstable that its label calls stable, and where it fails numerically. Upper part: non-bcc SSCHA false-unstables by temperature, over the units whose label is stable at that temperature; numerical blow-ups (|f| > 50 THz) are included in the counts and also tallied separately. The count grows with temperature partly because more labels are stable at high temperature; the direct evidence is the per-unit trend below the table, in which units SSCHA calls stable at 100 K turn negative by 600 to 900 K. An instability that grows with thermal amplitude on a fixed potential-energy surface is the opposite of entropy stabilisation. It is what an MLIP extrapolating on large-amplitude thermal configurations would produce; an instability of the stochastic sampling itself, and a free-energy Hessian evaluated at an auxiliary matrix that has not reached the SCHA minimum, are the other candidates, and these data do not separate them. PBE forces on twelve configurations of the SrTiO₃ MACE-MP-0 600 K ensemble (Table S20) show the MLIPs extrapolating there (relative force error 0.19 against 0.11 near equilibrium, energy errors to 44 meV per atom), without showing that this rather than the sampling drives the runaway. <!-- PENDING-C1: the SrTiO3/MACE-MP-0 600 K seed study records whether the relaxation reached the SCHA minimum (the third candidate); one clause here, whichever way it falls --> `scripts/stats_hardening.py` (`sscha_high_t`, `orb_split_s3`).
 
 | T (K) | Model set | Non-bcc units returned | False-unstable / stable-labelled [95% CI] | Of which blow-ups | By system |
 |---|---|---|---|---|---|
@@ -1098,6 +1102,71 @@ Blow-ups and failed units by model. A failed unit is one of the 208-unit attempt
 | (f) | S, MatterSim committee | MatterSim's call wrong | 60 (11) | 0.686 [0.473, 0.873] | 0.120 |
 | (g) | primary, units with no atomic overlap in any configuration | consensus wrong | 43 (4) | 0.314 [0.146, 0.529] | -- |
 
+**Table S19** PBE along the screen's own soft-mode coordinates (Referee 1.1, plan item C3a). Each of the 120 ladder units (6 systems × 5 models × 100, 300, 600 and 900 K) is called twice by the screen's rule (unstable if any computed path condenses, §2.4), on the same structures: from the model's own energies (*MLIP, same paths*) and from Quantum ESPRESSO PBE single-point energies (*PBE-backed*). Both are scored against the finite-temperature label used throughout (stable iff T is at or above the experimental transition temperature). *Corrected by PBE* counts units whose MLIP call is wrong and whose PBE-backed call is right; *newly wrong* counts the reverse. **PBE is evaluated at each MLIP's own relaxed lattice, along that MLIP's coordinate**, so it is a different PBE potential for each model, not one reference curve per system. PBE covers 1 to 2 paths per unit, out of the 1 to 24 modes the screen maps; the mode that decided the ledger's call has a PBE path in 100 of 120 units. The MLIP column is the model's own call on those same paths and equals the ledger's call in 115 of 120 units. In 28 units a path's regenerated E(Q) map did not reproduce the cached map the ledger was computed from (a substitute direction inside a degenerate eigenspace; `all_paths_match_cache` in the deposited table), so those calls rest partly on a substitute coordinate. Of the 23 corrections, 10 are bcc-Zr units on a reference coordinate and 8 are BaTiO₃ and KNbO₃ units, all at 300 K and all for CHGNet, MACE-MP-0, MatterSim, SevenNet-0. **The bcc-Zr paths of every model except MatterSim are MatterSim's deciding coordinate, q = (1/3, 2/3, 0)** (role `ref`: a coordinate borrowed from MatterSim, not one of the model's own), and ORB-v2's SrTiO₃ path is MatterSim's pattern at q = (1/2, 1/2, 1/2); 5 of the 38 paths below are of this kind, and on 3 of them the model's own curve has no well at all. The 3 newly wrong units are BaTiO₃/ORB-v2 at 300 K; bcc-Zr/MatterSim at 900 K; CsSnBr₃/ORB-v2 at 600 K; the 19 units that stay wrong under PBE are BaTiO₃ 1, KNbO₃ 5, CsSnBr₃ 9, bcc-Zr 4. Counts are descriptive: the units cluster by system (6 systems) and no test is attached. The label is a transition-temperature rule, so a PBE call that disagrees with it is not necessarily a PBE error. `scripts/dft_reference.py analyze` → `results/revision/dft/c3a_unit_calls.csv`.
+
+| System | n units | MLIP, same paths: correct | PBE-backed: correct | Corrected by PBE | Newly wrong |
+|---|---|---|---|---|---|
+| batio3_cubic | 20 | 16 | 19 | 4 | 1 |
+| knbo3_cubic | 20 | 11 | 15 | 4 | 0 |
+| srtio3_cubic | 20 | 18 | 20 | 2 | 0 |
+| cssnbr3_cubic | 20 | 9 | 11 | 3 | 1 |
+| zr_bcc | 20 | 7 | 16 | 10 | 1 |
+| zro2_cubic | 20 | 20 | 20 | 0 | 0 |
+| *total, all five models* | 120 | 81 | 101 | 23 | 3 |
+| *total, excluding ORB-v2* | 96 | 61 | 82 | 22 | 1 |
+
+Lower part: the well depth of each of the 38 PBE paths (33 deciding, 5 reference), the path model's own E(Q) against PBE on the same 10 structures. Depth is −min E(Q) over the sampled amplitudes, zero when none is below E(0), and Q_min is the sampled amplitude at that minimum, so both are limited to the 10-point scan to 0.45 Å. *Ratio* is own depth over PBE depth. The BaTiO₃ and KNbO₃ deciding paths of the four models other than ORB-v2 (12 paths: CHGNet, MACE-MP-0, MatterSim, SevenNet-0) have own-model depths 0.315 to 0.763 of PBE (median 0.525); with ORB-v2's 3 paths the range is 0.315 to 1.529. **The PBE minimum is at the scan edge (Q ≥ 0.449 Å) on 8 of 38 paths, all CsSnBr₃**; there the sampled depth is a lower bound on the PBE depth and the ratio is not a well-depth comparison.
+
+| Path | Role | Own depth (meV) | PBE depth (meV) | Ratio own/PBE | Own Q_min (Å) | PBE Q_min (Å) | PBE minimum at scan edge |
+|---|---|---|---|---|---|---|---|
+| batio3_cubic_chgnet_q0-0-0-b0 | decide | 16.6 | 22.5 | 0.74 | 0.089 | 0.139 | no |
+| batio3_cubic_chgnet_q1d2-1d2-0-b0 | decide | 38.6 | 73.3 | 0.53 | 0.089 | 0.089 | no |
+| batio3_cubic_mace_mp0_q1d2-0-1d2-b0 | decide | 42.6 | 73.5 | 0.58 | 0.089 | 0.089 | no |
+| batio3_cubic_mattersim_q0-0-0-b0 | decide | 33.2 | 43.5 | 0.76 | 0.089 | 0.089 | no |
+| batio3_cubic_mattersim_q1d2-0-1d2-b0 | decide | 41.1 | 73.0 | 0.56 | 0.089 | 0.089 | no |
+| batio3_cubic_orb_v2_q1d2-1d2-0-b0 | decide | 32.8 | 21.4 | 1.53 | 0.089 | 0.089 | no |
+| batio3_cubic_sevennet0_q1d2-0-0-b0 | decide | 28.2 | 42.4 | 0.67 | 0.089 | 0.089 | no |
+| batio3_cubic_sevennet0_q1d2-0-1d2-b0 | decide | 33.3 | 69.0 | 0.48 | 0.050 | 0.089 | no |
+| knbo3_cubic_chgnet_q0-0-0-b0 | decide | 30.3 | 57.8 | 0.52 | 0.089 | 0.089 | no |
+| knbo3_cubic_mace_mp0_q0-1d2-1d2-b0 | decide | 27.9 | 87.8 | 0.32 | 0.050 | 0.089 | no |
+| knbo3_cubic_mattersim_q0-0-0-b0 | decide | 25.4 | 48.8 | 0.52 | 0.089 | 0.139 | no |
+| knbo3_cubic_mattersim_q0-1d2-1d2-b0 | decide | 28.9 | 91.8 | 0.31 | 0.050 | 0.089 | no |
+| knbo3_cubic_orb_v2_q0-1d2-1d2-b0 | decide | 58.8 | 97.6 | 0.60 | 0.089 | 0.139 | no |
+| knbo3_cubic_orb_v2_q1d2-1d2-0-b0 | decide | 56.6 | 100.1 | 0.57 | 0.089 | 0.139 | no |
+| knbo3_cubic_sevennet0_q0-1d2-1d2-b0 | decide | 31.6 | 94.6 | 0.33 | 0.089 | 0.089 | no |
+| srtio3_cubic_chgnet_q1d2-1d2-1d2-b0 | decide | 5.8 | 23.4 | 0.25 | 0.139 | 0.139 | no |
+| srtio3_cubic_mace_mp0_q1d2-1d2-1d2-b0 | decide | 27.4 | 27.7 | 0.99 | 0.139 | 0.139 | no |
+| srtio3_cubic_mattersim_q1d2-1d2-1d2-b0 | decide | 17.2 | 26.5 | 0.65 | 0.139 | 0.139 | no |
+| srtio3_cubic_orb_v2_q1d2-1d2-1d2-b0-refmattersim | ref | 57.4 | 26.7 | 2.15 | 0.139 | 0.139 | no |
+| srtio3_cubic_sevennet0_q1d2-1d2-1d2-b0 | decide | 22.9 | 26.1 | 0.88 | 0.139 | 0.139 | no |
+| cssnbr3_cubic_chgnet_q1d2-1d2-1d2-b0 | decide | 228.3 | 105.2 | 2.17 | 0.450 | 0.450 | yes |
+| cssnbr3_cubic_mace_mp0_q1d2-1d2-0-b0 | decide | 55.7 | 60.6 | 0.92 | 0.450 | 0.450 | yes |
+| cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0 | decide | 116.8 | 127.2 | 0.92 | 0.450 | 0.450 | yes |
+| cssnbr3_cubic_mattersim_q0-1d2-1d2-b0 | decide | 64.3 | 60.8 | 1.06 | 0.450 | 0.450 | yes |
+| cssnbr3_cubic_mattersim_q1d2-1d2-1d2-b0 | decide | 128.6 | 128.1 | 1.00 | 0.450 | 0.450 | yes |
+| cssnbr3_cubic_orb_v2_q1d2-1d2-1d2-b1 | decide | 72.6 | 126.4 | 0.57 | 0.450 | 0.450 | yes |
+| cssnbr3_cubic_orb_v2_q1d2-1d2-1d2-b2 | decide | 73.8 | 107.9 | 0.68 | 0.356 | 0.450 | yes |
+| cssnbr3_cubic_sevennet0_q1d2-1d2-1d2-b0 | decide | 149.0 | 127.4 | 1.17 | 0.450 | 0.450 | yes |
+| zr_bcc_chgnet_q1d3-2d3-0-b0-refmattersim | ref | 0.0 | 159.5 | 0.00 | no well | 0.200 | no |
+| zr_bcc_mace_mp0_q1d3-2d3-0-b0-refmattersim | ref | 0.0 | 173.8 | 0.00 | no well | 0.200 | no |
+| zr_bcc_mattersim_q1d3-2d3-0-b0 | decide | 190.9 | 161.6 | 1.18 | 0.272 | 0.200 | no |
+| zr_bcc_orb_v2_q1d3-2d3-0-b0-refmattersim | ref | 144.0 | 158.4 | 0.91 | 0.272 | 0.200 | no |
+| zr_bcc_sevennet0_q1d3-2d3-0-b0-refmattersim | ref | 0.0 | 162.5 | 0.00 | no well | 0.200 | no |
+| zro2_cubic_chgnet_q1d2-0-1d2-b0 | decide | 226.7 | 388.7 | 0.58 | 0.200 | 0.272 | no |
+| zro2_cubic_mace_mp0_q0-1d2-1d2-b0 | decide | 173.4 | 385.4 | 0.45 | 0.200 | 0.272 | no |
+| zro2_cubic_mattersim_q1d2-0-1d2-b0 | decide | 234.9 | 383.7 | 0.61 | 0.200 | 0.272 | no |
+| zro2_cubic_orb_v2_q1d2-1d2-1d2-b0 | decide | 408.0 | 747.3 | 0.55 | 0.200 | 0.272 | no |
+| zro2_cubic_sevennet0_q1d2-0-1d2-b0 | decide | 191.1 | 382.6 | 0.50 | 0.200 | 0.272 | no |
+
+**Table S20** MLIP errors on SSCHA-sampled configurations, scored against PBE (Referee 1.2, plan item C3b). The configurations are drawn from the C1 SSCHA ensembles (`scripts/sscha_seed_study.py`), one temperature per system; the baseline is near-equilibrium rattled configurations of the same supercell. Per set there are 4 baseline and 12 SSCHA configurations, so every figure rests on very few configurations and carries no uncertainty. The owner model is the one whose SSCHA ensemble produced the configurations; all five models are scored on the same configurations. Relative force RMSE is the RMSE over all Cartesian components divided by the RMS PBE force component; *Ratio* is the owner's relative force RMSE on the SSCHA configurations over its own baseline value. u_rms is the mean over configurations of the rms atomic displacement from the ideal supercell. Energy errors are per atom, taken relative to the undisplaced supercell in each code separately, and given as RMS / maximum absolute value over configurations; the baseline and SSCHA values are separated by a semicolon where two are given. Ranges run over the five evaluated models, with the range without ORB-v2 in brackets where it differs. **The owner's relative force error is 0.74 to 1.04 times its baseline for BaTiO₃, ZrO₂ and bcc-Zr, but 1.67 times for SrTiO₃ at 600 K** (0.113 to 0.190), where the configurations are displaced by 0.337 Å rms and the owner's energy error is 15.1 meV/atom rms and 44.3 meV/atom at its worst; its absolute force RMSE grows 15-fold while the PBE forces themselves grow 9-fold. **bcc-Zr's relative error has a PBE-force denominator of about 0.07 eV/Å on the baseline and is uninformative**: it goes from 0.596 to 0.439 on the SSCHA configurations although the owner's absolute force RMSE grows 2.3-fold, because the PBE force RMS (the denominator) grows 3.2-fold. `scripts/dft_reference.py analyze` → `results/revision/dft/c3b_units.csv`.
+
+| System | Owner model | T (K) | Configs (baseline + SSCHA) | u_rms (Å), baseline / SSCHA | PBE force RMS (eV/Å), baseline / SSCHA | Owner force RMSE (eV/Å), baseline / SSCHA | Owner relative force RMSE, baseline | Owner relative force RMSE, SSCHA | Ratio | Relative force RMSE over five models, baseline; SSCHA | Owner energy error RMS / max (meV/atom), baseline; SSCHA | Energy error RMS over five models, SSCHA (meV/atom) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| batio3_cubic | MACE-MP-0 | 100 | 4 + 12 | 0.033 / 0.091 | 0.271 / 0.496 | 0.027 / 0.052 | 0.100 | 0.104 | 1.04 | 0.041 to 0.135; 0.064 to 0.133 | 0.21 / 0.30; 0.54 / 1.46 | 0.4 to 2.0 |
+| srtio3_cubic | MACE-MP-0 | 600 | 4 + 12 | 0.033 / 0.337 | 0.311 / 2.807 | 0.035 / 0.532 | 0.113 | 0.190 | 1.67 | 0.040 to 0.113; 0.124 to 0.203 | 0.37 / 0.55; 15.12 / 44.29 | 11.8 to 19.8 (11.8 to 17.7 without ORB-v2) |
+| zr_bcc | MatterSim | 50 | 4 + 12 | 0.028 / 0.095 | 0.072 / 0.230 | 0.043 / 0.101 | 0.596 | 0.439 | 0.74 | 0.222 to 0.674 (0.577 to 0.674 without ORB-v2); 0.159 to 0.645 (0.439 to 0.645 without ORB-v2) | 0.73 / 0.87; 5.54 / 8.31 | 2.0 to 11.9 |
+| zro2_cubic | MACE-MP-0 | 100 | 4 + 12 | 0.033 / 0.088 | 0.317 / 0.558 | 0.071 / 0.098 | 0.225 | 0.175 | 0.78 | 0.087 to 0.225; 0.124 to 0.175 | 0.94 / 1.10; 1.79 / 3.10 | 1.5 to 4.8 (1.5 to 3.2 without ORB-v2) |
+
 <!-- END GENERATED TABLES -->
 
 ## S4. Threats to validity (pre-registered, with outcomes)
@@ -1125,7 +1194,8 @@ Blow-ups and failed units by model. A failed unit is one of the 208-unit attempt
   not settled by these data.*
   <!-- PENDING-C1: whether the converged-mode relaxations (C1c) keep the false-stables; outcome
   sentence here -->
-  <!-- PENDING-C3b: PBE forces/energies on SSCHA-sampled configurations; outcome sentence here -->
+  *PBE forces on the sampled configurations (§S5, Table S20) show no extrapolation error behind
+  the 100 K false-stables of BaTiO₃ and ZrO₂.*
 - **Single-mode approximation itself** → derivation and sensitivity analysis (§S1.3, Table S14).
   *Outcome: varying the fit window, sampling range, condensation threshold and scan range changes
   at most one unit call at T ≤ 300 K, but the frozen-cell normalisation is outcome-determining
@@ -1133,7 +1203,10 @@ Blow-ups and failed units by model. A failed unit is one of the 208-unit attempt
   production cell, runs from 7 v 4 to 24 v 4; §S1.3), and mode–mode coupling is unbounded. The
   screen's T*, its ferroelectric recall and the H2 count are conditional on the minimal-cell
   convention.*
-  <!-- PENDING-C3a: PBE-backed screen calls; outcome sentence here -->
+  *On PBE energies along the same coordinates the screen agrees with the labels in 101/120 units
+  of six systems against 81/120 on the MLIP energies (§S5, Table S19); the 16 errors that persist
+  (KNbO₃ 600 K, CsSnBr₃ 300/600 K, bcc Zr 900 K) bound what the single-mode approximation, the
+  functional and the labels contribute there.*
 - **MLIP relaxation moving off the soft-mode geometry** → both at-reference and at-relaxed
   geometries recorded; relaxation hiding an instability is itself reported.
 - **Supercell / cell-size convergence** → SSCHA at 2×2×2. *Outcome: the only cell-size test, bcc
@@ -1153,3 +1226,47 @@ Blow-ups and failed units by model. A failed unit is one of the 208-unit attempt
   stability, whereas the screen and SSCHA probe dynamic stability. The two coincide for a
   continuous soft-mode transition and can differ for a deep double well, which is where the
   local SSCHA criterion and the labels part company (§3.3).
+
+## S5. First-principles reference along the soft-mode coordinates and on SSCHA samples
+
+Settings are in §2.6; the analysis is `python scripts/dft_reference.py analyze` over the deposited
+pw.x outputs (`results/revision/dft/`), and every number below is pinned in
+`scripts/verify_claims.py`. All 448 calculations finished (three BaTiO₃/CHGNet points were rerun
+with symmetry off after a symmetry error on the slightly non-cubic CHGNet cell; `NOSYM_NOTE.txt`).
+
+**S5.1 The screen on PBE energies (C3a; Referee 1.1).** For each of 120 ladder units of six systems
+we compare the screen's call on the MLIP energies along the PBE-covered paths with the call on PBE
+energies along the same paths (Table S19). The comparison changes the energy engine only: the mode
+pattern, amplitudes, fit and solver are the same. On the covered paths the MLIP call reproduces
+the full screen's call in 115 of 120 units (all 100 own-mode units; the five exceptions are ORB-v2
+units scored on MatterSim's coordinate). Against the labels the MLIP calls are right in 81 units
+and the PBE calls in 101: 23 corrected, 3 newly wrong, five systems improved and none worse
+(without ORB-v2, 61 and 82 of 96). The corrections are of two kinds. Ten are bcc Zr, where
+CHGNet, MACE-MP-0 and SevenNet-0 have no well along MatterSim's deciding coordinate and PBE has one
+of 159–174 meV. Eight are the BaTiO₃ and KNbO₃ units at 300 K that four of the five models call
+stable; along the coordinates that decide them, those models' wells are 0.32–0.76 of the PBE depth
+(median 0.53), which is enough to move the screen's T* below 300 K. ZrO₂'s wells are similarly
+shallow (0.45–0.61) without changing any call. The 16 errors that persist on PBE are KNbO₃ at
+600 K (all five models; T_c 708 K, curves bracketed), CsSnBr₃ at 300 and 600 K (wells matching PBE
+within 20 % for three models, every PBE minimum at the 0.45 Å edge of the scan, and a 300 K label
+8 K above the transition) and bcc Zr at 900 K. They bound what the single-mode approximation, the
+PBE functional and the labels contribute; this design cannot split them further.
+
+Three limits apply. PBE is evaluated at each MLIP's relaxed lattice (within 0.3 % across models for
+the perovskites, about 2 % in volume for Zr) and along its eigenvector, so each model is compared
+with a slightly different PBE surface. The PBE call covers one or two of the screen's modes per
+unit, so a PBE "stable" means stable on those modes only. Twenty-eight units rest on a path whose
+regenerated map differs from the cached one (Table S19). The counts are descriptive: six systems,
+with the five models sharing each system's label, so no unit-level test is attached.
+
+**S5.2 MLIP error on SSCHA-sampled configurations (C3b; Referee 1.2).** Table S20 scores all five
+models against PBE on twelve configurations from each of four seed-study ensembles and on four
+rattled near-equilibrium cells. At 50–100 K (0.09 Å root-mean-square displacement) the owner
+model's force error relative to the PBE forces is 1.04, 0.78 and 0.74 times its near-equilibrium
+value for BaTiO₃, ZrO₂ and bcc Zr; the absolute error grows 1.4–2.3-fold with the forces
+themselves. For bcc Zr the ratio is uninformative, since the near-equilibrium PBE forces are only
+0.07 eV Å⁻¹. For SrTiO₃ at 600 K (0.34 Å) the relative error rises 1.67-fold, to 0.19, energy
+errors reach 15 meV per atom root-mean-square and 44 at most, and all five models fall at 0.12–0.20.
+The low-temperature false-stables therefore show no sign of MLIP extrapolation; the
+high-temperature SrTiO₃ ensemble does. These ensembles come from the production recipe, which did
+not converge (§2.5), and twelve configurations per unit support a description, not a test.

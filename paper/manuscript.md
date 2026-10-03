@@ -15,16 +15,15 @@ models divide: MatterSim and SevenNet-0 score 19/19, while MACE-MP-0 and CHGNet 
 and Hf instabilities to zero. A single-mode quantum self-consistent harmonic approximation (SCHA)
 screen shows that harmonic correctness does not certify finite-temperature behaviour: at 300 K,
 17 harmonically correct units are mis-called against 4 the other way (7–24 against 4 under other
-cell conventions). The asymmetry is not significant once units are clustered by system (p = 0.15),
-and 13 of the 17 sit in three systems the screen mis-calls for at least four of five models, so
-much of it likely reflects the screen's approximation. Multi-mode stochastic SCHA (SSCHA), with its
+cell conventions). The asymmetry is not significant once units are clustered by system (p = 0.15).
+On PBE energies along the same coordinates eight of the 17 (BaTiO₃, KNbO₃) are called correctly:
+four models' wells there are about half the PBE depth. Multi-mode stochastic SCHA (SSCHA), with its
 default free-energy Hessian at the symmetric structure, calls deep displacive wells stable against
 unstable labels in 57 units; on the same MLIP energies the screen's free-energy comparison finds a
 lower displaced minimum in 46 of them. A curvature read at the symmetric structure is local and
 cannot certify stability against condensation into a deeper well. Under its
 production convention the screen recovers 16/30 [0.36, 0.70] ferroelectric-perovskite
 instabilities at T ≤ 300 K, against 5/27 [0.08, 0.37] for SSCHA.
-<!-- PENDING-C3: one sentence reporting the PBE checks, whichever way they fall: C3a (PBE E(Q) along the deciding soft-mode coordinates of SrTiO3 R, BaTiO3, KNbO3, CsSnBr3, bcc-Zr, ZrO2, and whether the PBE-backed screen keeps the shared mis-calls) and C3b (PBE energies/forces on SSCHA-sampled configurations, i.e. whether MLIP error on thermally sampled configurations also contributes to the SSCHA false-stables and high-T false-unstables). Keep the abstract <= 250 words: it is at 248 without this sentence, so trim elsewhere to fit it. -->
 <!-- PENDING-C1: the seed study shows converged = false and only the first population moving the auxiliary matrix on all 16 seeds of the four units (commit 2fdbb61; §S2.1 marker). If the converged-mode runs (C1c) do not keep the false-stables on BaTiO3/ZrO2, the SSCHA sentence above (and the title's second clause) must be restated as a property of the recipe as run, not of the default criterion; report whichever way it falls. -->
 Ensemble vote splits flag consensus errors (AUC 0.76), but not robustly: 0.63 without ORB-v2.
 
@@ -377,7 +376,29 @@ question: whether the symmetric phase is a local minimum of the free energy. §3
 matters for deep double wells. Unlike the free-energy screen, which treats each imaginary mode
 independently, SSCHA captures the coupled multi-mode phonon entropy, which matters most for the
 entropy-stabilised martensitic transitions of the bcc metals.
-<!-- PENDING-C3a / PENDING-C3b: Methods paragraph (new §2.6 here) for the first-principles reference of scripts/dft_reference.py: PBE with pw.x (Quantum ESPRESSO) and SSSP pseudopotentials, cutoffs and k-meshes as run; C3a = single points along each model's regenerated screen soft-mode coordinate (pattern checked against the cached E(Q) map, degenerate-space recovery disclosed), the five MLIPs re-evaluated on the identical geometries, and the screen re-solved on the PBE-fitted E(Q); C3b = MLIP-vs-PBE energies and forces on SSCHA-sampled configurations from the C1 ensembles against a rattled near-equilibrium baseline. Cite the codes as new references appended at the end of the list. State that C3a evaluates PBE along each model's own coordinate at that model's relaxed lattice (not the PBE-relaxed lattice or the PBE eigenvector), and that the C3b configurations come from the seed study's final Hessian ensembles of the production recipe, which did not converge (so at 100 K they may sample only the region near the positive-definite start, not the double well): report their amplitude along the soft coordinate, and match the rattled baseline's displacement RMS or report error against amplitude. -->
+### 2.6 First-principles reference (PBE)
+
+To separate force-engine error from the approximations of the two finite-temperature methods we
+computed PBE single points with pw.x (Quantum ESPRESSO 7.5)^44^ and the SSSP 1.3 PBE efficiency
+pseudopotentials,^45^ for six systems (BaTiO₃, KNbO₃, SrTiO₃, CsSnBr₃, cubic ZrO₂, bcc Zr; 448
+calculations, `scripts/dft_reference.py`). Cutoffs are the largest SSSP recommendation over the
+elements (30–60 Ry for the wavefunctions, eight times that for the density), with
+Marzari–Vanderbilt smearing^46^ of 0.005 Ry (0.02 Ry for Zr) and Γ-centred k-meshes at a spacing
+of 0.25 Å⁻¹ (0.15 Å⁻¹ for Zr, 2π included). (i) Along the soft-mode coordinates (C3a): for each
+model, the paths that decide its screen call were regenerated from its own force constants,
+checked against the cached E(Q) map, and evaluated with PBE at ten amplitudes up to 0.45 Å, at that
+model's relaxed lattice and along its eigenvector, not at the PBE lattice or along the PBE
+eigenvector; the five MLIPs were re-evaluated on the identical geometries, and the screen of §2.4
+was re-solved on the PBE-fitted E(Q) with every other setting unchanged. Where a model's screen
+finds no instability in a system that another model does (bcc Zr for CHGNet, MACE-MP-0 and
+SevenNet-0; SrTiO₃ for ORB-v2), the path is MatterSim's deciding coordinate. (ii) On
+SSCHA-sampled configurations (C3b): twelve configurations from each of four seed-study ensembles
+(BaTiO₃, ZrO₂ and SrTiO₃ with MACE-MP-0 at 100, 100 and 600 K; bcc Zr with MatterSim at 50 K),
+scored for all five models against PBE forces and energies, with four rattled cells (0.03 Å
+root-mean-square displacement) of the same supercell as the near-equilibrium baseline. These
+ensembles come from the production recipe, which did not converge (§2.5), so at low temperature
+they may sample only the neighbourhood of its positive-definite start rather than the double
+well. Energies are compared only as differences within one code.
 
 ## 3. Results
 
@@ -556,14 +577,25 @@ are PbTiO₃, the screen's ordering failure (below), and all four c units are st
 control false-unstables that the harmonic layer reads off its interpolated mesh and the
 commensurate screen cannot reproduce (CeO₂ and NaCl with CHGNet, MgO with ORB-v2; approximation A2),
 and the fourth is ORB-v2 on SrTiO₃, which sees no instability at any temperature. At 600 K five
-systems hold 22 of the 23. An error that four or five architectures share on the same system is not a
-model-specific PES error. Its likeliest source is the single-mode screen itself (approximation A1
-of Table 1); the alternative is a surface error common to all five models, for instance one
-inherited from similar training data. These counterexamples therefore measure an error shared
-across models, and a screen run on the PBE surface for the same systems separates the two
-readings: a mis-call that persists there belongs to the screen (or to the functional), and one
-that disappears belongs to the MLIPs.
-<!-- PENDING-C3a: PBE E(Q) along the deciding soft-mode coordinates (BaTiO3, KNbO3, CsSnBr3, SrTiO3 R, bcc-Zr, ZrO2) and the PBE-backed screen calls at 300 K and 600 K. Report, whichever way it falls, whether the shared mis-calls persist on the PBE surface (the screen's own approximation) or disappear (MLIP PES error), and point to the new ESI section/table. -->
+systems hold 22 of the 23. An error that four or five architectures share on the same system can
+come from the single-mode screen itself (approximation A1 of Table 1) or from a surface error common
+to the models, for instance one inherited from similar training data. Running the screen on PBE
+energies along the same coordinates separates the two (§2.6; ESI §S5, Table S19): a mis-call that
+persists there belongs to the screen, the functional or the label, and one that disappears belongs
+to the MLIPs. For BaTiO₃ and KNbO₃ the shared 300 K mis-calls disappear. All eight b units of
+CHGNet, MACE-MP-0, MatterSim and SevenNet-0 are called unstable on PBE, as labelled, and along the
+coordinates that decide them these four models' wells are 0.32–0.76 of the PBE depth (median 0.53).
+That is the PES softening of H1, measured directly on the coordinate that matters. For CsSnBr₃ the
+mis-calls persist: the MLIP wells match PBE to within 20 % for three of the five models, every PBE
+curve has its minimum at the edge of the scan, and the label sits 8 K above the transition. KNbO₃ at
+600 K, called stable by all five models and by PBE against an unstable label (T_c 708 K), is the
+cleanest error of the screen or the functional. Over all 120 ladder units of the six systems,
+swapping only the energy engine from each MLIP to PBE, on identical modes and amplitudes, raises
+agreement with the labels from 81 to 101 (23 corrected, 3 newly wrong; five systems improve and
+none worsens). Ten of the corrections are bcc Zr along MatterSim's deciding coordinate, which
+CHGNet, MACE-MP-0 and SevenNet-0 flatten to zero. The counts are descriptive, over six systems, and
+PBE is evaluated at each MLIP's relaxed lattice and along its coordinate, so they separate
+force-engine error from the screen's approximation without measuring either in isolation.
 
 The second question is whether harmonic and finite-temperature correctness are *associated*,
 which McNemar does not test. There the answer is that this design cannot say. The
@@ -779,9 +811,11 @@ nothing about stability, and the bubble-level Hessian (+2.87 THz). The run with 
 (`include_v4 = True`) did not finish: it had run for more than 18 min on this one unit, against
 about 200 s without the term. No two rows differ in truncation order alone, so the table does not
 isolate the truncation as the cause. Whether an MLIP error on the thermally sampled configurations
-also contributes to the false-stables is a separate question, which data computed on one surface
-cannot settle.
-<!-- PENDING-C3b: PBE energies and forces on SSCHA-sampled configurations (MLIP-vs-PBE error against a near-equilibrium baseline); one sentence here on whether MLIP error on thermally sampled configurations contributes to the SSCHA false-stables, whichever way it falls, pointing to the new ESI section. -->
+also contributes to the false-stables is a separate question, which PBE forces on those
+configurations address (ESI §S5, Table S20). They give no sign of it: on twelve configurations each
+from the BaTiO₃ and ZrO₂ ensembles at 100 K (0.09 Å root-mean-square displacement), MACE-MP-0's
+force error relative to the PBE forces is 0.10 and 0.18, against 0.10 and 0.23 on rattled
+near-equilibrium cells.
 
 The fluorites show the same pattern on a shallower, numerically well-behaved instability. Cubic
 ZrO₂ and HfO₂ are the high-temperature phases (above about 2570 and 2800 K), unstable through the
@@ -811,8 +845,12 @@ the sign is right and the trend is not. An instability that grows with thermal a
 potential is the opposite of entropy stabilisation. It is what an MLIP extrapolating on
 large-amplitude configurations, far from its training data, would produce; an instability of the
 stochastic sampling itself, and a Hessian evaluated at an auxiliary matrix that has not reached
-the SCHA minimum (§2.5), are the other candidates. The MLIP-only data here cannot separate them.
-<!-- PENDING-C3b: PBE forces and energies on SSCHA-sampled configurations from the high-T false-unstable units (SrTiO3 first); one or two sentences here on MLIP extrapolation against sampling instability, whichever way it falls. -->
+the SCHA minimum (§2.5), are the other candidates. PBE forces on twelve configurations from the
+SrTiO₃ 600 K ensemble (ESI §S5, Table S20), at 0.34 Å root-mean-square displacement, show the
+extrapolation error is real there: MACE-MP-0's relative force error rises from 0.11 near
+equilibrium to 0.19, energy errors reach 44 meV per atom, and all five models fall in the same range
+(0.12–0.20). Whether that error, rather than the sampling, drives the runaway is not settled by
+twelve configurations from one unit.
 
 Numerical failures. The SSCHA grid holds 208 of the 215 (system, model, temperature)
 combinations its ten systems and two temperature ladders allow: ORB-v2 was not run on
@@ -966,10 +1004,11 @@ units that the screen mis-calls at finite temperature exist and outnumber the re
 under the others, §2.4). The asymmetry is large and one-directional in unit counts but not
 significant once units are clustered by system (p = 0.152 at 300 K, 0.066 at 600 K), and 13 of the
 17 sit in BaTiO₃, KNbO₃ and CsSnBr₃, three systems the screen mis-calls for at least four of the
-five models. An error shared by four or five architectures is more likely the single-mode screen's
-own approximation than a defect of one model's surface, so the count says less about the models
-than its size suggests.
-<!-- PENDING-C3a: whether the shared screen mis-calls on BaTiO3, KNbO3 and CsSnBr3 persist when the screen is run on the PBE E(Q) (screen approximation) or disappear (MLIP PES error); one sentence here, whichever way it falls. -->
+five models. Sharing does not make them the screen's. On PBE energies along the same coordinates
+the eight BaTiO₃ and KNbO₃ units are called correctly, with the MLIP wells at about half the PBE
+depth, while the five CsSnBr₃ units stay mis-called (§3.2). So at least eight of the 17 are a
+softening that four architectures share, and the five that persist are the screen's, the
+functional's or the label's.
 What survives is the point the title makes, and it does not depend on which layer is at fault in a
 given unit: a top harmonic score does not certify the finite-temperature calls made with a model.
 MatterSim, MACE-MP-0 and SevenNet-0 are harmonically perfect on the matched set and still have 5,
@@ -1025,8 +1064,9 @@ depths and shapes the screen reads, and so the per-model screen accuracies and t
 from them. Whether it would remove the mis-calls shared across models, which carry most of the H2
 count, is what a screen run on the PBE surface tests (§3.2), since that is the surface a PBE
 fine-tune aims at, along the same coordinates (the mode pattern still comes from each MLIP's force
-constants).
-<!-- PENDING-C3a: one clause, whichever way it falls: do the shared mis-calls on BaTiO3, KNbO3 and CsSnBr3 persist on the PBE E(Q)? -->
+constants). On that surface the BaTiO₃ and KNbO₃ mis-calls disappear and the CsSnBr₃ ones do not,
+so a fine-tune that deepened the softened ferroelectric wells toward PBE would plausibly remove
+about half the shared count and leave the rest.
 Fine-tuning could change which units fall in the deep-well regime of §3.3, since that depends on
 the well depth, but not the locality of the criterion: a curvature read at the symmetric reference
 reports stable on any surface whose double well is deep enough, fine-tuned or not. Nor could it
@@ -1074,9 +1114,16 @@ transition the gate is scored against (three of the five models pass it), and th
 wells themselves, or the MLIP on the large-amplitude configurations SSCHA samples at high
 temperature. First-principles energies along
 the deciding soft-mode coordinates, and first-principles forces and energies on SSCHA-sampled
-configurations, separate those errors from the approximations of the two methods.
-<!-- PENDING-C3a: PBE E(Q) along the deciding soft-mode coordinates (SrTiO3 R, BaTiO3, KNbO3, CsSnBr3, bcc-Zr, ZrO2) and PBE-backed screen calls: do the MLIP wells match PBE, and do the shared mis-calls persist on the PBE surface; one or two sentences here, whichever way it falls. -->
-<!-- PENDING-C3b: MLIP-vs-PBE force and energy errors on SSCHA-sampled configurations against a near-equilibrium baseline: does MLIP extrapolation contribute to the SSCHA false-stables and high-T false-unstables; one or two sentences here, whichever way it falls. -->
+configurations, separate those errors from the approximations of the two methods. We computed
+both for six systems (§2.6; ESI §S5). Along the deciding coordinates the MLIP wells are shallower
+than PBE's for BaTiO₃, KNbO₃ and ZrO₂ (about half the depth for the four conservative models),
+comparable for CsSnBr₃, and absent for bcc Zr in the three models that flatten it; with PBE energies
+the screen agrees with the labels in 101 of 120 units against 81 with the MLIPs. On SSCHA-sampled
+configurations at 50–100 K the MLIPs' relative force error is no larger than near equilibrium, so
+extrapolation does not explain the false-stables there. At 600 K in SrTiO₃, where sampling runs to
+0.34 Å root-mean-square displacements, it rises 1.7-fold and energy errors reach 44 meV per atom.
+The PBE checks rest on six systems, at each MLIP's relaxed lattice, and do not cover the remaining
+fourteen.
 SSCHA cells are 2×2×2, the only cell-size test is on a bcc unit with no instability and compares
 cells that are not nested, and we make no convergence claim for the zone-boundary systems (§3.5);
 the production SSCHA grid did not record per-unit convergence diagnostics, and its step cap counts
@@ -1102,8 +1149,9 @@ way under its production frozen-cell convention (7 to 24 against 4 under the oth
 asymmetry is large and one-directional in unit counts but not significant once units are
 clustered by system, and most of it sits in three systems the screen mis-calls for at least four of
 the five models, so it establishes that such units exist, not a measured difference between the
-models' surfaces.
-<!-- PENDING-C3a: one clause on whether the shared mis-calls survive on the PBE surface. -->
+models' surfaces. On PBE energies along the same coordinates the BaTiO₃ and KNbO₃ mis-calls
+disappear, the four models' wells there being about half the PBE depth, and the CsSnBr₃ ones
+persist.
 
 The default SSCHA cross-check does not supply that certification for deep displacive wells. Its
 free-energy Hessian at the symmetric reference asks whether that phase is a local minimum, and on
@@ -1117,8 +1165,9 @@ reached the SCHA minimum was not recorded (§3.3).
 <!-- PENDING-C1: one clause on whether the false-stables survive a converged relaxation (C1c), whichever way it falls; restate this paragraph if they do not. -->
 Screening every imaginary commensurate mode
 rather than the softest one also matters: in SrTiO₃, under the production convention, the deepest
-instability is not the one that condenses.
-<!-- PENDING-C3b: one clause on whether MLIP error on SSCHA-sampled configurations contributes. -->
+instability is not the one that condenses. PBE forces on the sampled configurations show no
+extrapolation error behind the low-temperature false-stables, and a 1.7-fold rise in it on the
+600 K SrTiO₃ ensemble, where the high-temperature false-unstables arise.
 
 Disagreement across an ensemble of independent architectures is a suggestive guardrail, not a
 robust one. The discrete vote split flags consensus errors (AUC 0.76) but falls to 0.63, with an
@@ -1251,3 +1300,6 @@ not-for-profit sectors.
 41. H. Lee, Z. Li, J. He and Y. Xia, *Small*, 2026, **22**, e00071.
 42. M. Radova, W. G. Stark, C. S. Allen, R. J. Maurer and A. P. Bartók, *npj Comput. Mater.*, 2025, **11**, 237.
 43. J. Hänseroth, A. Flötotto, M. N. Qaisrani and C. Dreßler, *J. Phys. Chem. Lett.*, 2026, **17**, 3152–3162.
+44. (a) P. Giannozzi, S. Baroni, N. Bonini *et al.*, *J. Phys.: Condens. Matter*, 2009, **21**, 395502; (b) P. Giannozzi, O. Andreussi, T. Brumme *et al.*, *J. Phys.: Condens. Matter*, 2017, **29**, 465901.
+45. G. Prandini, A. Marrazzo, I. E. Castelli, N. Mounet and N. Marzari, *npj Comput. Mater.*, 2018, **4**, 72.
+46. N. Marzari, D. Vanderbilt, A. De Vita and M. C. Payne, *Phys. Rev. Lett.*, 1999, **82**, 3296.

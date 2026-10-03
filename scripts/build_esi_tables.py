@@ -8,8 +8,10 @@ S4-S11 and S13 from the ledger and results/stats_hardening.json, S14 (screen sen
 Referee 1.5) from results/screen_sensitivity.json, and S15-S17 (H2 clustered ladder, bcc
 agreement and criterion blindness, SSCHA high-T false-unstables and failures) from
 results/stats_hardening.json, and S18 (the pre-registered force-level ensemble test,
-Referee 2.2) from results/revision/force_spread/summary.json. Tables S1-S3 and S12 are
-hand-written in their own sections.
+Referee 2.2) from results/revision/force_spread/summary.json, and S19-S20 (PBE along the
+screen's coordinates, Referee 1.1; MLIP-versus-PBE errors on SSCHA configurations, Referee 1.2)
+from the C3a/C3b tables that ``scripts/dft_reference.py analyze`` writes under
+results/revision/dft/. Tables S1-S3 and S12 are hand-written in their own sections.
 
 It rewrites the block between the sentinels
 
@@ -48,7 +50,10 @@ STATS = REPO / "results" / "stats_hardening.json"
 SENS = REPO / "results" / "screen_sensitivity.json"
 CURV = REPO / "results" / "curvature_identity_check.json"
 FSPREAD = REPO / "results" / "revision" / "force_spread" / "summary.json"
-ESI = REPO / "paper" / "supplementary.md"
+C3A_UNITS = REPO / "results" / "revision" / "dft" / "c3a_unit_calls.csv"
+C3A_PATHS = REPO / "results" / "revision" / "dft" / "c3a_paths.csv"
+C3B_UNITS = REPO / "results" / "revision" / "dft" / "c3b_units.csv"
+ESI =REPO / "paper" / "supplementary.md"
 
 BEGIN = "<!-- BEGIN GENERATED TABLES -->"
 END = "<!-- END GENERATED TABLES -->"
@@ -1030,10 +1035,11 @@ def table_s17_sscha_high_t(st: dict) -> str:
         "an MLIP extrapolating on large-amplitude thermal configurations would produce; an "
         "instability of the stochastic sampling itself, and a free-energy Hessian evaluated at an "
         "auxiliary matrix that has not reached the SCHA minimum, are the other candidates, and "
-        "these data do not separate them. "
-        "<!-- PENDING-C3b: PBE forces and energies on SSCHA-sampled configurations (SrTiO3 and "
-        "the other high-T false-unstables) decide between MLIP extrapolation error and sampling "
-        "instability; result goes in §3.3 and in a sentence here. PENDING-C1: the SrTiO3/MACE-MP-0 "
+        "these data do not separate them. PBE forces on twelve configurations of the SrTiO₃ "
+        "MACE-MP-0 600 K ensemble (Table S20) show the MLIPs extrapolating there (relative force "
+        "error 0.19 against 0.11 near equilibrium, energy errors to 44 meV per atom), without "
+        "showing that this rather than the sampling drives the runaway. "
+        "<!-- PENDING-C1: the SrTiO3/MACE-MP-0 "
         "600 K seed study records whether the relaxation reached the SCHA minimum (the third "
         "candidate); one clause here, whichever way it falls --> "
         "`scripts/stats_hardening.py` (`sscha_high_t`, `orb_split_s3`).\n\n"
@@ -1149,6 +1155,232 @@ def table_s18_force_spread() -> str:
     )
 
 
+# ------------------------------------------- revision tables S19-S20 (PBE, C3a/C3b) ----
+
+C3A_ORDER = ["batio3_cubic", "knbo3_cubic", "srtio3_cubic", "cssnbr3_cubic", "zr_bcc",
+             "zro2_cubic"]
+EDGE_Q_A = 0.449      # the scan's largest amplitude is 0.45 A; a minimum at or beyond this is at the edge
+SHORT = {"batio3_cubic": "BaTiO₃", "knbo3_cubic": "KNbO₃", "srtio3_cubic": "SrTiO₃",
+         "cssnbr3_cubic": "CsSnBr₃", "zr_bcc": "bcc-Zr", "zro2_cubic": "ZrO₂"}
+
+
+def c3a_ladder_units() -> pd.DataFrame:
+    """The C3a unit calls on the ladder: the rows the ledger has a call for (100/300/600/900 K;
+    the 50 K rows have none), each scored against the label for the MLIP's own energies on the
+    PBE paths (``mlip_same_paths_stable``) and for PBE (``pbe_backed_stable``)."""
+    u = pd.read_csv(C3A_UNITS)
+    u = u[u["mlip_pred_stable_ledger"].notna()].copy()
+    gt = u["gt_stable"].astype(bool)
+    mlip, pbe = u["mlip_same_paths_stable"].astype(bool), u["pbe_backed_stable"].astype(bool)
+    u["mlip_ok"], u["pbe_ok"] = mlip == gt, pbe == gt
+    u["corrected"] = ~u["mlip_ok"] & u["pbe_ok"]
+    u["newly_wrong"] = u["mlip_ok"] & ~u["pbe_ok"]
+    return u
+
+
+def _nz(x: float) -> float:
+    """-0.0 -> 0.0, so that a zero well depth or ratio prints without a sign."""
+    return float(x) + 0.0
+
+
+def table_s19_c3a_pbe() -> str:
+    """Referee 1.1 (plan item C3a): PBE along the screen's own soft-mode coordinates.
+
+    Upper part: the unit calls, MLIP on the same paths against PBE, per system and in total with
+    and without ORB-v2. Lower part: the well depth of each path's own model against PBE. Every
+    number is read from results/revision/dft/c3a_unit_calls.csv and c3a_paths.csv, which
+    ``scripts/dft_reference.py analyze`` writes."""
+    if not (C3A_UNITS.exists() and C3A_PATHS.exists()):
+        return ""
+    u = c3a_ladder_units()
+
+    def row(label: str, g: pd.DataFrame) -> list:
+        return [label, len(g), int(g["mlip_ok"].sum()), int(g["pbe_ok"].sum()),
+                int(g["corrected"].sum()), int(g["newly_wrong"].sum())]
+
+    rows = [row(s, u[u["system"] == s]) for s in C3A_ORDER]
+    rows += [row("*total, all five models*", u),
+             row("*total, excluding ORB-v2*", u[u["model"] != "orb_v2"])]
+    tot = rows[-2]
+
+    # lower part: one row per PBE path, own-model curve against the PBE curve
+    p = pd.read_csv(C3A_PATHS)
+    own = p[p["curve"] == p["path_model"]]
+    pbe = p[p["curve"] == "pbe"]
+    m = own.merge(pbe, on="stem", suffixes=("_own", "_pbe"))
+    m["ratio"] = m["depth_meV_own"].abs() / m["depth_meV_pbe"]
+    m["edge"] = m["Q_min_A_pbe"] >= EDGE_Q_A
+    m["order"] = m["system_own"].map({s: i for i, s in enumerate(C3A_ORDER)})
+    m = m.sort_values(["order", "stem"])
+    drows = []
+    for r in m.itertuples():
+        has_well = r.depth_meV_own > 0
+        drows.append([r.stem, r.role_own, f"{_nz(r.depth_meV_own):.1f}", f"{r.depth_meV_pbe:.1f}",
+                      f"{_nz(r.ratio):.2f}",
+                      f"{r.Q_min_A_own:.3f}" if has_well else "no well", f"{r.Q_min_A_pbe:.3f}",
+                      "yes" if r.edge else "no"])
+    fe = m[m["system_own"].isin(["batio3_cubic", "knbo3_cubic"]) & (m["role_own"] == "decide")]
+    fe4 = fe[fe["path_model_own"] != "orb_v2"]
+    edge_sys = sorted({SHORT[s] for s in m.loc[m["edge"], "system_own"]})
+    n_decide, n_ref = int((m["role_own"] == "decide").sum()), int((m["role_own"] == "ref").sum())
+
+    # caption facts, read from the data
+    corr = u[u["corrected"]]
+    zr_ref = corr[(corr["system"] == "zr_bcc") & (corr["kind"] == "reference_coordinate")]
+    fe_corr = corr[corr["system"].isin(["batio3_cubic", "knbo3_cubic"])]
+    fe_T = ", ".join(f"{t:.0f}" for t in sorted(set(fe_corr["T"])))
+    fe_models = ", ".join(PRETTY[x] for x in sorted(set(fe_corr["model"])))
+    nw = u[u["newly_wrong"]]
+    nw_txt = "; ".join(f"{SHORT[r.system]}/{PRETTY[r.model]} at {r.T:.0f} K" for r in nw.itertuples())
+    same_ledger = int((u["mlip_pred_stable_ledger"].astype(bool) == u["mlip_same_paths_stable"].astype(bool)).sum())
+    n_off_cache = int((~u["all_paths_match_cache"]).sum())
+    n_decide_pbe = int(u["deciding_mode_has_pbe"].sum())
+    resid = u[~u["pbe_ok"]].groupby("system").size()
+    resid_txt = ", ".join(f"{SHORT[s]} {resid[s]}" for s in C3A_ORDER if s in resid)
+    n_nowell = int((m["depth_meV_own"] <= 0).sum())
+    npb = u["n_paths_pbe"]
+    return (
+        "**Table S19** PBE along the screen's own soft-mode coordinates (Referee 1.1, plan item "
+        f"C3a). Each of the {tot[1]} ladder units (6 systems × 5 models × 100, 300, 600 and 900 K) "
+        "is called twice by the screen's rule (unstable if any computed path condenses, §2.4), on "
+        "the same structures: from the model's own energies (*MLIP, same paths*) and from "
+        "Quantum ESPRESSO PBE single-point energies (*PBE-backed*). Both are scored against the "
+        "finite-temperature label used throughout (stable iff T is at or above the experimental "
+        "transition temperature). *Corrected by PBE* counts units whose MLIP call is wrong and "
+        "whose PBE-backed call is right; *newly wrong* counts the reverse. **PBE is evaluated at "
+        "each MLIP's own relaxed lattice, along that MLIP's coordinate**, so it is a different "
+        f"PBE potential for each model, not one reference curve per system. PBE covers "
+        f"{int(npb.min())} to {int(npb.max())} paths per unit, out of the "
+        f"{int(u['n_screened'].min())} to {int(u['n_screened'].max())} "
+        f"modes the screen maps; the mode that decided the ledger's call has a PBE path in "
+        f"{n_decide_pbe} of {len(u)} units. The MLIP column is the model's own call on those "
+        f"same paths and equals the ledger's call in {same_ledger} of {len(u)} units. In "
+        f"{n_off_cache} units a path's regenerated E(Q) map did not reproduce the cached map the "
+        "ledger was computed from (a substitute direction inside a degenerate eigenspace; "
+        "`all_paths_match_cache` in the deposited table), so those calls rest partly on a "
+        f"substitute coordinate. Of the {tot[4]} corrections, {len(zr_ref)} are bcc-Zr units on a "
+        "reference coordinate and "
+        f"{len(fe_corr)} are BaTiO₃ and KNbO₃ units, all at {fe_T} K and all for {fe_models}. "
+        "**The bcc-Zr paths of every model except MatterSim are MatterSim's deciding coordinate, "
+        "q = (1/3, 2/3, 0)** (role `ref`: a coordinate borrowed from MatterSim, not one of the "
+        f"model's own), and ORB-v2's SrTiO₃ path is MatterSim's pattern at q = (1/2, 1/2, 1/2); "
+        f"{n_ref} of the {len(m)} paths below are of this kind, and on "
+        f"{n_nowell} of them the model's own curve has no well at all. The "
+        f"{len(nw)} newly wrong units are {nw_txt}; the {int((~u['pbe_ok']).sum())} units that "
+        f"stay wrong under PBE are {resid_txt}. Counts are descriptive: the units cluster by system "
+        "(6 systems) and no test is attached. The label is a transition-temperature rule, so a "
+        "PBE call that disagrees with it is not necessarily a PBE error. "
+        "`scripts/dft_reference.py analyze` → "
+        "`results/revision/dft/c3a_unit_calls.csv`.\n\n"
+        + md(rows, ["System", "n units", "MLIP, same paths: correct", "PBE-backed: correct",
+                    "Corrected by PBE", "Newly wrong"])
+        + f"\n\nLower part: the well depth of each of the {len(m)} PBE paths ({n_decide} deciding, "
+        f"{n_ref} reference), the path model's own E(Q) against PBE on the same {int(p['n_Q_dft'].max())} "
+        "structures. Depth is −min E(Q) over the sampled amplitudes, zero when none is below "
+        "E(0), and Q_min is the sampled amplitude at that minimum, so both are limited to the "
+        f"{int(p['n_Q_dft'].max())}-point scan to 0.45 Å. *Ratio* is own depth over PBE depth. "
+        f"The BaTiO₃ and KNbO₃ deciding paths of the four models other than ORB-v2 "
+        f"({len(fe4)} paths: " + ", ".join(PRETTY[x] for x in sorted(set(fe4['path_model_own'])))
+        + f") have own-model depths {fe4['ratio'].min():.3f} to {fe4['ratio'].max():.3f} of PBE "
+        f"(median {fe4['ratio'].median():.3f}); with ORB-v2's {len(fe) - len(fe4)} paths the range is "
+        f"{fe['ratio'].min():.3f} to {fe['ratio'].max():.3f}. **The PBE minimum is at the scan "
+        f"edge (Q ≥ {EDGE_Q_A} Å) on {int(m['edge'].sum())} of {len(m)} paths, all "
+        f"{' and '.join(edge_sys)}**; there the sampled depth is a lower bound on the PBE depth "
+        "and the ratio is not a well-depth comparison.\n\n"
+        + md(drows, ["Path", "Role", "Own depth (meV)", "PBE depth (meV)", "Ratio own/PBE",
+                     "Own Q_min (Å)", "PBE Q_min (Å)", "PBE minimum at scan edge"])
+    )
+
+
+def table_s20_c3b() -> str:
+    """Referee 1.2 (plan item C3b): MLIP-versus-PBE forces and energies on SSCHA-sampled
+    configurations, against a near-equilibrium baseline, from results/revision/dft/c3b_units.csv.
+
+    One row per (system, owner model, T). The owner model is the one whose SSCHA ensemble
+    produced the configurations; the five models are all scored on the same configurations. The
+    five-model ranges are given with and without ORB-v2, as in Tables S9 and S15."""
+    if not C3B_UNITS.exists():
+        return ""
+    c = pd.read_csv(C3B_UNITS)
+    ss, base = c[c["set"] == "sscha"], c[c["set"] == "baseline"]
+    order = {s: i for i, s in enumerate(C3A_ORDER)}
+
+    def rng(x: pd.Series, nd: int) -> str:
+        return f"{x.min():.{nd}f} to {x.max():.{nd}f}"
+
+    def two(g: pd.DataFrame, col: str, nd: int) -> str:
+        """Range over the five models; the range without ORB-v2 in brackets where it differs."""
+        a, x = rng(g[col], nd), rng(g[g["eval_model"] != "orb_v2"][col], nd)
+        return a if a == x else f"{a} ({x} without ORB-v2)"
+
+    rows, facts = [], {}
+    keys = ss[["system", "owner_model", "T"]].drop_duplicates()
+    keys = keys.assign(o=keys["system"].map(order)).sort_values(["o", "T"]).drop(columns="o")
+    for k in keys.itertuples(index=False):
+        s = ss[(ss["system"] == k.system) & (ss["owner_model"] == k.owner_model) & (ss["T"] == k.T)]
+        b = base[(base["system"] == k.system) & (base["owner_model"] == k.owner_model)]
+        so, bo = s[s["is_owner"]].iloc[0], b[b["is_owner"]].iloc[0]
+        ratio = so["rel_force_rmse"] / so["rel_force_rmse_baseline"]
+        facts[k.system] = dict(so=so, bo=bo, ratio=ratio)
+        rows.append([
+            k.system, PRETTY[k.owner_model], f"{k.T:.0f}",
+            f"{int(bo['n_configs'])} + {int(so['n_configs'])}",
+            f"{bo['u_rms_mean_A']:.3f} / {so['u_rms_mean_A']:.3f}",
+            f"{bo['rms_f_pbe']:.3f} / {so['rms_f_pbe']:.3f}",
+            f"{bo['force_rmse']:.3f} / {so['force_rmse']:.3f}",
+            f"{so['rel_force_rmse_baseline']:.3f}", f"{so['rel_force_rmse']:.3f}", f"{ratio:.2f}",
+            f"{two(b, 'rel_force_rmse', 3)}; {two(s, 'rel_force_rmse', 3)}",
+            f"{bo['e_err_rms_meV_per_atom']:.2f} / {bo['e_err_maxabs_meV_per_atom']:.2f}; "
+            f"{so['e_err_rms_meV_per_atom']:.2f} / {so['e_err_maxabs_meV_per_atom']:.2f}",
+            two(s, "e_err_rms_meV_per_atom", 1),
+        ])
+    sr, zr = facts["srtio3_cubic"], facts["zr_bcc"]
+    others = [v["ratio"] for k, v in facts.items() if k != "srtio3_cubic"]
+    nb = sorted({int(x) for x in base["n_configs"]})
+    ns = sorted({int(x) for x in ss["n_configs"]})
+    return (
+        "**Table S20** MLIP errors on SSCHA-sampled configurations, scored against PBE (Referee "
+        "1.2, plan item C3b). The configurations are drawn from the C1 SSCHA ensembles "
+        "(`scripts/sscha_seed_study.py`), one temperature per system; the baseline is "
+        "near-equilibrium rattled configurations of the same supercell. Per set there are "
+        f"{' or '.join(str(x) for x in nb)} baseline and {' or '.join(str(x) for x in ns)} SSCHA "
+        "configurations, so every figure rests on very few configurations and carries no "
+        "uncertainty. The owner model is the one whose SSCHA ensemble produced the "
+        "configurations; all five models are scored on the same configurations. Relative force "
+        "RMSE is the RMSE over all Cartesian components divided by the RMS PBE force component; "
+        "*Ratio* is the owner's relative force RMSE on the SSCHA configurations over its own "
+        "baseline value. u_rms is the mean over configurations of the rms atomic displacement "
+        "from the ideal supercell. Energy errors are per atom, taken relative to the undisplaced "
+        "supercell in each code separately, and given as RMS / maximum absolute value over "
+        "configurations; the baseline and SSCHA values are separated by a semicolon where two "
+        "are given. Ranges run over the five evaluated models, with the range without ORB-v2 in "
+        f"brackets where it differs. **The owner's relative force error is {min(others):.2f} to {max(others):.2f} "
+        f"times its baseline for BaTiO₃, ZrO₂ and bcc-Zr, but {sr['ratio']:.2f} times for SrTiO₃ "
+        f"at {sr['so']['T']:.0f} K** ({sr['so']['rel_force_rmse_baseline']:.3f} to "
+        f"{sr['so']['rel_force_rmse']:.3f}), where the configurations are displaced by "
+        f"{sr['so']['u_rms_mean_A']:.3f} Å rms and the owner's energy error is "
+        f"{sr['so']['e_err_rms_meV_per_atom']:.1f} meV/atom rms and "
+        f"{sr['so']['e_err_maxabs_meV_per_atom']:.1f} meV/atom at its worst; its absolute force "
+        f"RMSE grows {sr['so']['force_rmse'] / sr['bo']['force_rmse']:.0f}-fold while the PBE "
+        f"forces themselves grow {sr['so']['rms_f_pbe'] / sr['bo']['rms_f_pbe']:.0f}-fold. "
+        f"**bcc-Zr's relative error has a PBE-force denominator of about "
+        f"{zr['bo']['rms_f_pbe']:.2f} eV/Å on the baseline and is uninformative**: it goes from "
+        f"{zr['so']['rel_force_rmse_baseline']:.3f} to {zr['so']['rel_force_rmse']:.3f} on the "
+        f"SSCHA configurations although the owner's absolute force RMSE grows "
+        f"{zr['so']['force_rmse'] / zr['bo']['force_rmse']:.1f}-fold, because the PBE force RMS "
+        f"(the denominator) grows {zr['so']['rms_f_pbe'] / zr['bo']['rms_f_pbe']:.1f}-fold. "
+        "`scripts/dft_reference.py analyze` → `results/revision/dft/c3b_units.csv`.\n\n"
+        + md(rows, ["System", "Owner model", "T (K)", "Configs (baseline + SSCHA)",
+                    "u_rms (Å), baseline / SSCHA", "PBE force RMS (eV/Å), baseline / SSCHA",
+                    "Owner force RMSE (eV/Å), baseline / SSCHA",
+                    "Owner relative force RMSE, baseline", "Owner relative force RMSE, SSCHA",
+                    "Ratio",
+                    "Relative force RMSE over five models, baseline; SSCHA",
+                    "Owner energy error RMS / max (meV/atom), baseline; SSCHA",
+                    "Energy error RMS over five models, SSCHA (meV/atom)"])
+    )
+
+
 def build() -> str:
     raw = pd.read_parquet(LEDGER)
     df = A.canonical(raw)
@@ -1173,6 +1405,8 @@ def build() -> str:
         table_s16_bcc_agreement(st),
         table_s17_sscha_high_t(st),
         table_s18_force_spread(),
+        table_s19_c3a_pbe(),
+        table_s20_c3b(),
     ]
     blocks = [b for b in blocks if b]
     return "\n\n".join(blocks)

@@ -391,6 +391,95 @@ def main() -> int:
           f"[3.3] SSCHA false-stables: screen call finds a displaced minimum on {ccall}/{len(cfs)} "
           f"(curvature positive by construction on {cpos}; {cblind} both)")
 
+    # ==== Revision C3a / C3b (R1.1, R1.2): PBE along the screen's coordinates and PBE errors on
+    # SSCHA configurations. Recomputed from the committed tables that `scripts/dft_reference.py
+    # analyze` writes (not read from summary.json). The ladder is the 120 rows the ledger has a
+    # call for; the 50 K rows have none. Counts are descriptive over six systems.
+    dft = "results/revision/dft/"
+    c3u = pd.read_csv(dft + "c3a_unit_calls.csv")
+    c3u = c3u[c3u.mlip_pred_stable_ledger.notna()].copy()
+    c3_gt = c3u.gt_stable.astype(bool)
+    c3_mlip, c3_pbe = c3u.mlip_same_paths_stable.astype(bool), c3u.pbe_backed_stable.astype(bool)
+    c3u["m_ok"], c3u["p_ok"] = c3_mlip == c3_gt, c3_pbe == c3_gt
+    c3u["fixed"] = ~c3u.m_ok & c3u.p_ok          # MLIP wrong on the same paths, PBE right
+    c3u["newly"] = c3u.m_ok & ~c3u.p_ok         # MLIP right, PBE wrong
+    c3x = c3u[c3u.model != "orb_v2"]
+    c3_tot = tuple(int(x) for x in (len(c3u), c3u.m_ok.sum(), c3u.p_ok.sum(), c3u.fixed.sum(),
+                                    c3u.newly.sum()))
+    check(c3_tot == (120, 81, 101, 23, 3),
+          f"[R1.1] C3a: MLIP on the same paths {c3_tot[1]}/{c3_tot[0]} correct, PBE-backed "
+          f"{c3_tot[2]}/{c3_tot[0]}; {c3_tot[3]} corrected by PBE, {c3_tot[4]} newly wrong")
+    c3_totx = (len(c3x), int(c3x.m_ok.sum()), int(c3x.p_ok.sum()))
+    check(c3_totx == (96, 61, 82),
+          f"[R1.1] C3a ex-ORB-v2: MLIP {c3_totx[1]}/{c3_totx[0]}, PBE {c3_totx[2]}/{c3_totx[0]} "
+          f"({int(c3x.fixed.sum())} corrected, {int(c3x.newly.sum())} newly wrong)")
+    c3_per = c3u.groupby("system")[["m_ok", "p_ok"]].sum()
+    c3_exp = {"batio3_cubic": (16, 19), "cssnbr3_cubic": (9, 11), "knbo3_cubic": (11, 15),
+              "srtio3_cubic": (18, 20), "zr_bcc": (7, 16), "zro2_cubic": (20, 20)}
+    check(all((int(c3_per.loc[k, "m_ok"]), int(c3_per.loc[k, "p_ok"])) == e
+              for k, e in c3_exp.items()) and (c3u.groupby("system").size() == 20).all(),
+          "[R1.1] C3a per system (MLIP -> PBE of 20): "
+          + ", ".join(f"{k} {int(c3_per.loc[k, 'm_ok'])}->{int(c3_per.loc[k, 'p_ok'])}"
+                      for k in c3_exp))
+    c3_zr = c3u[(c3u.system == "zr_bcc") & c3u.fixed]
+    check(len(c3_zr) == 10 and bool((c3_zr.kind == "reference_coordinate").all()),
+          f"[R1.1] C3a: all {len(c3_zr)} bcc-Zr corrections are on MatterSim's reference "
+          f"coordinate (models {sorted(set(c3_zr.model))})")
+    c3_fe = c3u[c3u.system.isin(["batio3_cubic", "knbo3_cubic"])]
+    c3_fe8 = c3_fe[(c3_fe["T"] == 300) & c3_fe.mlip_same_paths_stable.astype(bool)
+                   & ~c3_fe.pbe_backed_stable.astype(bool) & ~c3_fe.gt_stable.astype(bool)]
+    check(len(c3_fe8) == 8 and int(c3_fe.fixed.sum()) == 8
+          and sorted(set(c3_fe8.model)) == ["chgnet", "mace_mp0", "mattersim", "sevennet0"]
+          and c3_fe8.groupby("system").size().eq(4).all(),
+          f"[R1.1] C3a: {len(c3_fe8)} BaTiO3+KNbO3 units at 300 K (CHGNet, MACE, MatterSim, "
+          f"SevenNet) are MLIP-stable, PBE-unstable, label-unstable; no other BaTiO3/KNbO3 unit "
+          f"is corrected ({int(c3_fe.fixed.sum())} in all)")
+
+    c3p = pd.read_csv(dft + "c3a_paths.csv")
+    c3_own, c3_pbe_c = c3p[c3p.curve == c3p.path_model], c3p[c3p.curve == "pbe"]
+    c3_dm = c3_own.merge(c3_pbe_c, on="stem", suffixes=("_own", "_pbe"))
+    c3_dm["ratio"] = c3_dm.depth_meV_own / c3_dm.depth_meV_pbe
+    c3_r = c3_dm[c3_dm.system_own.isin(["batio3_cubic", "knbo3_cubic"])
+                 & (c3_dm.role_own == "decide") & (c3_dm.path_model_own != "orb_v2")].ratio
+    c3_models = sorted(set(c3_dm[c3_dm.index.isin(c3_r.index)].path_model_own))
+    check(len(c3_dm) == 38 and len(c3_r) == 12
+          and c3_models == ["chgnet", "mace_mp0", "mattersim", "sevennet0"]
+          and abs(c3_r.min() - 0.315) < 5e-4 and abs(c3_r.max() - 0.763) < 5e-4
+          and abs(c3_r.median() - 0.525) < 1e-3,
+          f"[R1.1] C3a: BaTiO3+KNbO3 own-path well depth is {c3_r.min():.3f}-{c3_r.max():.3f} of "
+          f"PBE (median {c3_r.median():.3f}) over {len(c3_r)} paths, 4 models")
+    c3_edge = c3_pbe_c[c3_pbe_c.Q_min_A >= 0.449]
+    check(len(c3_edge) == 8 and set(c3_edge.system) == {"cssnbr3_cubic"}
+          and int((c3_pbe_c.system == "cssnbr3_cubic").sum()) == 8,
+          f"[R1.1] C3a: {len(c3_edge)} PBE minima at the 0.45 A scan edge, all CsSnBr3 "
+          f"(= every CsSnBr3 path)")
+
+    c3b = pd.read_csv(dft + "c3b_units.csv")
+    c3_own3 = c3b[c3b.is_owner & (c3b["set"] == "sscha")].set_index("system")
+    c3_base = c3b[c3b.is_owner & (c3b["set"] == "baseline")].set_index("system")
+    c3_exp3 = {"batio3_cubic": (0.100, 0.104), "zro2_cubic": (0.225, 0.175),
+               "zr_bcc": (0.596, 0.439), "srtio3_cubic": (0.113, 0.190)}
+    check(all(abs(c3_own3.loc[k, "rel_force_rmse_baseline"] - b0) < 5e-4
+              and abs(c3_base.loc[k, "rel_force_rmse"]
+                      - c3_own3.loc[k, "rel_force_rmse_baseline"]) < 1e-9
+              and abs(c3_own3.loc[k, "rel_force_rmse"] - s0) < 5e-4
+              for k, (b0, s0) in c3_exp3.items())
+          and set(c3b[c3b["set"] == "baseline"].n_configs) == {4}
+          and set(c3b[c3b["set"] == "sscha"].n_configs) == {12},
+          "[R1.2] C3b owner relative force RMSE baseline -> SSCHA: "
+          + ", ".join(f"{k} {c3_own3.loc[k, 'rel_force_rmse_baseline']:.3f}->"
+                      f"{c3_own3.loc[k, 'rel_force_rmse']:.3f}" for k in c3_exp3)
+          + " (4 baseline + 12 SSCHA configs per set)")
+    c3_sr = c3_own3.loc["srtio3_cubic"]
+    c3_ratio = c3_sr.rel_force_rmse / c3_sr.rel_force_rmse_baseline
+    check(abs(c3_sr.rel_force_rmse - 0.190) < 5e-4 and abs(c3_ratio - 1.67) < 5e-3
+          and abs(c3_sr.u_rms_mean_A - 0.337) < 5e-4
+          and abs(c3_sr.e_err_rms_meV_per_atom - 15.1) < 0.05
+          and abs(c3_sr.e_err_maxabs_meV_per_atom - 44.3) < 0.05,
+          f"[R1.2] C3b SrTiO3/MACE 600 K: owner relative force RMSE {c3_sr.rel_force_rmse:.3f} = "
+          f"{c3_ratio:.2f}x baseline, u_rms {c3_sr.u_rms_mean_A:.3f} A, energy error RMS "
+          f"{c3_sr.e_err_rms_meV_per_atom:.1f} / max {c3_sr.e_err_maxabs_meV_per_atom:.1f} meV/atom")
+
     print()
     if _fails:
         print(f"{len(_fails)} CLAIM(S) FAILED -- the manuscript and the ledger disagree:")
