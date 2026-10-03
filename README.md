@@ -116,3 +116,53 @@ python paper/toc_entry/make_toc_graphic.py
 ```
 
 Running new units needs one environment per model; see `envs/README.md`.
+
+## Reproducing the paper
+
+**CPU only, one command.** The five commands above are the core of `scripts/reproduce.sh`, which
+also re-derives the other statistics, the PBE-versus-MLIP and force-spread analyses, and the
+Holm and power outputs, then re-runs `verify_claims.py`. It needs only
+`envs/analysis-requirements.txt` (Python 3.12; no GPU, no MLIP package, no network beyond pip):
+
+```
+python -m venv .venv-analysis && . .venv-analysis/bin/activate
+pip install -r envs/analysis-requirements.txt
+bash scripts/reproduce.sh               # about three minutes
+bash scripts/reproduce.sh --check-only  # rewrites nothing: manifest, verify_claims, ESI --check
+bash scripts/reproduce.sh --resolve     # also re-solves the cached E(Q) maps: H2 by convention, and
+                                        #   Table S14 if MACE-MP-0 is importable; about 15 minutes
+```
+
+It first checks `results/MANIFEST.sha256` (sha256 and size of every tracked file under `results/`;
+`python scripts/make_manifest.py --check`, rewritten with `python scripts/make_manifest.py` after
+results are added) so that the deposit is the one the paper was built from, and it ends by listing the
+tracked files that changed. On a clean clone that list is four files under `results/revision/`
+(`force_spread/summary.json`, `dft/summary.json`, `dft/c3a_curves.json`, `dft/qe_jobs.csv`). They
+differ from the deposit in the provenance block (time, host, package versions) and nothing else,
+except that `qe_jobs.csv` and `dft/summary.json` also lose the 533 never-run `ax_` jobs, whose
+inputs are gitignored. Every other regenerated file, the ESI tables and the figures included, is
+byte-identical.
+`.github/workflows/verify.yml` runs `verify_claims.py`,
+`build_esi_tables.py --check` and the manifest check on every push in `envs/ci-requirements.txt`
+(numpy, pandas, pyarrow, pyyaml, scipy).
+
+**What needs a GPU box.** Everything above starts from the ledger and from raw outputs already in
+`results/`. Producing those outputs is the part that does not run on a laptop:
+
+| Generated data | Script (run inside the model's environment) | Environment |
+|---|---|---|
+| Harmonic phonons (layer 1), screen calls (layer 2) | `scripts/run_grid.py --layer harmonic` / `--layer finite_t` | `envs/lock-<model>-2026-08-16.txt` |
+| SSCHA grid (layer 3), seed study, converged-recipe grid | `scripts/run_sscha_v2.py`, `scripts/sscha_seed_study.py --preset revision / converged / grid`, GPU | `envs/lock-<model>-2026-08-17.txt` (the 08-16 set plus CellConstructor 1.6.2 and python-sscha 1.6.1) |
+| Displacement sweep (Table S13) | `scripts/run_disp_sweep.py` | `envs/lock-<model>-2026-08-17.txt` |
+| Force-level spread (Table S18) | `scripts/force_spread.py --stage fc / configs / forces`, GPU; `--stage analyze` is the CPU step | five model environments plus the committee checkpoints |
+| PBE reference (Tables S19-S20) | `scripts/dft_reference.py geom / mlip-eval / qe-inputs / c3b-inputs`, then `scripts/box/qe_queue.sh`; `analyze` is the CPU step | model environments, Quantum ESPRESSO 7.5, SSSP 1.3.0 PBE efficiency |
+
+The revision box was driven stage by stage with the scripts in `scripts/box/as_run/` (its README
+gives the order, the hardware and what each stage wrote); `tasks/compute-runbook-rsc-revision.md`
+maps every stage to the referee point and the output it feeds. Environments are built from the lock
+files as `envs/README.md` describes (`scripts/box/as_run/env_build.sh` rewrites the conda `@ file://`
+lines). A re-run resumes: units already in the ledger are skipped, so a fresh box recomputes only
+what is missing. Two outputs are additions to the paper's numbers and change none of them:
+`results/power_h2.json` (the projected probability that the H2 test reaches p < 0.05 as the number of
+systems grows) and `results/holm_adjusted.json` (Holm-adjusted p-values within each family the paper
+reports), both from `scripts/power_h2.py`.

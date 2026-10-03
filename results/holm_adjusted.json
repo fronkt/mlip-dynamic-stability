@@ -1,0 +1,759 @@
+{
+ "_generated_by": "scripts/power_h2.py",
+ "_alpha": 0.05,
+ "_method": "Holm step-down: adj_(i) = max over j<=i of min(1, (m - j + 1) p_(j)), p sorted ascending",
+ "_note": "Additional output. No existing number is changed. Families are the sets of p-values the paper reports side by side; descriptive and companion p-values (unit-level McNemar, leave-one-system-out, Spearman) are not adjusted. Several p-values are discrete or Monte-Carlo, see each family's note.",
+ "families": {
+  "h2_ladder_all_models": {
+   "id": "h2_ladder_all_models",
+   "description": "H2 transfer asymmetry b v c at the four ladder temperatures, all five models",
+   "reported_in": "manuscript 3.2 ladder table; ESI Table S15",
+   "test": "system-clustered exact (2^k sign flips)",
+   "items": [
+    {
+     "label": "100 K",
+     "p_raw": 0.84375,
+     "source": "results/stats_hardening.json h2_clustered/100/all_models/clustered_by_system/p_exact_clustered",
+     "p_holm": 0.84375,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "300 K",
+     "p_raw": 0.15234,
+     "source": "results/stats_hardening.json h2_clustered/300/all_models/clustered_by_system/p_exact_clustered",
+     "p_holm": 0.45702,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "600 K",
+     "p_raw": 0.06641,
+     "source": "results/stats_hardening.json h2_clustered/600/all_models/clustered_by_system/p_exact_clustered",
+     "p_holm": 0.26564,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "900 K",
+     "p_raw": 0.41406,
+     "source": "results/stats_hardening.json h2_clustered/900/all_models/clustered_by_system/p_exact_clustered",
+     "p_holm": 0.82812,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    }
+   ],
+   "m": 4,
+   "n_below_alpha_raw": 0,
+   "n_below_alpha_holm": 0
+  },
+  "h2_ladder_excl_orb_v2": {
+   "id": "h2_ladder_excl_orb_v2",
+   "description": "H2 transfer asymmetry b v c at the four ladder temperatures, without ORB-v2",
+   "reported_in": "manuscript 3.2 ladder table; ESI Table S15",
+   "test": "system-clustered exact (2^k sign flips)",
+   "items": [
+    {
+     "label": "100 K",
+     "p_raw": 1.0,
+     "source": "results/stats_hardening.json h2_clustered/100/excl_orb_v2/clustered_by_system/p_exact_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "300 K",
+     "p_raw": 0.15625,
+     "source": "results/stats_hardening.json h2_clustered/300/excl_orb_v2/clustered_by_system/p_exact_clustered",
+     "p_holm": 0.46875,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "600 K",
+     "p_raw": 0.05469,
+     "source": "results/stats_hardening.json h2_clustered/600/excl_orb_v2/clustered_by_system/p_exact_clustered",
+     "p_holm": 0.21876,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "900 K",
+     "p_raw": 0.25,
+     "source": "results/stats_hardening.json h2_clustered/900/excl_orb_v2/clustered_by_system/p_exact_clustered",
+     "p_holm": 0.5,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    }
+   ],
+   "m": 4,
+   "n_below_alpha_raw": 0,
+   "n_below_alpha_holm": 0
+  },
+  "h2_convention_x_T": {
+   "id": "h2_convention_x_T",
+   "description": "H2 under each frozen-cell convention of the screen at each ladder T (all five models)",
+   "reported_in": "ESI S1.3 ('the 20 convention and temperature combinations'), Table S14",
+   "test": "system-clustered exact (2^k sign flips)",
+   "items": [
+    {
+     "label": "production @ 100 K",
+     "p_raw": 0.84375,
+     "source": "results/h2_by_convention.json conventions/production/by_T/100/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "production @ 300 K",
+     "p_raw": 0.15234,
+     "source": "results/h2_by_convention.json conventions/production/by_T/300/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "production @ 600 K",
+     "p_raw": 0.06641,
+     "source": "results/h2_by_convention.json conventions/production/by_T/600/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "production @ 900 K",
+     "p_raw": 0.41406,
+     "source": "results/h2_by_convention.json conventions/production/by_T/900/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_common_fc @ 100 K",
+     "p_raw": 1.0,
+     "source": "results/h2_by_convention.json conventions/cell_common_fc/by_T/100/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_common_fc @ 300 K",
+     "p_raw": 0.89062,
+     "source": "results/h2_by_convention.json conventions/cell_common_fc/by_T/300/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_common_fc @ 600 K",
+     "p_raw": 0.12891,
+     "source": "results/h2_by_convention.json conventions/cell_common_fc/by_T/600/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_common_fc @ 900 K",
+     "p_raw": 0.11719,
+     "source": "results/h2_by_convention.json conventions/cell_common_fc/by_T/900/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_per_fu @ 100 K",
+     "p_raw": 0.04492,
+     "source": "results/h2_by_convention.json conventions/cell_per_fu/by_T/100/p_clustered",
+     "p_holm": 0.85348,
+     "below_alpha_raw": true,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_per_fu @ 300 K",
+     "p_raw": 0.06348,
+     "source": "results/h2_by_convention.json conventions/cell_per_fu/by_T/300/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_per_fu @ 600 K",
+     "p_raw": 0.125,
+     "source": "results/h2_by_convention.json conventions/cell_per_fu/by_T/600/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_per_fu @ 900 K",
+     "p_raw": 0.5,
+     "source": "results/h2_by_convention.json conventions/cell_per_fu/by_T/900/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_doubled @ 100 K",
+     "p_raw": 1.0,
+     "source": "results/h2_by_convention.json conventions/cell_doubled/by_T/100/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_doubled @ 300 K",
+     "p_raw": 0.5,
+     "source": "results/h2_by_convention.json conventions/cell_doubled/by_T/300/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_doubled @ 600 K",
+     "p_raw": 0.07617,
+     "source": "results/h2_by_convention.json conventions/cell_doubled/by_T/600/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_doubled @ 900 K",
+     "p_raw": 0.25,
+     "source": "results/h2_by_convention.json conventions/cell_doubled/by_T/900/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_x8 @ 100 K",
+     "p_raw": 1.0,
+     "source": "results/h2_by_convention.json conventions/cell_x8/by_T/100/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_x8 @ 300 K",
+     "p_raw": 0.42188,
+     "source": "results/h2_by_convention.json conventions/cell_x8/by_T/300/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_x8 @ 600 K",
+     "p_raw": 0.07812,
+     "source": "results/h2_by_convention.json conventions/cell_x8/by_T/600/p_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "cell_x8 @ 900 K",
+     "p_raw": 0.03125,
+     "source": "results/h2_by_convention.json conventions/cell_x8/by_T/900/p_clustered",
+     "p_holm": 0.625,
+     "below_alpha_raw": true,
+     "below_alpha_holm": false
+    }
+   ],
+   "note": "production and cell_minimal are the same convention and are counted once",
+   "m": 20,
+   "n_below_alpha_raw": 2,
+   "n_below_alpha_holm": 0
+  },
+  "h2_phi_association_by_T": {
+   "id": "h2_phi_association_by_T",
+   "description": "phi (harmonic-right vs finite-T-right association on the matched pairs) at the four ladder temperatures",
+   "reported_in": "manuscript 3.2 ladder table (last column)",
+   "test": "system-clustered permutation, 10,000 draws, seed 0",
+   "items": [
+    {
+     "label": "100 K",
+     "p_raw": 0.12468753124687532,
+     "source": "results/estimator_noise.json C_association/by_temperature/100/phi_perm_p_two_sided",
+     "p_holm": 0.37406,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "300 K",
+     "p_raw": 0.3050694930506949,
+     "source": "results/estimator_noise.json C_association/by_temperature/300/phi_perm_p_two_sided",
+     "p_holm": 0.61014,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "600 K",
+     "p_raw": 0.08309169083091691,
+     "source": "results/estimator_noise.json C_association/by_temperature/600/phi_perm_p_two_sided",
+     "p_holm": 0.33237,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "900 K",
+     "p_raw": 0.35836416358364165,
+     "source": "results/estimator_noise.json C_association/by_temperature/900/phi_perm_p_two_sided",
+     "p_holm": 0.61014,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    }
+   ],
+   "note": "Monte-Carlo permutation p-values (10,000 draws), so the adjusted values carry that noise",
+   "m": 4,
+   "n_below_alpha_raw": 0,
+   "n_below_alpha_holm": 0
+  },
+  "screen_vs_sscha_S10": {
+   "id": "screen_vs_sscha_S10",
+   "description": "Screen vs SSCHA paired contrast, the six rows of ESI Table S10",
+   "reported_in": "manuscript 3.3; ESI Table S10",
+   "test": "system-clustered exact (randomising the method label over systems)",
+   "items": [
+    {
+     "label": "fe oxide / all_models",
+     "p_raw": 0.5,
+     "source": "results/stats_hardening.json screen_vs_sscha_paired/fe_oxide__all_models/clustered_by_system/p_exact_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "fe oxide / excl_orb_v2",
+     "p_raw": 0.5,
+     "source": "results/stats_hardening.json screen_vs_sscha_paired/fe_oxide__excl_orb_v2/clustered_by_system/p_exact_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "fluorite / all_models",
+     "p_raw": 0.5,
+     "source": "results/stats_hardening.json screen_vs_sscha_paired/fluorite__all_models/clustered_by_system/p_exact_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "fluorite / excl_orb_v2",
+     "p_raw": 0.5,
+     "source": "results/stats_hardening.json screen_vs_sscha_paired/fluorite__excl_orb_v2/clustered_by_system/p_exact_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "displacive combined / all_models",
+     "p_raw": 0.125,
+     "source": "results/stats_hardening.json screen_vs_sscha_paired/displacive_combined__all_models/clustered_by_system/p_exact_clustered",
+     "p_holm": 0.75,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "displacive combined / excl_orb_v2",
+     "p_raw": 0.125,
+     "source": "results/stats_hardening.json screen_vs_sscha_paired/displacive_combined__excl_orb_v2/clustered_by_system/p_exact_clustered",
+     "p_holm": 0.75,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    }
+   ],
+   "note": "with 5, 3 and 2 systems the smallest attainable p is 0.0625, 0.25 and 0.5, so no row can reach 0.05 before or after adjustment",
+   "m": 6,
+   "n_below_alpha_raw": 0,
+   "n_below_alpha_holm": 0
+  },
+  "screen_vs_sscha_S10_combined_only": {
+   "id": "screen_vs_sscha_S10_combined_only",
+   "description": "The two combined-displacive rows of Table S10, the ones that carry the claim",
+   "reported_in": "manuscript 3.3",
+   "test": "system-clustered exact",
+   "items": [
+    {
+     "label": "displacive combined / all_models",
+     "p_raw": 0.125,
+     "source": "results/stats_hardening.json screen_vs_sscha_paired/displacive_combined__all_models/clustered_by_system/p_exact_clustered",
+     "p_holm": 0.25,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "displacive combined / excl_orb_v2",
+     "p_raw": 0.125,
+     "source": "results/stats_hardening.json screen_vs_sscha_paired/displacive_combined__excl_orb_v2/clustered_by_system/p_exact_clustered",
+     "p_holm": 0.25,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    }
+   ],
+   "m": 2,
+   "n_below_alpha_raw": 0,
+   "n_below_alpha_holm": 0
+  },
+  "h3_guardrail_auc": {
+   "id": "h3_guardrail_auc",
+   "description": "Ensemble-disagreement AUCs (vote split, frequency spread), with and without ORB-v2",
+   "reported_in": "manuscript 3.4; ESI Table S9",
+   "test": "system-clustered permutation, 10,000 draws, seed 0",
+   "items": [
+    {
+     "label": "vote_disagreement / all_models",
+     "p_raw": 0.0035,
+     "source": "results/stats_hardening.json orb_split_s3/guardrail/all_models/auc_vote_disagreement/p_perm_clustered",
+     "p_holm": 0.014,
+     "below_alpha_raw": true,
+     "below_alpha_holm": true
+    },
+    {
+     "label": "vote_disagreement / excl_orb_v2",
+     "p_raw": 0.0469,
+     "source": "results/stats_hardening.json orb_split_s3/guardrail/excl_orb_v2/auc_vote_disagreement/p_perm_clustered",
+     "p_holm": 0.1407,
+     "below_alpha_raw": true,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "freq_std / all_models",
+     "p_raw": 0.2748,
+     "source": "results/stats_hardening.json orb_split_s3/guardrail/all_models/auc_freq_std/p_perm_clustered",
+     "p_holm": 0.2748,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "freq_std / excl_orb_v2",
+     "p_raw": 0.103,
+     "source": "results/stats_hardening.json orb_split_s3/guardrail/excl_orb_v2/auc_freq_std/p_perm_clustered",
+     "p_holm": 0.206,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    }
+   ],
+   "m": 4,
+   "n_below_alpha_raw": 2,
+   "n_below_alpha_holm": 1
+  },
+  "force_spread_S18": {
+   "id": "force_spread_S18",
+   "description": "The 19 force-spread scores of ESI Table S18 that carry a clustered p (primary + 18 secondary)",
+   "reported_in": "manuscript 3.4 ('None is adjusted for multiple comparisons'); ESI Table S18",
+   "test": "system-clustered permutation, 10,000 draws, seed 0",
+   "items": [
+    {
+     "label": "primary_S_5model",
+     "p_raw": 0.1039,
+     "source": "results/revision/force_spread/summary.json consensus_level/primary_S_5model/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "a_S_ex_orb_4model",
+     "p_raw": 0.1033,
+     "source": "results/revision/force_spread/summary.json consensus_level/a_S_ex_orb_4model/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "b_S_mace_committee",
+     "p_raw": 0.0403,
+     "source": "results/revision/force_spread/summary.json consensus_level/b_S_mace_committee/p_perm_clustered",
+     "p_holm": 0.7254,
+     "below_alpha_raw": true,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "c_S_mattersim_committee",
+     "p_raw": 0.0536,
+     "source": "results/revision/force_spread/summary.json consensus_level/c_S_mattersim_committee/p_perm_clustered",
+     "p_holm": 0.804,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "d_Snorm_5model",
+     "p_raw": 0.5411,
+     "source": "results/revision/force_spread/summary.json consensus_level/d_Snorm_5model/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "d_Snorm_ex_orb_4model",
+     "p_raw": 0.5541,
+     "source": "results/revision/force_spread/summary.json consensus_level/d_Snorm_ex_orb_4model/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_pooled_5model",
+     "p_raw": 0.0939,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_pooled_5model/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_pooled_ex_orb_4model",
+     "p_raw": 0.063,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_pooled_ex_orb_4model/p_perm_clustered",
+     "p_holm": 0.882,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_mace_mp0_5model",
+     "p_raw": 0.0816,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_mace_mp0_5model/p_perm_clustered",
+     "p_holm": 0.9792,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_mace_mp0_ex_orb",
+     "p_raw": 0.0411,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_mace_mp0_ex_orb/p_perm_clustered",
+     "p_holm": 0.7254,
+     "below_alpha_raw": true,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_chgnet_5model",
+     "p_raw": 0.1524,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_chgnet_5model/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_chgnet_ex_orb",
+     "p_raw": 0.1325,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_chgnet_ex_orb/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_orb_v2_5model",
+     "p_raw": 0.7358,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_orb_v2_5model/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_sevennet0_5model",
+     "p_raw": 0.0657,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_sevennet0_5model/p_perm_clustered",
+     "p_holm": 0.882,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_sevennet0_ex_orb",
+     "p_raw": 0.0481,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_sevennet0_ex_orb/p_perm_clustered",
+     "p_holm": 0.7696,
+     "below_alpha_raw": true,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_mattersim_5model",
+     "p_raw": 0.4466,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_mattersim_5model/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_mattersim_ex_orb",
+     "p_raw": 0.4534,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_mattersim_ex_orb/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "f_committee_mace_mp0_own_call",
+     "p_raw": 0.034,
+     "source": "results/revision/force_spread/summary.json per_model_level/f_committee_mace_mp0_own_call/p_perm_clustered",
+     "p_holm": 0.646,
+     "below_alpha_raw": true,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "f_committee_mattersim_own_call",
+     "p_raw": 0.12,
+     "source": "results/revision/force_spread/summary.json per_model_level/f_committee_mattersim_own_call/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    }
+   ],
+   "note": "score (g) has no p-value (unequal blocks) and is not in the family",
+   "m": 19,
+   "n_below_alpha_raw": 4,
+   "n_below_alpha_holm": 0
+  },
+  "force_spread_S18_secondary": {
+   "id": "force_spread_S18_secondary",
+   "description": "The 18 secondary scores of ESI Table S18 (the pre-registered primary tested alone)",
+   "reported_in": "manuscript 3.4; ESI Table S18",
+   "test": "system-clustered permutation, 10,000 draws, seed 0",
+   "items": [
+    {
+     "label": "a_S_ex_orb_4model",
+     "p_raw": 0.1033,
+     "source": "results/revision/force_spread/summary.json consensus_level/a_S_ex_orb_4model/p_perm_clustered",
+     "p_holm": 0.939,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "b_S_mace_committee",
+     "p_raw": 0.0403,
+     "source": "results/revision/force_spread/summary.json consensus_level/b_S_mace_committee/p_perm_clustered",
+     "p_holm": 0.6851,
+     "below_alpha_raw": true,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "c_S_mattersim_committee",
+     "p_raw": 0.0536,
+     "source": "results/revision/force_spread/summary.json consensus_level/c_S_mattersim_committee/p_perm_clustered",
+     "p_holm": 0.7504,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "d_Snorm_5model",
+     "p_raw": 0.5411,
+     "source": "results/revision/force_spread/summary.json consensus_level/d_Snorm_5model/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "d_Snorm_ex_orb_4model",
+     "p_raw": 0.5541,
+     "source": "results/revision/force_spread/summary.json consensus_level/d_Snorm_ex_orb_4model/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_pooled_5model",
+     "p_raw": 0.0939,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_pooled_5model/p_perm_clustered",
+     "p_holm": 0.939,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_pooled_ex_orb_4model",
+     "p_raw": 0.063,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_pooled_ex_orb_4model/p_perm_clustered",
+     "p_holm": 0.819,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_mace_mp0_5model",
+     "p_raw": 0.0816,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_mace_mp0_5model/p_perm_clustered",
+     "p_holm": 0.8976,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_mace_mp0_ex_orb",
+     "p_raw": 0.0411,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_mace_mp0_ex_orb/p_perm_clustered",
+     "p_holm": 0.6851,
+     "below_alpha_raw": true,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_chgnet_5model",
+     "p_raw": 0.1524,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_chgnet_5model/p_perm_clustered",
+     "p_holm": 0.96,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_chgnet_ex_orb",
+     "p_raw": 0.1325,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_chgnet_ex_orb/p_perm_clustered",
+     "p_holm": 0.96,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_orb_v2_5model",
+     "p_raw": 0.7358,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_orb_v2_5model/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_sevennet0_5model",
+     "p_raw": 0.0657,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_sevennet0_5model/p_perm_clustered",
+     "p_holm": 0.819,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_sevennet0_ex_orb",
+     "p_raw": 0.0481,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_sevennet0_ex_orb/p_perm_clustered",
+     "p_holm": 0.7215,
+     "below_alpha_raw": true,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_mattersim_5model",
+     "p_raw": 0.4466,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_mattersim_5model/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "e_loo_mattersim_ex_orb",
+     "p_raw": 0.4534,
+     "source": "results/revision/force_spread/summary.json per_model_level/e_loo_mattersim_ex_orb/p_perm_clustered",
+     "p_holm": 1.0,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "f_committee_mace_mp0_own_call",
+     "p_raw": 0.034,
+     "source": "results/revision/force_spread/summary.json per_model_level/f_committee_mace_mp0_own_call/p_perm_clustered",
+     "p_holm": 0.612,
+     "below_alpha_raw": true,
+     "below_alpha_holm": false
+    },
+    {
+     "label": "f_committee_mattersim_own_call",
+     "p_raw": 0.12,
+     "source": "results/revision/force_spread/summary.json per_model_level/f_committee_mattersim_own_call/p_perm_clustered",
+     "p_holm": 0.96,
+     "below_alpha_raw": false,
+     "below_alpha_holm": false
+    }
+   ],
+   "m": 18,
+   "n_below_alpha_raw": 4,
+   "n_below_alpha_holm": 0
+  }
+ }
+}

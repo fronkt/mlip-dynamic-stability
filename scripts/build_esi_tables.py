@@ -14,7 +14,10 @@ from the C3a/C3b tables that ``scripts/dft_reference.py analyze`` writes under
 results/revision/dft/, and S21 (the SSCHA seed study with the production recipe, Referee 1.4:
 sample sizes, gradient history, stopping criteria, Hessian uncertainty, seeds beyond bcc-Zr; and
 the bcc-Zr cell-size re-measurement) from the unit JSONs that scripts/sscha_seed_study.py writes
-under results/revision/sscha_seeds/. Tables S1-S3 and S12 are hand-written in their own sections.
+under results/revision/sscha_seeds/, and S22 (the converged-recipe SSCHA grid beside the production
+claims, Referee 1.4) from results/revision/grid_compare.json, which ``scripts/grid_compare.py``
+writes from the grid's summary.csv; S22 is left out, with a note on stderr, until that file exists.
+Tables S1-S3 and S12 are hand-written in their own sections.
 
 It rewrites the block between the sentinels
 
@@ -57,6 +60,8 @@ C3A_UNITS = REPO / "results" / "revision" / "dft" / "c3a_unit_calls.csv"
 C3A_PATHS = REPO / "results" / "revision" / "dft" / "c3a_paths.csv"
 C3B_UNITS = REPO / "results" / "revision" / "dft" / "c3b_units.csv"
 SEED_DIR = REPO / "results" / "revision" / "sscha_seeds"
+GRID_SUMMARY = REPO / "results" / "revision" / "sscha_converged_grid" / "summary.csv"
+GRID_COMPARE = REPO / "results" / "revision" / "grid_compare.json"
 ESI =REPO / "paper" / "supplementary.md"
 
 BEGIN = "<!-- BEGIN GENERATED TABLES -->"
@@ -1696,6 +1701,218 @@ def table_s21_sscha_seeds() -> str:
     )
 
 
+# ------------------------- revision table S22 (converged-recipe SSCHA grid, plan item C1c) ----
+
+def _sha256(p: Path) -> str:
+    import hashlib
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
+def _rel(p: Path) -> str:
+    try:
+        return Path(p).resolve().relative_to(REPO).as_posix()
+    except ValueError:
+        return Path(p).as_posix()
+
+
+def _grid_compare():
+    """scripts/grid_compare.py as a module (imported here, not at the top, so that the build does
+    not depend on it until the grid's outputs exist)."""
+    sd = str(REPO / "scripts")
+    if sd not in sys.path:
+        sys.path.insert(0, sd)
+    import grid_compare
+    return grid_compare
+
+
+def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Path = GRID_SUMMARY,
+                             allow_dry_run: bool = False) -> str:
+    """Referee 1.4 (plan item C1c): SSCHA with the converged recipe on the units behind the §3.3
+    claims, beside the production numbers on the same units.
+
+    Every number is read from results/revision/grid_compare.json, which ``scripts/grid_compare.py``
+    writes from the grid's summary.csv (``scripts/sscha_seed_study.py --preset grid --summarize``)
+    and the converged-mode JSONs of SrTiO3/MACE-MP-0 at 600 and 900 K. Left out, with a note on
+    stderr, while that file does not exist. Refuses (rather than render stale or mocked numbers)
+    a file made from a --dry-run grid, from another summary.csv or another ledger than the ones on
+    disk, or whose production numbers no longer reproduce results/stats_hardening.json.
+    ``allow_dry_run`` is for testing the plumbing only."""
+    if not compare_path.exists():
+        print(f"Table S22 skipped: {_rel(compare_path)} does not exist (run scripts/sscha_seed_study.py "
+              "--preset grid, then --preset grid --summarize, then scripts/grid_compare.py)",
+              file=sys.stderr)
+        return ""
+    cmp = json.loads(compare_path.read_text(encoding="utf-8"))
+    m = cmp["meta"]
+    if m["dry_run"] and not allow_dry_run:
+        raise SystemExit(f"Table S22: {_rel(compare_path)} was made from a --dry-run grid (mocked "
+                         "SSCHA values); rerun scripts/grid_compare.py on the real grid")
+    if not summary_path.exists():
+        raise SystemExit(f"Table S22: {_rel(compare_path)} exists but {_rel(summary_path)} does not")
+    if _sha256(summary_path) != m["summary_csv"]["sha256"]:
+        raise SystemExit(f"Table S22: {_rel(summary_path)} changed since scripts/grid_compare.py "
+                         "read it; rerun scripts/grid_compare.py")
+    if _sha256(LEDGER) != m["ledger"]["sha256"]:
+        raise SystemExit("Table S22: results/ledger.parquet changed since scripts/grid_compare.py "
+                         "read it; rerun scripts/grid_compare.py")
+    for name in ("production_reproduces_stats_hardening", "grid_vs_ledger"):
+        if not m[name]["all_ok"]:
+            raise SystemExit(f"Table S22: grid_compare.json records a failed check ({name}); "
+                             "rerun scripts/grid_compare.py and read its output")
+    gc = _grid_compare()
+    rs = cmp["run_status"]
+    cv = cmp["variants"]["converged_only"]
+    cov, fo = cv["coverage"], cv["fs57_outcomes"]
+    R = m["recipe"]
+    docs = _seed_docs() if SEED_DIR.exists() else {}
+    P = next(iter(docs.values()))["recipe"] if docs else None
+
+    # ---- tables
+    def pretty_col(rows, col):
+        for r in rows:
+            r[col] = PRETTY.get(r[col], r[col])
+        return rows
+
+    h_claim, claim = gc.claim_table(cmp, "converged_only", typographic=True)
+    h_cov, covrows = gc.coverage_table(cmp, "converged_only", typographic=True)
+    h_stat, stat = gc.status_table(cmp)
+    h_chg, chg = gc.changed_table(cmp, typographic=True)
+    stat = [r for r in pretty_col([list(r) for r in stat], 0)]
+    chg = pretty_col([list(r) for r in chg], 1)
+
+    # the SrTiO3 units above T_c that have a converged value, beside production
+    so_c = (cv["converged_all"]["iv"].get("all_models") or {}).get("srtio3_above_tc")
+    so_p = cmp["production_full"]["iv"]["all_models"]["srtio3_above_tc"]
+    so_rows, so_txt = [], ""
+    if so_c:
+        prod = {(u["model"], u["T"]): u for u in so_p["units"]}
+        for u in sorted(so_c["units"], key=lambda u: (u["T"], u["model"])):
+            p = prod.get((u["model"], u["T"]))
+            so_rows.append([PRETTY.get(u["model"], u["model"]), f"{u['T']:.0f}",
+                            signed(p["sscha_min_eff_freq_thz"], 2) if p else "--",
+                            signed(u["sscha_min_eff_freq_thz"], 2),
+                            "unstable" if p and p["false_unstable"] else "stable" if p else "--",
+                            "unstable" if u["false_unstable"] else "stable"])
+        so_txt = (
+            f"SrTiO₃ above its {so_c['transition_T_K']:.0f} K transition (the units of Table S17's "
+            "second part that the grid or the converged mode evaluated; the label is stable at "
+            f"every one): the converged recipe calls {so_c['false_unstable']['short']} of them "
+            "unstable.\n\n"
+            + md(so_rows, ["Model", "T (K)", "Production SSCHA minimum (THz)",
+                           "Converged Hessian minimum (THz)", "Production call", "Converged call"]))
+
+    # ---- caption facts, read from the data
+    n, ok, conv = rs["n_planned_units"], rs["n_ok"], rs["n_converged"]
+    stops = ", ".join(f"{k.replace('_', ' ')} {v}" for k, v in sorted(rs["stop_reasons_of_ok"].items()))
+    used = [e for e in m["c1c_extra_units"] if e["used"]]
+    by_unit: dict = {}
+    for e in used:
+        by_unit.setdefault((e["system"], e["model"]), []).append(f"{e['T_K']:.0f}")
+    extra_txt = (
+        "The grid stops at 300 K for every non-bcc system; 600 and 900 K are covered only by "
+        + _and(f"{SHORT.get(s, s)} with {PRETTY.get(mo, mo)} at {' and '.join(Ts)} K"
+               for (s, mo), Ts in by_unit.items())
+        + ", run in the converged mode (`results/revision/sscha_converged/`) with the same recipe"
+        if used else "The grid stops at 300 K for every non-bcc system, and no converged value "
+                     "exists above 300 K")
+    miss_T = cov["i"]["not_in_grid_by_T"]
+    miss_txt = (", ".join(f"{k} at {t} K" for t, k in miss_T.items()) if miss_T else "")
+    still = fo["outcomes"].get("still_false_stable", 0)
+    now = fo["outcomes"].get("now_unstable", 0)
+    rest = cov["i"]["in_grid_plan"] - still - now
+    rest_states = ", ".join(f"{gc.STATE_WORDS.get(k, k)} {v}" for k, v in sorted(fo["outcomes"].items())
+                            if k not in ("still_false_stable", "now_unstable", "not_in_grid"))
+    n_prod_failed = rs["failed_in_production"]
+    wall = len(rs["wall_cap_timeouts"])
+
+    prod_txt = ""
+    if P:
+        prod_txt = (f" Production: {P['n_configs']} configurations per population, at most "
+                    f"{P['max_pop']} populations, `max_ka` = {P['max_ka']} cumulative, "
+                    f"`meaningful_factor` = {P['meaningful_factor']:g} against the placeholder error, "
+                    f"a Hessian ensemble of {P['n_hessian']}.")
+    caption = (
+        "**Table S22** SSCHA with the converged recipe on the units behind the §3.3 claims, beside "
+        "the production numbers on the same units (Referee 1.4, plan item C1c; "
+        "`scripts/sscha_seed_study.py --preset grid`, compared with the production ledger by "
+        "`scripts/grid_compare.py`). "
+        f"**Recipe:** {R['n_configs']} configurations per population, at most {R['max_pop']} "
+        f"populations and at most {R['max_steps_per_pop']} minimiser steps per population (a cap per "
+        f"population, where the production `max_ka` is cumulative over populations, Table S21), "
+        f"`meaningful_factor` = {R['meaningful_factor']:g} applied to the real stochastic error of "
+        "the gradient (the library's serial estimate, in place of the constant placeholder of "
+        f"Table S21; it is set to zero wherever KL/N < {R['converge_min_kl_ratio']:g}, so convergence "
+        f"cannot be declared at a statistically invalid point), Kong-Liu ratio {R['kong_liu_ratio']:g}, "
+        f"then a Hessian ensemble of {R['n_hessian']} configurations with "
+        f"{' or '.join(str(x) for x in m['n_boot'])} bootstrap resamples, and a "
+        f"{m['unit_timeout_s']:g} s wall cap on each relaxation." + prod_txt + " "
+        "**Start A only** (the production ForcePositiveDefinite start): start dependence is the "
+        "six-unit start-A against start-B study (C1c), not repeated across the grid. A call is the "
+        f"sign rule used throughout: stable iff the lowest free-energy-Hessian frequency is at or "
+        f"above {signed(m['imag_tol_thz'], 1)} THz. "
+        f"**Run status:** {n} planned units, {ok} finished, {conv} of them "
+        + (f"({conv / ok:.0%} of those finished) " if ok else "")
+        + "met the library's stopping test"
+        + (f" (stop reasons: {stops})" if ok else "") + f"; {wall} ended at the wall cap, "
+        f"{len(rs['failed'])} failed, {len(rs['not_finished'])} are not finished, "
+        f"{len(rs['blowups'])} returned a blow-up (|f| > 50 THz)"
+        + (f"; production returned no value for {n_prod_failed} of the {n} units" if n_prod_failed else "")
+        + ". Only runs that met the stopping test enter the claim table; the others are listed "
+        "under *Planned, not evaluated* in the coverage table. "
+        "**Coverage.** "
+        + (f"Of the {cov['i']['n']} units where SSCHA calls a phase stable against an unstable label "
+           f"in Table S16, {cov['i']['in_grid_plan']} are in the grid"
+           + (f" and {cov['i']['n'] - cov['i']['in_grid_plan']} ({miss_txt}) are not" if miss_txt else "")
+           + f"; of the {cov['i']['in_grid_plan']} in the grid, {still} are still called stable by the "
+           f"converged recipe (the screen calls {fo['still_false_stable_screen_unstable']['short']} of "
+           f"them unstable) and {now} are called unstable"
+           + (f", and {rest} have no converged value ({rest_states})" if rest else "") + ". ")
+        + extra_txt + ". "
+        "**The bcc cell is 3×3×3 in the grid and 2×2×2 in production**, so on bcc a change of call "
+        "mixes the cell change with the convergence (Table S21, lower part, measures the cell change "
+        "at the production recipe), and the bcc agreement below compares the screen with a "
+        "different cell's SSCHA. "
+        "**How the columns are made.** Each production claim is recomputed with the function that "
+        "produced it (`stats_hardening.criterion_blindness` for claim (i), `analysis.displacive_recall` "
+        "for (ii), `stats_hardening.bcc_agreement` for (iii), `stats_hardening.sscha_high_t` for (iv); "
+        "Tables S16 and S17 and §3.3), so the unit sets, the ORB-v2 split and the blow-up rules are "
+        "the production ones: SSCHA blow-ups leave the denominator in (ii), where they are counted "
+        "beside, and stay in (i), (iii) and (iv). The first column is the production number on its "
+        "full set, recomputed from the ledger and checked against `results/stats_hardening.json`; "
+        "the second is the production number on exactly the units the grid evaluated; the third is "
+        "the converged value on those same units; the fourth is the converged value on every unit "
+        f"evaluated, which includes units that production never returned ({n_prod_failed} in the "
+        "plan). A count of 0/0 means no unit of that kind was evaluated. "
+        "`results/revision/grid_compare.json`.")
+
+    ch = cmp["changed_calls"]
+    a, c = ch["all_changed"], ch["converged_no_blowup_changed"]
+    nb = ch["bcc_3x3x3_vs_2x2x2"]["n"]
+    chg_txt = (
+        f"Calls that differ from production, with the old and new Hessian minimum: {a['n']} of "
+        f"the {ch['n_compared_ok']} finished units that have a production value change their call "
+        f"(stable → unstable {a['S_to_U']}, unstable → stable {a['U_to_S']}, whatever stopped the "
+        f"relaxation); of the {ch['n_compared_converged']} that met the stopping test, {c['n']} "
+        f"change without a blow-up on either side ({ch['same_cell']['n']} in the production cell and "
+        f"{nb} bcc unit{'s' if nb != 1 else ''} where the cell changes as well), and on the non-bcc "
+        f"units {ch['nonbcc_corrected_vs_label']} of those change from wrong to right against the "
+        f"label and {ch['nonbcc_worsened_vs_label']} from right to wrong. *n/s*: the bcc label is the "
+        "thermodynamic one and is not scored against a dynamical call (§3.3).")
+    return (
+        caption + "\n\n"
+        + md(claim, h_claim)
+        + "\n\nCoverage of the production units behind each claim: how many are in the grid, how many "
+        "have a converged value, which are not in the grid (by temperature) and which were planned "
+        "but have no converged value.\n\n"
+        + md(covrows, h_cov)
+        + "\n\nRun status by model.\n\n"
+        + md(stat, h_stat)
+        + ("\n\n" + so_txt if so_txt else "")
+        + "\n\n" + chg_txt + "\n\n"
+        + (md(chg, h_chg) if chg else "No call changes.")
+    )
+
+
 def build() -> str:
     raw = pd.read_parquet(LEDGER)
     df = A.canonical(raw)
@@ -1723,6 +1940,7 @@ def build() -> str:
         table_s19_c3a_pbe(),
         table_s20_c3b(),
         table_s21_sscha_seeds(),
+        table_s22_converged_grid(),
     ]
     blocks = [b for b in blocks if b]
     return "\n\n".join(blocks)

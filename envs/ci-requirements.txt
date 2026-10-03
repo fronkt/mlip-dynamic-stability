@@ -1,0 +1,20 @@
+# Minimal, pinned environment for the CPU-only checks that run in CI (.github/workflows/verify.yml):
+#
+#   python scripts/verify_claims.py             # every headline number against results/ledger.parquet
+#   python scripts/build_esi_tables.py --check  # the ESI generated tables are up to date
+#   python scripts/make_manifest.py --check     # results/ files match results/MANIFEST.sha256
+#
+# These need the ledger reader and the statistics only: numpy + pandas + pyarrow (parquet) +
+# pyyaml (configs/curated_systems.yaml) + scipy. No torch, no ASE, no phonopy, no MLIP package,
+# no matplotlib, no network beyond `pip install`. Versions are the ones the checks were last run
+# with locally (Python 3.12). The per-model compute environments are pinned separately in
+# envs/lock-*.txt; do not install this file into them.
+#
+# scipy is here for ONE call: pandas' Series.corr(method="spearman") in
+# mlip_dynstab/analysis.py (h2_paired_summary, line 323; also line 197) imports scipy.stats.
+# Rewriting those two calls as a.rank().corr(b) would make scipy unnecessary.
+numpy==2.3.5
+pandas==2.3.3
+pyarrow==24.0.0
+pyyaml==6.0.3
+scipy==1.17.1
