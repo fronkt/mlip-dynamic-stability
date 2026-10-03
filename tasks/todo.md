@@ -56,6 +56,12 @@ stable at any temperature" is now FALSE (C1c 100 K +1.13) — fix after the grid
 - **OOM 22:48 UTC 10-03:** ft_ at `-r 8 -n 15` (8 pools) = ~34 GB/job x 15 on a 126 GB box -> 49 jobs
   killed (rc 137/139). Relaunched `-r 16 -n 7 -k 1` (~8 GB actual per job, 57 GB used). Failed jobs rerun
   automatically (pw.out.failed). after_ft.sh checks also use -r 16 -n 7 -k 1. ft_ ETA ~11:00 UTC Sun.
+- **ft_ split (23:50 UTC 10-03):** box 2 is ONE 64-core EPYC exposed as 128 SMT threads and is
+  memory-bandwidth-bound; CsSnBr3 40-atom jobs need ~7 core-h and ~20-34 GB. So: **CsSnBr3 ft_ (82) on box 1**
+  (window ft_csb, `-r 8 -n 5 -k 4`, log /root/logs/qe_ft_csb.log; raise -n to 7 once the grid ends) and
+  **BaTiO3/KNbO3 ft_ (164) on box 2** (window ft, `-r 8 -n 7 -k 4`, ~5.9 GB/job, log qe_ft.log; after_ft.sh
+  then runs ax_ + checks there). ETA all ft_ ~Sun 12:00-13:30 UTC; box 2 should help with leftover CsSnBr3
+  once its oxides finish. Credit $14.44 at 23:44 UTC, burn ~$0.66/h -> TOP-UP NEEDED (Frank).
 - [ ] E1 Full PBE coverage: 533 ax_ jobs — 194 finished on box 1, then its queue was stopped; the other 339
       run on box 2 (window ax, 15x8 ranks, log /root/logs/qe_ax.log). rsync qe/ax_* back from BOTH boxes.
       (gotcha: `pkill -f qe_queue.sh` over ssh kills the ssh command itself; use `pkill -f "[q]e_queue.sh"`)
