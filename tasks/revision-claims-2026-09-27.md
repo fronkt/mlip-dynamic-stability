@@ -242,3 +242,47 @@ Report each whichever way it falls.
 - Add to §7 banned list: "curvature-sign agreement" as evidence; "max_ka per population";
   "the re-measurement removed the positive correlation"; "no target data to fine-tune with".
 
+
+## 10. C3a / C3b results, analysed 2026-10-03 (`dft_reference.py analyze` at e7eac67; adversarially verified)
+
+Outputs: `results/revision/dft/{summary.json,c3a_unit_calls.csv,c3a_paths.csv,c3b_units.csv,...}`.
+448/448 pw.x outputs used, 0 flags; 38 PBE paths × 10 Q points (the 533 `ax_*` jobs were never run
+and feed nothing). PBE curves sit at EACH MLIP's own relaxed lattice (0.1–0.3 % spread for the
+perovskites; Zr ~2 % in volume) — lattice and functional error cannot be separated here.
+
+**R1.1 (C3a) — like-for-like is PBE vs `mlip_same_paths_stable`, NOT vs the ledger call.**
+- Baseline is **81/120, not 78**: the MLIP's call on the PBE-covered paths reproduces the ledger in
+  115/120; all 100 own-mode rows reproduce, the 5 misses are ORB-v2 reference-coordinate rows.
+- Swap the energy engine only (same modes, same Q, same `_fit_double_well`/`_solve_scha`, same T
+  grid): **81/120 → 101/120** (23 corrected, 3 newly wrong: BaTiO₃/ORB 300 K, Zr/MatterSim 900 K,
+  CsSnBr₃/ORB 600 K); ex-ORB-v2 61/96 → 82/96. By system: BaTiO₃ 16→19, CsSnBr₃ 9→11,
+  KNbO₃ 11→15, SrTiO₃ 18→20, bcc-Zr 7→16, ZrO₂ 20→20 — 5 improve, 1 tie, 0 worsen.
+- 10 of the 23 corrections are bcc-Zr reference-coordinate rows (MACE 4, CHGNet 3, SevenNet 3):
+  those models' screens find no instability; PBE along **MatterSim's deciding coordinate
+  q = (⅓,⅔,0)** does. Do NOT call it "the N point". Without Zr: 74 → 85 of 100. Own-mode rows
+  75 → 84 of 100. Strict subset (cache-matching paths whose deciding mode has PBE, n = 72): 54 → 60.
+- 16 errors persist on PBE: KNbO₃ 600 K ×5 (clean: T_c 708 K, curves bracketed — PBE + the
+  single-mode screen put T_c below 600 K); CsSnBr₃ 300/600 K ×8 (**all 8 CsSnBr₃ PBE curves have
+  their minimum at the scan edge Q = 0.45 Å**, wells unbracketed; 300 K is 8 K above the 292 K
+  label); bcc-Zr 900 K ×3 (4 of 5 wrong on PBE counting the new MatterSim error). Attribute these to
+  the screen, the PBE functional/lattice, or the label threshold — NOT to the screen alone.
+- PBE-backed "stable" = stable on the 1–2 PBE-covered modes, not on the full screen; unstable
+  calls are the safer direction. BaTiO₃/CHGNet 300 K's correction rests on the q(½½0) path whose
+  i00/i01 points are nosym reruns — fragile, say so if quoted.
+- Statistics: 6 systems, models share PES families → descriptive counts only. No McNemar on 23 v 3.
+
+**R1.2 (C3b) — relative force RMSE (RMSE / RMS PBE force), baseline → SSCHA configs:**
+BaTiO₃/MACE 100 K 0.100 → 0.104; ZrO₂/MACE 100 K 0.225 → 0.175; Zr/MatterSim 50 K 0.596 → 0.439
+(u_rms 0.09–0.095 Å; absolute RMSE 1.4–2.3× larger because forces are larger);
+**SrTiO₃/MACE 600 K 0.113 → 0.190 (1.7×), u_rms 0.34 Å, owner energy error RMS 15, max 44
+meV/atom.** Zr's relative error is a ratio on a 0.07 eV/Å denominator — uninformative, say so.
+4 sets × 12 SSCHA configs (+4 baseline). Not "roughly doubles".
+
+Allowed manuscript wording (R1.1): "With the energy engine swapped from each MLIP to PBE on
+identical modes and Q points, the screen's call matched experiment in 101/120 ladder units, against
+81/120 for the same MLIPs on those paths (23 corrected, 3 newly wrong; 5 of 6 systems improved, none
+worsened). Ten corrections are bcc-Zr units along MatterSim's deciding coordinate. The 16 errors
+that persist with PBE (KNbO₃ 600 K; CsSnBr₃ 300/600 K, wells unbracketed at the scan edge; bcc-Zr
+900 K) reflect the single-mode screen, the PBE functional and lattice, or the label threshold, not
+force-engine error alone. Counts are descriptive, from six systems, with PBE evaluated at each
+MLIP's relaxed lattice."
