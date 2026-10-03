@@ -135,7 +135,7 @@ def _prov(args, stage):
 # ------------------------------------------------------------- pw.x input writer ----
 
 def pw_text(atoms, job, system, sssp, *, kspacing, degauss, ecut_scale=1.0, input_dft=None,
-            calculation="scf"):
+            calculation="scf", nosym=False):
     """pw.x input in the format of dft_reference.pw_input (byte-identical to it for
     ecut_scale = 1, input_dft = None, calculation = 'scf', apart from the job comment line,
     which conv-inputs checks against the production pw.in), plus the three things the checks
@@ -164,6 +164,10 @@ def pw_text(atoms, job, system, sssp, *, kspacing, degauss, ecut_scale=1.0, inpu
         L += ["  etot_conv_thr = 1.0d-6", "  forc_conv_thr = 1.0d-4", "  nstep = 150"]
     L += ["/", "&SYSTEM", "  ibrav = 0", f"  nat = {nat}", f"  ntyp = {len(species)}",
           f"  ecutwfc = {ecutwfc:.1f}", f"  ecutrho = {ecutrho:.1f}"]
+    if nosym:
+        # inherited from the production job of the same frame (QE d_matrix error 14 on the
+        # slightly non-cubic CHGNet BaTiO3 cell; dft/qe/a_*/NOSYM_NOTE.txt)
+        L += ["  nosym = .true."]
     if input_dft:
         L += [f"  input_dft = '{input_dft}'"]
     L += ["  occupations = 'smearing'", "  smearing = 'mv'", f"  degauss = {degauss}", "/",
@@ -190,7 +194,7 @@ def pw_text(atoms, job, system, sssp, *, kspacing, degauss, ecut_scale=1.0, inpu
                 "nk_irr_spglib": dr._nk_irr(atoms, mesh), "ecutwfc_Ry": ecutwfc,
                 "ecutrho_Ry": ecutrho, "ecut_scale": ecut_scale, "conv_thr_Ry": conv,
                 "mixing_beta": 0.4, "calculation": calculation,
-                "disk_io": "low" if vc else "none", "input_dft": input_dft,
+                "disk_io": "low" if vc else "none", "input_dft": input_dft, "nosym": bool(nosym),
                 "functional": functional,
                 "pseudos": {s: sssp["table"][s] for s in species},
                 "sssp_json": sssp["json"], "sssp_sha256": sssp["sha256"]}
@@ -413,6 +417,17 @@ def _fallback(args):
             "degauss": args.degauss_insulator or FALLBACK_DEGAUSS}
 
 
+def _prod_nosym(ctx, P, i):
+    """True where the production pw.x job of this frame ran with nosym (three BaTiO3/CHGNet
+    frames, hand-edited on 2026-09-27 after QE's d_matrix error 14): the checks must change only
+    the setting they test, so they inherit it."""
+    pj = (P.get("prod") or [None] * (i + 1))[i]
+    if not pj or not ctx.get("dft"):
+        return False
+    p = Path(ctx["dft"]) / "qe" / pj["job"] / "pw.in"
+    return p.exists() and "nosym = .true." in p.read_text(encoding="utf-8")
+
+
 def _add_path(w, P, jobname, member_of, sssp, kspacing, degauss, ecut_scale, input_dft, study,
               ctx):
     """Write one path's frames under one setting set; refuses the whole path if any frame has a
@@ -421,7 +436,8 @@ def _add_path(w, P, jobname, member_of, sssp, kspacing, degauss, ecut_scale, inp
     for i, a in enumerate(P["frames"]):
         job = jobname(i)
         text, st = pw_text(a, job, P["system"], sssp, kspacing=kspacing, degauss=degauss,
-                           ecut_scale=ecut_scale, input_dft=input_dft)
+                           ecut_scale=ecut_scale, input_dft=input_dft,
+                           nosym=_prod_nosym(ctx, P, i))
         rows.append((i, job, a, text, st))
     blocked = [r[1] for r in rows if w.would_refuse(r[1], r[3])]
     if blocked:
@@ -479,7 +495,7 @@ def stage_conv_inputs(args):
     dft, out = Path(args.dft_root), Path(args.out_root)
     sssp = dr.load_sssp(args)
     prov = _prov(args, "conv-inputs")
-    ctx = {"idx": _prod_index(dft), **_prod_costs(dft)}
+    ctx = {"idx": _prod_index(dft), **_prod_costs(dft), "dft": dft}
     w = CheckWriter(out, prov, args.force)
     fb = _fallback(args)
     sel, tot, n_prob = [], {v: 0.0 for v in args.variants}, 0
@@ -547,7 +563,7 @@ def stage_xc_inputs(args):
     dft, out = Path(args.dft_root), Path(args.out_root)
     sssp = dr.load_sssp(args)
     prov = _prov(args, "xc-inputs")
-    ctx = {"idx": _prod_index(dft), **_prod_costs(dft)}
+    ctx = {"idx": _prod_index(dft), **_prod_costs(dft), "dft": dft}
     w = CheckWriter(out, prov, args.force)
     fb = _fallback(args)
     paths, skipped, est = [], [], 0.0
