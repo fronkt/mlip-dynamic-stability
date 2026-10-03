@@ -69,6 +69,12 @@ qe-inputs and c3b-inputs rest on an ASSUMED per-k-point cost (--c0-core-s); anal
 
 Outputs go under results/revision/dft/ (``--out-root`` moves them; the smoke test uses it).
 Nothing here writes to the ledger.
+
+Three follow-up checks on the persistent PBE screen errors (convergence, functional, PBE
+lattice / eigenvector) are the stages ``conv-inputs``, ``xc-inputs``, ``pbe-lattice`` and
+``analyze-checks``, implemented in scripts/dft_checks.py (its docstring has the acceptance
+criterion, the approximations and the box commands). They write results/revision/dft_checks/
+and only read results/revision/dft/.
 """
 from __future__ import annotations
 
@@ -2299,6 +2305,18 @@ def main(argv=None):
     p.add_argument("--workers", type=int, default=min(8, os.cpu_count() or 1),
                    help="processes for the screen solves")
     p.set_defaults(func=stage_analyze)
+
+    # Numerical / functional / lattice checks on the C3a curves (conv-inputs, xc-inputs,
+    # pbe-lattice, analyze-checks) live in scripts/dft_checks.py. A failure to load that module
+    # must not take the production stages down.
+    sys.modules.setdefault("dft_reference", sys.modules[__name__])
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import dft_checks
+        dft_checks.register(sub)
+    except Exception as exc:                                  # noqa: BLE001
+        print(f"[dft_reference] check stages unavailable: {type(exc).__name__}: {exc}",
+              file=sys.stderr)
 
     args = ap.parse_args(argv)
     args.out_root = Path(args.out_root)
