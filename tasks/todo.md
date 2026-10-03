@@ -9,6 +9,21 @@ each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ..
 **Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
 false.
 
+## ▶ 2026-10-03 session (resumed; supersedes "Next session" items 1, and starts 2)
+
+- [x] 1. C3a/C3b analysed (`dft_reference.py analyze`, 448/448, 0 flags), adversarially verified, folded into
+  manuscript (§2.6 new, §3.2, §3.3, §4, abstract), ESI §S5 + Tables S19/S20, letter (R1.1, R1.2, R1.6, R2),
+  pinned in verify_claims (65/65). Claims ledger §10. **Headline: the shared BaTiO3/KNbO3 300 K mis-calls are
+  MLIP softening (wells 0.32–0.76 of PBE), NOT the screen; CsSnBr3 + KNbO3 600 K persist on PBE.** Commits
+  c1e69cd, cde10e7, 3481d57, 7583b0a.
+- [x] Corresponding e-mail -> cai485@purdue.edu in manuscript + cover letter (Frank). Portal record must match.
+- [ ] 2. GRID RUNNING on vast 54043018 (RTX 3090, 61 vCPU quota, $0.27/h, ssh -p 20473 root@201.188.77.20),
+  started ~17:52 UTC, 14 workers in tmux `grid` (3 mace/chgnet/sevennet/mattersim, 2 orb), ETA ~4-5 h.
+  Repo on box at c42b6e4 (ledger_lookup empty-row fix). Workers MUST be launched as `bash grid_run.sh ...; echo`
+  (a bare exec makes `timeout` the session leader -> setpgid EPERM -> instant silent exit).
+  When done: `--preset grid --summarize`, rsync results/revision/sscha_converged_grid back (+ work/ to raw
+  archive), destroy the box, then items 3-4.
+
 ## ▶ RESUME HERE — paused 2026-09-27 at Frank's request ("pause after the runs are done, save everything")
 
 **Done and pushed (branch `rsc-figure-fixes`):** Phase 2 stats; Phase 3 text (manuscript, ESI S1–S18, figures,
