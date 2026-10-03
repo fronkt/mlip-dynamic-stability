@@ -28,7 +28,12 @@ false.
   window `sto_hiT` = converged (`--converge`, start A) SrTiO3/MACE 600 + 900 K (cap 2 h each, log
   /root/logs/sto_hiT.log, JSONs in results/revision/sscha_converged/) — the grid stops at T <= 300 K for
   non-bcc, and these decide whether the high-T runaway survives a converged relaxation (letter R1.2 marker).
-  rsync BOTH dirs back. Post-grid tooling: scripts/grid_compare.py + Table S22 (being built 10-03).
+  rsync BOTH dirs back. Post-grid tooling: scripts/grid_compare.py + Table S22 (built 10-03, dry-run tested).
+  **Grid EXTENDED 10-03 (commit 96e40bf): + non-bcc 600/900 K set (7 systems x 2 T x 5 models; 178 units in
+  all)** so all 57 false-stables and Table S17 are converged. Runs from scripts/sscha_seed_study_grid2.py on
+  the box via window `topup` (scripts/box/grid2_topup.sh keeps 3/3/3/3/2 workers across both copies; logs
+  grid2_*.log, topup.log; TOPUP_DONE when every model's queue is empty). After landing:
+  `--preset grid --summarize` -> `python scripts/grid_compare.py` -> `build_esi_tables.py` (S22).
 
 ## ▶ RESUME HERE — paused 2026-09-27 at Frank's request ("pause after the runs are done, save everything")
 
