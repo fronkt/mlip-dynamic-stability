@@ -1,0 +1,4481 @@
+{
+ "provenance": {
+  "script": "scripts/finetune_trial.py",
+  "stage": "qe-inputs",
+  "git_head": "30d5674",
+  "git_dirty": true,
+  "host": "frank",
+  "utc": "2026-10-03T22:31:57Z",
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "versions": {
+   "numpy": "2.3.5",
+   "scipy": "1.17.1",
+   "ase": "3.28.0",
+   "phonopy": "3.5.1",
+   "spglib": "2.7.0",
+   "torch": "2.11.0+cpu",
+   "mace-torch": "0.3.15",
+   "chgnet": "0.4.2",
+   "pandas": "2.3.3"
+  },
+  "settings": {
+   "stage": "qe-inputs",
+   "out": "C:\\Users\\frank\\mlip-dynamic-stability\\results\\revision\\finetune",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": true,
+   "models": [
+    "mace_mp0",
+    "chgnet"
+   ],
+   "qe_root": "C:\\Users\\frank\\mlip-dynamic-stability\\results\\revision\\dft\\qe",
+   "sssp_json": null,
+   "kspacing_insulator": 0.25,
+   "degauss_insulator": 0.005,
+   "no_write": false
+  }
+ },
+ "n_jobs": 246,
+ "core_h_total": 1176.7427490024204,
+ "counts": {
+  "new": 0,
+  "same": 183,
+  "rewritten": 63,
+  "refused": 0
+ },
+ "jobs": [
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c00",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c01",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c02",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c03",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c04",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c05",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c06",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c07",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c08",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c09",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c10",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c11",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c12",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c13",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c14",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c15",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c16",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c17",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c18",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c19",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c20",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c21",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c22",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c23",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c24",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c25",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c26",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c27",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c28",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c29",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c30",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c31",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c32",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c33",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c34",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c35",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c36",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c37",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c38",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_c39",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_mace_mp0_ref",
+   "system": "batio3_cubic",
+   "model": "mace_mp0",
+   "role": "ref",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 10,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 0.9751296296296297,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c00",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c01",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c02",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c03",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c04",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c05",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c06",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c07",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c08",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c09",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c10",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c11",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c12",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c13",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c14",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c15",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c16",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c17",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c18",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c19",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c20",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c21",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c22",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c23",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c24",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c25",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c26",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c27",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c28",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c29",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c30",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c31",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c32",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c33",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c34",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c35",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c36",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c37",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c38",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_c39",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 3.510466666666667,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_batio3_cubic_chgnet_ref",
+   "system": "batio3_cubic",
+   "model": "chgnet",
+   "role": "ref",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 10,
+   "ecutwfc": 50.0,
+   "ecutrho": 400.0,
+   "core_h_est": 0.9751296296296297,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c00",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c01",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c02",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c03",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c04",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c05",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c06",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c07",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c08",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c09",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c10",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c11",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c12",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c13",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c14",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c15",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c16",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c17",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c18",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c19",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c20",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c21",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c22",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c23",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c24",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c25",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c26",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c27",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c28",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c29",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c30",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c31",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c32",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c33",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c34",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c35",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c36",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c37",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c38",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_c39",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_mace_mp0_ref",
+   "system": "knbo3_cubic",
+   "model": "mace_mp0",
+   "role": "ref",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 10,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 1.107171048375433,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c00",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c01",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c02",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c03",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c04",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c05",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c06",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c07",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c08",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c09",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c10",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c11",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c12",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c13",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c14",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c15",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c16",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c17",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c18",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c19",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c20",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c21",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c22",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c23",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c24",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c25",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c26",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c27",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c28",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c29",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c30",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c31",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c32",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c33",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c34",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c35",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c36",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c37",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c38",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_c39",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 36,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 3.9858157741515585,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_knbo3_cubic_chgnet_ref",
+   "system": "knbo3_cubic",
+   "model": "chgnet",
+   "role": "ref",
+   "n_atoms": 40,
+   "kmesh": [
+    4,
+    4,
+    4
+   ],
+   "nk": 10,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 1.107171048375433,
+   "estimate_basis": "BaTiO3 40-atom x (knbo3_cubic/BaTiO3 at 20 atoms = 1.14)",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c00",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c01",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c02",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c03",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c04",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c05",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c06",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c07",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c08",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c09",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c10",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c11",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c12",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c13",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c14",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c15",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c16",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c17",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c18",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c19",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c20",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c21",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c22",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c23",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c24",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c25",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c26",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c27",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c28",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c29",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c30",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c31",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c32",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c33",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c34",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c35",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c36",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c37",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c38",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_c39",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_mace_mp0_ref",
+   "system": "cssnbr3_cubic",
+   "model": "mace_mp0",
+   "role": "ref",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 4,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 2.024295238095238,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c00",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c01",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c02",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c03",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c04",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c05",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c06",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c07",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c08",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c09",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c10",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c11",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c12",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c13",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c14",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c15",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c16",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c17",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c18",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c19",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c20",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c21",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c22",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c23",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c24",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c25",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c26",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c27",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c28",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c29",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c30",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c31",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c32",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c33",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c34",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c35",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c36",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c37",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c38",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_c39",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "train_pool",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 14,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 7.0850333333333335,
+   "estimate_basis": "measured same system/size",
+   "status": "rewritten"
+  },
+  {
+   "job": "ft_cssnbr3_cubic_chgnet_ref",
+   "system": "cssnbr3_cubic",
+   "model": "chgnet",
+   "role": "ref",
+   "n_atoms": 40,
+   "kmesh": [
+    3,
+    3,
+    3
+   ],
+   "nk": 8,
+   "ecutwfc": 60.0,
+   "ecutrho": 480.0,
+   "core_h_est": 4.048590476190476,
+   "estimate_basis": "measured same system/size",
+   "status": "same"
+  }
+ ],
+ "cost_basis": "median core-h per irreducible k-point of the finished C3a/C3b jobs in results/revision/dft/qe_jobs.csv"
+}

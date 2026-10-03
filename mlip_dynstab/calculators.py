@@ -50,6 +50,9 @@ def get_calculator(name: str, device: str = "cuda", **kw) -> CalcHandle:
 
 
 def _load_calculator(name: str, device: str = "cuda", **kw) -> CalcHandle:
+    ft = _finetuned_path(name)
+    if ft is not None:
+        return _finetuned(name, device, ft, **kw)
     if name == "mace_mp0":
         return _mace_mp0(device, **kw)
     if name == "chgnet":
@@ -61,6 +64,38 @@ def _load_calculator(name: str, device: str = "cuda", **kw) -> CalcHandle:
     if name == "mattersim":
         return _mattersim(device, **kw)
     raise ValueError(f"Unknown model '{name}'. Supported: see mlip_dynstab.SUPPORTED_MODELS")
+
+
+_CKPT_ENV = "MLIP_DYNSTAB_CKPT_"   # + the model key upper-cased, e.g. MLIP_DYNSTAB_CKPT_MACE_MP0
+
+
+def _finetuned_path(name: str):
+    """Opt-in hook for the fine-tuning trial (scripts/finetune_trial.py): when
+    MLIP_DYNSTAB_CKPT_<MODEL> names a checkpoint file, that model is loaded from it instead of
+    the foundation checkpoint, so scripts that call ``get_calculator(name, device)`` (for
+    example scripts/sscha_seed_study.py) can run a fine-tuned model without being edited. With
+    the variable unset (every production run) this returns None and nothing else changes."""
+    import os
+    return os.environ.get(_CKPT_ENV + name.upper()) or None
+
+
+def _finetuned(name: str, device: str, path: str, **kw) -> CalcHandle:
+    import hashlib
+    import os
+    with open(path, "rb") as fh:
+        digest = hashlib.sha256(fh.read()).hexdigest()[:16]
+    tag = f"ckpt=finetuned:{os.path.basename(path)}:sha256={digest}"
+    if name == "mace_mp0":
+        from mace.calculators import mace_mp
+        calc = mace_mp(model=path, device=device, default_dtype="float64", **kw)
+        return CalcHandle("mace_mp0", f"mace-torch={_pkg_version('mace-torch')};{tag}", calc, device)
+    if name == "chgnet":
+        from chgnet.model import CHGNet
+        from chgnet.model.dynamics import CHGNetCalculator
+        calc = CHGNetCalculator(model=CHGNet.from_file(path), use_device=device, **kw)
+        return CalcHandle("chgnet", f"chgnet={_pkg_version('chgnet')};{tag}", calc, device)
+    raise ValueError(f"{_CKPT_ENV}{name.upper()} is set, but a fine-tuned checkpoint is only "
+                     "supported for mace_mp0 and chgnet")
 
 
 def _pkg_version(mod_name: str) -> str:

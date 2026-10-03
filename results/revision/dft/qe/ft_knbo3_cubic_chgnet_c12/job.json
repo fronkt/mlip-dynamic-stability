@@ -1,0 +1,110 @@
+{
+ "job": "ft_knbo3_cubic_chgnet_c12",
+ "system": "knbo3_cubic",
+ "structure_sha": "bd8f6ce7b9cf98d7b7e6",
+ "n_atoms": 40,
+ "species": [
+  "K",
+  "Nb",
+  "O"
+ ],
+ "members": [
+  {
+   "study": "ft",
+   "geom_file": "../finetune/configs/knbo3_cubic_chgnet.extxyz",
+   "frame": 12,
+   "role": "train_pool",
+   "system": "knbo3_cubic",
+   "base_model": "chgnet",
+   "T": 100.0,
+   "draw": 12
+  }
+ ],
+ "qe": {
+  "is_metal": false,
+  "smearing": "mv",
+  "degauss_Ry": 0.005,
+  "kspacing_inv_A": 0.25,
+  "kspacing_convention": "n_i = max(1, ceil(|b_i| / spacing)) with b = 2*pi*inv(cell).T, i.e. |b_i| includes 2*pi (the VASP KSPACING convention); Gamma-centred, unshifted",
+  "kmesh": [
+   4,
+   4,
+   4
+  ],
+  "nk_full": 64,
+  "nk_tr_upper": 36,
+  "nk_irr_spglib": 36,
+  "ecutwfc_Ry": 60.0,
+  "ecutrho_Ry": 480.0,
+  "conv_thr_Ry": 4e-09,
+  "mixing_beta": 0.4,
+  "disk_io": "none",
+  "functional": "PBE (from the SSSP PBE set)",
+  "pseudos": {
+   "K": {
+    "filename": "K.pbe-spn-kjpaw_psl.1.0.0.UPF",
+    "ecutwfc": 60.0,
+    "ecutrho": 480.0,
+    "md5": "7d58810084cac21f60fbe77ea2b688fd",
+    "family": "100PAW"
+   },
+   "Nb": {
+    "filename": "Nb.pbe-spn-kjpaw_psl.0.3.0.UPF",
+    "ecutwfc": 40.0,
+    "ecutrho": 320.0,
+    "md5": "411d72ad547312f8017e2943ceca08cc",
+    "family": "031PAW"
+   },
+   "O": {
+    "filename": "O.pbe-n-kjpaw_psl.0.1.UPF",
+    "ecutwfc": 50.0,
+    "ecutrho": 400.0,
+    "md5": "0234752ac141de4415c5fc33072bef88",
+    "family": "031PAW"
+   }
+  },
+  "sssp_json": "SSSP_1.3.0_PBE_efficiency.json",
+  "sssp_sha256": "2c8642a70308ecd072a209a30c160bf51423560bb202116cb31fd5275eff814a"
+ },
+ "pw_in_sha256": "3ae81a66449e8cb9fa53bd1e985066f791a5c18154956b7600e0df5739f1d425",
+ "provenance": {
+  "script": "scripts/finetune_trial.py",
+  "stage": "qe-inputs",
+  "git_head": "f61f1d0",
+  "git_dirty": true,
+  "host": "frank",
+  "utc": "2026-10-03T21:50:46Z",
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "versions": {
+   "numpy": "2.3.5",
+   "scipy": "1.17.1",
+   "ase": "3.28.0",
+   "phonopy": "3.5.1",
+   "spglib": "2.7.0",
+   "torch": "2.11.0+cpu",
+   "mace-torch": "0.3.15",
+   "chgnet": "0.4.2",
+   "pandas": "2.3.3"
+  },
+  "settings": {
+   "stage": "qe-inputs",
+   "out": "C:\\Users\\frank\\mlip-dynamic-stability\\results\\revision\\finetune",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "models": [
+    "mace_mp0",
+    "chgnet"
+   ],
+   "qe_root": "C:\\Users\\frank\\mlip-dynamic-stability\\results\\revision\\dft\\qe",
+   "sssp_json": null,
+   "kspacing_insulator": 0.25,
+   "degauss_insulator": 0.005,
+   "no_write": false
+  }
+ }
+}

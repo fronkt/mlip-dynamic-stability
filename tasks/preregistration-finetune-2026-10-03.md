@@ -65,4 +65,24 @@ with the same settings and a new seed, and the failure is recorded.
 
 ## Deviations
 
-(none yet)
+Recorded 2026-10-03, after the tooling was built and BEFORE any training or test data was computed
+(no ft_ pw.x job had run; no model had been fine-tuned).
+
+- **D1 Contact redraw.** The C2 generator with |ω| for imaginary modes and its 0.5 THz floor gives
+  physically impossible draws for very soft spectra: CsSnBr₃ at 300/600 K (both base models;
+  closest atom pair down to 0.28 of its equilibrium distance, up to 13 of 14 draws below 0.75) and
+  KNbO₃/CHGNet at 600 K (down to 0.40). PBE on overlapping atoms is not a training label for the
+  surface the screen reads. Draws whose closest pair falls below **0.6** of its equilibrium
+  distance are redrawn (`configs --min-pair-ratio 0.6`); the acceptance fraction per set is
+  recorded in manifest.json (8.5 % for CsSnBr₃/CHGNet at 600 K, the lowest). The training set is
+  therefore milder than the literal draws for those sets; this is stated in the paper.
+- **D2 Epoch budget.** "Each tool's documented fine-tuning defaults" gave 6 epochs (MACE naive
+  fine-tuning) and 5 (CHGNet notebook), about 324 optimiser steps for MACE on this dataset. The
+  budget is fixed at **30 epochs for both**, with checkpoint selection on the validation split only;
+  every other setting is the documented one (scripts/finetune/*.json record both values).
+- **D3 Implementation details (consistent with the design, listed for completeness).** MACE keeps
+  all foundation elements (`--foundation_model_elements=True`) so that S2 can run; one energy
+  offset per system from training configurations only; stress not trained (no stress labels);
+  training cells are each base model's own relaxed lattice, as the held-out cells are; the
+  undisplaced cells are excluded from training (they coincide with held-out Q = 0 frames); S1 on
+  C3b covers BaTiO₃/MACE-sampled configurations only, the only C3b set of a test system.
