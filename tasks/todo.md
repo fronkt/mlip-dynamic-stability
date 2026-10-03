@@ -43,8 +43,13 @@ bubble +2.8783 THz on BaTiO3 (no change)**; **SrTiO3/MACE 600 K converged +2.44 
 -20.2): the high-T runaway was the unconverged recipe.** Letter R3.2 sentence "SSCHA never calls SrTiO3
 stable at any temperature" is now FALSE (C1c 100 K +1.13) — fix after the grid.
 
-- [ ] E1 Full PBE coverage: 533 ax_ jobs running on the box (window qe_ax, 4x8 ranks, log /root/logs/qe_ax.log)
-      -> rsync qe/ax_* back -> `dft_reference.py analyze` -> update §S5/Table S19 (PBE now covers every mode).
+- **BOX 2 (CPU, Frank OK 10-03): vast 54068206, EPYC 7763, 122.9-core quota, $0.39/h, `ssh -p 36065
+  root@211.21.106.81`, QE 7.5 + SSSP at /root/qe, /root/sssp (SSSP_CHECK ok), repo clone at f61f1d0, tmux `qe`.**
+  Runs the PBE work (ax_ now; ft_ and cv_/xs_/pl_ when their inputs are built). DESTROY when its queue is empty.
+- [ ] E1 Full PBE coverage: 533 ax_ jobs — 194 finished on box 1, then its queue was stopped; the other 339
+      run on box 2 (window ax, 15x8 ranks, log /root/logs/qe_ax.log). rsync qe/ax_* back from BOTH boxes.
+      (gotcha: `pkill -f qe_queue.sh` over ssh kills the ssh command itself; use `pkill -f "[q]e_queue.sh"`)
+      -> then `dft_reference.py analyze` -> update §S5/Table S19 (PBE now covers every mode).
 - [ ] E2 DFT convergence (cv_), PBEsol (xs_), PBE-lattice/eigenvector (pl_) stages — subagent building.
 - [ ] E3 Converged repeats — PRE-REGISTERED tasks/preregistration-repeats-2026-10-03.md (d816906); start B +
       --conv-seed 10 on the selected units after the grid.
