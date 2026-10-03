@@ -46,6 +46,13 @@ stable at any temperature" is now FALSE (C1c 100 K +1.13) — fix after the grid
 - **BOX 2 (CPU, Frank OK 10-03): vast 54068206, EPYC 7763, 122.9-core quota, $0.39/h, `ssh -p 36065
   root@211.21.106.81`, QE 7.5 + SSSP at /root/qe, /root/sssp (SSSP_CHECK ok), repo clone at f61f1d0, tmux `qe`.**
   Runs the PBE work (ax_ now; ft_ and cv_/xs_/pl_ when their inputs are built). DESTROY when its queue is empty.
+- **Box 2 queue order (22:35 UTC 10-03), unattended:** ft_ (246 jobs, ~1180 core-h, log qe_ft.log) ->
+  remaining ax_ (log qe_ax2.log) -> cv_/xs_/pl_vcrelax checks (log qe_checks.log), via /root/after_ft.sh.
+  ax_ was stopped mid-run to put the fine-tuning data first (critical path); ax_ jobs cost ~2 core-h each
+  on CsSnBr3/Zr, ~8x the cost model. Smoke: PBEsol on PBE pseudos RUNS ("XC functional enforced from
+  input"); the failure was QE d_matrix 14 on CHGNet BaTiO3 -> check inputs now inherit nosym (bb1578b).
+  vc-relax ran ok for BaTiO3 and KNbO3 (check the parser on them). pl phase B/C still to do after A.
+  When box-1's grid ends: give box 1 the PBEsol/conv checks or part of ax_ (generate inputs there too).
 - [ ] E1 Full PBE coverage: 533 ax_ jobs — 194 finished on box 1, then its queue was stopped; the other 339
       run on box 2 (window ax, 15x8 ranks, log /root/logs/qe_ax.log). rsync qe/ax_* back from BOTH boxes.
       (gotcha: `pkill -f qe_queue.sh` over ssh kills the ssh command itself; use `pkill -f "[q]e_queue.sh"`)
