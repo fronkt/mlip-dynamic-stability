@@ -86,7 +86,8 @@ Everything that feeds the paper is in `tasks/revision-claims-2026-09-27.md` (§9
   to top up if the run needs more.
 - [x] **Transparent peer review: opt in** ("sure, or your call"). Precondition: the R1.3 decline
   paragraph is rewritten neutrally before upload (Phase 5).
-- [ ] Corresponding e-mail: gmail or cai485@purdue.edu (Purdue RSC read-and-publish, APC). Open.
+- [x] Corresponding e-mail: **cai485@purdue.edu** (Frank, 2026-10-03) — Purdue RSC read-and-publish covers the APC; Purdue affiliation + portal record must match.
+- [x] **Converged-SSCHA grid: RUN IT** (Frank, 2026-10-03), `--preset grid`, start A, on vast.ai credit.
 - [ ] AI-use statement wording. I draft it, Frank confirms. Open.
 
 ---

@@ -450,6 +450,11 @@ def ledger_lookup(system: str, model: str, T: float, supercell) -> dict:
         return {"found": False, "error": f"{type(exc).__name__}: {exc}"}
     d = df[(df["method"] == "sscha") & (df["system"] == system) & (df["model"] == model)]
     d = d[np.isclose(d["temperature_K"].astype(float), float(T))]
+    if d.empty:
+        # No sscha row at all (e.g. ORB-v2 PbTiO3). An empty object-dtype mask below would be
+        # read by pandas as a list of column labels and drop every column.
+        return {"source": "mlip_dynstab.analysis.load_canonical(), method == 'sscha'",
+                "found": False, "n_rows": 0, "other_supercells": []}
     sc = d["supercell"].map(lambda v: tuple(int(x) for x in v) if v is not None else None)
     want = tuple(int(x) for x in supercell)
     same = d[sc.map(lambda s: s == want)]
