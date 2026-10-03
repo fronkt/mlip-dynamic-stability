@@ -23,6 +23,12 @@ false.
   (a bare exec makes `timeout` the session leader -> setpgid EPERM -> instant silent exit).
   When done: `--preset grid --summarize`, rsync results/revision/sscha_converged_grid back (+ work/ to raw
   archive), destroy the box, then items 3-4.
+  Also on the box (same tmux session): window `v4` = C1b include_v4 on BaTiO3/MACE 100 K seed 0 (cap 4 h,
+  24 threads, log /root/logs/v4.log, result lands in results/revision/sscha_seeds/batio3_..._sc222.json `v4`);
+  window `sto_hiT` = converged (`--converge`, start A) SrTiO3/MACE 600 + 900 K (cap 2 h each, log
+  /root/logs/sto_hiT.log, JSONs in results/revision/sscha_converged/) — the grid stops at T <= 300 K for
+  non-bcc, and these decide whether the high-T runaway survives a converged relaxation (letter R1.2 marker).
+  rsync BOTH dirs back. Post-grid tooling: scripts/grid_compare.py + Table S22 (being built 10-03).
 
 ## ▶ RESUME HERE — paused 2026-09-27 at Frank's request ("pause after the runs are done, save everything")
 
