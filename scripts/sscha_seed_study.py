@@ -1778,7 +1778,8 @@ def converged_recipe(args) -> dict:
              # julia's get_fourier_gradient (SchaMinimizer.py:350-354) would bypass the real-error
              # subclass and its KL guard; the box envs have no julia, and this keeps it so.
              use_julia=False,
-             seed=CONV_SEED, seed_rule="np.random.seed(seed + index of start), A=0, B=1",
+             seed=int(getattr(args, "conv_seed", CONV_SEED)),
+             seed_rule="np.random.seed(seed + index of start), A=0, B=1",
              fresh_splits=FRESH_SPLITS)
     return r
 
@@ -3673,6 +3674,10 @@ def parse_args(argv=None):
                     help=f"print the --preset {GRID_PRESET} plan (unit, env, atoms, estimated "
                          "minutes, status) and exit; --model/--system/--T narrow it")
     cg.add_argument("--start-b-thz", type=float, default=CONV_DEFAULTS["start_b_thz"])
+    cg.add_argument("--conv-seed", type=int, default=CONV_SEED,
+                    help="base seed of the converged mode (default %(default)s). Part of the recipe, "
+                         "so a run with another seed refuses to write into a file made with the "
+                         "default: give it its own --out-dir (seed-replicate study, 2026-10-03)")
     cg.add_argument("--conv-n-configs", type=int, default=CONV_DEFAULTS["n_configs"])
     cg.add_argument("--conv-max-pop", type=int, default=CONV_DEFAULTS["max_pop"])
     cg.add_argument("--conv-n-hessian", type=int, default=CONV_DEFAULTS["n_hessian"])
