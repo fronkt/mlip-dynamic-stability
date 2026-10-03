@@ -2,7 +2,7 @@
 
 Frank Cai
 Purdue University, West Lafayette, Indiana, USA
-frankyc11223@gmail.com · ORCID 0009-0003-0041-1459
+cai485@purdue.edu · ORCID 0009-0003-0041-1459
 
 To the Editors, *Digital Discovery* (Editor-in-Chief: Prof. Alán Aspuru-Guzik)
 

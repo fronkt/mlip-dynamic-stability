@@ -2,7 +2,7 @@
 
 Frank Cai^a^
 
-^a^ Purdue University, West Lafayette, Indiana, USA. E-mail: frankyc11223@gmail.com.
+^a^ Purdue University, West Lafayette, Indiana, USA. E-mail: cai485@purdue.edu.
 ORCID: 0009-0003-0041-1459
 
 ## Abstract
@@ -1120,7 +1120,8 @@ than PBE's for BaTiO₃, KNbO₃ and ZrO₂ (about half the depth for the four c
 comparable for CsSnBr₃, and absent for bcc Zr in the three models that flatten it; with PBE energies
 the screen agrees with the labels in 101 of 120 units against 81 with the MLIPs. On SSCHA-sampled
 configurations at 50–100 K the MLIPs' relative force error is no larger than near equilibrium, so
-extrapolation does not explain the false-stables there. At 600 K in SrTiO₃, where sampling runs to
+those configurations show no extrapolation error, though they come from relaxations that did not
+converge and may not reach the double well, where the error would matter. At 600 K in SrTiO₃, where sampling runs to
 0.34 Å root-mean-square displacements, it rises 1.7-fold and energy errors reach 44 meV per atom.
 The PBE checks rest on six systems, at each MLIP's relaxed lattice, and do not cover the remaining
 fourteen.
