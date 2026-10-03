@@ -103,7 +103,7 @@ Everything that feeds the paper is in `tasks/revision-claims-2026-09-27.md` (§9
   paragraph is rewritten neutrally before upload (Phase 5).
 - [x] Corresponding e-mail: **cai485@purdue.edu** (Frank, 2026-10-03) — Purdue RSC read-and-publish covers the APC; Purdue affiliation + portal record must match.
 - [x] **Converged-SSCHA grid: RUN IT** (Frank, 2026-10-03), `--preset grid`, start A, on vast.ai credit.
-- [ ] AI-use statement wording. I draft it, Frank confirms. Open.
+- [x] AI-use statement: **Frank writes it himself** (2026-10-03) — insert nothing; at packaging, remind him the Acknowledgements need it before upload.
 
 ---
 
