@@ -53,6 +53,9 @@ stable at any temperature" is now FALSE (C1c 100 K +1.13) — fix after the grid
   input"); the failure was QE d_matrix 14 on CHGNet BaTiO3 -> check inputs now inherit nosym (bb1578b).
   vc-relax ran ok for BaTiO3 and KNbO3 (check the parser on them). pl phase B/C still to do after A.
   When box-1's grid ends: give box 1 the PBEsol/conv checks or part of ax_ (generate inputs there too).
+- **OOM 22:48 UTC 10-03:** ft_ at `-r 8 -n 15` (8 pools) = ~34 GB/job x 15 on a 126 GB box -> 49 jobs
+  killed (rc 137/139). Relaunched `-r 16 -n 7 -k 1` (~8 GB actual per job, 57 GB used). Failed jobs rerun
+  automatically (pw.out.failed). after_ft.sh checks also use -r 16 -n 7 -k 1. ft_ ETA ~11:00 UTC Sun.
 - [ ] E1 Full PBE coverage: 533 ax_ jobs — 194 finished on box 1, then its queue was stopped; the other 339
       run on box 2 (window ax, 15x8 ranks, log /root/logs/qe_ax.log). rsync qe/ax_* back from BOTH boxes.
       (gotcha: `pkill -f qe_queue.sh` over ssh kills the ssh command itself; use `pkill -f "[q]e_queue.sh"`)
