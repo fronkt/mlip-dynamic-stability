@@ -35,6 +35,26 @@ false.
   grid2_*.log, topup.log; TOPUP_DONE when every model's queue is empty). After landing:
   `--preset grid --summarize` -> `python scripts/grid_compare.py` -> `build_esi_tables.py` (S22).
 
+## ▶ 2026-10-03 evening — scope extension (Frank: "best rigor and publication odds; can move past Oct 9")
+
+Target date moved to **14 Oct** — Gmail DRAFT reply to advances@rsc.org in the extension thread
+(1a0dc7cfb8312bb1), NOT sent; Frank sends. Results landed: **C1b v4 finished: include_v4 +2.8784 vs
+bubble +2.8783 THz on BaTiO3 (no change)**; **SrTiO3/MACE 600 K converged +2.44 THz = STABLE (production
+-20.2): the high-T runaway was the unconverged recipe.** Letter R3.2 sentence "SSCHA never calls SrTiO3
+stable at any temperature" is now FALSE (C1c 100 K +1.13) — fix after the grid.
+
+- [ ] E1 Full PBE coverage: 533 ax_ jobs running on the box (window qe_ax, 4x8 ranks, log /root/logs/qe_ax.log)
+      -> rsync qe/ax_* back -> `dft_reference.py analyze` -> update §S5/Table S19 (PBE now covers every mode).
+- [ ] E2 DFT convergence (cv_), PBEsol (xs_), PBE-lattice/eigenvector (pl_) stages — subagent building.
+- [ ] E3 Converged repeats — PRE-REGISTERED tasks/preregistration-repeats-2026-10-03.md (d816906); start B +
+      --conv-seed 10 on the selected units after the grid.
+- [ ] E4 Reproducibility: CI workflow, scripts/reproduce.sh, results/MANIFEST.sha256, Holm-adjusted p's,
+      H2 power analysis — subagent building.
+- [ ] E5 Fine-tuning trial (R2.1) — PRE-REGISTERED tasks/preregistration-finetune-2026-10-03.md (033b3d8):
+      MACE-MP-0 + CHGNet, 3 replicates, 3 systems (CsSnBr3 = negative control), held-out = all C3a/C3b PBE.
+      Tooling subagent building scripts/finetune_trial.py; ~300 core-h PBE (ft_ jobs) + ~2 GPU-h.
+- [ ] E6 System expansion: NOT in this revision; report the power analysis (n needed) as future work.
+
 ## ▶ RESUME HERE — paused 2026-09-27 at Frank's request ("pause after the runs are done, save everything")
 
 **Done and pushed (branch `rsc-figure-fixes`):** Phase 2 stats; Phase 3 text (manuscript, ESI S1–S18, figures,
