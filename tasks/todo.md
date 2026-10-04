@@ -15,9 +15,18 @@ false.
   died. Frank's $10 top-up (20:21 UTC) auto-restarted both containers with nothing running (tmux gone).
   Box 1 had been idle since 13:25 UTC (CsSnBr3 ft_ 82/82 done; grid TOPUP_DONE 04:41) with no auto-stop,
   ~6 h of paid idle. Lesson in tasks/lessons.md.
-- [x] **Box 1 (54043018) STOPPED 20:27 UTC** (self-stop via its CONTAINER_API_KEY; disk kept, storage-only
-  billing). Full archive first: `mlip-rsc-revision-raw/box1_final_2026-10-04.tar.gz` (525 MB, 20,193/20,193
-  files, gzip OK). Destroy it only after Frank OKs; nothing on it is missing locally.
+- [x] **Box 1 (54043018) STOPPED 20:27 UTC, DESTROYED ~21:00 UTC (Frank: "destroy box 1 and rent a fresh gpu
+  when training is ready").** Full archive: `mlip-rsc-revision-raw/box1_final_2026-10-04.tar.gz` (525 MB,
+  20,193/20,193 files, gzip OK).
+- [ ] **E5 fine-tuning GPU box: vast 54202873** (RTX 3090, EPYC 7742 25.6 vCPU, 50 GB, $0.28/h, Saskatchewan,
+  label mlip-ft-2026-10-04), rented ~21:04 UTC so the env build overlaps box 2's last 8 ft_knbo3 jobs. Runner
+  `scripts/box/as_run/ft_gpu_2026-10-04.sh` (tmux `ft` + `watchdog`, log /root/logs/ft_runner.log): bootstrap
+  env-mace + env-chgnet -> waits for /root/ft_ready -> git pull, needs 246/246 ft_ -> runs the committed
+  `results/revision/finetune/train/box_sequence.sh` verbatim (log /root/logs/ft_sequence.log) -> RUN_DONE ->
+  45 min grace (touch /root/pulled to end it) -> self-stop; watchdog stops it if the runner dies or at 9 h.
+  Laptop side: when box 2 logs QE_FT_EXIT, pull ft_knbo3*, merge, commit+push, `touch /root/ft_ready` on the
+  GPU box. After RUN_DONE pull results/revision/finetune/{dataset,models,eval,p2cache,sscha_converged_grid,
+  summary.json} + /root/logs, then destroy it.
 - [x] Merged into the repo: 82 ft_cssnbr3 + 194 ax_ (box 1) and 82 ft_batio3 + 74 ft_knbo3 + 69 ax_ (box 2)
   pw.out/pw.in.ran, each checked JOB DONE + pw.in.ran == pw.in == repo pw.in (0 mismatches). Local now:
   **ft_ 238/246, ax_ 263/533.** Also the box-only SSCHA files: sscha_seeds/batio3_..._100K (C1b `v4` block),
