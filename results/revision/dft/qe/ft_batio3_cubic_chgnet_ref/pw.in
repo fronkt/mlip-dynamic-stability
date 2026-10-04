@@ -10,6 +10,7 @@
   verbosity = 'low'
 /
 &SYSTEM
+  nosym = .true.
   ibrav = 0
   nat = 40
   ntyp = 3

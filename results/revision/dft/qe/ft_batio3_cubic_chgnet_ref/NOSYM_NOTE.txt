@@ -1,0 +1,4 @@
+2026-10-04: nosym = .true. added by hand after QE d_matrix error 21 (D_S (l=2) not orthogonal) on the
+undisplaced CHGNet-relaxed BaTiO3 2x2x2 cell, which is very slightly off-cubic. Same fix as the three
+production a_batio3_cubic_chgnet jobs of 2026-09-27 (their NOSYM_NOTE.txt). Symmetry is a numerical
+shortcut only; the energy and forces are unchanged by it. The rattled ft_ configurations have no symmetry.
