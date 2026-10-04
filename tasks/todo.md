@@ -9,6 +9,35 @@ each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ..
 **Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
 false.
 
+## ▶ 2026-10-04 — credit ran out ~19:20 UTC; both boxes were halted mid-queue (supersedes the box notes below)
+
+- **What happened:** vast credit hit zero ~19:20 UTC 10-04; both instances went `exited` and every queue
+  died. Frank's $10 top-up (20:21 UTC) auto-restarted both containers with nothing running (tmux gone).
+  Box 1 had been idle since 13:25 UTC (CsSnBr3 ft_ 82/82 done; grid TOPUP_DONE 04:41) with no auto-stop,
+  ~6 h of paid idle. Lesson in tasks/lessons.md.
+- [x] **Box 1 (54043018) STOPPED 20:27 UTC** (self-stop via its CONTAINER_API_KEY; disk kept, storage-only
+  billing). Full archive first: `mlip-rsc-revision-raw/box1_final_2026-10-04.tar.gz` (525 MB, 20,193/20,193
+  files, gzip OK). Destroy it only after Frank OKs; nothing on it is missing locally.
+- [x] Merged into the repo: 82 ft_cssnbr3 + 194 ax_ (box 1) and 82 ft_batio3 + 74 ft_knbo3 + 69 ax_ (box 2)
+  pw.out/pw.in.ran, each checked JOB DONE + pw.in.ran == pw.in == repo pw.in (0 mismatches). Local now:
+  **ft_ 238/246, ax_ 263/533.** Also the box-only SSCHA files: sscha_seeds/batio3_..._100K (C1b `v4` block),
+  sscha_converged/srtio3_..._{600,900}K_AB.json.
+- [x] **Grid: two units were stale locally.** srtio3_cubic_orb_v2_{600,900}K had been pulled mid-run
+  (status `running`); the box had the finished files (status ok, not converged, max_pop; Hessian −33,506 /
+  −10,459 THz = ORB blow-ups). Replaced (partials kept in mlip-rsc-revision-raw/local_partial_grid_2026-10-04/),
+  re-ran `--preset grid --summarize` + `grid_compare.py`: **converged-only numbers unchanged**; the all_ok
+  variants gain the two blow-ups (e.g. production_matched srtio3 above Tc false-unstable 12/12 -> 14/14).
+  No manuscript text used the old grid_compare.json.
+- [ ] **Box 2 (54068206) RESUMED 20:30 UTC** via `scripts/box/as_run/resume_box2_2026-10-04.sh` (tmux
+  `resume` + `watchdog`, log /root/logs/resume.log): ft_knbo3 (8 left) -> ax_ (270 left, ~4-5 h) -> E2 checks
+  (321 jobs) -> **the box stops itself** when the queue ends, and the watchdog stops it after 30 min with no
+  pw.x. ETA ~06:00-08:00 UTC 10-05, ~$4-5 at $0.40/h (credit $9.92 at 20:22 UTC). Afterwards: pull
+  qe/ft_knbo3*, ax_*, dft_checks/qe back (merge_qe-style: JOB DONE + pw.in.ran check), then
+  `dft_reference.py analyze` (E1), analyze-checks (E2), finetune_trial (E5, needs a GPU: restart box 1 or rent).
+- [ ] `.gitignore:50` still ignores `results/revision/dft/qe/ax_*/` ("unselected C3a inputs (never run)"), which
+  predates E1. The 263 merged ax_ outputs are therefore NOT in git (they are in both raw archives and on both
+  box disks). Un-ignore ax_ pw.in/pw.in.ran/pw.out/job.json when E1 is analysed, as for a_/b_/ft_.
+
 ## ▶ 2026-10-03 session (resumed; supersedes "Next session" items 1, and starts 2)
 
 - [x] 1. C3a/C3b analysed (`dft_reference.py analyze`, 448/448, 0 flags), adversarially verified, folded into

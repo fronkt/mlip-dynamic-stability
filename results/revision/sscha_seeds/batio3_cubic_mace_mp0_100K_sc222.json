@@ -4447,7 +4447,78 @@
    }
   }
  },
- "v4": null,
+ "v4": {
+  "status": "finished",
+  "seed": 0,
+  "timeout_s": 14400.0,
+  "killed_by_parent": false,
+  "wall_s": 9862.585828781128,
+  "utc_start": "2026-10-03T18:19:18Z",
+  "utc_end": "2026-10-03T21:03:40Z",
+  "exitcode": 0,
+  "omp_threads": 24,
+  "v4_min_nonac_thz": 2.878440188980995,
+  "v4_dynamically_stable": true,
+  "v4_false_roundtrip_thz": 2.87829949281429,
+  "v4_false_parent_thz": 2.878299492814301,
+  "v4_false_roundtrip_ok": true,
+  "roundtrip_tol_thz": 0.001,
+  "peak_rss_children_kb": 8350720,
+  "ensemble_dir": "results/revision/sscha_seeds/work/batio3_cubic_mace_mp0_100K_sc222_seed0/hessian_ensemble",
+  "child_json": "results/revision/sscha_seeds/work/batio3_cubic_mace_mp0_100K_sc222_seed0/v4_child.json",
+  "child": {
+   "pid": 8888,
+   "omp_num_threads": "24",
+   "openblas_num_threads": "24",
+   "mkl_num_threads": "24",
+   "dies_with_parent": true,
+   "stage": "done",
+   "utc_start": "2026-10-03T18:19:18Z",
+   "julia_ext_available": false,
+   "schamodules": {
+    "file": "/root/env-mace/lib/python3.11/site-packages/SCHAModules.cpython-311-x86_64-linux-gnu.so",
+    "ldd": [
+     "liblapack.so.3 => /lib/x86_64-linux-gnu/liblapack.so.3 (0x00007d7e69446000)",
+     "libblas.so.3 => /lib/x86_64-linux-gnu/libblas.so.3 (0x00007d7e693a0000)",
+     "libgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (0x00007d7e690c5000)"
+    ]
+   },
+   "n_configs": 512,
+   "include_v4_false": {
+    "min_nonac_thz": 2.87829949281429,
+    "lowest6_thz": [
+     -1.5983216197673407e-07,
+     7.878320516548049e-08,
+     1.4681331523800857e-07,
+     2.87829949281429,
+     2.8782994928143064,
+     2.878299492814321
+    ],
+    "n_imag_nonac": 0,
+    "acoustic_max_abs_thz": 1.5983216197673407e-07,
+    "wall_s": 11.340018033981323,
+    "abs_diff_vs_parent_thz": 1.1102230246251565e-14
+   },
+   "include_v4_true": {
+    "min_nonac_thz": 2.878440188980995,
+    "lowest6_thz": [
+     -2.1759704017109504e-07,
+     -1.548795487626974e-07,
+     -1.3234988700748256e-07,
+     2.878440188980995,
+     2.8784401889810014,
+     2.8784401889810054
+    ],
+    "n_imag_nonac": 0,
+    "acoustic_max_abs_thz": 2.1759704017109504e-07,
+    "wall_s": 9849.663980007172,
+    "dynamically_stable": true
+   },
+   "utc_end": "2026-10-03T21:03:40Z",
+   "peak_rss_self_kb": 8350720
+  },
+  "dry_run": false
+ },
  "paths": {
   "configs": "results/revision/sscha_seeds/configs",
   "work": "results/revision/sscha_seeds/work",
@@ -4717,9 +4788,9 @@
   "model_versions": [
    "mace-torch=0.3.16;ckpt=medium"
   ],
-  "v4_status": null,
-  "v4_min_nonac_thz": null,
-  "v4_false_roundtrip_ok": null
+  "v4_status": "finished",
+  "v4_min_nonac_thz": 2.878440188980995,
+  "v4_false_roundtrip_ok": true
  },
- "last_written_utc": "2026-09-27T06:29:31Z"
+ "last_written_utc": "2026-10-03T21:03:40Z"
 }

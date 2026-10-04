@@ -261,3 +261,22 @@ headline without them is not a result.**
 **Seed agreement is not convergence.** Four seeds agreeing to 0.007 THz looked like robustness; they
 agreed because all four stopped at the same deterministic start. Report start-dependence (two different
 starts), not just seed spread.
+
+---
+
+## 2026-10-04 — rented boxes idled, then died on credit (Frank: "You were supposed to stop it automatically")
+
+**A shutdown that depends on a future session noticing is not a shutdown.** The plan said "destroy the
+box" when the grid ended and "DESTROY when its queue is empty" for box 2, but both were manual steps for a
+session that no longer existed. Box 1 finished at 13:25 UTC and billed idle for ~6 h; then the credit ran
+out ~19:20 UTC and killed box 2's queue mid-job (8 KNbO3 fine-tuning jobs lost, ax_ + checks never
+started). The two failures share one root: nothing on the box itself enforced the end state. **Rule:
+every queue launched on a rented box ends with a self-stop (PUT state=stopped with the container's own
+`CONTAINER_API_KEY`; see scripts/box/as_run/resume_box2_2026-10-04.sh), plus an independent idle
+watchdog (no worker process for 30 min -> self-stop). Stop, not destroy: the disk survives for the pull.
+Size the queue against the credit balance at launch and say the run-out time out loud.**
+
+**A pull taken while the box is still writing is a snapshot, not the result.** The grid's two ORB-v2
+SrTiO3 600/900 K units were copied back as `running` partials and the analysis was built on them; the box
+finished them 10-50 min later. **Rule: pull only after the queue's end marker (TOPUP_DONE / QUEUE end),
+and check that no unit in the summary is `running` before building on it.**
