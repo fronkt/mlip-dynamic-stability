@@ -18,7 +18,14 @@ false.
 - [x] **Box 1 (54043018) STOPPED 20:27 UTC, DESTROYED ~21:00 UTC (Frank: "destroy box 1 and rent a fresh gpu
   when training is ready").** Full archive: `mlip-rsc-revision-raw/box1_final_2026-10-04.tar.gz` (525 MB,
   20,193/20,193 files, gzip OK).
-- [ ] **E5 fine-tuning GPU box: vast 54202873** (RTX 3090, EPYC 7742 25.6 vCPU, 50 GB, $0.28/h, Saskatchewan,
+- [x] **E5 RUN DONE 22:16 UTC (rc=0), pulled 22:24, box self-stopped, then DESTROYED (Frank, 10-04).** Raw:
+  `mlip-rsc-revision-raw/ft_gpu_results_2026-10-04.tar.gz` (498 MB, gzip OK). In git: dataset/, eval/ (32 runs,
+  missing []), p2cache/, sscha_converged_grid/, summary.json, logs/, models/ minus weights (WEIGHTS.sha256
+  verified against the archive; weights gitignored, 157 MB MACE checkpoints). Raw verdict labels, NOT yet
+  analysed: P1 MACE supported / CHGNet unresolved; P2 "corrected" at 300 K refuted for BaTiO3 + KNbO3 (both
+  models), "persist" supported for KNbO3 600 K + CsSnBr3 300 K, several CHGNet cells unresolved; P3 supported;
+  S2 MACE 6/6 controls unchanged. Next: write up E5 against the pre-registration (incl. unresolved cells).
+- [x] **E5 fine-tuning GPU box: vast 54202873** (RTX 3090, EPYC 7742 25.6 vCPU, 50 GB, $0.28/h, Saskatchewan,
   label mlip-ft-2026-10-04), rented ~21:04 UTC so the env build overlaps box 2's last 8 ft_knbo3 jobs. Runner
   `scripts/box/as_run/ft_gpu_2026-10-04.sh` (tmux `ft` + `watchdog`, log /root/logs/ft_runner.log): bootstrap
   env-mace + env-chgnet -> waits for /root/ft_ready -> git pull, needs 246/246 ft_ -> runs the committed
@@ -42,7 +49,8 @@ false.
   (321 jobs) -> **the box stops itself** when the queue ends, and the watchdog stops it after 30 min with no
   pw.x. ETA ~06:00-08:00 UTC 10-05, ~$4-5 at $0.40/h (credit $9.92 at 20:22 UTC). Afterwards: pull
   qe/ft_knbo3*, ax_*, dft_checks/qe back (merge_qe-style: JOB DONE + pw.in.ran check), then
-  `dft_reference.py analyze` (E1), analyze-checks (E2), finetune_trial (E5, needs a GPU: restart box 1 or rent).
+  `dft_reference.py analyze` (E1), analyze-checks (E2). **02:36 UTC 10-05: ft_ + ax_ (339/339) done, checks
+  66/321 (0 failed, started 01:50), ETA ~05:30-07:00 UTC; credit $16.05.**
 - [ ] `.gitignore:50` still ignores `results/revision/dft/qe/ax_*/` ("unselected C3a inputs (never run)"), which
   predates E1. The 263 merged ax_ outputs are therefore NOT in git (they are in both raw archives and on both
   box disks). Un-ignore ax_ pw.in/pw.in.ran/pw.out/job.json when E1 is analysed, as for a_/b_/ft_.
