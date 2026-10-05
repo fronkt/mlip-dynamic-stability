@@ -437,6 +437,10 @@ def main() -> int:
           f"is corrected ({int(c3_fe.fixed.sum())} in all)")
 
     c3p = pd.read_csv(dft + "c3a_paths.csv")
+    # The 38 deciding / reference paths of the 448-job analysis (10-03). Since the 533 extra-mode
+    # jobs (E1, 10-05) c3a_paths.csv also carries 55 `mode` paths; those are pinned separately.
+    c3p_all = c3p
+    c3p = c3p[c3p.role.isin(["decide", "ref"])]
     c3_own, c3_pbe_c = c3p[c3p.curve == c3p.path_model], c3p[c3p.curve == "pbe"]
     c3_dm = c3_own.merge(c3_pbe_c, on="stem", suffixes=("_own", "_pbe"))
     c3_dm["ratio"] = c3_dm.depth_meV_own / c3_dm.depth_meV_pbe
@@ -480,6 +484,53 @@ def main() -> int:
           f"[R1.2] C3b SrTiO3/MACE 600 K: owner relative force RMSE {c3_sr.rel_force_rmse:.3f} = "
           f"{c3_ratio:.2f}x baseline, u_rms {c3_sr.u_rms_mean_A:.3f} A, energy error RMS "
           f"{c3_sr.e_err_rms_meV_per_atom:.1f} / max {c3_sr.e_err_maxabs_meV_per_atom:.1f} meV/atom")
+
+    # ==== E1 (R1.1): the 533 extra-mode `ax_*` jobs, analysed 2026-10-05 together with the 448
+    # production jobs (dft_reference.py analyze over 1,227 pw.x outputs, 0 flags). The extra
+    # modes add PBE coverage; they must not, and do not, change any unit call above.
+    qj = pd.read_csv(dft + "qe_jobs.csv")
+    qj["pre"] = qj.job.str.extract(r"^([a-z]+)_")[0]
+    check(len(qj) == 1227 and bool((qj.status == "ok").all()) and bool(qj.input_matches_run.all())
+          and qj.groupby("pre").size().to_dict() == {"a": 380, "ax": 533, "b": 68, "ft": 246}
+          and float(qj.pos_mismatch_A.max()) < 1e-4,
+          "[E1] 1227 pw.x jobs read (a_ 380, b_ 68, ax_ 533, ft_ 246): all status ok, every pw.in "
+          "equals the input that ran, structure mismatch < 1e-4 A")
+    c3_pb_all = c3p_all[c3p_all.curve == "pbe"]
+    c3_roles = c3_pb_all.groupby("role").size().to_dict()
+    check(c3_roles == {"decide": 33, "mode": 55, "ref": 5} and len(c3_pb_all) == 93,
+          f"[E1] {len(c3_pb_all)} PBE curves now: {c3_roles.get('decide')} deciding, "
+          f"{c3_roles.get('ref')} reference-coordinate, {c3_roles.get('mode')} extra-mode (the 38 "
+          "of the 448-job analysis plus 55)")
+    c3_uall = pd.read_csv(dft + "c3a_unit_calls.csv")
+    c3_uu = c3_uall.drop_duplicates(["system", "model"])
+    c3_lad = c3_uall[c3_uall.mlip_pred_stable_ledger.notna()]
+    check(int(c3_uu.n_paths_pbe.sum()) == 93 and int(c3_uu.n_screened.sum()) == 139
+          and int((c3_uu.n_paths_pbe == c3_uu.n_screened).sum()) == 20 and len(c3_uu) == 30
+          and int((c3_lad.n_paths_pbe == c3_lad.n_screened).sum()) == 80
+          and int((~c3_lad.all_paths_match_cache).sum()) == 40,
+          "[E1] PBE now covers 93 of the 139 modes the screen maps (38 before); 20 of 30 "
+          "(system, model) units are fully covered (11 before), 80 of 120 ladder units; 40 of 120 "
+          "ladder units rest on a path whose regenerated map differs from the cache (28 before)")
+    c3_calls = pd.read_csv(dft + "c3a_calls.csv")
+    c3_grp = c3_calls.groupby(["system", "path_model", "T"])
+    c3_flip = sum(g[g.role != "mode"].pbe_stable.all() != g.pbe_stable.all() for _, g in c3_grp)
+    check(c3_flip == 0 and c3_grp.ngroups == 150,
+          f"[E1] adding the 55 extra-mode paths changes the PBE-backed call in {c3_flip} of 150 "
+          "(system, model, T) units: the deciding mode already decided every call")
+    c3_w = c3p_all.pivot_table(index=["stem", "role", "path_model"], columns="curve",
+                               values="depth_meV").reset_index()
+    c3_w["own"] = [r[r.path_model] for _, r in c3_w.iterrows()]
+    c3_mw = c3_w[(c3_w.role == "mode") & (c3_w.pbe > 1)]
+    c3_mr = c3_mw.own / c3_mw.pbe
+    c3_mpb = c3_pb_all[c3_pb_all.role == "mode"]
+    check(len(c3_mw) == 42 and abs(c3_mr.median() - 0.516) < 1e-3
+          and int((c3_mpb.Q_min_A >= 0.449).sum()) == 0
+          and int((c3_pb_all.Q_min_A >= 0.449).sum()) == 8
+          and int(c3_mpb.cache_check_pass.sum()) == 33,
+          f"[E1] extra modes: {len(c3_mw)} of the 55 have a PBE well deeper than 1 meV; the "
+          f"model's own well is {c3_mr.median():.3f} of PBE (median; deciding paths 0.60); none of "
+          "the 55 PBE minima is at the scan edge (the 8 edge minima are all deciding CsSnBr3 paths); "
+          "33 of 55 regenerated maps reproduce the cache")
 
     # ==== Revision C1 / C5 (R1.4): the SSCHA seed study with the PRODUCTION recipe (Table S21).
     # Recomputed from the unit JSONs that scripts/sscha_seed_study.py wrote under
@@ -597,6 +648,318 @@ def main() -> int:
           "[R1.4] C5: the two MACE-MP-0 3x3x3 runs satisfy the library's test in one population "
           "(harmonic matrix already positive); the two MatterSim 3x3x3 runs end at the cumulative cap "
           "(8 populations, 19 kept steps) like the C1 units")
+
+    # ==== E2 (R1.1): numerical, functional and lattice checks on the C3a curves, analysed
+    # 2026-10-05 (dft_reference.py analyze-checks over 323 pw.x; results/revision/dft_checks/).
+    chk = "results/revision/dft_checks/"
+    ej = pd.read_csv(chk + "qe_jobs.csv")
+    ej["pre"] = ej.job.str.extract(r"^([a-z]+)_")[0]
+    check(len(ej) == 323 and bool((ej.status == "ok").all()) and bool(ej.input_matches_run.all())
+          and ej.groupby("pre").size().to_dict() == {"cv": 90, "pl": 3, "xs": 230},
+          "[E2] 323 check jobs read (cv_ 90, xs_ 230, pl_ vc-relax 3): all status ok, every pw.in "
+          "equals the input that ran")
+    cv = pd.read_csv(chk + "conv_variants.csv")
+    cv = cv[cv.variant != "prod"]
+    cv_rng = cv.groupby("system").depth_rel_change.agg(["min", "max"])
+    cv_k = cv[(cv.system == "cssnbr3_cubic")].set_index("variant").depth_rel_change
+    cv_pass = cv.groupby("system")["pass"].apply(lambda s: bool(s.astype(bool).all())).to_dict()
+    check(cv_pass == {"batio3_cubic": True, "cssnbr3_cubic": False, "knbo3_cubic": True}
+          and float(cv_rng.loc[["batio3_cubic", "knbo3_cubic"]].abs().max().max()) < 0.0169
+          and abs(cv_k["k"] - (-0.0682)) < 5e-4 and abs(cv_k["ke"] - (-0.0686)) < 5e-4
+          and abs(cv_k["e"]) < 5e-4 and int(cv.n_T_call_changed.sum()) == 0
+          and len(cv) == 9,
+          "[E2] convergence (acceptance: depth within 5 % and identical call at every T, three "
+          "variants, three deciding paths): BaTiO3 and KNbO3 pass (depth changes at most 1.7 %); "
+          f"CsSnBr3 FAILS on the 0.15 A^-1 k-spacing variants (depth {cv_k['k']:+.1%} and "
+          f"{cv_k['ke']:+.1%}; cutoff alone {cv_k['e']:+.2%}); no call changes in any of the 9 "
+          "variant x path pairs")
+    xp = pd.read_csv(chk + "xc_paths.csv")
+    xu = pd.read_csv(chk + "xc_unit_calls.csv")
+    xl = xu[xu.in_ladder.astype(bool) & xu.unit_complete.astype(bool)]
+    xpe, xse = xl.pbe_error.astype(bool), xl.pbesol_error.astype(bool)
+    xr = xp.groupby("system").depth_ratio_pbesol_over_pbe.agg(["count", "min", "max"])
+    xcs = xp[xp.system == "cssnbr3_cubic"]
+    check(len(xp) == 23 and len(xl) == 60 and int(xpe.sum()) == 15 and int(xse.sum()) == 6
+          and int((xpe & ~xse).sum()) == 9 and int((~xpe & xse).sum()) == 0
+          and set(xl[xpe & ~xse].system) == {"cssnbr3_cubic", "knbo3_cubic"}
+          and int((xl[xpe & ~xse].system == "cssnbr3_cubic").sum()) == 8
+          and int(xl[xpe].groupby("system").pbesol_error.sum().loc["cssnbr3_cubic"]) == 1
+          and int(xl[xpe].groupby("system").pbesol_error.sum().loc["knbo3_cubic"]) == 4
+          and int(xl.mlip_error.astype(bool).sum()) == 24,
+          "[E2] PBEsol (input_dft on the PBE pseudopotentials, same lattices and paths; 60 ladder "
+          "units of BaTiO3, KNbO3, CsSnBr3): 24 MLIP errors, 15 PBE errors, 6 PBEsol errors; "
+          "9 PBE errors fixed (8 CsSnBr3, 1 KNbO3/SevenNet-0 at 600 K), 0 new; the 6 that remain "
+          "are KNbO3 at 600 K (CHGNet, MACE-MP-0, MatterSim, ORB-v2), BaTiO3/ORB-v2 at 300 K and "
+          "CsSnBr3/ORB-v2 at 300 K")
+    check(int(xr.loc["cssnbr3_cubic", "count"]) == 8
+          and abs(xr.loc["cssnbr3_cubic", "min"] - 0.317) < 1e-3
+          and abs(xr.loc["cssnbr3_cubic", "max"] - 0.422) < 1e-3
+          and abs(xr.loc[["batio3_cubic", "knbo3_cubic"], "min"].min() - 1.027) < 1e-3
+          and abs(xr.loc[["batio3_cubic", "knbo3_cubic"], "max"].max() - 1.304) < 1e-3
+          and int(xcs.pbe_min_at_edge.astype(bool).sum()) == 8
+          and int(xcs.pbesol_min_at_edge.astype(bool).sum()) == 0
+          and set(xcs.pbesol_Q_min_A.round(3)) == {0.356},
+          "[E2] PBEsol well depth over PBE: CsSnBr3 0.317-0.422 (8 paths; the minimum moves from "
+          "the 0.45 A scan edge in all 8 PBE curves to 0.356 A in all 8 PBEsol curves), BaTiO3 and "
+          "KNbO3 1.027-1.304 (15 paths)")
+    pl = pd.read_csv(chk + "pl_lattice.csv")
+    pl_pbe = pl[pl.source.str.startswith("PBE")].set_index("system").a_A
+    pl_ml = pl[pl.source.str.endswith("relaxed")]
+    pl_rng = pl_ml.groupby("system").minus_pbe_pct.agg(["min", "max"])
+    check(abs(pl_pbe["batio3_cubic"] - 4.0237) < 5e-4 and abs(pl_pbe["knbo3_cubic"] - 4.0269) < 5e-4
+          and abs(pl_pbe["cssnbr3_cubic"] - 5.8871) < 5e-4
+          and abs(pl_rng.loc["batio3_cubic", "min"] - 0.256) < 1e-3
+          and abs(pl_rng.loc["batio3_cubic", "max"] - 0.308) < 1e-3
+          and abs(pl_rng.loc["knbo3_cubic", "min"] - 0.740) < 1e-3
+          and abs(pl_rng.loc["knbo3_cubic", "max"] - 0.797) < 1e-3
+          and abs(pl_rng.loc["cssnbr3_cubic", "min"] - 0.119) < 1e-3
+          and abs(pl_rng.loc["cssnbr3_cubic", "max"] - 0.568) < 1e-3,
+          "[E2] PBE vc-relax lattice (phase A only; phases B and C not run): BaTiO3 4.0237, KNbO3 "
+          "4.0269, CsSnBr3 5.8871 A; the five MLIP relaxed lattices are larger by 0.26-0.31 %, "
+          "0.74-0.80 % and 0.12-0.57 %")
+
+    # ==== E5 (R2.1): the fine-tuning trial against its pre-registration
+    # (tasks/preregistration-finetune-2026-10-03.md, commit 033b3d8). Every number is recomputed
+    # here from the raw per-run evaluation files under results/revision/finetune/, not read from
+    # summary.json, and the verdicts are then compared with summary.json's.
+    ft_dir = "results/revision/finetune/"
+    ft_ev = ft_dir + "ev" + "al/"
+    ft_seeds = ["seed0", "seed1", "seed2"]
+    ft_models = ["mace_mp0", "chgnet"]
+
+    def ftj(name):
+        with open(ft_ev + name, encoding="utf-8") as fh:
+            return json.load(fh)
+
+    ft_summary = json.load(open(ft_dir + "summary.json", encoding="utf-8"))
+    ft_files = [f"{part}_{m}_{t}.json" for part in ("c3a", "c3b", "p2", "s2") for m in ft_models
+                for t in ["base"] + ft_seeds]
+    check(all(os.path.exists(ft_ev + f) for f in ft_files) and len(ft_files) == 32
+          and ft_summary["missing"] == [] and len(ft_summary["available"]) == 32
+          and all(not ft_summary["dataset"][m]["mock"] for m in ft_models)
+          and all((ft_summary["dataset"][m]["n_labelled"], ft_summary["dataset"][m]["n_train"],
+                   ft_summary["dataset"][m]["n_valid"]) == (120, 108, 12) for m in ft_models),
+          "[E5] 32 of 32 evaluation runs present (c3a, c3b, p2, s2 x 2 base models x base + 3 "
+          "replicates), none missing, none mock; 120 PBE-labelled training configurations per base "
+          "model (108 train, 12 validation; 40 per system, 3 systems)")
+
+    # P1: fine-tuned over PBE well depth on the held-out deciding paths of BaTiO3 and KNbO3
+    ft_p1 = {}
+    for m in ft_models:
+        base = ftj(f"c3a_{m}_base.json")["paths"]
+        stems = [k for k, v in base.items() if v["system"] in ("batio3_cubic", "knbo3_cubic")
+                 and v["role"] == "decide" and v["path_model"] == m]
+        cs = [k for k, v in base.items() if v["system"] == "cssnbr3_cubic"
+              and v["role"] == "decide" and v["path_model"] == m]
+        reps = {t: ftj(f"c3a_{m}_{t}.json")["paths"] for t in ft_seeds}
+        rat = {t: [reps[t][s]["metrics"]["depth_meV"] / base[s]["pbe_depth_meV"] for s in stems]
+               for t in ft_seeds}
+        ft_p1[m] = dict(
+            n=len(stems), base=float(np.median([base[s]["metrics"]["depth_meV"]
+                                                / base[s]["pbe_depth_meV"] for s in stems])),
+            allmed=float(np.median([x for t in ft_seeds for x in rat[t]])),
+            repmed={t: float(np.median(rat[t])) for t in ft_seeds},
+            lo=min(x for t in ft_seeds for x in rat[t]), hi=max(x for t in ft_seeds for x in rat[t]),
+            cs=[reps[t][s]["metrics"]["depth_meV"] / base[s]["pbe_depth_meV"]
+                for t in ft_seeds for s in cs])
+        pm = ft_p1[m]
+        pm["verdict"] = ("supported" if 0.8 <= pm["allmed"] <= 1.2
+                         and all(0.8 <= v <= 1.2 for v in pm["repmed"].values()) else
+                         "refuted" if not (0.8 <= pm["allmed"] <= 1.2)
+                         and not any(0.8 <= v <= 1.2 for v in pm["repmed"].values())
+                         else "unresolved")
+    pa, pc = ft_p1["mace_mp0"], ft_p1["chgnet"]
+    check(pa["n"] == 2 and pc["n"] == 3 and pa["verdict"] == "supported"
+          and pc["verdict"] == "unresolved"
+          and abs(pa["base"] - 0.448) < 1e-3 and abs(pa["allmed"] - 1.005) < 1e-3
+          and abs(pa["repmed"]["seed0"] - 1.071) < 1e-3 and abs(pa["repmed"]["seed1"] - 1.002) < 1e-3
+          and abs(pa["repmed"]["seed2"] - 1.029) < 1e-3
+          and abs(pa["lo"] - 0.923) < 1e-3 and abs(pa["hi"] - 1.142) < 1e-3
+          and abs(pc["base"] - 0.527) < 1e-3 and abs(pc["allmed"] - 1.038) < 1e-3
+          and abs(pc["repmed"]["seed0"] - 1.332) < 1e-3 and abs(pc["repmed"]["seed1"] - 1.060) < 1e-3
+          and abs(pc["repmed"]["seed2"] - 0.991) < 1e-3
+          and abs(pc["lo"] - 0.921) < 1e-3 and abs(pc["hi"] - 1.670) < 1e-3
+          and ft_summary["P1"]["mace_mp0"]["primary_own_deciding"]["verdict"] == "supported"
+          and ft_summary["P1"]["chgnet"]["primary_own_deciding"]["verdict"] == "unresolved",
+          f"[E5] P1 (well depth, held-out deciding paths of BaTiO3 and KNbO3, band 0.8-1.2): "
+          f"MACE-MP-0 SUPPORTED, median {pa['base']:.3f} -> {pa['allmed']:.3f} (replicate medians "
+          f"{pa['repmed']['seed0']:.3f}, {pa['repmed']['seed1']:.3f}, {pa['repmed']['seed2']:.3f}; "
+          f"{pa['n']} paths, per-path range {pa['lo']:.3f}-{pa['hi']:.3f}); CHGNet UNRESOLVED, "
+          f"median {pc['base']:.3f} -> {pc['allmed']:.3f} but replicate 0's median is "
+          f"{pc['repmed']['seed0']:.3f} ({pc['n']} paths, range {pc['lo']:.3f}-{pc['hi']:.3f})")
+    check(abs(min(pa["cs"]) - 1.475) < 1e-3 and abs(max(pa["cs"]) - 1.728) < 1e-3
+          and len(pc["cs"]) == 3 and abs(min(pc["cs"]) - 0.354) < 1e-3
+          and abs(max(pc["cs"]) - 2.461) < 1e-3,
+          f"[E5] P1 negative control CsSnBr3 (own deciding paths, ratio to PBE): MACE-MP-0 "
+          f"{min(pa['cs']):.2f}-{max(pa['cs']):.2f} over 6 path-replicates (base 0.92), CHGNet "
+          f"{min(pc['cs']):.2f}-{max(pc['cs']):.2f} over 3 (base 2.17): the fine-tune overshoots or "
+          "scatters where the surface was not wrong")
+
+    # P2: the screen re-run with each fine-tuned model, against the label
+    sm_l = A.canonical(pd.read_parquet("results/ledger.parquet"))
+    sm_l = sm_l[sm_l.method == "softmode"]
+    ft_p2 = {}
+    for m in ft_models:
+        rows = {t: ftj(f"p2_{m}_{t}.json")["rows"] for t in ["base"] + ft_seeds}
+        for sysn in ("batio3_cubic", "knbo3_cubic", "cssnbr3_cubic"):
+            for T in (100.0, 300.0, 600.0, 900.0):
+                def row(t, sysn=sysn, T=T, rows=rows):
+                    return [r for r in rows[t] if r["system"] == sysn and r["T"] == T][0]
+                led = sm_l[(sm_l.system == sysn) & (sm_l.model == m) & (sm_l.temperature_K == T)]
+                lc = bool(led.dynamically_stable.iloc[0])
+                calls = [bool(row(t)["pred_stable"]) for t in ft_seeds]
+                gt = bool(row("base")["gt_stable"])
+                ft_p2[(m, sysn, int(T))] = dict(
+                    label=gt, ledger=lc, rerun=bool(row("base")["pred_stable"]), calls=calls,
+                    status="changed" if all(c != lc for c in calls) else
+                    "unchanged" if all(c == lc for c in calls) else "unresolved")
+    check(all(v["ledger"] == v["rerun"] for v in ft_p2.values())
+          and all(ft_summary["P2"]["models"][m][f"{s}@{T}"]["status"] in
+                  (v["status"], "supported", "refuted")
+                  for (m, s, T), v in ft_p2.items()
+                  for v in [ft_p2[(m, s, T)]]),
+          "[E5] P2 recomputed from the raw p2 rows: every base re-run reproduces the deposited "
+          "ledger call (24 of 24), and every changed / unchanged / unresolved status agrees with "
+          "summary.json")
+    reg_cor = [(m, s, 300) for m in ft_models for s in ("batio3_cubic", "knbo3_cubic")]
+    reg_per = [(m, "cssnbr3_cubic", 300) for m in ft_models] \
+        + [(m, "cssnbr3_cubic", 600) for m in ft_models] + [(m, "knbo3_cubic", 600) for m in ft_models]
+
+    def p2_verdict(key, kind):
+        v = ft_p2[key]
+        if v["status"] == "unresolved":
+            return "unresolved"
+        return ("supported" if (v["status"] == "changed") == (kind == "corrected") else "refuted")
+    ver_cor = [p2_verdict(k, "corrected") for k in reg_cor]
+    ver_per = [p2_verdict(k, "persist") for k in reg_per]
+    check(ver_cor == ["refuted"] * 4
+          and all(ft_p2[k]["label"] is False and ft_p2[k]["ledger"] is True
+                  and ft_p2[k]["calls"] == [True] * 3 for k in reg_cor)
+          and ver_per == ["supported", "supported", "supported", "unresolved", "supported", "supported"]
+          and ft_p2[("chgnet", "cssnbr3_cubic", 600)]["calls"] == [False, True, False],
+          "[E5] P2, the 10 pre-registered cells: 'corrected' at 300 K REFUTED in all 4 (BaTiO3 and "
+          "KNbO3, both models: all three replicates still call it stable against an unstable "
+          "label); 'persist' SUPPORTED in 5 (CsSnBr3 300 K both models, CsSnBr3 600 K MACE-MP-0, "
+          "KNbO3 600 K both models) and UNRESOLVED in 1 (CsSnBr3 600 K CHGNet: replicates "
+          "unstable, stable, unstable)")
+    ft_cnt = {m: {s: sum(1 for k, v in ft_p2.items() if k[0] == m and v["status"] == s)
+                  for s in ("unchanged", "changed", "unresolved")} for m in ft_models}
+    check(ft_cnt == {"mace_mp0": {"unchanged": 11, "changed": 1, "unresolved": 0},
+                     "chgnet": {"unchanged": 9, "changed": 0, "unresolved": 3}}
+          and ft_p2[("mace_mp0", "cssnbr3_cubic", 900)]["ledger"] is True
+          and ft_p2[("mace_mp0", "cssnbr3_cubic", 900)]["calls"] == [False] * 3
+          and ft_p2[("chgnet", "knbo3_cubic", 100)]["calls"] == [False, True, False]
+          and ft_p2[("chgnet", "cssnbr3_cubic", 900)]["calls"] == [False, True, True],
+          "[E5] P2, all 24 (system, T) cells per model: MACE-MP-0 11 unchanged / 1 changed / 0 "
+          "unresolved, CHGNet 9 / 0 / 3. The one change is not a prediction: CsSnBr3 at 900 K, "
+          "correct (stable) for the base model, is called unstable by all three MACE-MP-0 "
+          "replicates, a new error; CHGNet KNbO3 at 100 K (replicate 1 calls it stable) and CsSnBr3 "
+          "at 900 K are unresolved")
+    # the fine-tuned model's own wells (T-independent maps) against the P1 wells on the base path
+    own = {}
+    for m in ft_models:
+        for sysn in ("batio3_cubic", "knbo3_cubic"):
+            own[(m, sysn)] = {t: [r for r in ftj(f"p2_{m}_{t}.json")["rows"]
+                                  if r["system"] == sysn and r["T"] == 300.0][0]
+                              for t in ["base"] + ft_seeds}
+    mb, mk = own[("mace_mp0", "batio3_cubic")], own[("mace_mp0", "knbo3_cubic")]
+    cb, ck = own[("chgnet", "batio3_cubic")], own[("chgnet", "knbo3_cubic")]
+    check(abs(mb["base"]["ft_well_depth_meV"] - 42.57) < 0.01
+          and [round(mb[t]["ft_well_depth_meV"], 1) for t in ft_seeds] == [43.7, 37.0, 39.2]
+          and abs(mk["base"]["ft_well_depth_meV"] - 27.9) < 0.05
+          and [round(mk[t]["ft_well_depth_meV"], 1) for t in ft_seeds] == [35.1, 34.6, 39.5]
+          and ck["seed1"]["ft_n_imag_total"] == 0 and abs(ck["seed1"]["ft_harm_soft_thz"] - 2.07) < 5e-3
+          and ck["seed0"]["ft_n_imag_total"] == 3 and ck["seed2"]["ft_n_imag_total"] == 3
+          and all(ft_p2[("chgnet", "knbo3_cubic", T)]["calls"][1] is True for T in (100, 300, 600, 900)),
+          "[E5] the screen reads each fine-tuned model's OWN soft-mode map, not the held-out path: "
+          "MACE-MP-0 BaTiO3 deciding well 42.6 meV (base) -> 43.7, 37.0, 39.2 (replicates) against "
+          "PBE 73.5 on the base path, KNbO3 27.9 -> 35.1, 34.6, 39.5 (PBE 87.8), although P1 puts "
+          "the same models at 0.92-1.14 and 1.00-1.14 of PBE on the base path; CHGNet KNbO3 "
+          "replicate 1 has NO imaginary phonon at all (+2.07 THz) and calls the cubic phase stable "
+          "at every temperature")
+    p3 = ft_summary["P3"]
+    p3j = json.load(open(ft_dir + "sscha_converged_grid/batio3_cubic_mace_mp0_100K_sc222_startA.json",
+                         encoding="utf-8"))
+    p3r = p3j["run"]
+    check(p3["status"] == "supported" and p3["called_stable"] is True and p3["relax_converged"] is True
+          and p3["label_stable"] is False and p3r["status"] == "ok"
+          and bool(p3r["relax"]["converged"]) and p3r["hessian"]["dynamically_stable"] is True
+          and abs(p3r["hessian"]["min_nonac_thz"] - 1.7351) < 5e-4
+          and abs(p3r["start"]["min_nonac_thz"] - 3.1291) < 5e-4
+          and abs(p3r["relaxed_cellpar"][0] - 4.0162) < 5e-4
+          and "finetuned:ft_mace_mp0_seed0" in p3r["provenance"]["model_version"]
+          and p3j["start"] == "A" and p3j["unit"]["system"] == "batio3_cubic"
+          and p3j["unit"]["T"] == 100.0 and p3j["recipe"]["seed"] == 0,
+          f"[E5] P3 SUPPORTED: converged SSCHA (start A, seed 0) with the replicate-0 fine-tuned "
+          f"MACE-MP-0 on BaTiO3 at 100 K ends at {p3r['hessian']['min_nonac_thz']:+.3f} THz "
+          f"(start {p3r['start']['min_nonac_thz']:+.3f}), relaxation converged "
+          f"({p3r['relax']['n_populations']} populations, {p3r['relax']['n_steps_total']} steps): "
+          "called stable against an unstable label; its relaxed lattice is 4.016 A (base 4.034, "
+          "PBE 4.024)")
+    # S1: window force / energy errors on the held-out deciding paths, recomputed from raw sums
+    s1 = {}
+    for m in ft_models:
+        for t in ["base"] + ft_seeds:
+            d = ftj(f"c3a_{m}_{t}.json")["paths"]
+            for sysn in ("batio3_cubic", "knbo3_cubic", "cssnbr3_cubic"):
+                ps = [v for v in d.values() if v["system"] == sysn]
+                s1[(m, t, sysn)] = (
+                    len(ps), sum(v["n_pts"] for v in ps),
+                    float(np.sqrt(sum(v["f_sumsq_window"] for v in ps)
+                                  / sum(v["n_force_components_window"] for v in ps))),
+                    float(np.sqrt(sum(v["e_sumsq_window_per_atom_meV2"] for v in ps)
+                                  / sum(v["n_pts_window"] for v in ps))))
+    check(all(s1[(m, t, s)][:2] == {"batio3_cubic": (8, 80), "knbo3_cubic": (7, 70),
+                                    "cssnbr3_cubic": (8, 80)}[s]
+              for (m, t, s) in s1)
+          and abs(s1[("mace_mp0", "base", "batio3_cubic")][2] - 0.0317) < 5e-5
+          and [round(s1[("mace_mp0", t, "batio3_cubic")][2], 4) for t in ft_seeds]
+          == [0.0104, 0.0037, 0.0121]
+          and abs(s1[("mace_mp0", "base", "knbo3_cubic")][2] - 0.0896) < 5e-5
+          and [round(s1[("mace_mp0", t, "knbo3_cubic")][2], 4) for t in ft_seeds]
+          == [0.0139, 0.0059, 0.0139]
+          and abs(s1[("mace_mp0", "base", "cssnbr3_cubic")][2] - 0.0013) < 5e-5
+          and [round(s1[("mace_mp0", t, "cssnbr3_cubic")][2], 4) for t in ft_seeds]
+          == [0.0039, 0.0039, 0.0027]
+          and abs(s1[("chgnet", "base", "knbo3_cubic")][2] - 0.1032) < 5e-5
+          and [round(s1[("chgnet", t, "knbo3_cubic")][2], 4) for t in ft_seeds]
+          == [0.0210, 0.0244, 0.0161]
+          and [round(s1[("chgnet", t, "cssnbr3_cubic")][2], 4) for t in ft_seeds]
+          == [0.0104, 0.0047, 0.0048]
+          and abs(s1[("chgnet", "base", "cssnbr3_cubic")][2] - 0.0074) < 5e-5,
+          "[E5] S1 on the held-out deciding paths (23 paths, 230 PBE points; well-window force RMSE, "
+          "eV/A, base -> three replicates): MACE-MP-0 BaTiO3 0.0317 -> 0.0104, 0.0037, 0.0121; "
+          "KNbO3 0.0896 -> 0.0139, 0.0059, 0.0139; CsSnBr3 0.0013 -> 0.0039, 0.0039, 0.0027 (worse "
+          "in all three); CHGNet KNbO3 0.1032 -> 0.0210, 0.0244, 0.0161; CsSnBr3 0.0074 -> 0.0104, "
+          "0.0047, 0.0048")
+    # S2: harmonic calls of the six stable controls
+    s2 = {}
+    for m in ft_models:
+        for t in ["base"] + ft_seeds:
+            for r in ftj(f"s2_{m}_{t}.json")["rows"]:
+                s2[(m, t, r["system"])] = bool(r["dynamically_stable"])
+    ctl = sorted({k[2] for k in s2})
+    s2_diff = {m: [(c, t) for c in ctl for t in ft_seeds if s2[(m, t, c)] != s2[(m, "base", c)]]
+               for m in ft_models}
+    s2_unres = {m: sum(1 for c in ctl if any(s2[(m, t, c)] != s2[(m, "base", c)] for t in ft_seeds)
+                       and not all(s2[(m, t, c)] != s2[(m, "base", c)] for t in ft_seeds))
+                for m in ft_models}
+    check(ctl == sorted(CONTROLS) and s2_diff["mace_mp0"] == [] and s2_unres["chgnet"] == 4
+          and sorted(s2_diff["chgnet"]) == sorted([("si_diamond", "seed0"), ("cu_fcc", "seed0"),
+                                                   ("nacl_rocksalt", "seed1"),
+                                                   ("nacl_rocksalt", "seed2"),
+                                                   ("ceo2_cubic", "seed0")])
+          and s2[("chgnet", "base", "nacl_rocksalt")] is False
+          and s2[("chgnet", "base", "ceo2_cubic")] is False
+          and s2[("chgnet", "seed0", "si_diamond")] is False
+          and s2[("chgnet", "seed0", "cu_fcc")] is False
+          and ft_summary["S2"]["mace_mp0"]["n_unchanged"] == 6
+          and ft_summary["S2"]["chgnet"]["n_unchanged"] == 2
+          and ft_summary["S2"]["chgnet"]["n_unresolved"] == 4,
+          "[E5] S2 (harmonic calls of the six stable controls): MACE-MP-0 6 of 6 unchanged in all "
+          "three replicates; CHGNet 2 unchanged and 4 unresolved (5 of 18 replicate calls differ "
+          "from the base: replicate 0 makes Si and Cu newly unstable, NaCl (replicates 1, 2) and "
+          "CeO2 (replicate 0), false-unstable for the base model, become stable)")
 
     print()
     if _fails:
