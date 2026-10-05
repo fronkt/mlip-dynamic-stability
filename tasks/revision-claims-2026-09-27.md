@@ -286,3 +286,74 @@ that persist with PBE (KNbO₃ 600 K; CsSnBr₃ 300/600 K, wells unbracketed at 
 900 K) reflect the single-mode screen, the PBE functional and lattice, or the label threshold, not
 force-engine error alone. Counts are descriptive, from six systems, with PBE evaluated at each
 MLIP's relaxed lattice."
+
+
+## 11. E1 / E2 / E5 results, analysed 2026-10-05 (committed d1e7c50; pinned in `scripts/verify_claims.py`, 95/95; adversarially re-checked against the raw outputs)
+
+Supersedes the sentence in section 10 that the 533 `ax_*` jobs "were never run and feed nothing": they ran (box 2, 10-05), are analysed, and change no unit call. The ESI tables S19, S23 and S24 are generated (`scripts/build_esi_tables.py`; S23/S24 read the raw files through `scripts/ft_results.py`, and verify_claims recomputes the same quantities independently).
+
+**E1 (R1.1) — `dft_reference.py analyze` over 1,227 pw.x (a_ 380, b_ 68, ax_ 533, ft_ 246), 0 flags.**
+- Every job `ok`, SCF converged, `pw.in.ran == pw.in`, structure mismatch < 1e-4 Å.
+- PBE now covers **93 of the 139** screened modes (38 before): 33 deciding, 5 reference, 55 extra-mode;
+  20 of 30 (system, model) units fully covered (11 before); 40 of 120 ladder units rest on a
+  cache-mismatched path (28 before; 22 of the 55 new paths mismatch).
+- **0 of 150** (system, model, T) PBE-backed calls change when the 55 extra modes are added; every
+  headline number of section 10 (81 → 101, 23/3, per-system, ex-ORB) is unchanged. Extra modes: own-model
+  well median 0.516 of PBE (n = 42 with PBE well > 1 meV; deciding paths 0.602); none of the 55 PBE minima is at
+  the scan edge (the 8 edge minima are all deciding CsSnBr₃ paths).
+- Pins that had assumed 38 paths now filter to role decide/ref and a new block pins the 93.
+
+**E2 (R1.1) — `analyze-checks` over 323 pw.x (cv_ 90, xs_ 230, pl_ vc-relax 3), 0 flags.**
+- **Convergence: NOT converged by the pre-set criterion.** BaTiO₃ and KNbO₃ pass all three variants
+  (depth ≤ 1.7 %, calls identical). **CsSnBr₃ fails the 5 % depth criterion on the two k-spacing variants
+  (−6.82 %, −6.86 %; cutoff alone −0.04 %)**, no call changes anywhere (9/9 pairs), and its PBE minimum is at the
+  scan edge. Do NOT write "the PBE wells are converged" for CsSnBr₃.
+- **PBEsol (PBE pseudopotentials, MLIP lattices, unrelaxed): 60 ladder units; MLIP errors 24, PBE 15,
+  PBEsol 6; 9 PBE errors fixed (8 of CsSnBr₃'s 9, KNbO₃/SevenNet-0 at 600 K), 0 new.** Remaining: KNbO₃ 600 K ×4
+  (CHGNet, MACE, MatterSim, ORB), BaTiO₃/ORB 300 K, CsSnBr₃/ORB 300 K. CsSnBr₃ PBEsol/PBE depth 0.317–0.422
+  (minimum 0.356 Å, off the edge, all 8); BaTiO₃/KNbO₃ 1.027–1.304. **So the CsSnBr₃ persistent errors are PBE's,
+  not evidence about the screen; KNbO₃ 600 K is the unambiguous screen/label error.** The JSON key
+  `persistent_errors` in dft_checks/summary.json lists ALL 15 PBE errors (including ones PBEsol fixes); use
+  `pbesol_error`. PBEsol is not the SSSP PBEsol set and the lattice is not PBEsol's.
+- **Lattice (phase A only):** PBE a = 4.0237 (BaTiO₃), 4.0269 (KNbO₃), 5.8871 Å (CsSnBr₃); MLIPs larger by
+  0.26–0.31 %, 0.74–0.80 %, 0.12–0.57 %. **Phases B (PBE force constants) and C (profiles) were NOT run** (need a
+  QE box); "lattice vs eigenvector" remains untested. Say so.
+
+**E5 (R2.1) — fine-tuning trial, pre-registered (033b3d8; D1 contact redraw 0.6, D2 30 epochs, D3 details).**
+Raw labels verified from the raw eval files (not summary.json); 32/32 runs, none mock; 120 labels per model
+(108 train, 12 valid).
+- **P1 well depth (band 0.8–1.2): MACE-MP-0 SUPPORTED** (median 0.448 → 1.005; replicate medians 1.071, 1.002,
+  1.029; per-path 0.923–1.142). **CHGNet UNRESOLVED** (0.527 → 1.038 pooled; replicate-0 median 1.332; 3 paths,
+  0.921–1.670). Negative control CsSnBr₃: MACE 1.475–1.728 (base 0.92), CHGNet 0.354–2.461 (base 2.17).
+- **P2 screen calls, 10 registered cells: 'corrected' at 300 K REFUTED in all 4** (BaTiO₃, KNbO₃ × MACE, CHGNet; all 3
+  replicates stable vs unstable label; MACE min-eff moves ≤ 0.107 THz). 'Persist': **5 supported** (CsSnBr₃ 300 K ×2,
+  CsSnBr₃ 600 K MACE, KNbO₃ 600 K ×2), **1 unresolved** (CsSnBr₃ 600 K CHGNet: U S U). All 24 cells/model: MACE 11
+  unchanged / 1 changed / 0 unresolved; CHGNet 9 / 0 / 3. **Unregistered: MACE CsSnBr₃ 900 K is a NEW error** (stable →
+  unstable, 3/3); CHGNet KNbO₃ 100 K (U S U) and CsSnBr₃ 900 K (U S S) unresolved. **CHGNet replicate 1 has no
+  imaginary phonon on KNbO₃ (+2.07 THz) and calls it stable at every T.**
+- **P3 SUPPORTED** (one replicate, one system): converged SSCHA, start A, seed 0, replicate-0 fine-tuned MACE, BaTiO₃ 100 K:
+  +1.735 THz (start +3.129), converged (6 populations, 343 steps), stable vs unstable label. Relaxed a = 4.016 Å (base 4.034,
+  PBE 4.024). The base-model ledger value +2.868 is production-recipe and NOT a like-for-like comparison.
+- **S2: MACE 6/6 controls unchanged; CHGNet 2 unchanged, 4 unresolved** (5 of 18 replicate calls differ: Si and Cu
+  false-unstable in replicate 0; NaCl ×2 and CeO₂ ×1 corrected).
+- **S1** (23 deciding paths, 230 pts; window force RMSE meV/Å): MACE BaTiO₃ 31.7 → 10.4/3.7/12.1; KNbO₃ 89.6 →
+  13.9/5.9/13.9; CsSnBr₃ 1.3 → 3.9/3.9/2.7 (WORSE); CHGNet KNbO₃ 103.2 → 21.0/24.4/16.1; CsSnBr₃ 7.4 → 10.4/4.7/4.8.
+- **THE P1/P2 GAP (key).** P1 is measured on the base model's held-out PBE geometries; the registered P2 pipeline relaxes the
+  fine-tuned model and re-derives path and E(Q) map. The screen's rule on the fine-tuned models' held-out-path energies (stored
+  in the c3a eval files; NOT registered, post hoc) gives the PBE-backed call in 12/12 replicate calls of the 4 corrected cells
+  (48/48 over all BaTiO₃/KNbO₃ ladder cells). On the pipeline's own maps the MACE deciding well is BaTiO₃ 43.7/37.0/39.2 meV
+  (base 42.6; PBE 73.5 on the base path), KNbO₃ 35.1/34.6/39.5 (base 27.9; PBE 87.8). PBE was not evaluated along the
+  fine-tuned models' own paths → cause (lattice, eigenvector, force constants) NOT established.
+- Departures to state: P1/S1 on the 23 deciding paths, not the registered full held-out set (extra-mode PBE finished after the
+  GPU box was destroyed); configs generated under mace-torch 0.3.15, training/eval under 0.3.16 (base re-run reproduces the
+  ledger in 24/24 cells). Weights gitignored (WEIGHTS.sha256).
+
+Allowed wording: "Fine-tuning toward PBE brought MACE-MP-0's wells to 1.00 of the PBE depth on the held-out deciding paths
+(CHGNet: unresolved), and the screen's rule applied there gives the PBE call, but re-running the screen on the fine-tuned
+models corrected none of the four BaTiO₃ and KNbO₃ 300 K cases in any of three replicates (prediction refuted); why the two
+differ is not established."
+
+Banned: "fine-tuning fixes the softening and therefore the mis-calls"; "the P2 refutation shows the wells are not the cause"
+(the held-out-path call says the opposite on those coordinates); "P3 shows the criterion, not the surface, decides" without the
+one-replicate / unverified-own-path-wells caveat; "CsSnBr₃ persists on first principles" (it persists on PBE only); dropping the
+CHGNet S2 / unresolved cells or MACE's CsSnBr₃ 900 K new error.

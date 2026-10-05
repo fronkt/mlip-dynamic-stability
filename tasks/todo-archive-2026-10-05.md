@@ -1,3 +1,5 @@
+<!-- ARCHIVE of tasks/todo.md as of commit 78ae670 (branch rsc-figure-fixes), copied 2026-10-05 by a Claude Code agent before the E1/E2/E5 analysis block was added on branch rsc-cloud-e1e2e5. Superseded by tasks/todo.md; kept because git history alone is not a backup. Unchanged below this line. -->
+
 # RSC Advances major revision: phased plan (rewritten 2026-09-26)
 
 **Manuscript** RA-ART-07-2026-006452. **Decision** major revision, 2026-09-11 (Assoc. Ed. Dr Lydia
@@ -8,29 +10,6 @@ for time to that date. If it slips, send a follow-up before 9 Oct, not after.
 each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ...) refer to it.
 **Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
 false.
-
-## ▶ 2026-10-05 — E1, E2, E5 analysed and folded (branch `rsc-cloud-e1e2e5`, cut from rsc-figure-fixes 78ae670; supersedes the E1/E2/E5 lines below)
-
-Previous version of this file: `tasks/todo-archive-2026-10-05.md`. Claims ledger §11 has the verified numbers and the allowed /
-banned wording. `scripts/verify_claims.py` 95/95 PASS (was 73; E1 +5, E2 +5, E5 +12).
-
-- [x] **E1** `dft_reference.py analyze` over 1,227 pw.x, 0 flags: PBE covers 93/139 modes (was 38); **0 of 150 calls change**; every
-  section-10 number unchanged. Outputs d1e7c50.
-- [x] **E2** `analyze-checks` over 323 pw.x, 0 flags: **convergence NOT converged for CsSnBr₃** (k-spacing −6.8 %/−6.9 % vs 5 %
-  criterion; no call changes); **PBEsol fixes 9 of 15 PBE errors, 0 new (8 of CsSnBr₃'s 9)**; MLIP lattices 0.12–0.80 % above PBE.
-- [x] **E5** written up against the registration: P1 MACE supported / CHGNet unresolved; **P2 'corrected' refuted 4/4**, 'persist'
-  5 supported + 1 unresolved; P3 supported (1 replicate); S2 MACE 6/6, CHGNet 2 + 4 unresolved; MACE CsSnBr₃ 900 K new error;
-  CHGNet replicate 1 erased KNbO₃'s instability. Folded into manuscript (abstract, §2.6(iii)-(iv), §3.2, new §3.6, §4, §5), ESI §S5.1/S5.3/S5.4 +
-  Tables S19 (regenerated), S23, S24, response letter (R1.1, R2.1, summary), cover note, claims ledger §11.
-- [ ] **OPEN: PBE along the fine-tuned models' OWN paths** (and the 55 extra-mode paths scored on the fine-tuned weights): the
-  held-out-path screen reproduces PBE (12/12) but the registered pipeline does not move; cause not established. Needs the fine-tuned
-  weights (gitignored in the main checkout, `models/WEIGHTS.sha256`), the pinned env (mace-torch 0.3.16, chgnet 0.4.2) and a QE box
-  for PBE along the new paths. Not done on this branch.
-- [ ] **OPEN: pbe-lattice phases B (PBE force constants) and C (soft-mode profiles)** — need a Quantum ESPRESSO box; phase A done.
-- [ ] **OPEN (unchanged, not in scope here):** E3 converged repeats, the grid fold (PENDING-C1/C1c/GRID/C5 markers and Table S22),
-  E4 sign-off, the Frank-only items (send the extension reply draft, portal upload).
-- Process note for the next session: the committed `summary.json` `out_root` strings in `results/revision/dft*/` now point at
-  the agent worktree path; harmless, but regenerate from the main checkout if byte-identical provenance matters.
 
 ## ▶ 2026-10-04 — credit ran out ~19:20 UTC; both boxes were halted mid-queue (supersedes the box notes below)
 

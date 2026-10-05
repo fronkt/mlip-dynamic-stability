@@ -25,14 +25,16 @@ changed what the paper claims. The revision:
   configurations (R1.1, R1.2), and a four-seed SSCHA study with recorded convergence diagnostics
   (R1.4);
     on PBE energies the shared BaTiO₃ and KNbO₃ mis-calls disappear (MLIP wells about half the PBE
-  depth) and the CsSnBr₃ ones persist;
+  depth) and the CsSnBr₃ ones persist, though most of them disappear under PBEsol;
     MLIP force error does not grow on the 100 K SSCHA samples and rises 1.7-fold at 600 K in SrTiO₃;
   <!-- PENDING-C1: one short clause with the outcome of the seed study and of the converged-mode runs (C1c). The seed study is complete (commit 2fdbb61): no seed of any unit converged, and the auxiliary matrix moved only in the first population. If C1c does not keep the false-stables, rewrite the SSCHA bullet above as well. -->
 - adds the literature on active-learning potentials and ML-driven screening (R1.3);
 - completes the screen's derivation and reports its sensitivity, including the frozen-cell
   convention that decides its ferroelectric recall (R1.5);
-- discusses fine-tuning and reports a pre-registered force-level ensemble test, which did not show
-  a signal (R2.1, R2.2);
+- discusses fine-tuning and reports a pre-registered fine-tuning trial on two of the models, in
+  which fine-tuning brought the wells to PBE depth on the held-out coordinates but did not correct
+  the BaTiO₃ and KNbO₃ 300 K mis-calls in the screen (R2.1), and a pre-registered force-level
+  ensemble test, which did not show a signal (R2.2);
 - drops the zone-boundary convergence claims, gives rates as counts with intervals, clusters by
   system every test used as evidence, splits every pooled rate by ORB-v2, renders the ESI tables
   and orders the figures by citation (R3.2–R3.6).
@@ -177,8 +179,9 @@ coordinate at that model's relaxed lattice, gives the same well, and whether a m
 across models persists on the PBE surface, in which case it belongs to the single-mode
 approximation (or to the functional), or disappears, in which case it belongs to the MLIP surfaces.
 It does not re-derive the coordinate or the lattice in PBE.
-All 448 calculations finished, and the outcome splits by system (new §2.6 and §3.2; ESI §S5,
-Table S19). (i) Along the coordinates that decide BaTiO₃, KNbO₃ and ZrO₂, the wells of CHGNet,
+All 448 calculations on the deciding paths finished, and so did 533 more on the screen's other
+modes (PBE now covers 93 of the 139 modes the screen maps; they change none of the 150 PBE-backed
+calls), and the outcome splits by system (new §2.6 and §3.2; ESI §S5, Table S19). (i) Along the coordinates that decide BaTiO₃, KNbO₃ and ZrO₂, the wells of CHGNet,
 MACE-MP-0, MatterSim and SevenNet-0 are shallower than PBE's (0.32–0.76 of the depth for the first
 two systems, 0.45–0.61 for ZrO₂) at the same minimum position; for SrTiO₃'s R tilt they are
 0.25–0.99 of it; for CsSnBr₃ three of the five match PBE within 20 %; and along MatterSim's
@@ -189,8 +192,24 @@ persist, with every PBE minimum at the edge of the scan and a 300 K label 8 K ab
 transition, and so does KNbO₃ at 600 K (T_c 708 K), called stable by all five models and by PBE.
 (iii) Over the 120 ladder units of the six systems, swapping only the energy engine raises
 agreement with the labels from 81 to 101 (23 corrected, 3 newly wrong; no system worse); ten of
-the corrections are bcc Zr. The counts are descriptive (six systems, PBE at each model's lattice);
-I did not repeat the profiles at the PBE-relaxed lattice along the PBE eigenvector.
+the corrections are bcc Zr. The counts are descriptive (six systems, PBE at each model's lattice).
+
+*Checks on the PBE curves (ESI §S5.3, Table S23).* I then asked whether the PBE numbers themselves
+can carry the persistent errors, with an acceptance criterion fixed before any variant ran. Two of
+three deciding paths pass: BaTiO₃ and KNbO₃ wells move by at most 1.7 % under a tighter k-spacing,
+higher cutoffs or both, and no call changes. **The CsSnBr₃ path fails the 5 % depth criterion**
+(−6.8 % and −6.9 % at the tighter k-spacing), with no call changing and its minimum at the edge of
+the scan, so its depth is a lower bound. With PBEsol in place of PBE, on the same lattices and
+paths, **eight of CsSnBr₃'s nine PBE errors disappear** (its wells fall to 0.32–0.42 of the PBE
+depth and leave the scan edge) while KNbO₃ at 600 K stays mis-called for four of its five models;
+PBEsol removes 9 of 15 PBE errors and creates none. I therefore no longer attribute the persistent
+CsSnBr₃ mis-calls to the screen: they belong to the PBE surface, and KNbO₃ at 600 K is the
+unambiguous one. The PBEsol run uses PBE-generated pseudopotentials and unrelaxed lattices, so it
+is a sensitivity and not a PBEsol calculation of the transition. The MLIPs' relaxed lattices are
+0.26–0.31 % (BaTiO₃), 0.74–0.80 % (KNbO₃) and 0.12–0.57 % (CsSnBr₃) larger than the PBE lattice.
+**I have not done the last step**: PBE force constants and soft-mode profiles at the PBE lattice,
+which would separate lattice from eigenvector error, need a Quantum ESPRESSO box and are not in this
+revision.
 
 *Global stability against local curvature.* This distinction is now the centre of §3.3. For the
 anharmonic systems the labels record which phase is the equilibrium phase at T, a global question
@@ -233,7 +252,8 @@ stable controls), not against SSCHA. Its SrTiO₃ gate, which on the 100/300 K l
 and "Why the default criterion misses these wells"); §4 (Limitations); captions of Figs. 2, 3 and
 4; ESI §S1.3 ("What the symmetric-point curvature is", last paragraph), §S2.2, §S4, Table S16;
 `scripts/curvature_identity_check.py`.
-New §2.6 (first-principles reference) and the C3a paragraph of §3.2; ESI §S5.1 and Table S19.
+New §2.6 (first-principles reference) and the C3a paragraph of §3.2; ESI §S5.1, §S5.3 and
+Tables S19 and S23.
 
 ## R1.2 MLIP force-engine errors against method failures
 
@@ -576,8 +596,9 @@ to 44 meV per atom, at 600 K in SrTiO₃.
 > The work focuses exclusively on a stability argument and does not mention how fine-tuning would
 > affect the results, which most experts would assume is needed for these systems.
 
-**Response.** The Abstract now says that the models are tested as shipped, §2.2, §4 and the
-Conclusions say that none was fine-tuned, and §4 says why. That is the regime of generative-CSP
+**Response.** The headline benchmark is of the models as shipped, and §2.2 and §4 say why; I have
+also now fine-tuned two of the models and report what happened, below. Shipped checkpoints are the
+regime of generative-CSP
 screening: a practitioner filtering candidates does not know in advance which of them are strongly
 anharmonic, so fine-tuning on the candidates themselves is not available before the screen, as
 the referee's report notes for crystal structure prediction. Fine-tuning on broad phonon data is
@@ -608,19 +629,60 @@ per-model screen accuracies and the H2 counts built from them. Whether it would 
 mis-calls shared across models, which carry most of the H2 count, is what the PBE-backed screen of
 R1.1 tests, since it re-solves the screen on the surface a PBE fine-tune aims at, along the same
 coordinates (the mode pattern still comes from each MLIP's force constants).
-It does so in part: the BaTiO₃ and KNbO₃ mis-calls disappear on that surface and the CsSnBr₃ ones
-do not, so a fine-tune that deepened the softened ferroelectric wells toward PBE would plausibly
-remove about half the shared count.
+On that surface the BaTiO₃ and KNbO₃ mis-calls disappear and the CsSnBr₃ ones do not, which led me
+to predict that a fine-tune that deepened the softened ferroelectric wells toward PBE would remove
+about half the shared count. **I then tested that prediction, and it was not borne out.**
+
+*The fine-tuning trial (new §2.6(iv) and §3.6; ESI §S5.4, Table S24).* The design and the
+predictions were registered before any training data existed
+(`tasks/preregistration-finetune-2026-10-03.md`, commit 033b3d8): MACE-MP-0 and CHGNet, three
+independent fine-tunes each, on 120 PBE single points (40 phonon-rattled cells of each of BaTiO₃,
+KNbO₃ and CsSnBr₃, the last as a negative control), scored on the held-out PBE paths of R1.1, with
+the whole screen re-run on each fine-tuned model at 100, 300, 600 and 900 K. A call counts as
+changed only if all three replicates differ from the base call. The outcomes, all of them:
+
+- *Wells (P1).* On the held-out deciding paths of BaTiO₃ and KNbO₃ the MACE-MP-0 wells go from a
+  median 0.45 of the PBE depth to 1.00, inside the registered band of 0.8–1.2: **supported**.
+  CHGNet goes from 0.53 to 1.04 pooled, but one replicate's median is 1.33, so the registered rule
+  gives **unresolved**. On the CsSnBr₃ control the MACE-MP-0 wells overshoot to 1.47–1.73 of PBE
+  and the held-out force error there rises.
+- *Screen calls (P2).* The four predictions that the BaTiO₃ and KNbO₃ 300 K mis-calls are
+  **corrected** are **refuted**: for both models, all three replicates still call the cubic phase
+  stable against an unstable label. The predictions that mis-calls persist (CsSnBr₃ at 300 and
+  600 K, KNbO₃ at 600 K; six model-cells) are supported in five and unresolved in one (CsSnBr₃
+  at 600 K, CHGNet). Beyond the registered cells MACE-MP-0 acquires one new error (CsSnBr₃ at 900 K),
+  CHGNet has three unresolved cells, and one CHGNet replicate lost the KNbO₃ instability entirely.
+- *SSCHA criterion (P3).* Converged SSCHA with a fine-tuned MACE-MP-0 on BaTiO₃ at 100 K still
+  calls the cubic phase stable (+1.735 THz, relaxation converged): **supported**, from one
+  replicate, one system and one temperature.
+- *Forgetting (S2).* MACE-MP-0's six stable controls are unchanged in all replicates; CHGNet's
+  are not (two unchanged, four unresolved; one replicate makes Si and Cu unstable).
+
+P1 supported and P2 refuted cannot both describe one surface, and I have located, not explained,
+the gap. Applying the screen's rule to the fine-tuned models' energies along the held-out
+coordinates gives the PBE call in all 12 replicate calls of the four 'corrected' cells (not a
+registered outcome), so along those coordinates the fine-tune does what I predicted. The registered
+pipeline instead relaxes the fine-tuned model and derives the soft-mode path and its energy map
+again from the model's own force constants, and on that map the MACE-MP-0 BaTiO₃ well is 37–44 meV
+(42.6 meV before fine-tuning; PBE 73.5 meV on the original path). I did not evaluate PBE along the
+fine-tuned models' own paths, so I cannot say whether those wells are too shallow or whether PBE is
+also shallow in those directions. Two departures from the registration are stated in the ESI: P1
+and S1 were scored on the 23 deciding paths, because the extra-mode PBE finished after the GPU run,
+and training configurations came from mace-torch 0.3.15 while training and evaluation ran 0.3.16.
+The counts are descriptive: three systems, three replicates.
+
 Fine-tuning could change which units fall in the deep-well regime of §3.3, since that depends on
 the well depth, but not the locality of the criterion: a curvature read at the symmetric reference
-reports stable on any surface whose double well is deep enough, fine-tuned or not. Nor could it
-change the screen's dependence on its frozen-cell convention. And fine-tuning moves a model toward
-its reference functional, not toward experiment. I have not fine-tuned any model here, and how much
-of the finite-temperature gap fine-tuning closes for each family, and with how much data, is beyond
-what a benchmark of released checkpoints can say; §4 says that too.
+reports stable on any surface whose double well is deep enough. The one test I ran is consistent
+with that, with the caveat just given about what it shows. Nor could fine-tuning change the
+screen's dependence on its frozen-cell convention, and it moves a model toward its reference
+functional, not toward experiment. How much of the finite-temperature gap fine-tuning closes for
+each family, and with how much data, is beyond what a benchmark of released checkpoints and one
+small trial can say; §4 says that too.
 
-**Changes.** Abstract; §2.2; §4 ("Scope: foundation models as shipped", "On model-reported
-uncertainty"); §5; refs 20 and 40–43.
+**Changes.** Abstract; §1; §2.2; new §2.6(iv) and §3.6; §4 ("Scope: foundation models as shipped",
+the fine-tuning paragraphs, the Limitations); §5; ESI §S3, §S5.4 and Table S24; refs 20 and 40–43;
+`scripts/finetune_trial.py`, `scripts/ft_results.py`.
 
 ## R2.2 Ensemble uncertainty of the force predictions
 

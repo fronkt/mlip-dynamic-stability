@@ -86,3 +86,9 @@ Recorded 2026-10-03, after the tooling was built and BEFORE any training or test
   training cells are each base model's own relaxed lattice, as the held-out cells are; the
   undisplaced cells are excluded from training (they coincide with held-out Q = 0 frames); S1 on
   C3b covers BaTiO₃/MACE-sampled configurations only, the only C3b set of a test system.
+
+Recorded 2026-10-05, AFTER the results were seen (appended; nothing above was edited). These are departures found while writing up, not decisions taken before the data.
+
+- **D4 Held-out set actually scored.** The registration names every C3a path point (448 + 533 extra-mode jobs) and every C3b configuration. The GPU run (2026-10-04) scored the 23 deciding paths (230 PBE points: BaTiO3 8, KNbO3 7, CsSnBr3 8 paths) and the BaTiO3/MACE C3b configurations only, because the 533 extra-mode jobs finished on 2026-10-05, after that box had been destroyed. P1 (deciding paths only) is unaffected; S1 covers a subset. Scoring the 55 extra-mode paths of the three test systems on the fine-tuned weights is open (weights gitignored, WEIGHTS.sha256).
+- **D5 Package versions.** Training configurations were generated on the laptop with mace-torch 0.3.15 (manifest.json); training, evaluation, P2 and P3 ran on the box with 0.3.16. The base model's P2 re-run reproduces the deposited ledger call in 24 of 24 cells and its P1 depths reproduce c3a_paths.csv to 7e-11 meV (MACE) and 0.015 meV (CHGNet).
+- **D6 Verdict rule for P1.** "Supported iff the pooled median and every replicate's median lie in [0.8, 1.2]" is the rule in scripts/finetune/summary.py, fixed in de7046c before any ft_ job ran; the registration text names only the pooled median. Under the pooled median alone CHGNet (1.038) would read supported; under the tooling rule it is unresolved (replicate 0: 1.332). Both are reported.

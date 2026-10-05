@@ -280,3 +280,15 @@ Size the queue against the credit balance at launch and say the run-out time out
 SrTiO3 600/900 K units were copied back as `running` partials and the analysis was built on them; the box
 finished them 10-50 min later. **Rule: pull only after the queue's end marker (TOPUP_DONE / QUEUE end),
 and check that no unit in the summary is `running` before building on it.**
+
+---
+
+## 2026-10-05 — E1/E2/E5 analysis (cloud agent)
+
+**A fix that works on the held-out surface is not a fix of the pipeline that consumes it.** The fine-tuned wells reached PBE depth on the base model's held-out geometries (P1 supported) and the screen's rule applied there gave the PBE call 12/12, yet the registered pipeline, which relaxes the fine-tuned model and re-derives path and E(Q) map, changed none of the four 300 K calls (P2 refuted). The earlier discussion had predicted "about half the shared count"; it was wrong. **Rule: when a prediction passes at a proxy (surface on fixed geometries) and fails end to end, locate the gap with the cheapest computation that already exists (here the stored per-path calls) before writing a mechanism, and say what was not measured (PBE along the new paths).**
+
+**A key named for the finding can hold something else.** `dft_checks/summary.json` `xc.persistent_errors` lists all 15 PBE errors, including nine that PBEsol fixes. **Rule: read the rows, not the key; pin the count from the rows.**
+
+**Report a failed pre-set criterion as failed.** CsSnBr3 missed the 5 % depth criterion at the tighter k-spacing (-6.8 %) with no call changing; the paper says "not converged by the criterion", not "converged for the call".
+
+**Operator precedence in a pin can make it vacuous.** `a and b if cond else True` parses as `(a and b) if cond else True`; mutate each new pin once (done) to prove it can fail.
