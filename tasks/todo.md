@@ -44,14 +44,23 @@ false.
   re-ran `--preset grid --summarize` + `grid_compare.py`: **converged-only numbers unchanged**; the all_ok
   variants gain the two blow-ups (e.g. production_matched srtio3 above Tc false-unstable 12/12 -> 14/14).
   No manuscript text used the old grid_compare.json.
-- [ ] **Box 2 (54068206) RESUMED 20:30 UTC** via `scripts/box/as_run/resume_box2_2026-10-04.sh` (tmux
+- [x] **Box 2 DONE + DESTROYED 10-05.** Queue finished 09:54 UTC (SELF_STOP "queue finished"; ax2 270 ok,
+  checks 321/321 ok, 0 failed). Restart was refused all day ("resources_unavailable", the GPU was re-rented),
+  so the disk came off via a relay: `vastai copy 54068206:<path>/ <relay>:/workspace/...` works with the source
+  STOPPED; the copied dir is invisible in the running relay (`d?????????`) until the relay is stopped and
+  started. Raw: `mlip-rsc-revision-raw/box2_final_2026-10-05.tar.gz` (34 MB, 7,545 files = relay count).
+  Merged + pushed 25d0527: **ax_ 533/533** (now tracked) and **dft_checks 323/323** (JOB DONE, SCF converged,
+  pw.in.ran == pw.in). Relays 54371240 (host CDI GPU error, never booted) and 54372222 destroyed; no instances
+  left, credit $12.91. **Next: `dft_reference.py analyze` (E1), `analyze-checks` (E2); pbe-lattice phases B
+  (FD supercells) + C (profiles) were never queued and need a QE box.**
+- [x] **Box 2 (54068206) RESUMED 20:30 UTC** via `scripts/box/as_run/resume_box2_2026-10-04.sh` (tmux
   `resume` + `watchdog`, log /root/logs/resume.log): ft_knbo3 (8 left) -> ax_ (270 left, ~4-5 h) -> E2 checks
   (321 jobs) -> **the box stops itself** when the queue ends, and the watchdog stops it after 30 min with no
   pw.x. ETA ~06:00-08:00 UTC 10-05, ~$4-5 at $0.40/h (credit $9.92 at 20:22 UTC). Afterwards: pull
   qe/ft_knbo3*, ax_*, dft_checks/qe back (merge_qe-style: JOB DONE + pw.in.ran check), then
   `dft_reference.py analyze` (E1), analyze-checks (E2). **02:36 UTC 10-05: ft_ + ax_ (339/339) done, checks
   66/321 (0 failed, started 01:50), ETA ~05:30-07:00 UTC; credit $16.05.**
-- [ ] `.gitignore:50` still ignores `results/revision/dft/qe/ax_*/` ("unselected C3a inputs (never run)"), which
+- [x] (Done 25d0527: rule removed, all 533 ax_ tracked.) `.gitignore:50` still ignores `results/revision/dft/qe/ax_*/` ("unselected C3a inputs (never run)"), which
   predates E1. The 263 merged ax_ outputs are therefore NOT in git (they are in both raw archives and on both
   box disks). Un-ignore ax_ pw.in/pw.in.ran/pw.out/job.json when E1 is analysed, as for a_/b_/ft_.
 
