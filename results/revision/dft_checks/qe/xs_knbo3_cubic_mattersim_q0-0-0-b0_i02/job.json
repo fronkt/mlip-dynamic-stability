@@ -1,0 +1,178 @@
+{
+ "job": "xs_knbo3_cubic_mattersim_q0-0-0-b0_i02",
+ "study": "xc",
+ "system": "knbo3_cubic",
+ "n_atoms": 5,
+ "structure_sha": "aed4b1a1b686aed7dd75",
+ "structure": {
+  "symbols": [
+   "K",
+   "Nb",
+   "O",
+   "O",
+   "O"
+  ],
+  "cell": [
+   [
+    4.0589940089893615,
+    -4.217920626462225e-09,
+    -2.892361865053133e-09
+   ],
+   [
+    -4.217922182793078e-09,
+    4.058994034854514,
+    -1.271227140043209e-09
+   ],
+   [
+    -2.8923606501281823e-09,
+    -1.2712319608578467e-09,
+    4.058993979428262
+   ]
+  ],
+  "positions": [
+   [
+    4.05860958,
+    4.05921482,
+    -5.748e-05
+   ],
+   [
+    2.03838623,
+    2.0243912,
+    2.03082666
+   ],
+   [
+    -0.02222218,
+    2.03766967,
+    2.02736861
+   ],
+   [
+    2.01526817,
+    0.01276377,
+    2.02736862
+   ],
+   [
+    2.01526813,
+    2.03766969,
+    -0.00332392
+   ]
+  ]
+ },
+ "members": [
+  {
+   "part": "xc",
+   "stem": "knbo3_cubic_mattersim_q0-0-0-b0",
+   "system": "knbo3_cubic",
+   "frame": 2,
+   "Q": 0.022222222222222223,
+   "n_images": 1,
+   "role": "decide",
+   "path_model": "mattersim",
+   "decide_T": [
+    100.0
+   ]
+  }
+ ],
+ "qe": {
+  "is_metal": false,
+  "smearing": "mv",
+  "degauss_Ry": 0.005,
+  "kspacing_inv_A": 0.25,
+  "kspacing_convention": "n_i = max(1, ceil(|b_i| / spacing)) with b = 2*pi*inv(cell).T, i.e. |b_i| includes 2*pi (the VASP KSPACING convention); Gamma-centred, unshifted",
+  "kmesh": [
+   7,
+   7,
+   7
+  ],
+  "nk_full": 343,
+  "nk_tr_upper": 172,
+  "nk_irr_spglib": 172,
+  "ecutwfc_Ry": 60.0,
+  "ecutrho_Ry": 480.0,
+  "ecut_scale": 1.0,
+  "conv_thr_Ry": 5e-10,
+  "mixing_beta": 0.4,
+  "calculation": "scf",
+  "disk_io": "none",
+  "input_dft": "pbesol",
+  "functional": "pbesol via input_dft on SSSP 1.3 PBE-efficiency pseudopotentials (PBE-generated; not the SSSP PBEsol set)",
+  "pseudos": {
+   "K": {
+    "filename": "K.pbe-spn-kjpaw_psl.1.0.0.UPF",
+    "ecutwfc": 60.0,
+    "ecutrho": 480.0,
+    "md5": "7d58810084cac21f60fbe77ea2b688fd",
+    "family": "100PAW"
+   },
+   "Nb": {
+    "filename": "Nb.pbe-spn-kjpaw_psl.0.3.0.UPF",
+    "ecutwfc": 40.0,
+    "ecutrho": 320.0,
+    "md5": "411d72ad547312f8017e2943ceca08cc",
+    "family": "031PAW"
+   },
+   "O": {
+    "filename": "O.pbe-n-kjpaw_psl.0.1.UPF",
+    "ecutwfc": 50.0,
+    "ecutrho": 400.0,
+    "md5": "0234752ac141de4415c5fc33072bef88",
+    "family": "031PAW"
+   }
+  },
+  "sssp_json": "SSSP_1.3.0_PBE_efficiency.json",
+  "sssp_sha256": "2c8642a70308ecd072a209a30c160bf51423560bb202116cb31fd5275eff814a"
+ },
+ "pw_in_sha256": "8785be44e1fbb44e77f41c0f36bf0c83273772ca7d10ccdb6c8fbb3f834fd3e9",
+ "provenance": {
+  "script": "scripts/dft_checks.py",
+  "stage": "xc-inputs",
+  "git_head": "30d5674",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.6",
+   "torch": null,
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": null,
+   "cellconstructor": null
+  },
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "host": "fd6e78900fba",
+  "utc": "2026-10-03T22:07:27Z",
+  "settings": {
+   "stage": "xc-inputs",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft_checks",
+   "dft_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "sssp_dir": "/root/sssp",
+   "sssp_json": null,
+   "kspacing_insulator": null,
+   "degauss_insulator": null,
+   "no_require_pbe": false,
+   "functional": "pbesol"
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "script_sha256": "963f25d823e04a57a1f542ac41509877c82a43d76f86eb9b5914f7e6fe5fd6d6",
+  "dft_reference_sha256": "c636c66408c17c067b30f170bd175c57ae41247bbdb14cceaa56769cca6796cf"
+ }
+}

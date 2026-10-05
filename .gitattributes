@@ -1,5 +1,6 @@
 # dft_reference.py analyze checks sha256 of geometry files and byte-compares pw.in with
 # pw.in.ran; keep these byte-exact (LF) on Windows checkouts with core.autocrlf=true
 results/revision/dft/** -text
+results/revision/dft_checks/** -text
 # shell scripts must stay LF on Windows checkouts (a CR breaks `set -euo pipefail`)
 *.sh text eol=lf

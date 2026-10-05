@@ -1,0 +1,213 @@
+{
+ "job": "cv_e_batio3_cubic_mace_mp0_q1d2-0-1d2-b0_i06",
+ "study": "conv",
+ "system": "batio3_cubic",
+ "n_atoms": 10,
+ "structure_sha": "b65de21173da30a27d8d",
+ "structure": {
+  "symbols": [
+   "Ba",
+   "Ba",
+   "Ti",
+   "Ti",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O"
+  ],
+  "cell": [
+   [
+    4.034047026810178,
+    1.1679178835097836e-15,
+    4.03404702681017
+   ],
+   [
+    4.034047026810178,
+    -1.1740614950529157e-15,
+    -4.03404702681017
+   ],
+   [
+    6.405462834321671e-32,
+    4.034047026810165,
+    1.7763568394002499e-15
+   ]
+  ],
+  "positions": [
+   [
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    4.03404703,
+    -8.41070826803415e-32,
+    -1.3029543428067807e-16
+   ],
+   [
+    6.051070536810178,
+    2.217023509999999,
+    -2.0170235168101702
+   ],
+   [
+    6.0510705399999996,
+    1.81702351,
+    2.01702351
+   ],
+   [
+    4.034047026810178,
+    2.0170235099999987,
+    -2.0170235168101702
+   ],
+   [
+    4.03404703,
+    2.01702351,
+    2.01702351
+   ],
+   [
+    6.051070536810178,
+    3.8634602168101635,
+    -2.0170235168101684
+   ],
+   [
+    6.05107054,
+    0.17058681,
+    2.0170235100000005
+   ],
+   [
+    2.01702351,
+    2.01702351,
+    4.981673616786428e-17
+   ],
+   [
+    6.0510705399999996,
+    2.01702351,
+    3.148859917681891e-17
+   ]
+  ]
+ },
+ "members": [
+  {
+   "part": "conv",
+   "variant": "e",
+   "stem": "batio3_cubic_mace_mp0_q1d2-0-1d2-b0",
+   "system": "batio3_cubic",
+   "frame": 6,
+   "Q": 0.19999999999999998,
+   "n_images": 2,
+   "role": "decide",
+   "path_model": "mace_mp0"
+  }
+ ],
+ "qe": {
+  "is_metal": false,
+  "smearing": "mv",
+  "degauss_Ry": 0.005,
+  "kspacing_inv_A": 0.25,
+  "kspacing_convention": "n_i = max(1, ceil(|b_i| / spacing)) with b = 2*pi*inv(cell).T, i.e. |b_i| includes 2*pi (the VASP KSPACING convention); Gamma-centred, unshifted",
+  "kmesh": [
+   5,
+   5,
+   7
+  ],
+  "nk_full": 175,
+  "nk_tr_upper": 88,
+  "nk_irr_spglib": 24,
+  "ecutwfc_Ry": 65.0,
+  "ecutrho_Ry": 520.0,
+  "ecut_scale": 1.3,
+  "conv_thr_Ry": 1e-09,
+  "mixing_beta": 0.4,
+  "calculation": "scf",
+  "disk_io": "none",
+  "input_dft": null,
+  "functional": "PBE (from the SSSP PBE set)",
+  "pseudos": {
+   "Ba": {
+    "filename": "Ba.pbe-spn-kjpaw_psl.1.0.0.UPF",
+    "ecutwfc": 30.0,
+    "ecutrho": 240.0,
+    "md5": "c432291d3e53af55f19d5e8866385beb",
+    "family": "100PAW"
+   },
+   "Ti": {
+    "filename": "ti_pbe_v1.4.uspp.F.UPF",
+    "ecutwfc": 35.0,
+    "ecutrho": 280.0,
+    "md5": "88a00a6731bd790ddea75d31a80cb452",
+    "family": "GBRV-1.4"
+   },
+   "O": {
+    "filename": "O.pbe-n-kjpaw_psl.0.1.UPF",
+    "ecutwfc": 50.0,
+    "ecutrho": 400.0,
+    "md5": "0234752ac141de4415c5fc33072bef88",
+    "family": "031PAW"
+   }
+  },
+  "sssp_json": "SSSP_1.3.0_PBE_efficiency.json",
+  "sssp_sha256": "2c8642a70308ecd072a209a30c160bf51423560bb202116cb31fd5275eff814a"
+ },
+ "pw_in_sha256": "209e040ab9236424c6c3555cd86697741788e66c2bd8a7a7393716cda6d2be3d",
+ "provenance": {
+  "script": "scripts/dft_checks.py",
+  "stage": "conv-inputs",
+  "git_head": "30d5674",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.6",
+   "torch": null,
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": null,
+   "cellconstructor": null
+  },
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "host": "fd6e78900fba",
+  "utc": "2026-10-03T22:07:18Z",
+  "settings": {
+   "stage": "conv-inputs",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft_checks",
+   "dft_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "sssp_dir": "/root/sssp",
+   "sssp_json": null,
+   "kspacing_insulator": null,
+   "degauss_insulator": null,
+   "no_require_pbe": false,
+   "model": "mace_mp0",
+   "variants": [
+    "k",
+    "e",
+    "ke"
+   ],
+   "kspacing_fine": 0.15,
+   "ecut_scale": 1.3
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "script_sha256": "963f25d823e04a57a1f542ac41509877c82a43d76f86eb9b5914f7e6fe5fd6d6",
+  "dft_reference_sha256": "c636c66408c17c067b30f170bd175c57ae41247bbdb14cceaa56769cca6796cf"
+ }
+}

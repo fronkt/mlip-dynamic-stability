@@ -1,0 +1,154 @@
+2026-10-03T21:53:33Z QUEUE start: 339 jobs, 15 x 8 ranks on 122 cores (cgroup quota)
+2026-10-03T21:53:33Z START ax_srtio3_cubic_chgnet_q0-0-0-b0_i02 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_chgnet_q0-0-0-b0_i03 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_chgnet_q0-0-0-b0_i04 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_chgnet_q0-0-0-b0_i05 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_chgnet_q0-0-0-b0_i06 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_chgnet_q0-0-0-b0_i07 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_chgnet_q0-0-0-b0_i08 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_chgnet_q0-0-0-b0_i09 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i00 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i01 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i02 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i03 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i04 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i05 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:53:33Z START ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i06 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:54:22Z END   ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i00 status=ok wall=49s
+2026-10-03T21:54:23Z START ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i07 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:54:37Z END   ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i05 status=ok wall=64s
+2026-10-03T21:54:37Z START ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i08 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:54:55Z END   ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i03 status=ok wall=82s
+2026-10-03T21:54:55Z START ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i09 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:55:16Z END   ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i01 status=ok wall=103s
+2026-10-03T21:55:16Z START ax_srtio3_cubic_mattersim_q0-0-0-b0_i00 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:55:34Z END   ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i06 status=ok wall=121s
+2026-10-03T21:55:34Z START ax_srtio3_cubic_mattersim_q0-0-0-b0_i01 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:55:41Z END   ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i08 status=ok wall=64s
+2026-10-03T21:55:41Z START ax_srtio3_cubic_mattersim_q0-0-0-b0_i02 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:55:50Z END   ax_srtio3_cubic_mattersim_q0-0-0-b0_i00 status=ok wall=34s
+2026-10-03T21:55:50Z START ax_srtio3_cubic_mattersim_q0-0-0-b0_i03 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:55:59Z END   ax_srtio3_cubic_chgnet_q0-0-0-b0_i04 status=ok wall=146s
+2026-10-03T21:55:59Z START ax_srtio3_cubic_mattersim_q0-0-0-b0_i04 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:56:04Z END   ax_srtio3_cubic_chgnet_q0-0-0-b0_i03 status=ok wall=151s
+2026-10-03T21:56:04Z START ax_srtio3_cubic_mattersim_q0-0-0-b0_i05 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:56:05Z END   ax_srtio3_cubic_chgnet_q0-0-0-b0_i07 status=ok wall=152s
+2026-10-03T21:56:05Z START ax_srtio3_cubic_mattersim_q0-0-0-b0_i06 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:56:12Z END   ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i04 status=ok wall=159s
+2026-10-03T21:56:12Z START ax_srtio3_cubic_mattersim_q0-0-0-b0_i07 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:56:13Z END   ax_srtio3_cubic_chgnet_q0-0-0-b0_i06 status=ok wall=160s
+2026-10-03T21:56:13Z START ax_srtio3_cubic_mattersim_q0-0-0-b0_i08 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:56:14Z END   ax_srtio3_cubic_chgnet_q0-0-0-b0_i02 status=ok wall=161s
+2026-10-03T21:56:14Z START ax_srtio3_cubic_mattersim_q0-0-0-b0_i09 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:56:19Z END   ax_srtio3_cubic_chgnet_q0-0-0-b0_i09 status=ok wall=166s
+2026-10-03T21:56:19Z START ax_srtio3_cubic_sevennet0_q0-0-0-b0_i00 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:56:22Z END   ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i02 status=ok wall=169s
+2026-10-03T21:56:22Z START ax_srtio3_cubic_sevennet0_q0-0-0-b0_i01 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:56:25Z END   ax_srtio3_cubic_chgnet_q0-0-0-b0_i08 status=ok wall=172s
+2026-10-03T21:56:25Z START ax_srtio3_cubic_sevennet0_q0-0-0-b0_i02 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:56:26Z END   ax_srtio3_cubic_chgnet_q0-0-0-b0_i05 status=ok wall=173s
+2026-10-03T21:56:26Z START ax_srtio3_cubic_sevennet0_q0-0-0-b0_i03 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:56:57Z END   ax_srtio3_cubic_sevennet0_q0-0-0-b0_i00 status=ok wall=38s
+2026-10-03T21:56:57Z START ax_srtio3_cubic_sevennet0_q0-0-0-b0_i04 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:57:06Z END   ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i07 status=ok wall=163s
+2026-10-03T21:57:06Z START ax_srtio3_cubic_sevennet0_q0-0-0-b0_i05 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:57:14Z END   ax_srtio3_cubic_mace_mp0_q0-0-0-b0_i09 status=ok wall=139s
+2026-10-03T21:57:14Z START ax_srtio3_cubic_sevennet0_q0-0-0-b0_i06 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:57:19Z END   ax_srtio3_cubic_mattersim_q0-0-0-b0_i01 status=ok wall=105s
+2026-10-03T21:57:19Z START ax_srtio3_cubic_sevennet0_q0-0-0-b0_i07 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:57:28Z END   ax_srtio3_cubic_mattersim_q0-0-0-b0_i05 status=ok wall=84s
+2026-10-03T21:57:28Z START ax_srtio3_cubic_sevennet0_q0-0-0-b0_i08 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:57:42Z END   ax_srtio3_cubic_mattersim_q0-0-0-b0_i07 status=ok wall=90s
+2026-10-03T21:57:42Z START ax_srtio3_cubic_sevennet0_q0-0-0-b0_i09 nat=5 kpts=343 np=8 nk_pools=8
+2026-10-03T21:57:55Z END   ax_srtio3_cubic_mattersim_q0-0-0-b0_i02 status=ok wall=134s
+2026-10-03T21:57:55Z START ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i00 nat=6 kpts=405 np=8 nk_pools=8
+2026-10-03T21:58:08Z END   ax_srtio3_cubic_mattersim_q0-0-0-b0_i04 status=ok wall=129s
+2026-10-03T21:58:08Z START ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i01 nat=6 kpts=405 np=8 nk_pools=8
+2026-10-03T21:58:11Z END   ax_srtio3_cubic_mattersim_q0-0-0-b0_i03 status=ok wall=141s
+2026-10-03T21:58:11Z START ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i02 nat=6 kpts=405 np=8 nk_pools=8
+2026-10-03T21:58:26Z END   ax_srtio3_cubic_sevennet0_q0-0-0-b0_i03 status=ok wall=120s
+2026-10-03T21:58:26Z START ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i03 nat=6 kpts=405 np=8 nk_pools=8
+2026-10-03T21:58:30Z END   ax_srtio3_cubic_mattersim_q0-0-0-b0_i06 status=ok wall=145s
+2026-10-03T21:58:30Z START ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i04 nat=6 kpts=405 np=8 nk_pools=8
+2026-10-03T21:58:40Z END   ax_srtio3_cubic_sevennet0_q0-0-0-b0_i01 status=ok wall=138s
+2026-10-03T21:58:40Z START ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i05 nat=6 kpts=405 np=8 nk_pools=8
+2026-10-03T21:58:43Z END   ax_srtio3_cubic_mattersim_q0-0-0-b0_i08 status=ok wall=150s
+2026-10-03T21:58:43Z START ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i06 nat=6 kpts=405 np=8 nk_pools=8
+2026-10-03T21:58:45Z END   ax_srtio3_cubic_mattersim_q0-0-0-b0_i09 status=ok wall=151s
+2026-10-03T21:58:45Z START ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i07 nat=6 kpts=405 np=8 nk_pools=8
+2026-10-03T21:58:53Z END   ax_srtio3_cubic_sevennet0_q0-0-0-b0_i08 status=ok wall=85s
+2026-10-03T21:58:53Z START ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i08 nat=6 kpts=405 np=8 nk_pools=8
+2026-10-03T21:59:01Z END   ax_srtio3_cubic_sevennet0_q0-0-0-b0_i04 status=ok wall=124s
+2026-10-03T21:59:01Z START ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i09 nat=6 kpts=405 np=8 nk_pools=8
+2026-10-03T21:59:05Z END   ax_srtio3_cubic_sevennet0_q0-0-0-b0_i06 status=ok wall=111s
+2026-10-03T21:59:05Z START ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i00 nat=6 kpts=672 np=8 nk_pools=8
+2026-10-03T21:59:07Z END   ax_srtio3_cubic_sevennet0_q0-0-0-b0_i02 status=ok wall=162s
+2026-10-03T21:59:07Z START ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i01 nat=6 kpts=672 np=8 nk_pools=8
+2026-10-03T21:59:25Z END   ax_srtio3_cubic_sevennet0_q0-0-0-b0_i05 status=ok wall=139s
+2026-10-03T21:59:25Z START ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i02 nat=6 kpts=672 np=8 nk_pools=8
+2026-10-03T21:59:41Z END   ax_srtio3_cubic_sevennet0_q0-0-0-b0_i07 status=ok wall=142s
+2026-10-03T21:59:41Z START ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i03 nat=6 kpts=672 np=8 nk_pools=8
+2026-10-03T21:59:49Z END   ax_srtio3_cubic_sevennet0_q0-0-0-b0_i09 status=ok wall=127s
+2026-10-03T21:59:49Z START ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i04 nat=6 kpts=672 np=8 nk_pools=8
+2026-10-03T22:01:17Z END   ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i05 status=ok wall=157s
+2026-10-03T22:01:17Z START ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i05 nat=6 kpts=672 np=8 nk_pools=8
+2026-10-03T22:02:19Z END   ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i00 status=ok wall=264s
+2026-10-03T22:02:19Z START ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i06 nat=6 kpts=672 np=8 nk_pools=8
+2026-10-03T22:02:37Z END   ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i03 status=ok wall=251s
+2026-10-03T22:02:37Z START ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i07 nat=6 kpts=672 np=8 nk_pools=8
+2026-10-03T22:02:53Z END   ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i08 status=ok wall=240s
+2026-10-03T22:02:53Z START ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i08 nat=6 kpts=672 np=8 nk_pools=8
+2026-10-03T22:03:02Z END   ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i01 status=ok wall=294s
+2026-10-03T22:03:02Z START ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i09 nat=6 kpts=672 np=8 nk_pools=8
+2026-10-03T22:03:05Z END   ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i04 status=ok wall=275s
+2026-10-03T22:03:05Z START ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i00 nat=6 kpts=918 np=8 nk_pools=8
+2026-10-03T22:03:20Z END   ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i02 status=ok wall=309s
+2026-10-03T22:03:20Z START ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i01 nat=6 kpts=918 np=8 nk_pools=8
+2026-10-03T22:03:30Z END   ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i06 status=ok wall=287s
+2026-10-03T22:03:30Z START ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i02 nat=6 kpts=918 np=8 nk_pools=8
+2026-10-03T22:03:31Z END   ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i09 status=ok wall=270s
+2026-10-03T22:03:31Z START ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i03 nat=6 kpts=918 np=8 nk_pools=8
+2026-10-03T22:03:47Z END   ax_zro2_cubic_orb_v2_q0-0-1d2-b0_i07 status=ok wall=302s
+2026-10-03T22:03:47Z START ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i04 nat=6 kpts=918 np=8 nk_pools=8
+2026-10-03T22:04:13Z END   ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i00 status=ok wall=308s
+2026-10-03T22:04:13Z START ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i05 nat=6 kpts=918 np=8 nk_pools=8
+2026-10-03T22:06:37Z END   ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i03 status=ok wall=416s
+2026-10-03T22:06:37Z START ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i06 nat=6 kpts=918 np=8 nk_pools=8
+2026-10-03T22:10:01Z END   ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i07 status=ok wall=444s
+2026-10-03T22:10:01Z START ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i07 nat=6 kpts=918 np=8 nk_pools=8
+2026-10-03T22:10:16Z END   ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i04 status=ok wall=627s
+2026-10-03T22:10:16Z START ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i08 nat=6 kpts=918 np=8 nk_pools=8
+2026-10-03T22:10:38Z END   ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i01 status=ok wall=691s
+2026-10-03T22:10:38Z START ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i09 nat=6 kpts=918 np=8 nk_pools=8
+2026-10-03T22:11:19Z END   ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i02 status=ok wall=714s
+2026-10-03T22:11:19Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i00 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:11:41Z END   ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i00 status=ok wall=516s
+2026-10-03T22:11:41Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i01 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:13:55Z END   ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i05 status=ok wall=758s
+2026-10-03T22:13:55Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i02 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:14:18Z END   ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i06 status=ok wall=719s
+2026-10-03T22:14:18Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i03 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:14:41Z END   ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i04 status=ok wall=654s
+2026-10-03T22:14:41Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i04 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:16:54Z END   ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i09 status=ok wall=832s
+2026-10-03T22:16:54Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i05 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:17:30Z END   ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i08 status=ok wall=877s
+2026-10-03T22:17:30Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i06 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:19:44Z END   ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i00 status=ok wall=505s
+2026-10-03T22:19:44Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i07 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:23:02Z END   ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i05 status=ok wall=1129s
+2026-10-03T22:23:02Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i08 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:23:38Z END   ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i01 status=ok wall=1218s
+2026-10-03T22:23:38Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i09 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:25:02Z END   ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i03 status=ok wall=1291s
+2026-10-03T22:25:02Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b2_i01 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:27:01Z END   ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i06 status=ok wall=1224s
+2026-10-03T22:27:01Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b2_i02 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:27:37Z END   ax_zr_bcc_mattersim_q1d3-1d2-0-b0_i02 status=ok wall=1447s
+2026-10-03T22:27:37Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b2_i03 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:28:03Z END   ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i01 status=ok wall=982s
+2026-10-03T22:28:03Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b2_i04 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:30:17Z END   ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i04 status=ok wall=936s
+2026-10-03T22:30:17Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b2_i05 nat=10 kpts=75 np=8 nk_pools=8
+2026-10-03T22:32:30Z END   ax_cssnbr3_cubic_chgnet_q0-0-1d2-b0_i02 status=ok wall=1115s
+2026-10-03T22:32:30Z START ax_cssnbr3_cubic_chgnet_q0-0-1d2-b2_i06 nat=10 kpts=75 np=8 nk_pools=8

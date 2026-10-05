@@ -1,0 +1,430 @@
+{
+ "provenance": {
+  "script": "scripts/dft_checks.py",
+  "stage": "conv-inputs",
+  "git_head": "bb1578b",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.6",
+   "torch": null,
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": null,
+   "cellconstructor": null
+  },
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "host": "fd6e78900fba",
+  "utc": "2026-10-03T22:36:24Z",
+  "settings": {
+   "stage": "conv-inputs",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft_checks",
+   "dft_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "sssp_dir": "/root/sssp",
+   "sssp_json": null,
+   "kspacing_insulator": null,
+   "degauss_insulator": null,
+   "no_require_pbe": false,
+   "model": "mace_mp0",
+   "variants": [
+    "k",
+    "e",
+    "ke"
+   ],
+   "kspacing_fine": 0.15,
+   "ecut_scale": 1.3
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "script_sha256": "34fceb0fb1e45204b16e7d977d45cdefcbecd0a3b378ee50e8935320d47d037e",
+  "dft_reference_sha256": "c636c66408c17c067b30f170bd175c57ae41247bbdb14cceaa56769cca6796cf"
+ },
+ "acceptance": {
+  "depth_rel": 0.05,
+  "calls": "identical at every T in T_SCREEN",
+  "T_SCREEN": [
+   50.0,
+   100.0,
+   300.0,
+   600.0,
+   900.0
+  ]
+ },
+ "paths": [
+  {
+   "system": "batio3_cubic",
+   "stem": "batio3_cubic_mace_mp0_q1d2-0-1d2-b0",
+   "role": "decide",
+   "q": [
+    0.5,
+    0.0,
+    0.5
+   ],
+   "decide_T": [
+    100.0,
+    300.0,
+    600.0,
+    900.0
+   ],
+   "n_atoms_supercell": 20,
+   "n_atoms_run": 10,
+   "n_images": 2,
+   "production_job_example": "a_batio3_cubic_mace_mp0_q1d2-0-1d2-b0_i00",
+   "reduction_source": "production job.json",
+   "repro_check": {
+    "checked": 10,
+    "identical": 10
+   },
+   "production_kspacing": 0.25,
+   "candidates": [
+    {
+     "stem": "batio3_cubic_mace_mp0_q1d2-0-1d2-b0",
+     "decide_T": [
+      100.0,
+      300.0,
+      600.0,
+      900.0
+     ],
+     "depth_meV": 42.572105761792045
+    }
+   ],
+   "variants": {
+    "k": {
+     "jobs": 10,
+     "atoms": 10,
+     "kmesh": [
+      8,
+      8,
+      11
+     ],
+     "nk_irr": [
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90
+     ],
+     "ecutwfc_Ry": 50.0,
+     "ecutrho_Ry": 400.0,
+     "est_core_h": 3.2284166666666665,
+     "what": "k-spacing 0.15 (production 0.25)"
+    },
+    "e": {
+     "jobs": 10,
+     "atoms": 10,
+     "kmesh": [
+      5,
+      5,
+      7
+     ],
+     "nk_irr": [
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24
+     ],
+     "ecutwfc_Ry": 65.0,
+     "ecutrho_Ry": 520.0,
+     "est_core_h": 1.4549397777777777,
+     "what": "ecutwfc x1.3, ecutrho 8x"
+    },
+    "ke": {
+     "jobs": 10,
+     "atoms": 10,
+     "kmesh": [
+      8,
+      8,
+      11
+     ],
+     "nk_irr": [
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90
+     ],
+     "ecutwfc_Ry": 65.0,
+     "ecutrho_Ry": 520.0,
+     "est_core_h": 5.456024166666668,
+     "what": "both"
+    }
+   }
+  },
+  {
+   "system": "knbo3_cubic",
+   "stem": "knbo3_cubic_mace_mp0_q0-1d2-1d2-b0",
+   "role": "decide",
+   "q": [
+    0.0,
+    0.5,
+    0.5
+   ],
+   "decide_T": [
+    100.0,
+    300.0,
+    600.0,
+    900.0
+   ],
+   "n_atoms_supercell": 20,
+   "n_atoms_run": 10,
+   "n_images": 2,
+   "production_job_example": "a_knbo3_cubic_mace_mp0_q0-1d2-1d2-b0_i00",
+   "reduction_source": "production job.json",
+   "repro_check": {
+    "checked": 10,
+    "identical": 10
+   },
+   "production_kspacing": 0.25,
+   "candidates": [
+    {
+     "stem": "knbo3_cubic_mace_mp0_q0-1d2-1d2-b0",
+     "decide_T": [
+      100.0,
+      300.0,
+      600.0,
+      900.0
+     ],
+     "depth_meV": 27.87949034515691
+    }
+   ],
+   "variants": {
+    "k": {
+     "jobs": 10,
+     "atoms": 10,
+     "kmesh": [
+      8,
+      8,
+      11
+     ],
+     "nk_irr": [
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90
+     ],
+     "ecutwfc_Ry": 60.0,
+     "ecutrho_Ry": 480.0,
+     "est_core_h": 3.740333333333333,
+     "what": "k-spacing 0.15 (production 0.25)"
+    },
+    "e": {
+     "jobs": 10,
+     "atoms": 10,
+     "kmesh": [
+      5,
+      5,
+      7
+     ],
+     "nk_irr": [
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24
+     ],
+     "ecutwfc_Ry": 78.0,
+     "ecutrho_Ry": 624.0,
+     "est_core_h": 1.685643555555556,
+     "what": "ecutwfc x1.3, ecutrho 8x"
+    },
+    "ke": {
+     "jobs": 10,
+     "atoms": 10,
+     "kmesh": [
+      8,
+      8,
+      11
+     ],
+     "nk_irr": [
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90,
+      90
+     ],
+     "ecutwfc_Ry": 78.0,
+     "ecutrho_Ry": 624.0,
+     "est_core_h": 6.321163333333334,
+     "what": "both"
+    }
+   }
+  },
+  {
+   "system": "cssnbr3_cubic",
+   "stem": "cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0",
+   "role": "decide",
+   "q": [
+    0.5,
+    0.5,
+    0.5
+   ],
+   "decide_T": [
+    300.0,
+    600.0,
+    900.0
+   ],
+   "n_atoms_supercell": 40,
+   "n_atoms_run": 10,
+   "n_images": 4,
+   "production_job_example": "a_cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0_i00",
+   "reduction_source": "production job.json",
+   "repro_check": {
+    "checked": 10,
+    "identical": 10
+   },
+   "production_kspacing": 0.25,
+   "candidates": [
+    {
+     "stem": "cssnbr3_cubic_mace_mp0_q1d2-1d2-0-b0",
+     "decide_T": [
+      100.0
+     ],
+     "depth_meV": 55.73749048624421
+    },
+    {
+     "stem": "cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0",
+     "decide_T": [
+      300.0,
+      600.0,
+      900.0
+     ],
+     "depth_meV": 116.83164701403825
+    }
+   ],
+   "variants": {
+    "k": {
+     "jobs": 10,
+     "atoms": 10,
+     "kmesh": [
+      7,
+      7,
+      7
+     ],
+     "nk_irr": [
+      20,
+      172,
+      172,
+      172,
+      172,
+      172,
+      172,
+      172,
+      172,
+      172
+     ],
+     "ecutwfc_Ry": 60.0,
+     "ecutrho_Ry": 480.0,
+     "est_core_h": 31.35572098765432,
+     "what": "k-spacing 0.15 (production 0.25)"
+    },
+    "e": {
+     "jobs": 10,
+     "atoms": 10,
+     "kmesh": [
+      4,
+      4,
+      4
+     ],
+     "nk_irr": [
+      8,
+      36,
+      36,
+      36,
+      36,
+      36,
+      36,
+      36,
+      36,
+      36
+     ],
+     "ecutwfc_Ry": 78.0,
+     "ecutrho_Ry": 624.0,
+     "est_core_h": 11.306851111111111,
+     "what": "ecutwfc x1.3, ecutrho 8x"
+    },
+    "ke": {
+     "jobs": 10,
+     "atoms": 10,
+     "kmesh": [
+      7,
+      7,
+      7
+     ],
+     "nk_irr": [
+      20,
+      172,
+      172,
+      172,
+      172,
+      172,
+      172,
+      172,
+      172,
+      172
+     ],
+     "ecutwfc_Ry": 78.0,
+     "ecutrho_Ry": 624.0,
+     "est_core_h": 52.9911684691358,
+     "what": "both"
+    }
+   }
+  }
+ ],
+ "est_core_h": {
+  "k": 38.32447098765432,
+  "e": 14.447434444444445,
+  "ke": 64.7683559691358
+ }
+}

@@ -1,0 +1,389 @@
+{
+ "job": "xs_cssnbr3_cubic_orb_v2_q1d2-1d2-1d2-b1_i09",
+ "study": "xc",
+ "system": "cssnbr3_cubic",
+ "n_atoms": 40,
+ "structure_sha": "c8b1519f299a677443ba",
+ "structure": {
+  "symbols": [
+   "Cs",
+   "Cs",
+   "Cs",
+   "Cs",
+   "Cs",
+   "Cs",
+   "Cs",
+   "Cs",
+   "Sn",
+   "Sn",
+   "Sn",
+   "Sn",
+   "Sn",
+   "Sn",
+   "Sn",
+   "Sn",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br",
+   "Br"
+  ],
+  "cell": [
+   [
+    -0.0001024169756352592,
+    3.340596872192238e-05,
+    11.79148150768795
+   ],
+   [
+    -1.5120743570334934e-05,
+    11.793806756457384,
+    3.340406161304098e-05
+   ],
+   [
+    -11.794163404529534,
+    1.5120971237791998e-05,
+    0.0001024233284183423
+   ]
+  ],
+  "positions": [
+   [
+    -0.00883167,
+    -0.10118493,
+    5.90524773
+   ],
+   [
+    0.00485046,
+    0.09911502,
+    11.78175342
+   ],
+   [
+    0.00489411,
+    5.9960017,
+    5.88602937
+   ],
+   [
+    -0.00608103,
+    5.79882673,
+    11.80066896
+   ],
+   [
+    -5.88988525,
+    0.10163096,
+    5.88578925
+   ],
+   [
+    -5.90315518,
+    -0.09806909,
+    11.80070347
+   ],
+   [
+    -5.90311153,
+    5.79881759,
+    5.90497942
+   ],
+   [
+    -5.89619561,
+    5.99167171,
+    11.78229492
+   ],
+   [
+    -2.95159584,
+    2.94011586,
+    2.95212087
+   ],
+   [
+    -2.94677387,
+    2.95778557,
+    8.83771709
+   ],
+   [
+    -2.94673022,
+    8.85467225,
+    2.94199304
+   ],
+   [
+    -2.95177104,
+    8.83721605,
+    8.84801277
+   ],
+   [
+    -8.84380436,
+    2.95777643,
+    2.94202755
+   ],
+   [
+    -8.84884518,
+    2.94032023,
+    8.84804728
+   ],
+   [
+    -8.84880153,
+    8.83720691,
+    2.95232323
+   ],
+   [
+    -8.84374666,
+    8.85451635,
+    8.83765057
+   ],
+   [
+    -5.89935243,
+    2.84562918,
+    3.08108686
+   ],
+   [
+    -5.89327688,
+    3.06393679,
+    8.75571088
+   ],
+   [
+    -5.89323323,
+    8.96082347,
+    2.85998683
+   ],
+   [
+    -5.89855614,
+    8.73016044,
+    8.93969309
+   ],
+   [
+    -11.79030737,
+    3.06392765,
+    2.86002134
+   ],
+   [
+    -11.79563028,
+    2.83326462,
+    8.9397276
+   ],
+   [
+    -11.79558663,
+    8.7301513,
+    3.04400355
+   ],
+   [
+    -11.79004071,
+    8.95612951,
+    8.74163759
+   ],
+   [
+    -3.04555436,
+    5.89515931,
+    2.50333018
+   ],
+   [
+    -2.85563522,
+    5.89609339,
+    9.28703919
+   ],
+   [
+    -2.85559158,
+    11.79298007,
+    3.39131514
+   ],
+   [
+    -3.04053554,
+    11.79205293,
+    8.39922215
+   ],
+   [
+    -8.75266572,
+    5.89608425,
+    3.39134965
+   ],
+   [
+    -8.93760968,
+    5.89515712,
+    8.39925666
+   ],
+   [
+    -8.93756603,
+    11.79204379,
+    2.50353261
+   ],
+   [
+    -8.7578012,
+    11.79303078,
+    9.28697243
+   ],
+   [
+    -3.02477623,
+    2.50506465,
+    0.00403238
+   ],
+   [
+    -2.95362546,
+    3.39966125,
+    5.89562034
+   ],
+   [
+    -2.83318742,
+    9.28858922,
+    -0.00222034
+   ],
+   [
+    -3.01134655,
+    8.4010924,
+    5.89955265
+   ],
+   [
+    -8.73026156,
+    3.39169341,
+    -0.00218583
+   ],
+   [
+    -8.90842069,
+    2.50419658,
+    5.89958716
+   ],
+   [
+    -8.90837705,
+    8.40108325,
+    0.00386311
+   ],
+   [
+    -8.77391138,
+    9.29149582,
+    5.89433801
+   ]
+  ]
+ },
+ "members": [
+  {
+   "part": "xc",
+   "stem": "cssnbr3_cubic_orb_v2_q1d2-1d2-1d2-b1",
+   "system": "cssnbr3_cubic",
+   "frame": 9,
+   "Q": 0.45,
+   "n_images": 1,
+   "role": "decide",
+   "path_model": "orb_v2",
+   "decide_T": [
+    600.0,
+    900.0
+   ]
+  }
+ ],
+ "qe": {
+  "is_metal": false,
+  "smearing": "mv",
+  "degauss_Ry": 0.005,
+  "kspacing_inv_A": 0.25,
+  "kspacing_convention": "n_i = max(1, ceil(|b_i| / spacing)) with b = 2*pi*inv(cell).T, i.e. |b_i| includes 2*pi (the VASP KSPACING convention); Gamma-centred, unshifted",
+  "kmesh": [
+   3,
+   3,
+   3
+  ],
+  "nk_full": 27,
+  "nk_tr_upper": 14,
+  "nk_irr_spglib": 14,
+  "ecutwfc_Ry": 60.0,
+  "ecutrho_Ry": 480.0,
+  "ecut_scale": 1.0,
+  "conv_thr_Ry": 4e-09,
+  "mixing_beta": 0.4,
+  "calculation": "scf",
+  "disk_io": "none",
+  "input_dft": "pbesol",
+  "functional": "pbesol via input_dft on SSSP 1.3 PBE-efficiency pseudopotentials (PBE-generated; not the SSSP PBEsol set)",
+  "pseudos": {
+   "Cs": {
+    "filename": "Cs_pbe_v1.uspp.F.UPF",
+    "ecutwfc": 30.0,
+    "ecutrho": 240.0,
+    "md5": "3476d69cb178dfad3ffaa59df4e07ca4",
+    "family": "GBRV-1.2"
+   },
+   "Sn": {
+    "filename": "Sn_pbe_v1.uspp.F.UPF",
+    "ecutwfc": 60.0,
+    "ecutrho": 480.0,
+    "md5": "4cf58ce39ec5d5d420df3dd08604eb00",
+    "family": "GBRV-1.2"
+   },
+   "Br": {
+    "filename": "br_pbe_v1.4.uspp.F.UPF",
+    "ecutwfc": 30.0,
+    "ecutrho": 240.0,
+    "md5": "d3ffb7b29f6225aa16fe06858fb2a80b",
+    "family": "GBRV-1.4"
+   }
+  },
+  "sssp_json": "SSSP_1.3.0_PBE_efficiency.json",
+  "sssp_sha256": "2c8642a70308ecd072a209a30c160bf51423560bb202116cb31fd5275eff814a"
+ },
+ "pw_in_sha256": "5d5889947762bac6a717579a0015f87828fd16fed96bea5217e60d9d2cd68060",
+ "provenance": {
+  "script": "scripts/dft_checks.py",
+  "stage": "xc-inputs",
+  "git_head": "30d5674",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.6",
+   "torch": null,
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": null,
+   "cellconstructor": null
+  },
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "host": "fd6e78900fba",
+  "utc": "2026-10-03T22:07:27Z",
+  "settings": {
+   "stage": "xc-inputs",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft_checks",
+   "dft_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "sssp_dir": "/root/sssp",
+   "sssp_json": null,
+   "kspacing_insulator": null,
+   "degauss_insulator": null,
+   "no_require_pbe": false,
+   "functional": "pbesol"
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "script_sha256": "963f25d823e04a57a1f542ac41509877c82a43d76f86eb9b5914f7e6fe5fd6d6",
+  "dft_reference_sha256": "c636c66408c17c067b30f170bd175c57ae41247bbdb14cceaa56769cca6796cf"
+ }
+}

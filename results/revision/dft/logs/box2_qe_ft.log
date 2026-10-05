@@ -1,0 +1,492 @@
+2026-10-03T22:35:15Z QUEUE start: 246 jobs, 15 x 8 ranks on 122 cores (cgroup quota)
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c00 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c01 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c02 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c03 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c04 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c05 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c06 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c07 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c08 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c09 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c10 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c11 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c12 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c13 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:35:15Z START ft_cssnbr3_cubic_chgnet_c14 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:38:22Z END   ft_cssnbr3_cubic_chgnet_c00 status=failed(rc=139) wall=187s
+2026-10-03T22:38:22Z START ft_cssnbr3_cubic_chgnet_c15 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:38:22Z END   ft_cssnbr3_cubic_chgnet_c09 status=failed(rc=139) wall=187s
+2026-10-03T22:38:22Z END   ft_cssnbr3_cubic_chgnet_c02 status=failed(rc=139) wall=187s
+2026-10-03T22:38:22Z START ft_cssnbr3_cubic_chgnet_c16 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:38:22Z START ft_cssnbr3_cubic_chgnet_c17 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:38:22Z END   ft_cssnbr3_cubic_chgnet_c04 status=failed(rc=139) wall=187s
+2026-10-03T22:38:22Z START ft_cssnbr3_cubic_chgnet_c18 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:38:22Z END   ft_cssnbr3_cubic_chgnet_c01 status=failed(rc=139) wall=187s
+2026-10-03T22:38:22Z START ft_cssnbr3_cubic_chgnet_c19 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:38:22Z END   ft_cssnbr3_cubic_chgnet_c13 status=failed(rc=139) wall=187s
+2026-10-03T22:38:23Z START ft_cssnbr3_cubic_chgnet_c20 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:38:23Z END   ft_cssnbr3_cubic_chgnet_c08 status=failed(rc=137) wall=188s
+2026-10-03T22:38:23Z END   ft_cssnbr3_cubic_chgnet_c14 status=failed(rc=137) wall=188s
+2026-10-03T22:38:23Z START ft_cssnbr3_cubic_chgnet_c21 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:38:23Z START ft_cssnbr3_cubic_chgnet_c22 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:38:25Z END   ft_cssnbr3_cubic_chgnet_c03 status=failed(rc=139) wall=190s
+2026-10-03T22:38:25Z START ft_cssnbr3_cubic_chgnet_c23 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:38:25Z END   ft_cssnbr3_cubic_chgnet_c06 status=failed(rc=139) wall=190s
+2026-10-03T22:38:26Z START ft_cssnbr3_cubic_chgnet_c24 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:39:17Z END   ft_cssnbr3_cubic_chgnet_c10 status=failed(rc=137) wall=242s
+2026-10-03T22:39:17Z START ft_cssnbr3_cubic_chgnet_c25 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:39:18Z END   ft_cssnbr3_cubic_chgnet_c05 status=failed(rc=137) wall=243s
+2026-10-03T22:39:18Z START ft_cssnbr3_cubic_chgnet_c26 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:40:33Z END   ft_cssnbr3_cubic_chgnet_c11 status=failed(rc=137) wall=318s
+2026-10-03T22:40:33Z START ft_cssnbr3_cubic_chgnet_c27 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:41:38Z END   ft_cssnbr3_cubic_chgnet_c23 status=failed(rc=139) wall=193s
+2026-10-03T22:41:38Z END   ft_cssnbr3_cubic_chgnet_c15 status=failed(rc=139) wall=196s
+2026-10-03T22:41:38Z START ft_cssnbr3_cubic_chgnet_c28 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:41:38Z END   ft_cssnbr3_cubic_chgnet_c17 status=failed(rc=139) wall=196s
+2026-10-03T22:41:38Z START ft_cssnbr3_cubic_chgnet_c29 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:41:38Z START ft_cssnbr3_cubic_chgnet_c30 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:41:46Z END   ft_cssnbr3_cubic_chgnet_c12 status=failed(rc=139) wall=391s
+2026-10-03T22:41:46Z START ft_cssnbr3_cubic_chgnet_c31 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:42:30Z END   ft_cssnbr3_cubic_chgnet_c30 status=failed(rc=139) wall=51s
+2026-10-03T22:42:30Z START ft_cssnbr3_cubic_chgnet_c32 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:42:31Z END   ft_cssnbr3_cubic_chgnet_c28 status=failed(rc=139) wall=53s
+2026-10-03T22:42:31Z START ft_cssnbr3_cubic_chgnet_c33 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:42:32Z END   ft_cssnbr3_cubic_chgnet_c18 status=failed(rc=139) wall=250s
+2026-10-03T22:42:32Z START ft_cssnbr3_cubic_chgnet_c34 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:42:33Z END   ft_cssnbr3_cubic_chgnet_c07 status=failed(rc=137) wall=438s
+2026-10-03T22:42:33Z END   ft_cssnbr3_cubic_chgnet_c22 status=failed(rc=139) wall=250s
+2026-10-03T22:42:33Z START ft_cssnbr3_cubic_chgnet_c35 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:42:33Z START ft_cssnbr3_cubic_chgnet_c36 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:42:34Z END   ft_cssnbr3_cubic_chgnet_c27 status=failed(rc=139) wall=121s
+2026-10-03T22:42:34Z START ft_cssnbr3_cubic_chgnet_c37 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:42:34Z END   ft_cssnbr3_cubic_chgnet_c26 status=failed(rc=139) wall=196s
+2026-10-03T22:42:34Z START ft_cssnbr3_cubic_chgnet_c38 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:42:58Z END   ft_cssnbr3_cubic_chgnet_c21 status=failed(rc=137) wall=275s
+2026-10-03T22:42:58Z START ft_cssnbr3_cubic_chgnet_c39 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:43:23Z END   ft_cssnbr3_cubic_chgnet_c25 status=failed(rc=137) wall=246s
+2026-10-03T22:43:23Z START ft_cssnbr3_cubic_chgnet_ref nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:43:23Z END   ft_cssnbr3_cubic_chgnet_c19 status=failed(rc=137) wall=301s
+2026-10-03T22:43:24Z START ft_cssnbr3_cubic_mace_mp0_c00 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:44:42Z END   ft_cssnbr3_cubic_chgnet_ref status=failed(rc=139) wall=78s
+2026-10-03T22:44:43Z START ft_cssnbr3_cubic_mace_mp0_c01 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:44:45Z END   ft_cssnbr3_cubic_chgnet_c29 status=failed(rc=139) wall=187s
+2026-10-03T22:44:45Z START ft_cssnbr3_cubic_mace_mp0_c02 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:44:45Z END   ft_cssnbr3_cubic_chgnet_c31 status=failed(rc=139) wall=179s
+2026-10-03T22:44:45Z START ft_cssnbr3_cubic_mace_mp0_c03 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:44:46Z END   ft_cssnbr3_cubic_chgnet_c36 status=failed(rc=139) wall=133s
+2026-10-03T22:44:46Z START ft_cssnbr3_cubic_mace_mp0_c04 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:44:50Z END   ft_cssnbr3_cubic_chgnet_c16 status=failed(rc=137) wall=388s
+2026-10-03T22:44:50Z START ft_cssnbr3_cubic_mace_mp0_c05 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:44:51Z END   ft_cssnbr3_cubic_chgnet_c20 status=failed(rc=137) wall=387s
+2026-10-03T22:44:51Z START ft_cssnbr3_cubic_mace_mp0_c06 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:46:21Z END   ft_cssnbr3_cubic_chgnet_c24 status=failed(rc=137) wall=475s
+2026-10-03T22:46:21Z START ft_cssnbr3_cubic_mace_mp0_c07 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:46:24Z END   ft_cssnbr3_cubic_chgnet_c37 status=failed(rc=137) wall=230s
+2026-10-03T22:46:24Z START ft_cssnbr3_cubic_mace_mp0_c08 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:46:46Z END   ft_cssnbr3_cubic_chgnet_c35 status=failed(rc=137) wall=253s
+2026-10-03T22:46:47Z START ft_cssnbr3_cubic_mace_mp0_c09 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:46:48Z END   ft_cssnbr3_cubic_chgnet_c34 status=failed(rc=137) wall=256s
+2026-10-03T22:46:48Z START ft_cssnbr3_cubic_mace_mp0_c10 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:46:57Z END   ft_cssnbr3_cubic_mace_mp0_c08 status=failed(rc=139) wall=32s
+2026-10-03T22:46:57Z START ft_cssnbr3_cubic_mace_mp0_c11 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:46:57Z END   ft_cssnbr3_cubic_mace_mp0_c07 status=failed(rc=139) wall=36s
+2026-10-03T22:46:57Z START ft_cssnbr3_cubic_mace_mp0_c12 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:47:04Z END   ft_cssnbr3_cubic_mace_mp0_c01 status=failed(rc=139) wall=141s
+2026-10-03T22:47:04Z START ft_cssnbr3_cubic_mace_mp0_c13 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:47:09Z END   ft_cssnbr3_cubic_mace_mp0_c00 status=failed(rc=139) wall=225s
+2026-10-03T22:47:09Z START ft_cssnbr3_cubic_mace_mp0_c14 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:48:08Z END   ft_cssnbr3_cubic_chgnet_c39 status=failed(rc=137) wall=310s
+2026-10-03T22:48:08Z START ft_cssnbr3_cubic_mace_mp0_c15 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:48:31Z END   ft_cssnbr3_cubic_chgnet_c33 status=failed(rc=137) wall=360s
+2026-10-03T22:48:31Z START ft_cssnbr3_cubic_mace_mp0_c16 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:48:31Z END   ft_cssnbr3_cubic_chgnet_c38 status=failed(rc=137) wall=357s
+2026-10-03T22:48:31Z START ft_cssnbr3_cubic_mace_mp0_c17 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:48:42Z END   ft_cssnbr3_cubic_mace_mp0_c17 status=failed(rc=139) wall=11s
+2026-10-03T22:48:42Z END   ft_cssnbr3_cubic_mace_mp0_c16 status=failed(rc=139) wall=11s
+2026-10-03T22:48:42Z START ft_cssnbr3_cubic_mace_mp0_c18 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:48:42Z START ft_cssnbr3_cubic_mace_mp0_c19 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:48:48Z END   ft_cssnbr3_cubic_mace_mp0_c06 status=failed(rc=139) wall=237s
+2026-10-03T22:48:48Z START ft_cssnbr3_cubic_mace_mp0_c20 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:48:51Z END   ft_cssnbr3_cubic_mace_mp0_c09 status=failed(rc=139) wall=124s
+2026-10-03T22:48:51Z START ft_cssnbr3_cubic_mace_mp0_c21 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:48:55Z END   ft_cssnbr3_cubic_chgnet_c32 status=failed(rc=137) wall=385s
+2026-10-03T22:48:55Z START ft_cssnbr3_cubic_mace_mp0_c22 nat=40 kpts=27 np=8 nk_pools=8
+2026-10-03T22:49:57Z QUEUE start: 246 jobs, 7 x 16 ranks on 122 cores (cgroup quota)
+2026-10-03T22:49:57Z START ft_cssnbr3_cubic_chgnet_c00 nat=40 kpts=27 np=16 nk_pools=2
+2026-10-03T22:49:57Z START ft_cssnbr3_cubic_chgnet_c01 nat=40 kpts=27 np=16 nk_pools=2
+2026-10-03T22:49:57Z START ft_cssnbr3_cubic_chgnet_c02 nat=40 kpts=27 np=16 nk_pools=2
+2026-10-03T22:49:57Z START ft_cssnbr3_cubic_chgnet_c03 nat=40 kpts=27 np=16 nk_pools=2
+2026-10-03T22:49:57Z START ft_cssnbr3_cubic_chgnet_c04 nat=40 kpts=27 np=16 nk_pools=2
+2026-10-03T22:49:57Z START ft_cssnbr3_cubic_chgnet_c05 nat=40 kpts=27 np=16 nk_pools=2
+2026-10-03T22:49:57Z START ft_cssnbr3_cubic_chgnet_c06 nat=40 kpts=27 np=16 nk_pools=2
+2026-10-03T22:52:37Z QUEUE start: 246 jobs, 7 x 16 ranks on 122 cores (cgroup quota)
+2026-10-03T22:52:37Z START ft_cssnbr3_cubic_chgnet_c00 nat=40 kpts=27 np=16 nk_pools=1
+2026-10-03T22:52:37Z START ft_cssnbr3_cubic_chgnet_c01 nat=40 kpts=27 np=16 nk_pools=1
+2026-10-03T22:52:37Z START ft_cssnbr3_cubic_chgnet_c02 nat=40 kpts=27 np=16 nk_pools=1
+2026-10-03T22:52:37Z START ft_cssnbr3_cubic_chgnet_c03 nat=40 kpts=27 np=16 nk_pools=1
+2026-10-03T22:52:37Z START ft_cssnbr3_cubic_chgnet_c04 nat=40 kpts=27 np=16 nk_pools=1
+2026-10-03T22:52:37Z START ft_cssnbr3_cubic_chgnet_c05 nat=40 kpts=27 np=16 nk_pools=1
+2026-10-03T22:52:37Z START ft_cssnbr3_cubic_chgnet_c06 nat=40 kpts=27 np=16 nk_pools=1
+2026-10-03T23:21:46Z QUEUE start: 246 jobs, 7 x 8 ranks on 122 cores (cgroup quota)
+2026-10-03T23:21:46Z START ft_cssnbr3_cubic_chgnet_c00 nat=40 kpts=27 np=8 nk_pools=4
+2026-10-03T23:21:46Z START ft_cssnbr3_cubic_chgnet_c01 nat=40 kpts=27 np=8 nk_pools=4
+2026-10-03T23:21:46Z START ft_cssnbr3_cubic_chgnet_c02 nat=40 kpts=27 np=8 nk_pools=4
+2026-10-03T23:21:46Z START ft_cssnbr3_cubic_chgnet_c03 nat=40 kpts=27 np=8 nk_pools=4
+2026-10-03T23:21:46Z START ft_cssnbr3_cubic_chgnet_c04 nat=40 kpts=27 np=8 nk_pools=4
+2026-10-03T23:21:46Z START ft_cssnbr3_cubic_chgnet_c05 nat=40 kpts=27 np=8 nk_pools=4
+2026-10-03T23:21:46Z START ft_cssnbr3_cubic_chgnet_c06 nat=40 kpts=27 np=8 nk_pools=4
+2026-10-03T23:32:33Z QUEUE start: 246 jobs, 7 x 8 ranks on 122 cores (cgroup quota)
+2026-10-03T23:32:33Z START ft_cssnbr3_cubic_chgnet_c00 nat=40 kpts=27 np=8 nk_pools=2
+2026-10-03T23:32:33Z START ft_cssnbr3_cubic_chgnet_c01 nat=40 kpts=27 np=8 nk_pools=2
+2026-10-03T23:32:33Z START ft_cssnbr3_cubic_chgnet_c02 nat=40 kpts=27 np=8 nk_pools=2
+2026-10-03T23:32:33Z START ft_cssnbr3_cubic_chgnet_c03 nat=40 kpts=27 np=8 nk_pools=2
+2026-10-03T23:32:33Z START ft_cssnbr3_cubic_chgnet_c04 nat=40 kpts=27 np=8 nk_pools=2
+2026-10-03T23:32:33Z START ft_cssnbr3_cubic_chgnet_c05 nat=40 kpts=27 np=8 nk_pools=2
+2026-10-03T23:32:33Z START ft_cssnbr3_cubic_chgnet_c06 nat=40 kpts=27 np=8 nk_pools=2
+2026-10-03T23:51:47Z QUEUE start: 164 jobs, 6 x 8 ranks on 122 cores (cgroup quota)
+2026-10-03T23:51:47Z START ft_batio3_cubic_chgnet_c00 nat=40 kpts=64 np=8 nk_pools=2
+2026-10-03T23:51:47Z START ft_batio3_cubic_chgnet_c01 nat=40 kpts=64 np=8 nk_pools=2
+2026-10-03T23:51:47Z START ft_batio3_cubic_chgnet_c02 nat=40 kpts=64 np=8 nk_pools=2
+2026-10-03T23:51:47Z START ft_batio3_cubic_chgnet_c03 nat=40 kpts=64 np=8 nk_pools=2
+2026-10-03T23:51:47Z START ft_batio3_cubic_chgnet_c04 nat=40 kpts=64 np=8 nk_pools=2
+2026-10-03T23:51:47Z START ft_batio3_cubic_chgnet_c05 nat=40 kpts=64 np=8 nk_pools=2
+2026-10-03T23:53:38Z QUEUE start: 164 jobs, 7 x 8 ranks on 122 cores (cgroup quota)
+2026-10-03T23:53:38Z START ft_batio3_cubic_chgnet_c00 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-03T23:53:38Z START ft_batio3_cubic_chgnet_c01 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-03T23:53:38Z START ft_batio3_cubic_chgnet_c02 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-03T23:53:38Z START ft_batio3_cubic_chgnet_c03 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-03T23:53:38Z START ft_batio3_cubic_chgnet_c04 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-03T23:53:38Z START ft_batio3_cubic_chgnet_c05 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-03T23:53:38Z START ft_batio3_cubic_chgnet_c06 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T00:42:30Z END   ft_batio3_cubic_chgnet_c03 status=ok wall=2932s
+2026-10-04T00:42:30Z START ft_batio3_cubic_chgnet_c07 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T00:44:05Z END   ft_batio3_cubic_chgnet_c00 status=ok wall=3027s
+2026-10-04T00:44:05Z START ft_batio3_cubic_chgnet_c08 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T00:44:12Z END   ft_batio3_cubic_chgnet_c06 status=ok wall=3034s
+2026-10-04T00:44:12Z START ft_batio3_cubic_chgnet_c09 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T00:45:17Z END   ft_batio3_cubic_chgnet_c01 status=ok wall=3099s
+2026-10-04T00:45:17Z START ft_batio3_cubic_chgnet_c10 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T00:48:12Z END   ft_batio3_cubic_chgnet_c05 status=ok wall=3274s
+2026-10-04T00:48:12Z START ft_batio3_cubic_chgnet_c11 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T00:48:18Z END   ft_batio3_cubic_chgnet_c04 status=ok wall=3280s
+2026-10-04T00:48:18Z START ft_batio3_cubic_chgnet_c12 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T00:48:44Z END   ft_batio3_cubic_chgnet_c02 status=ok wall=3306s
+2026-10-04T00:48:44Z START ft_batio3_cubic_chgnet_c13 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T01:32:32Z END   ft_batio3_cubic_chgnet_c07 status=ok wall=3002s
+2026-10-04T01:32:32Z START ft_batio3_cubic_chgnet_c14 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T01:35:25Z END   ft_batio3_cubic_chgnet_c08 status=ok wall=3080s
+2026-10-04T01:35:25Z START ft_batio3_cubic_chgnet_c15 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T01:36:18Z END   ft_batio3_cubic_chgnet_c09 status=ok wall=3126s
+2026-10-04T01:36:18Z START ft_batio3_cubic_chgnet_c16 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T01:37:36Z END   ft_batio3_cubic_chgnet_c13 status=ok wall=2932s
+2026-10-04T01:37:36Z START ft_batio3_cubic_chgnet_c17 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T01:38:21Z END   ft_batio3_cubic_chgnet_c12 status=ok wall=3003s
+2026-10-04T01:38:21Z START ft_batio3_cubic_chgnet_c18 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T01:38:52Z END   ft_batio3_cubic_chgnet_c10 status=ok wall=3215s
+2026-10-04T01:38:52Z START ft_batio3_cubic_chgnet_c19 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T01:40:21Z END   ft_batio3_cubic_chgnet_c11 status=ok wall=3129s
+2026-10-04T01:40:21Z START ft_batio3_cubic_chgnet_c20 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T02:22:47Z END   ft_batio3_cubic_chgnet_c17 status=ok wall=2711s
+2026-10-04T02:22:48Z START ft_batio3_cubic_chgnet_c21 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T02:22:49Z END   ft_batio3_cubic_chgnet_c14 status=ok wall=3017s
+2026-10-04T02:22:49Z START ft_batio3_cubic_chgnet_c22 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T02:27:02Z END   ft_batio3_cubic_chgnet_c15 status=ok wall=3097s
+2026-10-04T02:27:02Z START ft_batio3_cubic_chgnet_c23 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T02:27:13Z END   ft_batio3_cubic_chgnet_c16 status=ok wall=3055s
+2026-10-04T02:27:13Z START ft_batio3_cubic_chgnet_c24 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T02:28:13Z END   ft_batio3_cubic_chgnet_c18 status=ok wall=2992s
+2026-10-04T02:28:13Z START ft_batio3_cubic_chgnet_c25 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T02:32:13Z END   ft_batio3_cubic_chgnet_c19 status=ok wall=3201s
+2026-10-04T02:32:13Z START ft_batio3_cubic_chgnet_c26 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T02:32:21Z END   ft_batio3_cubic_chgnet_c20 status=ok wall=3120s
+2026-10-04T02:32:21Z START ft_batio3_cubic_chgnet_c27 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T03:05:35Z END   ft_batio3_cubic_chgnet_c21 status=ok wall=2567s
+2026-10-04T03:05:35Z START ft_batio3_cubic_chgnet_c28 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T03:14:44Z END   ft_batio3_cubic_chgnet_c25 status=ok wall=2791s
+2026-10-04T03:14:44Z START ft_batio3_cubic_chgnet_c29 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T03:15:21Z END   ft_batio3_cubic_chgnet_c22 status=ok wall=3152s
+2026-10-04T03:15:22Z START ft_batio3_cubic_chgnet_c30 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T03:19:14Z END   ft_batio3_cubic_chgnet_c23 status=ok wall=3132s
+2026-10-04T03:19:14Z START ft_batio3_cubic_chgnet_c31 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T03:21:37Z END   ft_batio3_cubic_chgnet_c24 status=ok wall=3264s
+2026-10-04T03:21:37Z START ft_batio3_cubic_chgnet_c32 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T03:26:20Z END   ft_batio3_cubic_chgnet_c26 status=ok wall=3247s
+2026-10-04T03:26:20Z START ft_batio3_cubic_chgnet_c33 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T03:27:24Z END   ft_batio3_cubic_chgnet_c27 status=ok wall=3303s
+2026-10-04T03:27:24Z START ft_batio3_cubic_chgnet_c34 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T03:57:02Z END   ft_batio3_cubic_chgnet_c28 status=ok wall=3087s
+2026-10-04T03:57:02Z START ft_batio3_cubic_chgnet_c35 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T04:05:10Z END   ft_batio3_cubic_chgnet_c30 status=ok wall=2988s
+2026-10-04T04:05:10Z START ft_batio3_cubic_chgnet_c36 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T04:05:53Z END   ft_batio3_cubic_chgnet_c29 status=ok wall=3069s
+2026-10-04T04:05:53Z START ft_batio3_cubic_chgnet_c37 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T04:13:04Z END   ft_batio3_cubic_chgnet_c31 status=ok wall=3230s
+2026-10-04T04:13:04Z START ft_batio3_cubic_chgnet_c38 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T04:14:57Z END   ft_batio3_cubic_chgnet_c32 status=ok wall=3200s
+2026-10-04T04:14:57Z START ft_batio3_cubic_chgnet_c39 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T04:15:50Z END   ft_batio3_cubic_chgnet_c33 status=ok wall=2970s
+2026-10-04T04:15:50Z START ft_batio3_cubic_chgnet_ref nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T04:15:53Z END   ft_batio3_cubic_chgnet_ref status=failed(rc=1) wall=3s
+2026-10-04T04:15:53Z START ft_batio3_cubic_mace_mp0_c00 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T04:17:45Z END   ft_batio3_cubic_chgnet_c34 status=ok wall=3021s
+2026-10-04T04:17:45Z START ft_batio3_cubic_mace_mp0_c01 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T04:44:06Z END   ft_batio3_cubic_chgnet_c35 status=ok wall=2824s
+2026-10-04T04:44:06Z START ft_batio3_cubic_mace_mp0_c02 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T05:03:16Z END   ft_batio3_cubic_chgnet_c36 status=ok wall=3486s
+2026-10-04T05:03:16Z START ft_batio3_cubic_mace_mp0_c03 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T05:04:32Z END   ft_batio3_cubic_chgnet_c38 status=ok wall=3088s
+2026-10-04T05:04:32Z START ft_batio3_cubic_mace_mp0_c04 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T05:07:22Z END   ft_batio3_cubic_chgnet_c37 status=ok wall=3689s
+2026-10-04T05:07:22Z START ft_batio3_cubic_mace_mp0_c05 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T05:10:49Z END   ft_batio3_cubic_chgnet_c39 status=ok wall=3352s
+2026-10-04T05:10:49Z START ft_batio3_cubic_mace_mp0_c06 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T05:17:57Z END   ft_batio3_cubic_mace_mp0_c00 status=ok wall=3724s
+2026-10-04T05:17:57Z START ft_batio3_cubic_mace_mp0_c07 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T05:19:58Z END   ft_batio3_cubic_mace_mp0_c01 status=ok wall=3733s
+2026-10-04T05:19:58Z START ft_batio3_cubic_mace_mp0_c08 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T05:36:09Z END   ft_batio3_cubic_mace_mp0_c02 status=ok wall=3123s
+2026-10-04T05:36:09Z START ft_batio3_cubic_mace_mp0_c09 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T05:55:44Z END   ft_batio3_cubic_mace_mp0_c03 status=ok wall=3148s
+2026-10-04T05:55:44Z START ft_batio3_cubic_mace_mp0_c10 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T05:59:48Z END   ft_batio3_cubic_mace_mp0_c06 status=ok wall=2939s
+2026-10-04T05:59:48Z START ft_batio3_cubic_mace_mp0_c11 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T06:02:12Z END   ft_batio3_cubic_mace_mp0_c04 status=ok wall=3460s
+2026-10-04T06:02:12Z START ft_batio3_cubic_mace_mp0_c12 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T06:05:55Z END   ft_batio3_cubic_mace_mp0_c05 status=ok wall=3513s
+2026-10-04T06:05:55Z START ft_batio3_cubic_mace_mp0_c13 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T06:06:54Z END   ft_batio3_cubic_mace_mp0_c08 status=ok wall=2816s
+2026-10-04T06:06:54Z START ft_batio3_cubic_mace_mp0_c14 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T06:08:54Z END   ft_batio3_cubic_mace_mp0_c07 status=ok wall=3057s
+2026-10-04T06:08:54Z START ft_batio3_cubic_mace_mp0_c15 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T06:21:51Z END   ft_batio3_cubic_mace_mp0_c09 status=ok wall=2742s
+2026-10-04T06:21:51Z START ft_batio3_cubic_mace_mp0_c16 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T06:50:01Z END   ft_batio3_cubic_mace_mp0_c10 status=ok wall=3257s
+2026-10-04T06:50:01Z START ft_batio3_cubic_mace_mp0_c17 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T06:50:35Z END   ft_batio3_cubic_mace_mp0_c12 status=ok wall=2903s
+2026-10-04T06:50:35Z START ft_batio3_cubic_mace_mp0_c18 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T06:51:11Z END   ft_batio3_cubic_mace_mp0_c11 status=ok wall=3083s
+2026-10-04T06:51:11Z START ft_batio3_cubic_mace_mp0_c19 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T06:54:46Z END   ft_batio3_cubic_mace_mp0_c13 status=ok wall=2931s
+2026-10-04T06:54:46Z START ft_batio3_cubic_mace_mp0_c20 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T07:00:58Z END   ft_batio3_cubic_mace_mp0_c14 status=ok wall=3244s
+2026-10-04T07:00:59Z START ft_batio3_cubic_mace_mp0_c21 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T07:06:12Z END   ft_batio3_cubic_mace_mp0_c15 status=ok wall=3438s
+2026-10-04T07:06:12Z START ft_batio3_cubic_mace_mp0_c22 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T07:12:23Z END   ft_batio3_cubic_mace_mp0_c16 status=ok wall=3032s
+2026-10-04T07:12:23Z START ft_batio3_cubic_mace_mp0_c23 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T07:38:52Z END   ft_batio3_cubic_mace_mp0_c19 status=ok wall=2861s
+2026-10-04T07:38:52Z START ft_batio3_cubic_mace_mp0_c24 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T07:41:13Z END   ft_batio3_cubic_mace_mp0_c18 status=ok wall=3038s
+2026-10-04T07:41:13Z START ft_batio3_cubic_mace_mp0_c25 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T07:42:34Z END   ft_batio3_cubic_mace_mp0_c17 status=ok wall=3153s
+2026-10-04T07:42:34Z START ft_batio3_cubic_mace_mp0_c26 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T07:46:36Z END   ft_batio3_cubic_mace_mp0_c21 status=ok wall=2737s
+2026-10-04T07:46:36Z START ft_batio3_cubic_mace_mp0_c27 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T07:47:23Z END   ft_batio3_cubic_mace_mp0_c20 status=ok wall=3157s
+2026-10-04T07:47:23Z START ft_batio3_cubic_mace_mp0_c28 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T07:58:12Z END   ft_batio3_cubic_mace_mp0_c22 status=ok wall=3119s
+2026-10-04T07:58:12Z START ft_batio3_cubic_mace_mp0_c29 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T08:05:05Z END   ft_batio3_cubic_mace_mp0_c23 status=ok wall=3162s
+2026-10-04T08:05:05Z START ft_batio3_cubic_mace_mp0_c30 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T08:28:54Z END   ft_batio3_cubic_mace_mp0_c26 status=ok wall=2780s
+2026-10-04T08:28:55Z START ft_batio3_cubic_mace_mp0_c31 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T08:30:00Z END   ft_batio3_cubic_mace_mp0_c24 status=ok wall=3068s
+2026-10-04T08:30:00Z START ft_batio3_cubic_mace_mp0_c32 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T08:30:35Z END   ft_batio3_cubic_mace_mp0_c27 status=ok wall=2639s
+2026-10-04T08:30:35Z START ft_batio3_cubic_mace_mp0_c33 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T08:33:02Z END   ft_batio3_cubic_mace_mp0_c25 status=ok wall=3109s
+2026-10-04T08:33:02Z START ft_batio3_cubic_mace_mp0_c34 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T08:37:26Z END   ft_batio3_cubic_mace_mp0_c28 status=ok wall=3003s
+2026-10-04T08:37:26Z START ft_batio3_cubic_mace_mp0_c35 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T08:51:57Z END   ft_batio3_cubic_mace_mp0_c29 status=ok wall=3225s
+2026-10-04T08:51:57Z START ft_batio3_cubic_mace_mp0_c36 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T08:56:04Z END   ft_batio3_cubic_mace_mp0_c30 status=ok wall=3059s
+2026-10-04T08:56:04Z START ft_batio3_cubic_mace_mp0_c37 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T09:19:43Z END   ft_batio3_cubic_mace_mp0_c31 status=ok wall=3048s
+2026-10-04T09:19:43Z START ft_batio3_cubic_mace_mp0_c38 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T09:19:44Z END   ft_batio3_cubic_mace_mp0_c32 status=ok wall=2984s
+2026-10-04T09:19:44Z START ft_batio3_cubic_mace_mp0_c39 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T09:24:09Z END   ft_batio3_cubic_mace_mp0_c34 status=ok wall=3067s
+2026-10-04T09:24:09Z START ft_batio3_cubic_mace_mp0_ref nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T09:25:48Z END   ft_batio3_cubic_mace_mp0_c33 status=ok wall=3313s
+2026-10-04T09:25:48Z START ft_knbo3_cubic_chgnet_c00 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T09:27:35Z END   ft_batio3_cubic_mace_mp0_c35 status=ok wall=3009s
+2026-10-04T09:27:35Z START ft_knbo3_cubic_chgnet_c01 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T09:37:01Z END   ft_batio3_cubic_mace_mp0_ref status=ok wall=772s
+2026-10-04T09:37:01Z START ft_knbo3_cubic_chgnet_c02 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T09:47:23Z END   ft_batio3_cubic_mace_mp0_c36 status=ok wall=3326s
+2026-10-04T09:47:23Z START ft_knbo3_cubic_chgnet_c03 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T09:49:26Z END   ft_batio3_cubic_mace_mp0_c37 status=ok wall=3202s
+2026-10-04T09:49:27Z START ft_knbo3_cubic_chgnet_c04 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T10:04:39Z END   ft_batio3_cubic_mace_mp0_c38 status=ok wall=2696s
+2026-10-04T10:04:39Z START ft_knbo3_cubic_chgnet_c05 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T10:16:30Z END   ft_batio3_cubic_mace_mp0_c39 status=ok wall=3406s
+2026-10-04T10:16:30Z START ft_knbo3_cubic_chgnet_c06 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T10:17:46Z END   ft_knbo3_cubic_chgnet_c00 status=ok wall=3118s
+2026-10-04T10:17:46Z START ft_knbo3_cubic_chgnet_c07 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T10:22:46Z END   ft_knbo3_cubic_chgnet_c01 status=ok wall=3311s
+2026-10-04T10:22:46Z START ft_knbo3_cubic_chgnet_c08 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T10:32:16Z END   ft_knbo3_cubic_chgnet_c02 status=ok wall=3315s
+2026-10-04T10:32:16Z START ft_knbo3_cubic_chgnet_c09 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T10:38:53Z END   ft_knbo3_cubic_chgnet_c04 status=ok wall=2966s
+2026-10-04T10:38:53Z START ft_knbo3_cubic_chgnet_c10 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T10:39:14Z END   ft_knbo3_cubic_chgnet_c03 status=ok wall=3111s
+2026-10-04T10:39:14Z START ft_knbo3_cubic_chgnet_c11 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T10:50:42Z END   ft_knbo3_cubic_chgnet_c05 status=ok wall=2763s
+2026-10-04T10:50:42Z START ft_knbo3_cubic_chgnet_c12 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T11:10:22Z END   ft_knbo3_cubic_chgnet_c07 status=ok wall=3156s
+2026-10-04T11:10:22Z START ft_knbo3_cubic_chgnet_c13 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T11:10:58Z END   ft_knbo3_cubic_chgnet_c06 status=ok wall=3268s
+2026-10-04T11:10:58Z START ft_knbo3_cubic_chgnet_c14 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T11:12:49Z END   ft_knbo3_cubic_chgnet_c08 status=ok wall=3003s
+2026-10-04T11:12:49Z START ft_knbo3_cubic_chgnet_c15 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T11:24:01Z END   ft_knbo3_cubic_chgnet_c09 status=ok wall=3105s
+2026-10-04T11:24:01Z START ft_knbo3_cubic_chgnet_c16 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T11:32:50Z END   ft_knbo3_cubic_chgnet_c11 status=ok wall=3216s
+2026-10-04T11:32:50Z START ft_knbo3_cubic_chgnet_c17 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T11:32:55Z END   ft_knbo3_cubic_chgnet_c10 status=ok wall=3242s
+2026-10-04T11:32:55Z START ft_knbo3_cubic_chgnet_c18 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T11:45:10Z END   ft_knbo3_cubic_chgnet_c12 status=ok wall=3268s
+2026-10-04T11:45:10Z START ft_knbo3_cubic_chgnet_c19 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T11:49:12Z END   ft_knbo3_cubic_chgnet_c13 status=ok wall=2330s
+2026-10-04T11:49:12Z START ft_knbo3_cubic_chgnet_c20 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T12:03:52Z END   ft_knbo3_cubic_chgnet_c14 status=ok wall=3174s
+2026-10-04T12:03:52Z START ft_knbo3_cubic_chgnet_c21 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T12:04:54Z END   ft_knbo3_cubic_chgnet_c15 status=ok wall=3125s
+2026-10-04T12:04:54Z START ft_knbo3_cubic_chgnet_c22 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T12:19:18Z END   ft_knbo3_cubic_chgnet_c16 status=ok wall=3317s
+2026-10-04T12:19:18Z START ft_knbo3_cubic_chgnet_c23 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T12:25:39Z END   ft_knbo3_cubic_chgnet_c17 status=ok wall=3169s
+2026-10-04T12:25:39Z START ft_knbo3_cubic_chgnet_c24 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T12:29:47Z END   ft_knbo3_cubic_chgnet_c18 status=ok wall=3412s
+2026-10-04T12:29:47Z START ft_knbo3_cubic_chgnet_c25 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T12:37:47Z END   ft_knbo3_cubic_chgnet_c19 status=ok wall=3157s
+2026-10-04T12:37:47Z START ft_knbo3_cubic_chgnet_c26 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T12:40:22Z END   ft_knbo3_cubic_chgnet_c20 status=ok wall=3070s
+2026-10-04T12:40:22Z START ft_knbo3_cubic_chgnet_c27 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T12:51:55Z END   ft_knbo3_cubic_chgnet_c22 status=ok wall=2821s
+2026-10-04T12:51:55Z START ft_knbo3_cubic_chgnet_c28 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T12:56:55Z END   ft_knbo3_cubic_chgnet_c21 status=ok wall=3183s
+2026-10-04T12:56:55Z START ft_knbo3_cubic_chgnet_c29 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T13:14:22Z END   ft_knbo3_cubic_chgnet_c25 status=ok wall=2675s
+2026-10-04T13:14:22Z START ft_knbo3_cubic_chgnet_c30 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T13:15:28Z END   ft_knbo3_cubic_chgnet_c23 status=ok wall=3370s
+2026-10-04T13:15:28Z START ft_knbo3_cubic_chgnet_c31 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T13:18:36Z END   ft_knbo3_cubic_chgnet_c24 status=ok wall=3177s
+2026-10-04T13:18:36Z START ft_knbo3_cubic_chgnet_c32 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T13:30:23Z END   ft_knbo3_cubic_chgnet_c26 status=ok wall=3156s
+2026-10-04T13:30:23Z START ft_knbo3_cubic_chgnet_c33 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T13:36:18Z END   ft_knbo3_cubic_chgnet_c27 status=ok wall=3356s
+2026-10-04T13:36:18Z START ft_knbo3_cubic_chgnet_c34 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T13:46:15Z END   ft_knbo3_cubic_chgnet_c28 status=ok wall=3260s
+2026-10-04T13:46:15Z START ft_knbo3_cubic_chgnet_c35 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T13:51:33Z END   ft_knbo3_cubic_chgnet_c29 status=ok wall=3278s
+2026-10-04T13:51:33Z START ft_knbo3_cubic_chgnet_c36 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T13:58:13Z END   ft_knbo3_cubic_chgnet_c30 status=ok wall=2631s
+2026-10-04T13:58:13Z START ft_knbo3_cubic_chgnet_c37 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T14:09:47Z END   ft_knbo3_cubic_chgnet_c31 status=ok wall=3259s
+2026-10-04T14:09:47Z START ft_knbo3_cubic_chgnet_c38 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T14:15:54Z END   ft_knbo3_cubic_chgnet_c32 status=ok wall=3438s
+2026-10-04T14:15:54Z START ft_knbo3_cubic_chgnet_c39 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T14:22:40Z END   ft_knbo3_cubic_chgnet_c34 status=ok wall=2782s
+2026-10-04T14:22:40Z START ft_knbo3_cubic_chgnet_ref nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T14:25:25Z END   ft_knbo3_cubic_chgnet_c33 status=ok wall=3302s
+2026-10-04T14:25:25Z START ft_knbo3_cubic_mace_mp0_c00 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T14:35:28Z END   ft_knbo3_cubic_chgnet_ref status=ok wall=768s
+2026-10-04T14:35:28Z START ft_knbo3_cubic_mace_mp0_c01 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T14:41:33Z END   ft_knbo3_cubic_chgnet_c35 status=ok wall=3318s
+2026-10-04T14:41:33Z START ft_knbo3_cubic_mace_mp0_c02 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T14:42:18Z END   ft_knbo3_cubic_chgnet_c37 status=ok wall=2645s
+2026-10-04T14:42:18Z START ft_knbo3_cubic_mace_mp0_c03 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T14:47:22Z END   ft_knbo3_cubic_chgnet_c36 status=ok wall=3349s
+2026-10-04T14:47:22Z START ft_knbo3_cubic_mace_mp0_c04 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T15:03:48Z END   ft_knbo3_cubic_chgnet_c38 status=ok wall=3241s
+2026-10-04T15:03:49Z START ft_knbo3_cubic_mace_mp0_c05 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T15:10:27Z END   ft_knbo3_cubic_chgnet_c39 status=ok wall=3273s
+2026-10-04T15:10:27Z START ft_knbo3_cubic_mace_mp0_c06 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T15:17:55Z END   ft_knbo3_cubic_mace_mp0_c00 status=ok wall=3150s
+2026-10-04T15:17:55Z START ft_knbo3_cubic_mace_mp0_c07 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T15:25:53Z END   ft_knbo3_cubic_mace_mp0_c03 status=ok wall=2615s
+2026-10-04T15:25:53Z START ft_knbo3_cubic_mace_mp0_c08 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T15:28:30Z END   ft_knbo3_cubic_mace_mp0_c01 status=ok wall=3182s
+2026-10-04T15:28:30Z START ft_knbo3_cubic_mace_mp0_c09 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T15:32:42Z END   ft_knbo3_cubic_mace_mp0_c02 status=ok wall=3069s
+2026-10-04T15:32:42Z START ft_knbo3_cubic_mace_mp0_c10 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T15:43:32Z END   ft_knbo3_cubic_mace_mp0_c04 status=ok wall=3370s
+2026-10-04T15:43:32Z START ft_knbo3_cubic_mace_mp0_c11 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T16:01:47Z END   ft_knbo3_cubic_mace_mp0_c05 status=ok wall=3478s
+2026-10-04T16:01:47Z START ft_knbo3_cubic_mace_mp0_c12 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T16:02:46Z END   ft_knbo3_cubic_mace_mp0_c08 status=ok wall=2213s
+2026-10-04T16:02:46Z START ft_knbo3_cubic_mace_mp0_c13 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T16:07:02Z END   ft_knbo3_cubic_mace_mp0_c06 status=ok wall=3395s
+2026-10-04T16:07:02Z START ft_knbo3_cubic_mace_mp0_c14 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T16:13:29Z END   ft_knbo3_cubic_mace_mp0_c07 status=ok wall=3334s
+2026-10-04T16:13:29Z START ft_knbo3_cubic_mace_mp0_c15 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T16:24:46Z END   ft_knbo3_cubic_mace_mp0_c09 status=ok wall=3376s
+2026-10-04T16:24:46Z START ft_knbo3_cubic_mace_mp0_c16 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T16:28:51Z END   ft_knbo3_cubic_mace_mp0_c10 status=ok wall=3369s
+2026-10-04T16:28:51Z START ft_knbo3_cubic_mace_mp0_c17 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T16:38:04Z END   ft_knbo3_cubic_mace_mp0_c11 status=ok wall=3272s
+2026-10-04T16:38:04Z START ft_knbo3_cubic_mace_mp0_c18 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T16:44:30Z END   ft_knbo3_cubic_mace_mp0_c12 status=ok wall=2563s
+2026-10-04T16:44:30Z START ft_knbo3_cubic_mace_mp0_c19 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T16:59:10Z END   ft_knbo3_cubic_mace_mp0_c13 status=ok wall=3384s
+2026-10-04T16:59:10Z START ft_knbo3_cubic_mace_mp0_c20 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T17:01:40Z END   ft_knbo3_cubic_mace_mp0_c14 status=ok wall=3278s
+2026-10-04T17:01:40Z START ft_knbo3_cubic_mace_mp0_c21 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T17:09:22Z END   ft_knbo3_cubic_mace_mp0_c15 status=ok wall=3353s
+2026-10-04T17:09:22Z START ft_knbo3_cubic_mace_mp0_c22 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T17:18:04Z END   ft_knbo3_cubic_mace_mp0_c17 status=ok wall=2953s
+2026-10-04T17:18:04Z START ft_knbo3_cubic_mace_mp0_c23 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T17:20:31Z END   ft_knbo3_cubic_mace_mp0_c16 status=ok wall=3345s
+2026-10-04T17:20:31Z START ft_knbo3_cubic_mace_mp0_c24 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T17:32:09Z END   ft_knbo3_cubic_mace_mp0_c19 status=ok wall=2859s
+2026-10-04T17:32:09Z START ft_knbo3_cubic_mace_mp0_c25 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T17:37:47Z END   ft_knbo3_cubic_mace_mp0_c18 status=ok wall=3583s
+2026-10-04T17:37:47Z START ft_knbo3_cubic_mace_mp0_c26 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T17:49:49Z END   ft_knbo3_cubic_mace_mp0_c21 status=ok wall=2889s
+2026-10-04T17:49:49Z START ft_knbo3_cubic_mace_mp0_c27 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T17:54:40Z END   ft_knbo3_cubic_mace_mp0_c20 status=ok wall=3330s
+2026-10-04T17:54:40Z START ft_knbo3_cubic_mace_mp0_c28 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T18:01:57Z END   ft_knbo3_cubic_mace_mp0_c22 status=ok wall=3155s
+2026-10-04T18:01:57Z START ft_knbo3_cubic_mace_mp0_c29 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T18:10:40Z END   ft_knbo3_cubic_mace_mp0_c23 status=ok wall=3156s
+2026-10-04T18:10:40Z START ft_knbo3_cubic_mace_mp0_c30 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T18:17:26Z END   ft_knbo3_cubic_mace_mp0_c24 status=ok wall=3415s
+2026-10-04T18:17:26Z START ft_knbo3_cubic_mace_mp0_c31 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T18:23:49Z END   ft_knbo3_cubic_mace_mp0_c25 status=ok wall=3100s
+2026-10-04T18:23:49Z START ft_knbo3_cubic_mace_mp0_c32 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T18:32:36Z END   ft_knbo3_cubic_mace_mp0_c26 status=ok wall=3289s
+2026-10-04T18:32:36Z START ft_knbo3_cubic_mace_mp0_c33 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T18:41:27Z END   ft_knbo3_cubic_mace_mp0_c27 status=ok wall=3098s
+2026-10-04T18:41:27Z START ft_knbo3_cubic_mace_mp0_c34 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T18:42:44Z END   ft_knbo3_cubic_mace_mp0_c28 status=ok wall=2884s
+2026-10-04T18:42:44Z START ft_knbo3_cubic_mace_mp0_c35 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T19:00:28Z END   ft_knbo3_cubic_mace_mp0_c29 status=ok wall=3511s
+2026-10-04T19:00:28Z START ft_knbo3_cubic_mace_mp0_c36 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T19:05:23Z END   ft_knbo3_cubic_mace_mp0_c30 status=ok wall=3283s
+2026-10-04T19:05:23Z START ft_knbo3_cubic_mace_mp0_c37 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T19:12:50Z END   ft_knbo3_cubic_mace_mp0_c31 status=ok wall=3324s
+2026-10-04T19:12:50Z START ft_knbo3_cubic_mace_mp0_c38 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T19:17:34Z END   ft_knbo3_cubic_mace_mp0_c32 status=ok wall=3225s
+2026-10-04T19:17:34Z START ft_knbo3_cubic_mace_mp0_c39 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T20:30:41Z QUEUE start: 8 jobs, 8 x 8 ranks on 122 cores (cgroup quota)
+2026-10-04T20:30:41Z START ft_knbo3_cubic_mace_mp0_c33 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T20:30:41Z START ft_knbo3_cubic_mace_mp0_c34 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T20:30:41Z START ft_knbo3_cubic_mace_mp0_c35 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T20:30:41Z START ft_knbo3_cubic_mace_mp0_c36 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T20:30:41Z START ft_knbo3_cubic_mace_mp0_c37 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T20:30:41Z START ft_knbo3_cubic_mace_mp0_c38 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T20:30:41Z START ft_knbo3_cubic_mace_mp0_c39 nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T20:30:41Z START ft_knbo3_cubic_mace_mp0_ref nat=40 kpts=64 np=8 nk_pools=4
+2026-10-04T20:54:31Z END   ft_knbo3_cubic_mace_mp0_ref status=ok wall=1430s
+2026-10-04T21:12:40Z END   ft_knbo3_cubic_mace_mp0_c38 status=ok wall=2519s
+2026-10-04T21:20:14Z END   ft_knbo3_cubic_mace_mp0_c35 status=ok wall=2973s
+2026-10-04T21:22:28Z END   ft_knbo3_cubic_mace_mp0_c34 status=ok wall=3107s
+2026-10-04T21:26:01Z END   ft_knbo3_cubic_mace_mp0_c36 status=ok wall=3320s
+2026-10-04T21:26:32Z END   ft_knbo3_cubic_mace_mp0_c39 status=ok wall=3351s
+2026-10-04T21:27:21Z END   ft_knbo3_cubic_mace_mp0_c37 status=ok wall=3400s
+2026-10-04T21:27:38Z END   ft_knbo3_cubic_mace_mp0_c33 status=ok wall=3417s
+2026-10-04T21:27:38Z QUEUE end: 8 ok, 0 scf-not-converged, 0 failed (re-run to retry failed)
+QE_FT_EXIT Sun Oct  4 21:27:40 UTC 2026
