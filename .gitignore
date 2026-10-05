@@ -49,3 +49,8 @@ results/revision/sscha_seeds/_dryrun/
 # the full box tree is in the raw archive
 results/revision/dft/qe/ax_*/
 results/revision/dft/qe/*/pw.err
+# E5 fine-tuned weights (~0.9 GB, MACE checkpoints 157 MB > GitHub limit): sha256 in
+# results/revision/finetune/models/WEIGHTS.sha256, files in the raw archive (Zenodo at publication)
+results/revision/finetune/models/**/*.model
+results/revision/finetune/models/**/*.pt
+results/revision/finetune/models/**/*.pth.tar
