@@ -855,6 +855,45 @@ def main() -> int:
           "correct (stable) for the base model, is called unstable by all three MACE-MP-0 "
           "replicates, a new error; CHGNet KNbO3 at 100 K (replicate 1 calls it stable) and CsSnBr3 "
           "at 900 K are unresolved")
+    ft_dmin = []
+    for sysn in ("batio3_cubic", "knbo3_cubic"):
+        for t in ft_seeds:
+            rb = [r for r in ftj("p2_mace_mp0_base.json")["rows"] if r["system"] == sysn and r["T"] == 300.0][0]
+            rt = [r for r in ftj(f"p2_mace_mp0_{t}.json")["rows"] if r["system"] == sysn and r["T"] == 300.0][0]
+            ft_dmin.append(abs(rt["min_eff_freq_thz"] - rb["min_eff_freq_thz"]))
+    check(len(ft_dmin) == 6 and max(ft_dmin) < 0.11 and abs(max(ft_dmin) - 0.107) < 1e-3,
+          f"[E5] MACE-MP-0 minimum effective frequency at 300 K moves by at most {max(ft_dmin):.3f} "
+          "THz in BaTiO3 and KNbO3 (6 replicate-cells), so the refuted cells did not come close to "
+          "flipping")
+    # Part 2b (not registered): the screen's rule on each fine-tuned model's held-out-path energies
+    # (the `calls` the S1 stage stored), against the PBE-backed call of Table S19
+    ft_sp = {}
+    for m in ft_models:
+        sp_d = {t: ftj(f"c3a_{m}_{t}.json")["paths"] for t in ["base"] + ft_seeds}
+        for sysn in ("batio3_cubic", "knbo3_cubic", "cssnbr3_cubic"):
+            for T in (100, 300, 600, 900):
+                def sp_unit(t, sysn=sysn, T=T, m=m, sp_d=sp_d):
+                    ps = [v for v in sp_d[t].values()
+                          if v["system"] == sysn and v["path_model"] == m]
+                    return all(v["calls"][str(T)]["stable"] for v in ps)
+                urow = c3_uall[(c3_uall.system == sysn) & (c3_uall.model == m)
+                               & (c3_uall["T"] == T)].iloc[0]
+                ft_sp[(m, sysn, T)] = dict(pbe=bool(urow.pbe_backed_stable), base=sp_unit("base"),
+                                           same=bool(urow.mlip_same_paths_stable),
+                                           calls=[sp_unit(t) for t in ft_seeds])
+    sp_cor = [ft_sp[(m, s, 300)] for m in ft_models for s in ("batio3_cubic", "knbo3_cubic")]
+    check(all(v["base"] == v["same"] for v in ft_sp.values())
+          and all(v["base"] is True and v["pbe"] is False and v["calls"] == [False] * 3
+                  for v in sp_cor)
+          and all(v["calls"] == [v["pbe"]] * 3 for k, v in ft_sp.items()
+                  if k[1] in ("batio3_cubic", "knbo3_cubic")),
+          "[E5] screen's rule on the held-out PBE paths (not registered): the fine-tuned models "
+          "reproduce the PBE-backed call in all 12 replicate calls of the four BaTiO3 / KNbO3 300 K "
+          "cells (the base call there is stable, PBE and the label unstable) and in every other "
+          "BaTiO3 / KNbO3 ladder cell (48 of 48 replicate calls); the base model's call on these "
+          "paths equals Table S19's in all 24 units. The registered P2 pipeline does not move, so "
+          "the gap sits in what the screen re-derives from the fine-tuned model (relaxation, "
+          "force constants, path), not in the energy surface along the held-out coordinates")
     # the fine-tuned model's own wells (T-independent maps) against the P1 wells on the base path
     own = {}
     for m in ft_models:

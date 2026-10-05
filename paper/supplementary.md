@@ -348,7 +348,11 @@ the same reason.
 That test was run (§S5, Table S19): the shared BaTiO₃ and KNbO₃ mis-calls at 300 K disappear on
 PBE energies along the same coordinates, where the MLIP wells are 0.32–0.76 of the PBE depth, so
 they are surface errors that four models share; the CsSnBr₃ mis-calls and KNbO₃ at 600 K persist
-and belong to the screen, the functional or the label.
+on PBE. Two later checks narrow that: under PBEsol eight of CsSnBr₃'s nine PBE errors vanish while
+KNbO₃ at 600 K persists (Table S23), so the CsSnBr₃ errors are PBE's and KNbO₃ at 600 K is the
+screen's or the label's; and a fine-tune that brings the wells to PBE depth on the held-out
+paths does not correct the BaTiO₃ and KNbO₃ 300 K calls (Table S24), so the softened-well
+reading does not by itself license the claim that fixing the surface fixes the call.
 
 The multi-mode SSCHA retains the couplings, but here it cannot bound their effect on the call,
 for three reasons. It runs on the same MLIP potential, so any PES error is common to both
@@ -651,6 +655,9 @@ rest are collected here in numerical order:
 - Table S19, the screen's calls on PBE energies along the same coordinates, and the MLIP against
   PBE well depths path by path (§S5).
 - Table S20, MLIP force and energy errors against PBE on SSCHA-sampled configurations (§S5).
+- Table S23, the convergence, PBEsol and lattice checks on the PBE curves (§S5.3).
+- Table S24, the fine-tuning trial against its pre-registration: well depths, screen calls, held-out
+  errors, forgetting controls (§S5.4).
 <!-- PENDING-C1: the seed-study and converged-grid tables are added to this list when they land -->
 
 <!-- BEGIN GENERATED TABLES -->
@@ -1113,7 +1120,7 @@ Blow-ups and failed units by model. A failed unit is one of the 208-unit attempt
 | (f) | S, MatterSim committee | MatterSim's call wrong | 60 (11) | 0.686 [0.473, 0.873] | 0.120 |
 | (g) | primary, units with no atomic overlap in any configuration | consensus wrong | 43 (4) | 0.314 [0.146, 0.529] | -- |
 
-**Table S19** PBE along the screen's own soft-mode coordinates (Referee 1.1, plan item C3a). Each of the 120 ladder units (6 systems × 5 models × 100, 300, 600 and 900 K) is called twice by the screen's rule (unstable if any computed path condenses, §2.4), on the same structures: from the model's own energies (*MLIP, same paths*) and from Quantum ESPRESSO PBE single-point energies (*PBE-backed*). Both are scored against the finite-temperature label used throughout (stable iff T is at or above the experimental transition temperature). *Corrected by PBE* counts units whose MLIP call is wrong and whose PBE-backed call is right; *newly wrong* counts the reverse. **PBE is evaluated at each MLIP's own relaxed lattice, along that MLIP's coordinate**, so it is a different PBE potential for each model, not one reference curve per system. PBE covers 1 to 2 paths per unit, out of the 1 to 24 modes the screen maps; the mode that decided the ledger's call has a PBE path in 100 of 120 units. The MLIP column is the model's own call on those same paths and equals the ledger's call in 115 of 120 units. In 28 units a path's regenerated E(Q) map did not reproduce the cached map the ledger was computed from (a substitute direction inside a degenerate eigenspace; `all_paths_match_cache` in the deposited table), so those calls rest partly on a substitute coordinate. Of the 23 corrections, 10 are bcc-Zr units on a reference coordinate and 8 are BaTiO₃ and KNbO₃ units, all at 300 K and all for CHGNet, MACE-MP-0, MatterSim, SevenNet-0. **The bcc-Zr paths of every model except MatterSim are MatterSim's deciding coordinate, q = (1/3, 2/3, 0)** (role `ref`: a coordinate borrowed from MatterSim, not one of the model's own), and ORB-v2's SrTiO₃ path is MatterSim's pattern at q = (1/2, 1/2, 1/2); 5 of the 38 paths below are of this kind, and on 3 of them the model's own curve has no well at all. The 3 newly wrong units are BaTiO₃/ORB-v2 at 300 K; bcc-Zr/MatterSim at 900 K; CsSnBr₃/ORB-v2 at 600 K; the 19 units that stay wrong under PBE are BaTiO₃ 1, KNbO₃ 5, CsSnBr₃ 9, bcc-Zr 4. Counts are descriptive: the units cluster by system (6 systems) and no test is attached. The label is a transition-temperature rule, so a PBE call that disagrees with it is not necessarily a PBE error. `scripts/dft_reference.py analyze` → `results/revision/dft/c3a_unit_calls.csv`.
+**Table S19** PBE along the screen's own soft-mode coordinates (Referee 1.1, plan item C3a). Each of the 120 ladder units (6 systems × 5 models × 100, 300, 600 and 900 K) is called twice by the screen's rule (unstable if any computed path condenses, §2.4), on the same structures: from the model's own energies (*MLIP, same paths*) and from Quantum ESPRESSO PBE single-point energies (*PBE-backed*). Both are scored against the finite-temperature label used throughout (stable iff T is at or above the experimental transition temperature). *Corrected by PBE* counts units whose MLIP call is wrong and whose PBE-backed call is right; *newly wrong* counts the reverse. **PBE is evaluated at each MLIP's own relaxed lattice, along that MLIP's coordinate**, so it is a different PBE potential for each model, not one reference curve per system. PBE covers 1 to 11 paths per unit, out of the 1 to 24 modes the screen maps (93 of the 139 modes the 30 (system, model) units map; 55 of the 93 paths are extra modes beyond the deciding ones, and they change 0 of the 150 (system, model, T) PBE-backed calls); the mode that decided the ledger's call has a PBE path in 100 of 120 units. The MLIP column is the model's own call on those same paths and equals the ledger's call in 115 of 120 units. In 40 units a path's regenerated E(Q) map did not reproduce the cached map the ledger was computed from (a substitute direction inside a degenerate eigenspace; `all_paths_match_cache` in the deposited table), so those calls rest partly on a substitute coordinate. Of the 23 corrections, 10 are bcc-Zr units on a reference coordinate and 8 are BaTiO₃ and KNbO₃ units, all at 300 K and all for CHGNet, MACE-MP-0, MatterSim, SevenNet-0. **The bcc-Zr paths of every model except MatterSim are MatterSim's deciding coordinate, q = (1/3, 2/3, 0)** (role `ref`: a coordinate borrowed from MatterSim, not one of the model's own), and ORB-v2's SrTiO₃ path is MatterSim's pattern at q = (1/2, 1/2, 1/2); 5 of the 93 paths below are of this kind, and on 3 of them the model's own curve has no well at all. The 3 newly wrong units are BaTiO₃/ORB-v2 at 300 K; bcc-Zr/MatterSim at 900 K; CsSnBr₃/ORB-v2 at 600 K; the 19 units that stay wrong under PBE are BaTiO₃ 1, KNbO₃ 5, CsSnBr₃ 9, bcc-Zr 4. Counts are descriptive: the units cluster by system (6 systems) and no test is attached. The label is a transition-temperature rule, so a PBE call that disagrees with it is not necessarily a PBE error. `scripts/dft_reference.py analyze` → `results/revision/dft/c3a_unit_calls.csv`.
 
 | System | n units | MLIP, same paths: correct | PBE-backed: correct | Corrected by PBE | Newly wrong |
 |---|---|---|---|---|---|
@@ -1126,46 +1133,101 @@ Blow-ups and failed units by model. A failed unit is one of the 208-unit attempt
 | *total, all five models* | 120 | 81 | 101 | 23 | 3 |
 | *total, excluding ORB-v2* | 96 | 61 | 82 | 22 | 1 |
 
-Lower part: the well depth of each of the 38 PBE paths (33 deciding, 5 reference), the path model's own E(Q) against PBE on the same 10 structures. Depth is −min E(Q) over the sampled amplitudes, zero when none is below E(0), and Q_min is the sampled amplitude at that minimum, so both are limited to the 10-point scan to 0.45 Å. *Ratio* is own depth over PBE depth. The BaTiO₃ and KNbO₃ deciding paths of the four models other than ORB-v2 (12 paths: CHGNet, MACE-MP-0, MatterSim, SevenNet-0) have own-model depths 0.315 to 0.763 of PBE (median 0.525); with ORB-v2's 3 paths the range is 0.315 to 1.529. **The PBE minimum is at the scan edge (Q ≥ 0.449 Å) on 8 of 38 paths, all CsSnBr₃**; there the sampled depth is a lower bound on the PBE depth and the ratio is not a well-depth comparison.
+Lower part: the well depth of each of the 93 PBE paths (33 deciding, 5 reference, 55 extra-mode), the path model's own E(Q) against PBE on the same 10 structures. Depth is −min E(Q) over the sampled amplitudes, zero when none is below E(0), and Q_min is the sampled amplitude at that minimum, so both are limited to the 10-point scan to 0.45 Å. *Ratio* is own depth over PBE depth. The BaTiO₃ and KNbO₃ deciding paths of the four models other than ORB-v2 (12 paths: CHGNet, MACE-MP-0, MatterSim, SevenNet-0) have own-model depths 0.315 to 0.763 of PBE (median 0.525); with ORB-v2's 3 paths the range is 0.315 to 1.529. **The PBE minimum is at the scan edge (Q ≥ 0.449 Å) on 8 of 93 paths, all CsSnBr₃**; there the sampled depth is a lower bound on the PBE depth and the ratio is not a well-depth comparison.
 
 | Path | Role | Own depth (meV) | PBE depth (meV) | Ratio own/PBE | Own Q_min (Å) | PBE Q_min (Å) | PBE minimum at scan edge |
 |---|---|---|---|---|---|---|---|
 | batio3_cubic_chgnet_q0-0-0-b0 | decide | 16.6 | 22.5 | 0.74 | 0.089 | 0.139 | no |
+| batio3_cubic_chgnet_q0-0-0-b1 | mode | 30.3 | 39.3 | 0.77 | 0.089 | 0.089 | no |
+| batio3_cubic_chgnet_q0-0-0-b2 | mode | 17.8 | 24.1 | 0.74 | 0.089 | 0.139 | no |
+| batio3_cubic_chgnet_q0-1d2-0-b0 | mode | 24.9 | 49.6 | 0.50 | 0.089 | 0.089 | no |
+| batio3_cubic_chgnet_q0-1d2-0-b1 | mode | 24.5 | 41.4 | 0.59 | 0.089 | 0.089 | no |
+| batio3_cubic_chgnet_q1d2-0-0-b0 | mode | 29.4 | 61.7 | 0.48 | 0.089 | 0.089 | no |
 | batio3_cubic_chgnet_q1d2-1d2-0-b0 | decide | 38.6 | 73.3 | 0.53 | 0.089 | 0.089 | no |
+| batio3_cubic_mace_mp0_q0-0-0-b0 | mode | 20.8 | 34.3 | 0.61 | 0.089 | 0.089 | no |
+| batio3_cubic_mace_mp0_q1d2-0-0-b0 | mode | 28.7 | 61.7 | 0.47 | 0.089 | 0.089 | no |
 | batio3_cubic_mace_mp0_q1d2-0-1d2-b0 | decide | 42.6 | 73.5 | 0.58 | 0.089 | 0.089 | no |
 | batio3_cubic_mattersim_q0-0-0-b0 | decide | 33.2 | 43.5 | 0.76 | 0.089 | 0.089 | no |
+| batio3_cubic_mattersim_q0-0-1d2-b0 | mode | 37.7 | 59.0 | 0.64 | 0.089 | 0.089 | no |
 | batio3_cubic_mattersim_q1d2-0-1d2-b0 | decide | 41.1 | 73.0 | 0.56 | 0.089 | 0.089 | no |
+| batio3_cubic_orb_v2_q0-0-0-b0 | mode | 4.7 | 1.8 | 2.67 | 0.050 | 0.050 | no |
+| batio3_cubic_orb_v2_q0-0-0-b1 | mode | 0.0 | 1.9 | 0.00 | no well | 0.050 | no |
+| batio3_cubic_orb_v2_q0-0-1d2-b0 | mode | 14.8 | 11.1 | 1.34 | 0.089 | 0.089 | no |
+| batio3_cubic_orb_v2_q0-0-1d2-b1 | mode | 9.3 | 10.9 | 0.86 | 0.089 | 0.089 | no |
+| batio3_cubic_orb_v2_q0-1d2-0-b0 | mode | 14.7 | 10.6 | 1.39 | 0.089 | 0.089 | no |
+| batio3_cubic_orb_v2_q0-1d2-0-b1 | mode | 8.3 | 11.0 | 0.76 | 0.089 | 0.089 | no |
+| batio3_cubic_orb_v2_q1d2-0-0-b0 | mode | 20.2 | 13.7 | 1.47 | 0.089 | 0.089 | no |
+| batio3_cubic_orb_v2_q1d2-0-0-b1 | mode | 19.0 | 13.9 | 1.37 | 0.089 | 0.089 | no |
 | batio3_cubic_orb_v2_q1d2-1d2-0-b0 | decide | 32.8 | 21.4 | 1.53 | 0.089 | 0.089 | no |
+| batio3_cubic_sevennet0_q0-0-0-b0 | mode | 21.2 | 25.5 | 0.83 | 0.089 | 0.089 | no |
 | batio3_cubic_sevennet0_q1d2-0-0-b0 | decide | 28.2 | 42.4 | 0.67 | 0.089 | 0.089 | no |
 | batio3_cubic_sevennet0_q1d2-0-1d2-b0 | decide | 33.3 | 69.0 | 0.48 | 0.050 | 0.089 | no |
 | knbo3_cubic_chgnet_q0-0-0-b0 | decide | 30.3 | 57.8 | 0.52 | 0.089 | 0.089 | no |
+| knbo3_cubic_mace_mp0_q0-0-0-b0 | mode | 16.3 | 32.2 | 0.51 | 0.089 | 0.089 | no |
+| knbo3_cubic_mace_mp0_q0-0-1d2-b0 | mode | 15.2 | 45.5 | 0.33 | 0.050 | 0.089 | no |
 | knbo3_cubic_mace_mp0_q0-1d2-1d2-b0 | decide | 27.9 | 87.8 | 0.32 | 0.050 | 0.089 | no |
 | knbo3_cubic_mattersim_q0-0-0-b0 | decide | 25.4 | 48.8 | 0.52 | 0.089 | 0.139 | no |
+| knbo3_cubic_mattersim_q0-0-1d2-b0 | mode | 20.6 | 63.8 | 0.32 | 0.050 | 0.089 | no |
 | knbo3_cubic_mattersim_q0-1d2-1d2-b0 | decide | 28.9 | 91.8 | 0.31 | 0.050 | 0.089 | no |
+| knbo3_cubic_orb_v2_q0-0-0-b0 | mode | 7.5 | 35.0 | 0.21 | 0.050 | 0.089 | no |
+| knbo3_cubic_orb_v2_q0-0-0-b1 | mode | 7.2 | 26.5 | 0.27 | 0.050 | 0.089 | no |
+| knbo3_cubic_orb_v2_q0-0-0-b2 | mode | 3.4 | 24.2 | 0.14 | 0.050 | 0.089 | no |
+| knbo3_cubic_orb_v2_q0-0-1d2-b0 | mode | 28.4 | 64.1 | 0.44 | 0.089 | 0.139 | no |
+| knbo3_cubic_orb_v2_q0-0-1d2-b1 | mode | 24.3 | 63.4 | 0.38 | 0.089 | 0.139 | no |
+| knbo3_cubic_orb_v2_q0-1d2-0-b0 | mode | 33.8 | 72.2 | 0.47 | 0.089 | 0.139 | no |
+| knbo3_cubic_orb_v2_q0-1d2-0-b1 | mode | 34.5 | 71.6 | 0.48 | 0.089 | 0.139 | no |
 | knbo3_cubic_orb_v2_q0-1d2-1d2-b0 | decide | 58.8 | 97.6 | 0.60 | 0.089 | 0.139 | no |
+| knbo3_cubic_orb_v2_q1d2-0-0-b0 | mode | 29.1 | 67.4 | 0.43 | 0.089 | 0.139 | no |
+| knbo3_cubic_orb_v2_q1d2-0-0-b1 | mode | 25.0 | 66.6 | 0.38 | 0.089 | 0.139 | no |
 | knbo3_cubic_orb_v2_q1d2-1d2-0-b0 | decide | 56.6 | 100.1 | 0.57 | 0.089 | 0.139 | no |
+| knbo3_cubic_sevennet0_q0-0-0-b0 | mode | 16.1 | 30.7 | 0.53 | 0.089 | 0.089 | no |
+| knbo3_cubic_sevennet0_q0-0-1d2-b0 | mode | 15.9 | 47.7 | 0.33 | 0.050 | 0.089 | no |
 | knbo3_cubic_sevennet0_q0-1d2-1d2-b0 | decide | 31.6 | 94.6 | 0.33 | 0.089 | 0.089 | no |
+| srtio3_cubic_chgnet_q0-0-0-b0 | mode | 0.1 | 6.1 | 0.02 | 0.006 | 0.050 | no |
+| srtio3_cubic_chgnet_q0-0-1d2-b0 | mode | 0.2 | 0.9 | 0.18 | 0.006 | 0.022 | no |
 | srtio3_cubic_chgnet_q1d2-1d2-1d2-b0 | decide | 5.8 | 23.4 | 0.25 | 0.139 | 0.139 | no |
+| srtio3_cubic_mace_mp0_q0-0-0-b0 | mode | 0.5 | 7.3 | 0.07 | 0.022 | 0.050 | no |
 | srtio3_cubic_mace_mp0_q1d2-1d2-1d2-b0 | decide | 27.4 | 27.7 | 0.99 | 0.139 | 0.139 | no |
+| srtio3_cubic_mattersim_q0-0-0-b0 | mode | 3.6 | 8.9 | 0.40 | 0.050 | 0.050 | no |
 | srtio3_cubic_mattersim_q1d2-1d2-1d2-b0 | decide | 17.2 | 26.5 | 0.65 | 0.139 | 0.139 | no |
 | srtio3_cubic_orb_v2_q1d2-1d2-1d2-b0-refmattersim | ref | 57.4 | 26.7 | 2.15 | 0.139 | 0.139 | no |
+| srtio3_cubic_sevennet0_q0-0-0-b0 | mode | 2.1 | 5.6 | 0.37 | 0.050 | 0.050 | no |
 | srtio3_cubic_sevennet0_q1d2-1d2-1d2-b0 | decide | 22.9 | 26.1 | 0.88 | 0.139 | 0.139 | no |
+| cssnbr3_cubic_chgnet_q0-0-0-b0 | mode | 8.5 | -0.0 | -inf | 0.200 | 0.000 | no |
+| cssnbr3_cubic_chgnet_q0-0-0-b1 | mode | 8.4 | -0.0 | -inf | 0.200 | 0.000 | no |
+| cssnbr3_cubic_chgnet_q0-0-0-b3 | mode | 2.6 | -0.0 | -inf | 0.272 | 0.000 | no |
+| cssnbr3_cubic_chgnet_q0-0-0-b4 | mode | 2.3 | -0.0 | -inf | 0.200 | 0.000 | no |
+| cssnbr3_cubic_chgnet_q0-0-1d2-b0 | mode | 13.8 | -0.0 | -inf | 0.356 | 0.000 | no |
+| cssnbr3_cubic_chgnet_q0-0-1d2-b2 | mode | 5.6 | -0.0 | -inf | 0.356 | 0.000 | no |
+| cssnbr3_cubic_chgnet_q0-1d2-0-b4 | mode | 3.9 | -0.0 | -inf | 0.272 | 0.000 | no |
+| cssnbr3_cubic_chgnet_q1d2-0-0-b0 | mode | 7.6 | -0.0 | -inf | 0.139 | 0.000 | no |
+| cssnbr3_cubic_chgnet_q1d2-0-0-b2 | mode | 3.6 | -0.0 | -inf | 0.272 | 0.000 | no |
 | cssnbr3_cubic_chgnet_q1d2-1d2-1d2-b0 | decide | 228.3 | 105.2 | 2.17 | 0.450 | 0.450 | yes |
 | cssnbr3_cubic_mace_mp0_q1d2-1d2-0-b0 | decide | 55.7 | 60.6 | 0.92 | 0.450 | 0.450 | yes |
 | cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0 | decide | 116.8 | 127.2 | 0.92 | 0.450 | 0.450 | yes |
+| cssnbr3_cubic_mattersim_q0-0-0-b0 | mode | 1.4 | -0.0 | -inf | 0.139 | 0.000 | no |
 | cssnbr3_cubic_mattersim_q0-1d2-1d2-b0 | decide | 64.3 | 60.8 | 1.06 | 0.450 | 0.450 | yes |
+| cssnbr3_cubic_mattersim_q1d2-0-0-b0 | mode | 2.5 | -0.0 | -inf | 0.200 | 0.000 | no |
 | cssnbr3_cubic_mattersim_q1d2-1d2-1d2-b0 | decide | 128.6 | 128.1 | 1.00 | 0.450 | 0.450 | yes |
 | cssnbr3_cubic_orb_v2_q1d2-1d2-1d2-b1 | decide | 72.6 | 126.4 | 0.57 | 0.450 | 0.450 | yes |
 | cssnbr3_cubic_orb_v2_q1d2-1d2-1d2-b2 | decide | 73.8 | 107.9 | 0.68 | 0.356 | 0.450 | yes |
 | cssnbr3_cubic_sevennet0_q1d2-1d2-1d2-b0 | decide | 149.0 | 127.4 | 1.17 | 0.450 | 0.450 | yes |
 | zr_bcc_chgnet_q1d3-2d3-0-b0-refmattersim | ref | 0.0 | 159.5 | 0.00 | no well | 0.200 | no |
 | zr_bcc_mace_mp0_q1d3-2d3-0-b0-refmattersim | ref | 0.0 | 173.8 | 0.00 | no well | 0.200 | no |
+| zr_bcc_mattersim_q1d2-0-0-b0 | mode | 50.1 | 67.7 | 0.74 | 0.200 | 0.200 | no |
+| zr_bcc_mattersim_q1d2-1d2-0-b0 | mode | 100.1 | 136.3 | 0.73 | 0.200 | 0.200 | no |
+| zr_bcc_mattersim_q1d3-0-0-b0 | mode | 63.6 | 53.4 | 1.19 | 0.272 | 0.200 | no |
+| zr_bcc_mattersim_q1d3-1d2-0-b0 | mode | 64.7 | 31.3 | 2.07 | 0.200 | 0.139 | no |
+| zr_bcc_mattersim_q1d3-1d3-0-b0 | mode | 206.3 | -0.0 | -inf | 0.200 | 0.000 | no |
 | zr_bcc_mattersim_q1d3-2d3-0-b0 | decide | 190.9 | 161.6 | 1.18 | 0.272 | 0.200 | no |
+| zr_bcc_mattersim_q1d6-1d2-0-b0 | mode | 129.4 | 62.0 | 2.09 | 0.200 | 0.139 | no |
 | zr_bcc_orb_v2_q1d3-2d3-0-b0-refmattersim | ref | 144.0 | 158.4 | 0.91 | 0.272 | 0.200 | no |
 | zr_bcc_sevennet0_q1d3-2d3-0-b0-refmattersim | ref | 0.0 | 162.5 | 0.00 | no well | 0.200 | no |
 | zro2_cubic_chgnet_q1d2-0-1d2-b0 | decide | 226.7 | 388.7 | 0.58 | 0.200 | 0.272 | no |
 | zro2_cubic_mace_mp0_q0-1d2-1d2-b0 | decide | 173.4 | 385.4 | 0.45 | 0.200 | 0.272 | no |
 | zro2_cubic_mattersim_q1d2-0-1d2-b0 | decide | 234.9 | 383.7 | 0.61 | 0.200 | 0.272 | no |
+| zro2_cubic_orb_v2_q0-0-1d2-b0 | mode | 100.1 | 186.1 | 0.54 | 0.200 | 0.272 | no |
+| zro2_cubic_orb_v2_q1d2-1d2-0-b0 | mode | 204.2 | 380.5 | 0.54 | 0.200 | 0.272 | no |
 | zro2_cubic_orb_v2_q1d2-1d2-1d2-b0 | decide | 408.0 | 747.3 | 0.55 | 0.200 | 0.272 | no |
 | zro2_cubic_sevennet0_q1d2-0-1d2-b0 | decide | 191.1 | 382.6 | 0.50 | 0.200 | 0.272 | no |
 
@@ -1216,6 +1278,159 @@ Lower part: bcc-Zr cell size (plan item C5). The 3×3×3 cell was run once (seed
 | MACE-MP-0 | 300 | +1.797 | +1.547 | 0.0015 | −0.250 | +1.567 | +1.567 | 1 × 256 (1) | 20 (20) / 20 | yes | converged ×1 | 0.072 → 3.3 × 10⁻⁵ | 0.77 |
 | MatterSim | 100 | +1.846 | +1.320 | 0.022 | −0.526 | +1.489 | −1.949 | 8 × 256 (1) | 27 (19) / 20 | no | max_ka (cumulative) ×8 | 0.35 → 0.31 | 7.1 × 10³ |
 | MatterSim | 300 | +1.953 | −2.106 | 0.15 | −4.059 | +1.488 | −1.949 | 8 × 256 (1) | 27 (19) / 20 | no | max_ka (cumulative) ×8 | 0.62 → 0.61 | 1.4 × 10⁴ |
+
+**Table S23** Numerical, functional and lattice checks on the PBE soft-mode curves (Referee 1.1 follow-up, plan item E2; `python scripts/dft_reference.py analyze-checks` → `results/revision/dft_checks/`; 323 pw.x calculations, all finished, none with an SCF problem). **Part 1, convergence.** The acceptance criterion was fixed in `scripts/dft_checks.py` before any variant ran: the production settings are converged for a path iff, for each of three variants, the well depth moves by at most 5 % and the single-mode screen re-solved on the variant's E(Q) returns the same call at every temperature of 50, 100, 300, 600 and 900 K, and all three deciding paths (BaTiO₃, KNbO₃, CsSnBr₃, each the MACE-MP-0 path that decides the persistent calls) must pass. **They do not all pass: the CsSnBr₃ path fails the depth criterion on the two variants that tighten the k-spacing (-6.8 % and -6.9 %; the cutoff alone moves it -0.04 %), while no call changes in any of the nine variant-by-path pairs and BaTiO₃ and KNbO₃ pass every variant (depth within 1.7 %).** The CsSnBr₃ curve is also edge-limited (minimum at the 0.45 Å edge of the scan), so its depth is a lower bound and its call is edge-sensitive. Part 2 (PBEsol) and Part 3 (lattice) follow. **Part 2, functional.** The same curves re-evaluated with input_dft = 'pbesol' on the *same PBE-generated SSSP pseudopotentials* (not the SSSP PBEsol set and not an all-electron result), at each MLIP's own relaxed lattice and along its own eigenvector, so only the functional changes; the screen is re-solved on the PBEsol E(Q). Units are the 60 ladder units of the three systems; 'PBE error' and 'PBEsol error' count units whose call disagrees with the label. **PBEsol removes 9 of the 15 PBE errors (KNbO₃ 1, CsSnBr₃ 8) and creates none; 6 remain: BaTiO₃/ORB-v2 at 300 K; CsSnBr₃/ORB-v2 at 300 K; KNbO₃/CHGNet at 600 K; KNbO₃/MACE-MP-0 at 600 K; KNbO₃/MatterSim at 600 K; KNbO₃/ORB-v2 at 600 K.** The CsSnBr₃ well is 0.32 to 0.42 of its PBE depth and its minimum leaves the scan edge (0.356 Å on all 8 curves); the oxides' wells deepen to 1.03 to 1.30 of PBE. The PBEsol lattice was not relaxed, so the PBEsol curves sit on lattices 0.1 to 0.8 % larger than the PBE equilibrium and larger still than PBEsol's own. **Part 3, lattice (phase A only).** PBE vc-relax of the five-atom cubic cell with the production settings and each MLIP's relaxed lattice parameter in Å (difference from PBE). The finite-displacement supercells (phase B) and the PBE soft-mode profiles (phase C), which would separate lattice from eigenvector error, were **not run** (they need a Quantum ESPRESSO box).
+
+Part 1.
+
+| System | Path | Variant | Well depth (meV) | Change vs production | Within 5 % | Calls changed (of 5 T) | Minimum at scan edge | Verdict |
+|---|---|---|---|---|---|---|---|---|
+| BaTiO₃ | batio3_cubic_mace_mp0_q1d2-0-1d2-b0 | k-spacing 0.15 Å⁻¹ | 73.4 | −0.11 % | yes | 0 | no | pass |
+| BaTiO₃ | batio3_cubic_mace_mp0_q1d2-0-1d2-b0 | cutoff ×1.3, ρ-cutoff ×8 | 74.7 | +1.69 % | yes | 0 | no | pass |
+| BaTiO₃ | batio3_cubic_mace_mp0_q1d2-0-1d2-b0 | both | 74.7 | +1.57 % | yes | 0 | no | pass |
+| CsSnBr₃ | cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0 | k-spacing 0.15 Å⁻¹ | 118.5 | −6.82 % | **no** | 0 | yes | **fail** |
+| CsSnBr₃ | cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0 | cutoff ×1.3, ρ-cutoff ×8 | 127.2 | −0.04 % | yes | 0 | yes | pass |
+| CsSnBr₃ | cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0 | both | 118.5 | −6.86 % | **no** | 0 | yes | **fail** |
+| KNbO₃ | knbo3_cubic_mace_mp0_q0-1d2-1d2-b0 | k-spacing 0.15 Å⁻¹ | 87.6 | −0.23 % | yes | 0 | no | pass |
+| KNbO₃ | knbo3_cubic_mace_mp0_q0-1d2-1d2-b0 | cutoff ×1.3, ρ-cutoff ×8 | 87.6 | −0.22 % | yes | 0 | no | pass |
+| KNbO₃ | knbo3_cubic_mace_mp0_q0-1d2-1d2-b0 | both | 87.4 | −0.45 % | yes | 0 | no | pass |
+
+2 of the 9 variant-by-path pairs fail the depth criterion, all CsSnBr₃.
+
+Part 2.
+
+| System | Paths | Ladder units | MLIP errors | PBE errors | PBEsol errors | Fixed by PBEsol | New under PBEsol | PBEsol / PBE well depth | Minima at edge, PBE / PBEsol |
+|---|---|---|---|---|---|---|---|---|---|
+| BaTiO₃ | 8 | 20 | 4 | 1 | 1 | 0 | 0 | 1.12 to 1.30 | 0 / 0 |
+| KNbO₃ | 7 | 20 | 9 | 5 | 4 | 1 | 0 | 1.03 to 1.12 | 0 / 0 |
+| CsSnBr₃ | 8 | 20 | 11 | 9 | 1 | 8 | 0 | 0.32 to 0.42 | 8 / 0 |
+| *total* | 23 | 60 | 24 | 15 | 6 | 9 | 0 |  |  |
+
+Part 3.
+
+| System | PBE a (Å) | MACE-MP-0 | CHGNet | ORB-v2 | SevenNet-0 | MatterSim |
+|---|---|---|---|---|---|---|
+| BaTiO₃ | 4.0237 | 4.0340 (+0.26 %) | 4.0361 (+0.31 %) | 4.0358 (+0.30 %) | 4.0355 (+0.29 %) | 4.0341 (+0.26 %) |
+| KNbO₃ | 4.0269 | 4.0567 (+0.74 %) | 4.0574 (+0.76 %) | 4.0584 (+0.78 %) | 4.0578 (+0.77 %) | 4.0590 (+0.80 %) |
+| CsSnBr₃ | 5.8871 | 5.8947 (+0.13 %) | 5.9205 (+0.57 %) | 5.8966 (+0.16 %) | 5.8949 (+0.13 %) | 5.8941 (+0.12 %) |
+
+**Table S24** Fine-tuning toward PBE, against its pre-registration (Referee 2.1, plan item E5; `tasks/preregistration-finetune-2026-10-03.md`, commit 033b3d8, committed before any training data existed; `scripts/finetune_trial.py`, `results/revision/finetune/`). **Design.** MACE-MP-0 (medium, the paper's checkpoint) and CHGNet 0.4.2, three independent fine-tunes each (seeds 0 to 2, identical data and settings), one pooled fine-tune per replicate on 120 PBE single points (Quantum ESPRESSO, the §2.6 settings): 40 phonon-rattled 2×2×2 cells of each of BaTiO₃, KNbO₃ and CsSnBr₃ (the negative control) drawn from the base model's own harmonic force constants at 100, 300 and 600 K, 108 for training and 12 for validation (checkpoint selection on validation only; 30 epochs; no hyperparameter search; forces and energies, no stress). Draws closer than 0.6 of an equilibrium pair distance were redrawn (pre-registered deviation D1: CsSnBr₃ down to 8.5 % acceptance, so its training set is milder than the literal draws), and none lies within 0.05 Å rms of any held-out geometry. A screen call counts as *changed* only if all three replicates differ from the base call, *unchanged* only if all three equal it, otherwise *unresolved*; nothing is dropped. **Part 1, P1 (well depth).** Fine-tuned over PBE well depth along the held-out deciding paths of BaTiO₃ and KNbO₃ (the PBE curves of Table S19; ratios; band 0.8 to 1.2), base model, then replicates 0, 1, 2. The verdict rule (supported iff the pooled median and every replicate's median are in the band) was fixed in the tooling before any ft_ job ran. **Part 2, P2 (screen calls).** The full harmonic → soft-mode pipeline re-run with each fine-tuned model: S stable, U unstable; *base* is the deposited ledger call (the re-run of the base model reproduces it in all 24 cells), then the three replicates' calls; min effective frequency (THz) for the base and the replicates; imaginary phonon modes found by the harmonic layer per replicate. Ten cells carried a pre-registered prediction (BaTiO₃ and KNbO₃ at 300 K 'corrected'; CsSnBr₃ at 300 and 600 K and KNbO₃ at 600 K 'persist'); the other 14 per model were not predicted and are reported as observed. **Part 2b** applies the screen's rule to the fine-tuned models' energies along the held-out paths. **Part 3, S1 (held-out accuracy)** on the 23 deciding paths (230 PBE points) that had PBE when the run executed; the 55 extra-mode paths of E1 finished afterwards and were **not** evaluated. Well-window RMSE: force (meV/Å) and energy (meV/atom), base → three replicates. **Part 4, S2 (forgetting)**: harmonic calls of the six stable controls. **Part 5** summarises the verdicts.
+
+**Reading the table.** P1 is supported for MACE-MP-0 and unresolved for CHGNet, but P2 refutes the prediction that the BaTiO₃ and KNbO₃ 300 K mis-calls are corrected, for both models and all three replicates, although for MACE-MP-0 the P1 wells are at PBE depth. **Part 2b locates the gap** (not a pre-registered outcome; it applies the screen's rule to the held-out-path energies that the S1 stage stored): along the base model's own deciding coordinates, where PBE exists, the fine-tuned models' energies give the PBE-backed call in 12 of the 12 replicate calls of the four 'corrected' cells, so the energy surface along those coordinates does what the prediction asked. What does not reproduce it is the screen's own pipeline, which relaxes the fine-tuned model and derives the soft-mode path, frozen-cell map and amplitudes again from that model's force constants. For MACE-MP-0 on BaTiO₃ that map's deciding well is 42.6 meV (base) → 43.7, 37.0, 39.2 (replicates) against 73.5 meV for PBE on the base path, and for KNbO₃ 27.9 → 35.1, 34.6, 39.5 against 87.8; PBE was not evaluated along the fine-tuned models' own paths, so whether those wells are too shallow or the PBE wells along those directions are also about 40 meV is untested. CHGNet replicate 1 erased the KNbO₃ instability (no imaginary phonon, +2.07 THz, called stable at every temperature). Fine-tuning also moved the negative control: CsSnBr₃ wells overshoot PBE and its held-out errors rise (Part 3). One call was newly broken, MACE-MP-0 CsSnBr₃ at 900 K.
+
+Part 1.
+
+| Base model | Path | PBE depth (meV) | Base | Replicate 0 | Replicate 1 | Replicate 2 |
+|---|---|---|---|---|---|---|
+| MACE-MP-0 | batio3_cubic_mace_mp0_q1d2-0-1d2-b0 | 73.5 | 0.58 | 1.14 | 0.99 | 0.92 |
+| MACE-MP-0 | knbo3_cubic_mace_mp0_q0-1d2-1d2-b0 | 87.8 | 0.32 | 1.00 | 1.01 | 1.13 |
+| MACE-MP-0 | **median** |  | **0.45** | **1.07** | **1.00** | **1.03** |
+| MACE-MP-0 | **median over paths and replicates 1.00** |  |  |  |  | **supported** |
+| MACE-MP-0 | cssnbr3_cubic_mace_mp0_q1d2-1d2-0-b0 (negative control) |  | 0.92 | 1.68 | 1.66 | 1.47 |
+| MACE-MP-0 | cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0 (negative control) |  | 0.92 | 1.73 | 1.73 | 1.51 |
+| CHGNet | batio3_cubic_chgnet_q0-0-0-b0 | 22.5 | 0.74 | 1.67 | 1.07 | 1.04 |
+| CHGNet | batio3_cubic_chgnet_q1d2-1d2-0-b0 | 73.3 | 0.53 | 1.33 | 0.99 | 0.97 |
+| CHGNet | knbo3_cubic_chgnet_q0-0-0-b0 | 57.8 | 0.52 | 0.92 | 1.06 | 0.99 |
+| CHGNet | **median** |  | **0.53** | **1.33** | **1.06** | **0.99** |
+| CHGNet | **median over paths and replicates 1.04** |  |  |  |  | **unresolved** |
+| CHGNet | cssnbr3_cubic_chgnet_q1d2-1d2-1d2-b0 (negative control) |  | 2.17 | 2.46 | 0.35 | 1.48 |
+
+Part 2.
+
+| Model | System | T (K) | Label | Base call | Replicates 0 1 2 | Min effective freq (THz): base; replicates | Imaginary modes at the commensurate q, replicates | Status | Pre-registered prediction |
+|---|---|---|---|---|---|---|---|---|---|
+| MACE-MP-0 | BaTiO₃ | 100 | unstable | U | U U U | +2.03; +2.04, +2.09, +2.11 | 3 / 3 / 3 | unchanged |  |
+| MACE-MP-0 | BaTiO₃ | 300 | unstable | S | S S S | +3.17; +3.19, +3.24, +3.28 | 3 / 3 / 3 | unchanged | corrected: **refuted** |
+| MACE-MP-0 | BaTiO₃ | 600 | stable | S | S S S | +4.14; +4.15, +4.20, +4.27 | 3 / 3 / 3 | unchanged |  |
+| MACE-MP-0 | BaTiO₃ | 900 | stable | S | S S S | +4.80; +4.80, +4.85, +4.93 | 3 / 3 / 3 | unchanged |  |
+| MACE-MP-0 | KNbO₃ | 100 | unstable | U | U U U | +1.77; +1.78, +1.70, +1.69 | 3 / 3 / 3 | unchanged |  |
+| MACE-MP-0 | KNbO₃ | 300 | unstable | S | S S S | +2.76; +2.79, +2.68, +2.68 | 3 / 3 / 3 | unchanged | corrected: **refuted** |
+| MACE-MP-0 | KNbO₃ | 600 | unstable | S | S S S | +3.59; +3.62, +3.48, +3.50 | 3 / 3 / 3 | unchanged | persist: **supported** |
+| MACE-MP-0 | KNbO₃ | 900 | stable | S | S S S | +4.15; +4.18, +4.03, +4.06 | 3 / 3 / 3 | unchanged |  |
+| MACE-MP-0 | CsSnBr₃ | 100 | unstable | U | U U U | +0.15; +0.13, -0.52, -0.09 | 2 / 2 / 2 | unchanged |  |
+| MACE-MP-0 | CsSnBr₃ | 300 | stable | U | U U U | +0.24; +0.21, +0.22, +0.23 | 2 / 2 / 2 | unchanged | persist: **supported** |
+| MACE-MP-0 | CsSnBr₃ | 600 | stable | U | U U U | +0.33; +0.29, +0.30, +0.31 | 2 / 2 / 2 | unchanged | persist: **supported** |
+| MACE-MP-0 | CsSnBr₃ | 900 | stable | S | U U U | +0.39; +0.35, +0.36, +0.37 | 2 / 2 / 2 | changed |  |
+| CHGNet | BaTiO₃ | 100 | unstable | U | U U U | +2.04; +2.51, +2.55, +2.43 | 3 / 3 / 3 | unchanged |  |
+| CHGNet | BaTiO₃ | 300 | unstable | S | S S S | +3.18; +3.79, +4.00, +3.75 | 3 / 3 / 3 | unchanged | corrected: **refuted** |
+| CHGNet | BaTiO₃ | 600 | stable | S | S S S | +4.13; +4.86, +5.31, +4.89 | 3 / 3 / 3 | unchanged |  |
+| CHGNet | BaTiO₃ | 900 | stable | S | S S S | +4.77; +5.57, +6.24, +5.68 | 3 / 3 / 3 | unchanged |  |
+| CHGNet | KNbO₃ | 100 | unstable | U | U S U | +2.52; +2.13, +2.07, +1.50 | 3 / 0 / 3 | unresolved |  |
+| CHGNet | KNbO₃ | 300 | unstable | S | S S S | +3.84; +3.20, +2.07, +2.35 | 3 / 0 / 3 | unchanged | corrected: **refuted** |
+| CHGNet | KNbO₃ | 600 | unstable | S | S S S | +4.97; +4.07, +2.07, +3.05 | 3 / 0 / 3 | unchanged | persist: **supported** |
+| CHGNet | KNbO₃ | 900 | stable | S | S S S | +5.74; +4.64, +2.07, +3.51 | 3 / 0 / 3 | unchanged |  |
+| CHGNet | CsSnBr₃ | 100 | unstable | U | U U U | +0.15; -0.73, +0.17, +0.17 | 36 / 24 / 26 | unchanged |  |
+| CHGNet | CsSnBr₃ | 300 | stable | U | U U U | +0.26; +0.24, +0.27, +0.28 | 36 / 24 / 26 | unchanged | persist: **supported** |
+| CHGNet | CsSnBr₃ | 600 | stable | U | U S U | +0.35; +0.33, +0.36, +0.37 | 36 / 24 / 26 | unresolved | persist: **unresolved** |
+| CHGNet | CsSnBr₃ | 900 | stable | U | U S S | +0.42; +0.39, +0.42, +0.44 | 36 / 24 / 26 | unresolved |  |
+
+Part 2b. The screen's rule on the held-out PBE paths (the model's own deciding coordinates), PBE-backed call and base model beside the three replicates; the unit is called unstable if any of its paths condenses, as in Table S19.
+
+| Model | System | T (K) | Label | Paths | PBE-backed call | Base call | Replicates 0 1 2 |
+|---|---|---|---|---|---|---|---|
+| MACE-MP-0 | BaTiO₃ | 100 | unstable | 1 | U | U | U U U |
+| MACE-MP-0 | BaTiO₃ | 300 | unstable | 1 | U | S | U U U |
+| MACE-MP-0 | BaTiO₃ | 600 | stable | 1 | S | S | S S S |
+| MACE-MP-0 | BaTiO₃ | 900 | stable | 1 | S | S | S S S |
+| MACE-MP-0 | KNbO₃ | 100 | unstable | 1 | U | U | U U U |
+| MACE-MP-0 | KNbO₃ | 300 | unstable | 1 | U | S | U U U |
+| MACE-MP-0 | KNbO₃ | 600 | unstable | 1 | S | S | S S S |
+| MACE-MP-0 | KNbO₃ | 900 | stable | 1 | S | S | S S S |
+| MACE-MP-0 | CsSnBr₃ | 100 | unstable | 2 | U | U | U U U |
+| MACE-MP-0 | CsSnBr₃ | 300 | stable | 2 | U | U | U U U |
+| MACE-MP-0 | CsSnBr₃ | 600 | stable | 2 | U | U | U U U |
+| MACE-MP-0 | CsSnBr₃ | 900 | stable | 2 | S | S | U U U |
+| CHGNet | BaTiO₃ | 100 | unstable | 2 | U | U | U U U |
+| CHGNet | BaTiO₃ | 300 | unstable | 2 | U | S | U U U |
+| CHGNet | BaTiO₃ | 600 | stable | 2 | S | S | S S S |
+| CHGNet | BaTiO₃ | 900 | stable | 2 | S | S | S S S |
+| CHGNet | KNbO₃ | 100 | unstable | 1 | U | U | U U U |
+| CHGNet | KNbO₃ | 300 | unstable | 1 | U | S | U U U |
+| CHGNet | KNbO₃ | 600 | unstable | 1 | S | S | S S S |
+| CHGNet | KNbO₃ | 900 | stable | 1 | S | S | S S S |
+| CHGNet | CsSnBr₃ | 100 | unstable | 1 | U | U | U U U |
+| CHGNet | CsSnBr₃ | 300 | stable | 1 | U | U | U S U |
+| CHGNet | CsSnBr₃ | 600 | stable | 1 | S | U | U S U |
+| CHGNet | CsSnBr₃ | 900 | stable | 1 | S | U | U S S |
+
+Part 3.
+
+| Model | System | Paths / points | Window force RMSE (meV/Å) | Window energy RMSE (meV/atom) |
+|---|---|---|---|---|
+| MACE-MP-0 | BaTiO₃ | 8 / 80 | 31.7 → 10.4, 3.7, 12.1 | 3.06 → 0.68, 0.10, 0.59 |
+| MACE-MP-0 | KNbO₃ | 7 / 70 | 89.6 → 13.9, 5.9, 13.9 | 5.19 → 0.86, 0.35, 0.74 |
+| MACE-MP-0 | CsSnBr₃ | 8 / 80 | 1.3 → 3.9, 3.9, 2.7 | 0.15 → 0.85, 0.83, 0.60 |
+| CHGNet | BaTiO₃ | 8 / 80 | 32.6 → 25.3, 17.9, 21.7 | 2.02 → 1.33, 0.26, 0.37 |
+| CHGNet | KNbO₃ | 7 / 70 | 103.2 → 21.0, 24.4, 16.1 | 5.66 → 0.89, 0.69, 0.30 |
+| CHGNet | CsSnBr₃ | 8 / 80 | 7.4 → 10.4, 4.7, 4.8 | 1.17 → 2.34, 0.71, 0.92 |
+
+Part 4.
+
+| Model | Control | Base call | Replicates 0 1 2 | Min frequency (THz): base; replicates | Status |
+|---|---|---|---|---|---|
+| MACE-MP-0 | Si | S | S S S | -1.33e-07; -1.08e-07, -1.61e-07, -2.43e-07 | unchanged |
+| MACE-MP-0 | MgO | S | S S S | -2.5e-08; -1.07e-07, -1.2e-07, -1.64e-07 | unchanged |
+| MACE-MP-0 | NaCl | S | S S S | -2.93e-08; -2.86e-08, -6.03e-08, -5.14e-08 | unchanged |
+| MACE-MP-0 | Cu | S | S S S | -7.17e-08; -6.29e-08, -1.92e-08, -6.16e-08 | unchanged |
+| MACE-MP-0 | C | S | S S S | 2.05e-07; -6.39e-07, -2.6e-07, -4.26e-07 | unchanged |
+| MACE-MP-0 | CeO₂ | S | S S S | -1.6e-07; -1.41e-07, -1.36e-07, 7.18e-08 | unchanged |
+| CHGNet | Si | S | U S S | -2.9e-07; -3.2, -2.25e-07, -3.69e-07 | unresolved |
+| CHGNet | MgO | S | S S S | -2.28e-07; -1.68e-06, -1.16e-06, -7.58e-07 | unchanged |
+| CHGNet | NaCl | U | U S S | -0.239; -1.73, -8.24e-08, -6.73e-08 | unresolved |
+| CHGNet | Cu | S | U S S | -4.74e-08; -0.397, -1.5e-08, -4.98e-08 | unresolved |
+| CHGNet | C | S | S S S | -5.18e-06; -1.08e-05, -8.24e-06, -6.45e-06 | unchanged |
+| CHGNet | CeO₂ | U | S U U | -0.266; -1.52e-07, -1.13, -0.873 | unresolved |
+
+Part 5.
+
+| Outcome | Verdict | Detail |
+|---|---|---|
+| P1 well depth (MACE-MP-0) | supported | median 0.45 → 1.00 |
+| P1 well depth (CHGNet) | unresolved | median 0.53 → 1.04; replicate 0 median 1.33 |
+| P2 screen calls, 10 registered cells | 5 supported, 4 refuted, 1 unresolved | 'corrected' at 300 K refuted in all 4; 'persist' supported in 5, unresolved in 1 |
+| P3 converged SSCHA, BaTiO₃ 100 K | supported | +1.735 THz, converged, called stable (label unstable) |
+| S2 forgetting (MACE-MP-0) | 6 of 6 unchanged | 0 of 18 replicate calls differ |
+| S2 forgetting (CHGNet) | 2 unchanged, 4 unresolved | 5 of 18 replicate calls differ |
 
 <!-- END GENERATED TABLES -->
 
@@ -1281,8 +1496,11 @@ Lower part: bcc-Zr cell size (plan item C5). The 3×3×3 cell was run once (seed
 
 Settings are in §2.6; the analysis is `python scripts/dft_reference.py analyze` over the deposited
 pw.x outputs (`results/revision/dft/`), and every number below is pinned in
-`scripts/verify_claims.py`. All 448 calculations finished (three BaTiO₃/CHGNet points were rerun
-with symmetry off after a symmetry error on the slightly non-cubic CHGNet cell; `NOSYM_NOTE.txt`).
+`scripts/verify_claims.py`. The analysis read 1,227 pw.x outputs, all finished with the SCF
+converged and no flag: 448 on the deciding and reference paths (analysed 3 October), 533 on the
+screen's other modes (E1, analysed 5 October) and 246 fine-tuning labels (§S5.4). A further 323
+calculations are the checks of §S5.3. Three BaTiO₃/CHGNet points were rerun with symmetry off after
+a symmetry error on the slightly non-cubic CHGNet cell (`NOSYM_NOTE.txt`).
 
 **S5.1 The screen on PBE energies (C3a; Referee 1.1).** For each of 120 ladder units of six systems
 we compare the screen's call on the MLIP energies along the PBE-covered paths with the call on PBE
@@ -1300,14 +1518,25 @@ shallow (0.45–0.61) without changing any call. The 16 errors that persist on P
 600 K (all five models; T_c 708 K, curves bracketed), CsSnBr₃ at 300 and 600 K (wells matching PBE
 within 20 % for three models, every PBE minimum at the 0.45 Å edge of the scan, and a 300 K label
 8 K above the transition) and bcc Zr at 900 K. They bound what the single-mode approximation, the
-PBE functional and the labels contribute; this design cannot split them further.
+PBE functional and the labels contribute; §S5.3 splits the CsSnBr₃ part off, because most of it
+does not survive a change of functional.
+
+The 533 extra-mode calculations added PBE curves for 55 more of the screen's modes, so that PBE now
+covers 93 of the 139 modes that the 30 (system, model) units map (38 before) and 20 of the 30
+units completely (11 before). They change none of the 150 (system, model, temperature) PBE-backed
+calls: the deciding mode already decided each one. Of the 42 extra modes whose PBE well is deeper
+than 1 meV, the model's own well is a median 0.52 of the PBE depth (the deciding paths: 0.60), so
+the softening is not specific to the deciding modes; none of the 55 PBE minima lies at the scan
+edge.
 
 Three limits apply. PBE is evaluated at each MLIP's relaxed lattice (within 0.3 % across models for
 the perovskites, about 2 % in volume for Zr) and along its eigenvector, so each model is compared
-with a slightly different PBE surface. The PBE call covers one or two of the screen's modes per
-unit, so a PBE "stable" means stable on those modes only. Twenty-eight units rest on a path whose
-regenerated map differs from the cached one (Table S19). The counts are descriptive: six systems,
-with the five models sharing each system's label, so no unit-level test is attached.
+with a slightly different PBE surface; against the PBE lattice itself the models' lattices are
+0.12–0.80 % larger (§S5.3). A PBE "stable" call is stable on the modes that have PBE, 93 of 139 in
+all, and unstable calls are the safer direction. Forty units rest on a path whose regenerated map
+differs from the cached one (28 before the extra modes; 22 of the 55 added paths are of this kind,
+Table S19). The counts are descriptive: six systems, with the five models sharing each system's
+label, so no unit-level test is attached.
 
 **S5.2 MLIP error on SSCHA-sampled configurations (C3b; Referee 1.2).** Table S20 scores all five
 models against PBE on twelve configurations from each of four seed-study ensembles and on four
@@ -1320,3 +1549,89 @@ errors reach 15 meV per atom root-mean-square and 44 at most, and all five model
 The low-temperature false-stables therefore show no sign of MLIP extrapolation; the
 high-temperature SrTiO₃ ensemble does. These ensembles come from the production recipe, which did
 not converge (§2.5), and twelve configurations per unit support a description, not a test.
+
+**S5.3 Numerical, functional and lattice checks (E2).** Table S23 holds three checks on the deciding
+PBE curves (323 pw.x calculations, all finished, no SCF problem). *Convergence.* The criterion was
+fixed in `scripts/dft_checks.py` before any variant ran: for each of three variants (k-spacing
+0.15 Å⁻¹ in place of 0.25; wavefunction cutoff ×1.3 with the density cutoff ×8; both) the well depth
+moves by at most 5 % and the screen re-solved on the variant's E(Q) returns the same call at 50,
+100, 300, 600 and 900 K, on all three deciding paths. BaTiO₃ and KNbO₃ pass every variant (depth
+within 1.7 %). **CsSnBr₃ does not**: the two variants that tighten the k-spacing deepen the sampled
+well by 6.8 and 6.9 % (the cutoff alone moves it 0.04 %). No call changes in any of the nine
+variant-by-path pairs, and the CsSnBr₃ curve has its minimum at the 0.45 Å edge of the scan, so its
+depth is a lower bound and the pre-set criterion is not met for that system. *Functional.* The
+same curves were re-evaluated with PBEsol (`input_dft`, on the PBE-generated SSSP pseudopotentials,
+not the SSSP PBEsol set, at each MLIP's relaxed lattice and along its eigenvector, so only the
+functional changes). Over the 60 ladder units of the three systems, 24 are mis-called by the MLIPs,
+15 by PBE and 6 by PBEsol; PBEsol removes 9 of the 15 PBE errors (eight of CsSnBr₃'s nine, all but
+ORB-v2's 300 K unit, and KNbO₃/SevenNet-0 at 600 K) and creates none. The CsSnBr₃ wells fall to
+0.32–0.42 of their PBE depth and their minimum leaves the scan edge (0.356 Å on all eight curves);
+the BaTiO₃ and KNbO₃ wells deepen to 1.03–1.30 of PBE. What remains under PBEsol is KNbO₃ at 600 K
+for CHGNet, MACE-MP-0, MatterSim and ORB-v2, BaTiO₃/ORB-v2 at 300 K and CsSnBr₃/ORB-v2 at 300 K.
+The persistent CsSnBr₃ mis-calls of §S5.1 are therefore a feature of the PBE surface and of the
+8 K margin to the label, not evidence about the screen, while KNbO₃ at 600 K persists in both
+functionals. The PBEsol lattice was not relaxed, so these curves sit on lattices 0.1–0.8 % larger
+than the PBE equilibrium and larger still than PBEsol's own; the result is a sensitivity, not a
+PBEsol calculation of the transition. *Lattice.* PBE vc-relax (phase A) gives a = 4.0237 Å for
+BaTiO₃, 4.0269 Å for KNbO₃ and 5.8871 Å for CsSnBr₃; the five MLIPs relax to lattices 0.26–0.31 %,
+0.74–0.80 % and 0.12–0.57 % larger. The PBE force constants and soft-mode profiles at the PBE
+lattice (phases B and C), which would separate a lattice error from an eigenvector error, were
+**not run** (they need a Quantum ESPRESSO box); whether the 0.7–0.8 % in KNbO₃ matters for its well
+depth is untested.
+
+**S5.4 Fine-tuning toward PBE (E5; Referee 2.1).** Table S24 reports the trial against its
+pre-registration (`tasks/preregistration-finetune-2026-10-03.md`, commit 033b3d8), every outcome
+whichever way it fell. MACE-MP-0 and CHGNet were each fine-tuned three times on 120 PBE single
+points (40 phonon-rattled cells of each of BaTiO₃, KNbO₃ and CsSnBr₃, the negative control), and
+the held-out set was the PBE data of §S5.1. *P1 (well depth): supported for MACE-MP-0, unresolved
+for CHGNet.* Along the held-out deciding paths of BaTiO₃ and KNbO₃ the MACE-MP-0 wells go from a
+median 0.45 of the PBE depth to 1.00 (replicate medians 1.07, 1.00, 1.03), inside the registered
+band of 0.8–1.2. CHGNet's pooled median goes from 0.53 to 1.04, but replicate 0's median is 1.33,
+outside the band, so the registered rule returns unresolved. On the CsSnBr₃ negative control the
+MACE-MP-0 wells overshoot to 1.47–1.73 of PBE (base 0.92) and CHGNet scatters between 0.35 and
+2.46. *P2 (screen calls): refuted where it mattered most.* Of the ten registered cells, the four
+predicting that the BaTiO₃ and KNbO₃ 300 K mis-calls are **corrected** are **refuted** for both
+models: all three replicates of each still call the cubic phase stable against an unstable label.
+The six predicting that mis-calls **persist** are supported in five (CsSnBr₃ at 300 K for both
+models and at 600 K for MACE-MP-0; KNbO₃ at 600 K for both) and unresolved in one (CsSnBr₃ at 600 K
+for CHGNet, whose replicates call it unstable, stable, unstable). Outside the registered cells,
+MACE-MP-0 has one change, CsSnBr₃ at 900 K, correctly stable for the base model and called unstable
+by all three replicates (a new error), and CHGNet has three unresolved cells in all (KNbO₃ at
+100 K, CsSnBr₃ at 600 and 900 K); CHGNet's replicate 1 lost the KNbO₃ instability altogether (no
+imaginary phonon, +2.07 THz, stable at every temperature). *Where P1 and P2 part is located, not
+explained.* The P1 wells are measured on the base model's held-out geometries, where PBE is
+available. Applying the screen's rule to the fine-tuned models' energies along those same
+coordinates (Table S24, Part 2b; not a registered outcome, computed from the S1 files) gives the
+PBE-backed call in all 12 replicate calls of the four BaTiO₃ and KNbO₃ 300 K cells: along the
+coordinates where PBE exists the fine-tune does what the prediction asked, as the 23 corrections of
+Table S19 would lead one to expect. The registered P2 pipeline instead relaxes the fine-tuned
+model and derives the soft-mode path, the frozen-cell map and the amplitudes again from that
+model's own force constants, and there the calls do not move: for
+MACE-MP-0 the deciding well is 42.6 meV for BaTiO₃ in the base model and 43.7, 37.0 and 39.2 meV in
+the replicates (PBE: 73.5 meV on the base path), and 27.9 meV for KNbO₃ against 35.1, 34.6 and
+39.5 meV (PBE: 87.8 meV). The fine-tuned BaTiO₃ cell relaxes to a = 4.016 Å in the one replicate
+where it was recorded (base 4.034 Å, PBE 4.024 Å). PBE was not evaluated along the fine-tuned
+models' own paths, so the data cannot say whether those wells are still too shallow or whether PBE
+along those directions is also near 40 meV. An evaluation of the 55 extra-mode paths on the
+fine-tuned weights, and PBE along the fine-tuned models' own paths, are open. *P3 (SSCHA
+criterion): supported.* Converged SSCHA (start A, seed 0; relaxation converged in 6 populations and
+343 steps) with the replicate-0 fine-tuned MACE-MP-0 on BaTiO₃ at 100 K ends at +1.735 THz (start
++3.129 THz) and calls the cubic phase stable against an unstable label. It is one replicate, one
+system and one temperature, and because of the P1/P2 gap it cannot be read as a test at PBE-accurate
+well depth: it shows only that the call survives this fine-tune. *S1 (held-out accuracy).* On the
+23 deciding paths (230 PBE points) the well-window force RMSE of MACE-MP-0 falls from 31.7 to 10.4,
+3.7 and 12.1 meV Å⁻¹ for BaTiO₃ and from 89.6 to 13.9, 5.9 and 13.9 for KNbO₃, and CHGNet's from
+103.2 to 21.0, 24.4 and 16.1 for KNbO₃, but the negative control worsens: CsSnBr₃ goes from 1.3 to
+3.9, 3.9 and 2.7 meV Å⁻¹ for MACE-MP-0. *S2 (forgetting).* MACE-MP-0's six stable controls are
+unchanged in all replicates; CHGNet's are not: two are unchanged and four unresolved, and 5 of the
+18 replicate calls differ from the base (replicate 0 makes Si and Cu unstable; NaCl and CeO₂,
+false-unstable for the base model, become stable in some replicates). *Deviations recorded before
+any data (D1–D3 of the pre-registration):* contact redraw at 0.6 of the equilibrium pair distance,
+30 epochs in place of the documented 6 and 5, and implementation details (foundation elements kept,
+one energy offset per system, no stress). *Two departures to state.* P1 and S1 were evaluated on the
+23 deciding paths, not on the full held-out set of the pre-registration, because the 533
+extra-mode jobs finished after the GPU box had run and been destroyed (the weights are kept
+locally, gitignored, with a checksum list); and the training configurations were generated with
+mace-torch 0.3.15 while training and evaluation ran with 0.3.16 (the base model's re-run reproduces
+the deposited ledger call in all 24 cells). The counts are descriptive: three systems and three
+replicates support no test.
