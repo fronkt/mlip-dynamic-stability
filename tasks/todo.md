@@ -9,6 +9,23 @@ each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ..
 **Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
 false.
 
+## ▶ 2026-10-08 — fold everything in + re-check every referee ask (supersedes the "Next" lines below)
+
+Editor agreed to **9 Oct** (RSC, 09-28). The 14 Oct request is still an UNSENT Gmail draft (thread
+1a0dc7cfb8312bb1); Frank must send it on 10-08 or the revision is late.
+- [x] Converged grid results were never committed: committed f45e77e (178 units + grid_compare.json).
+- [x] E1 `dft_reference.py analyze --workers 1` (Windows: the process pool dies, use 1 worker): 1227/1227
+      jobs ok, C3a paths with PBE 93/139, flags 0. Outputs modified, not yet committed.
+- [x] E2 `dft_checks.py analyze-checks`: conv **NOT converged** (only CsSnBr3 k-mesh: depth −6.8% > 5%,
+      calls identical at all T, minimum at the edge of the Q range); xc: 15 PBE errors, **PBEsol fixes 9**
+      (8 of them CsSnBr3), 0 new; pbe-lattice phase A done (MLIP a within 0.1–0.8% of PBE), B/C pending.
+- [ ] Phase 1 (parallel, analysis only, no manuscript edits): E1+E2 fold note, E5 write-up vs prereg,
+      grid fold note (all PENDING-C1/C1b/C1c/C5/GRID markers), verbatim-report coverage matrix.
+- [ ] Phase 2: apply edits to manuscript/ESI/letter (one writer), new verify_claims assertions, Table S22.
+- [ ] Phase 3: adversarial re-audit against the verbatim reports; rebuild docx + marked changes.
+- [ ] Frank decides: E3 replicate runs (prereg d816906, needs a GPU box + $) and pbe-lattice B/C (QE box),
+      or report them as not run.
+
 ## ▶ 2026-10-04 — credit ran out ~19:20 UTC; both boxes were halted mid-queue (supersedes the box notes below)
 
 - **What happened:** vast credit hit zero ~19:20 UTC 10-04; both instances went `exited` and every queue

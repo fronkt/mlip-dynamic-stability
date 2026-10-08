@@ -1,0 +1,24 @@
+system,source,stem,q,band,freq_thz
+batio3_cubic,chgnet (MLIP lattice),batio3_cubic_chgnet_q0-0-0-b0,"0,0,0",0,-6.904083568220142
+batio3_cubic,chgnet (MLIP lattice),batio3_cubic_chgnet_q1d2-1d2-0-b0,"1d2,1d2,0",0,-4.910529461895992
+batio3_cubic,mace_mp0 (MLIP lattice),batio3_cubic_mace_mp0_q1d2-0-1d2-b0,"1d2,0,1d2",0,-5.404168005352761
+batio3_cubic,mattersim (MLIP lattice),batio3_cubic_mattersim_q0-0-0-b0,"0,0,0",0,-7.082111994191451
+batio3_cubic,mattersim (MLIP lattice),batio3_cubic_mattersim_q1d2-0-1d2-b0,"1d2,0,1d2",0,-5.769300943112884
+batio3_cubic,orb_v2 (MLIP lattice),batio3_cubic_orb_v2_q1d2-1d2-0-b0,"1d2,1d2,0",0,-2.0328773228620327
+batio3_cubic,sevennet0 (MLIP lattice),batio3_cubic_sevennet0_q1d2-0-0-b0,"1d2,0,0",0,-6.5840920997396415
+batio3_cubic,sevennet0 (MLIP lattice),batio3_cubic_sevennet0_q1d2-0-1d2-b0,"1d2,0,1d2",0,-5.94806055093323
+cssnbr3_cubic,chgnet (MLIP lattice),cssnbr3_cubic_chgnet_q1d2-1d2-1d2-b0,"1d2,1d2,1d2",0,-0.6799672278398102
+cssnbr3_cubic,mace_mp0 (MLIP lattice),cssnbr3_cubic_mace_mp0_q1d2-1d2-0-b0,"1d2,1d2,0",0,-0.6606955048283176
+cssnbr3_cubic,mace_mp0 (MLIP lattice),cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0,"1d2,1d2,1d2",0,-0.665887243564172
+cssnbr3_cubic,mattersim (MLIP lattice),cssnbr3_cubic_mattersim_q0-1d2-1d2-b0,"0,1d2,1d2",0,-0.6779739392015262
+cssnbr3_cubic,mattersim (MLIP lattice),cssnbr3_cubic_mattersim_q1d2-1d2-1d2-b0,"1d2,1d2,1d2",0,-0.6779204492078897
+cssnbr3_cubic,orb_v2 (MLIP lattice),cssnbr3_cubic_orb_v2_q1d2-1d2-1d2-b1,"1d2,1d2,1d2",1,-0.1499774944466558
+cssnbr3_cubic,orb_v2 (MLIP lattice),cssnbr3_cubic_orb_v2_q1d2-1d2-1d2-b2,"1d2,1d2,1d2",2,-0.1337879414738934
+cssnbr3_cubic,sevennet0 (MLIP lattice),cssnbr3_cubic_sevennet0_q1d2-1d2-1d2-b0,"1d2,1d2,1d2",0,-0.6725161509518136
+knbo3_cubic,chgnet (MLIP lattice),knbo3_cubic_chgnet_q0-0-0-b0,"0,0,0",0,-2.227503572393719
+knbo3_cubic,mace_mp0 (MLIP lattice),knbo3_cubic_mace_mp0_q0-1d2-1d2-b0,"0,1d2,1d2",0,-4.225624696779636
+knbo3_cubic,mattersim (MLIP lattice),knbo3_cubic_mattersim_q0-0-0-b0,"0,0,0",0,-6.704034392004276
+knbo3_cubic,mattersim (MLIP lattice),knbo3_cubic_mattersim_q0-1d2-1d2-b0,"0,1d2,1d2",0,-4.386225363603934
+knbo3_cubic,orb_v2 (MLIP lattice),knbo3_cubic_orb_v2_q0-1d2-1d2-b0,"0,1d2,1d2",0,-2.2269396815915927
+knbo3_cubic,orb_v2 (MLIP lattice),knbo3_cubic_orb_v2_q1d2-1d2-0-b0,"1d2,1d2,0",0,-2.2523483096038985
+knbo3_cubic,sevennet0 (MLIP lattice),knbo3_cubic_sevennet0_q0-1d2-1d2-b0,"0,1d2,1d2",0,-4.279749514897412

@@ -1,0 +1,594 @@
+{
+ "provenance": {
+  "script": "scripts/dft_checks.py",
+  "stage": "analyze-checks",
+  "git_head": "f45e77e-dirty",
+  "versions": {
+   "numpy": "2.3.5",
+   "scipy": "1.17.1",
+   "ase": "3.28.0",
+   "phonopy": "3.5.1",
+   "spglib": "2.7.0",
+   "pandas": "2.3.3",
+   "torch": "2.11.0+cpu",
+   "mace-torch": "0.3.15",
+   "chgnet": "0.4.2",
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": null,
+   "cellconstructor": null
+  },
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "host": "frank",
+  "utc": "2026-10-08T21:38:32Z",
+  "settings": {
+   "stage": "analyze-checks",
+   "out_root": "C:\\Users\\frank\\mlip-dynamic-stability\\results\\revision\\dft_checks",
+   "dft_root": "C:\\Users\\frank\\mlip-dynamic-stability\\results\\revision\\dft",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "stages": [
+    "conv",
+    "xc",
+    "pbe-lattice"
+   ],
+   "pos_tol": 0.001,
+   "workers": 8
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "script_sha256": "909d51a2f092fc01f2c0fa360a704cdb4b0871dc9682e76db9cc1fa237b14065",
+  "dft_reference_sha256": "c636c66408c17c067b30f170bd175c57ae41247bbdb14cceaa56769cca6796cf",
+  "production_inputs_sha256": {
+   "c3a_curves.json": "580223950f4e0eb9a98467c2ee92dbf1fc91b8e7f8fdfe521c0d79d3a58cf965",
+   "c3a_calls.csv": "b376337782e67fd0e46227d72f0bfadb747ff4b1cff8b63cb08c56ca8841e59f",
+   "c3a_unit_calls.csv": "5750331e2e67e4259e8f63bc88d9af9a7149d4d042f7977a328441db6aa9f1ac"
+  }
+ },
+ "flags": [],
+ "conv": {
+  "acceptance": "depth within 5% and screen call identical at every T in [50.0, 100.0, 300.0, 600.0, 900.0], for each variant, on every path",
+  "verdict": "NOT converged",
+  "paths": [
+   {
+    "system": "batio3_cubic",
+    "stem": "batio3_cubic_mace_mp0_q1d2-0-1d2-b0",
+    "role": "decide",
+    "variants": {
+     "prod": {
+      "variant": "prod",
+      "status": "production",
+      "n_Q": 10,
+      "depth_meV": 73.4979478220339,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "a": -19.191107893804116,
+      "b": 1246.0567295563283,
+      "c": 0.0,
+      "bounded": true,
+      "omega_harm_thz": -6.277758985060443
+     },
+     "k": {
+      "variant": "k",
+      "status": "complete",
+      "n_Q": 10,
+      "depth_meV": 73.41658578661736,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "a": -19.178891160175716,
+      "b": 1245.8289328315059,
+      "c": 0.0,
+      "bounded": true,
+      "omega_harm_thz": -6.275760509540083,
+      "depth_rel_change": -0.0011069973764919303,
+      "depth_ok": true,
+      "dQ_min_A": 0.0,
+      "rmse_vs_prod_window_meV": 0.07121891781446522,
+      "max_abs_vs_prod_meV": 0.30612806585850194,
+      "n_T_call_changed": 0,
+      "calls_identical": true,
+      "pass": true
+     },
+     "e": {
+      "variant": "e",
+      "status": "complete",
+      "n_Q": 10,
+      "depth_meV": 74.73742635920644,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "a": -19.393607285555422,
+      "b": 1251.4655365680646,
+      "c": 0.0,
+      "bounded": true,
+      "omega_harm_thz": -6.3107926824363565,
+      "depth_rel_change": 0.016864124426627356,
+      "depth_ok": true,
+      "dQ_min_A": 0.0,
+      "rmse_vs_prod_window_meV": 0.9499930363390695,
+      "max_abs_vs_prod_meV": 24.63228889973834,
+      "n_T_call_changed": 0,
+      "calls_identical": true,
+      "pass": true
+     },
+     "ke": {
+      "variant": "ke",
+      "status": "complete",
+      "n_Q": 10,
+      "depth_meV": 74.65171049989294,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "a": -19.380643578001056,
+      "b": 1251.2150541814096,
+      "c": 0.0,
+      "bounded": true,
+      "omega_harm_thz": -6.308683096894136,
+      "depth_rel_change": 0.015697889696903396,
+      "depth_ok": true,
+      "dQ_min_A": 0.0,
+      "rmse_vs_prod_window_meV": 0.8759943805079274,
+      "max_abs_vs_prod_meV": 24.297044656123035,
+      "n_T_call_changed": 0,
+      "calls_identical": true,
+      "pass": true
+     }
+    },
+    "all_variants_complete": true,
+    "converged": true,
+    "failed_variants": [],
+    "min_at_edge": false
+   },
+   {
+    "system": "cssnbr3_cubic",
+    "stem": "cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0",
+    "role": "decide",
+    "variants": {
+     "prod": {
+      "variant": "prod",
+      "status": "production",
+      "n_Q": 10,
+      "depth_meV": 127.20886574970791,
+      "Q_min_A": 0.45,
+      "min_at_edge": true,
+      "a": -1.3325105424956456,
+      "b": 3.478452369952577,
+      "c": 0.0,
+      "bounded": true,
+      "omega_harm_thz": -0.6648697138017649
+     },
+     "k": {
+      "variant": "k",
+      "status": "complete",
+      "n_Q": 10,
+      "depth_meV": 118.53387657174608,
+      "Q_min_A": 0.45,
+      "min_at_edge": true,
+      "a": -1.2765290168581755,
+      "b": 3.413361120620874,
+      "c": 0.0,
+      "bounded": true,
+      "omega_harm_thz": -0.6507535847176046,
+      "depth_rel_change": -0.06819484732322403,
+      "depth_ok": false,
+      "dQ_min_A": 0.0,
+      "rmse_vs_prod_window_meV": 3.630725122641878,
+      "max_abs_vs_prod_meV": 8.674989177961834,
+      "n_T_call_changed": 0,
+      "calls_identical": true,
+      "pass": false
+     },
+     "e": {
+      "variant": "e",
+      "status": "complete",
+      "n_Q": 10,
+      "depth_meV": 127.16097371594515,
+      "Q_min_A": 0.45,
+      "min_at_edge": true,
+      "a": -1.3330951988637472,
+      "b": 3.482902285201768,
+      "c": 0.0,
+      "bounded": true,
+      "omega_harm_thz": -0.6650155579320972,
+      "depth_rel_change": -0.00037648345876296874,
+      "depth_ok": true,
+      "dQ_min_A": 0.0,
+      "rmse_vs_prod_window_meV": 0.0352704043894613,
+      "max_abs_vs_prod_meV": 0.049524722271598876,
+      "n_T_call_changed": 0,
+      "calls_identical": true,
+      "pass": true
+     },
+     "ke": {
+      "variant": "ke",
+      "status": "complete",
+      "n_Q": 10,
+      "depth_meV": 118.4848960765521,
+      "Q_min_A": 0.45,
+      "min_at_edge": true,
+      "a": -1.2770842521332841,
+      "b": 3.4176871733492677,
+      "c": 0.0,
+      "bounded": true,
+      "omega_harm_thz": -0.6508950942562027,
+      "depth_rel_change": -0.06857988727232904,
+      "depth_ok": false,
+      "dQ_min_A": 0.0,
+      "rmse_vs_prod_window_meV": 3.643095436286505,
+      "max_abs_vs_prod_meV": 8.723969673155807,
+      "n_T_call_changed": 0,
+      "calls_identical": true,
+      "pass": false
+     }
+    },
+    "all_variants_complete": true,
+    "converged": false,
+    "failed_variants": [
+     "k",
+     "ke"
+    ],
+    "min_at_edge": true
+   },
+   {
+    "system": "knbo3_cubic",
+    "stem": "knbo3_cubic_mace_mp0_q0-1d2-1d2-b0",
+    "role": "decide",
+    "variants": {
+     "prod": {
+      "variant": "prod",
+      "status": "production",
+      "n_Q": 10,
+      "depth_meV": 87.7958973578643,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "a": -21.496737721673966,
+      "b": 1305.095314890097,
+      "c": 0.0,
+      "bounded": true,
+      "omega_harm_thz": -5.136159399507382
+     },
+     "k": {
+      "variant": "k",
+      "status": "complete",
+      "n_Q": 10,
+      "depth_meV": 87.59235621255357,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "a": -21.464039913243496,
+      "b": 1304.3007766311616,
+      "c": 0.0,
+      "bounded": true,
+      "omega_harm_thz": -5.132251712001268,
+      "depth_rel_change": -0.002318344608758703,
+      "depth_ok": true,
+      "dQ_min_A": 0.0,
+      "rmse_vs_prod_window_meV": 0.16439872480649623,
+      "max_abs_vs_prod_meV": 0.600283128733281,
+      "n_T_call_changed": 0,
+      "calls_identical": true,
+      "pass": true
+     },
+     "e": {
+      "variant": "e",
+      "status": "complete",
+      "n_Q": 10,
+      "depth_meV": 87.60242441712762,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "a": -21.42072944903954,
+      "b": 1298.8697419893665,
+      "c": 0.0,
+      "bounded": true,
+      "omega_harm_thz": -5.127071129773552,
+      "depth_rel_change": -0.0022036672163400673,
+      "depth_ok": true,
+      "dQ_min_A": 0.0,
+      "rmse_vs_prod_window_meV": 0.36379474545391866,
+      "max_abs_vs_prod_meV": 18.614491364132846,
+      "n_T_call_changed": 0,
+      "calls_identical": true,
+      "pass": true
+     },
+     "ke": {
+      "variant": "ke",
+      "status": "complete",
+      "n_Q": 10,
+      "depth_meV": 87.40405342905433,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "a": -21.38877408863239,
+      "b": 1298.0851996733147,
+      "c": 0.0,
+      "bounded": true,
+      "omega_harm_thz": -5.123245430121391,
+      "depth_rel_change": -0.004463123455675652,
+      "depth_ok": true,
+      "dQ_min_A": 0.0,
+      "rmse_vs_prod_window_meV": 0.2904020967737283,
+      "max_abs_vs_prod_meV": 18.070807909680298,
+      "n_T_call_changed": 0,
+      "calls_identical": true,
+      "pass": true
+     }
+    },
+    "all_variants_complete": true,
+    "converged": true,
+    "failed_variants": [],
+    "min_at_edge": false
+   }
+  ]
+ },
+ "xc": {
+  "functional": "PBEsol (input_dft) on SSSP 1.3 PBE pseudopotentials; NOT the SSSP PBEsol set",
+  "n_unit_rows_ladder_complete": 60,
+  "pbe_errors": 15,
+  "pbe_errors_also_wrong_in_pbesol": 6,
+  "pbe_errors_fixed_by_pbesol": 9,
+  "new_errors_from_pbesol": 0,
+  "calls_changed_by_pbesol": 9,
+  "persistent_errors": [
+   {
+    "system": "batio3_cubic",
+    "model": "orb_v2",
+    "T": 300.0,
+    "gt_stable": false,
+    "pbe": true,
+    "pbesol": true
+   },
+   {
+    "system": "cssnbr3_cubic",
+    "model": "chgnet",
+    "T": 300.0,
+    "gt_stable": true,
+    "pbe": false,
+    "pbesol": true
+   },
+   {
+    "system": "cssnbr3_cubic",
+    "model": "mace_mp0",
+    "T": 300.0,
+    "gt_stable": true,
+    "pbe": false,
+    "pbesol": true
+   },
+   {
+    "system": "cssnbr3_cubic",
+    "model": "mace_mp0",
+    "T": 600.0,
+    "gt_stable": true,
+    "pbe": false,
+    "pbesol": true
+   },
+   {
+    "system": "cssnbr3_cubic",
+    "model": "mattersim",
+    "T": 300.0,
+    "gt_stable": true,
+    "pbe": false,
+    "pbesol": true
+   },
+   {
+    "system": "cssnbr3_cubic",
+    "model": "mattersim",
+    "T": 600.0,
+    "gt_stable": true,
+    "pbe": false,
+    "pbesol": true
+   },
+   {
+    "system": "cssnbr3_cubic",
+    "model": "orb_v2",
+    "T": 300.0,
+    "gt_stable": true,
+    "pbe": false,
+    "pbesol": false
+   },
+   {
+    "system": "cssnbr3_cubic",
+    "model": "orb_v2",
+    "T": 600.0,
+    "gt_stable": true,
+    "pbe": false,
+    "pbesol": true
+   },
+   {
+    "system": "cssnbr3_cubic",
+    "model": "sevennet0",
+    "T": 300.0,
+    "gt_stable": true,
+    "pbe": false,
+    "pbesol": true
+   },
+   {
+    "system": "cssnbr3_cubic",
+    "model": "sevennet0",
+    "T": 600.0,
+    "gt_stable": true,
+    "pbe": false,
+    "pbesol": true
+   },
+   {
+    "system": "knbo3_cubic",
+    "model": "chgnet",
+    "T": 600.0,
+    "gt_stable": false,
+    "pbe": true,
+    "pbesol": true
+   },
+   {
+    "system": "knbo3_cubic",
+    "model": "mace_mp0",
+    "T": 600.0,
+    "gt_stable": false,
+    "pbe": true,
+    "pbesol": true
+   },
+   {
+    "system": "knbo3_cubic",
+    "model": "mattersim",
+    "T": 600.0,
+    "gt_stable": false,
+    "pbe": true,
+    "pbesol": true
+   },
+   {
+    "system": "knbo3_cubic",
+    "model": "orb_v2",
+    "T": 600.0,
+    "gt_stable": false,
+    "pbe": true,
+    "pbesol": true
+   },
+   {
+    "system": "knbo3_cubic",
+    "model": "sevennet0",
+    "T": 600.0,
+    "gt_stable": false,
+    "pbe": true,
+    "pbesol": false
+   }
+  ],
+  "by_system": {
+   "batio3_cubic": {
+    "pbe_errors": 1,
+    "pbesol_errors": 1
+   },
+   "cssnbr3_cubic": {
+    "pbe_errors": 9,
+    "pbesol_errors": 1
+   },
+   "knbo3_cubic": {
+    "pbe_errors": 5,
+    "pbesol_errors": 4
+   }
+  },
+  "n_paths": 23,
+  "depth_ratio_pbesol_over_pbe": {
+   "min": 0.3169139742107626,
+   "median": 1.0965751613161894,
+   "max": 1.3043873085543796,
+   "n": 23
+  }
+ },
+ "pbe_lattice": {
+  "note": "single-mode screen: a 'condenses' result is a call of unstable; a 'stable' result is the call only if no other mode condenses. pbe_lattice_deciding = softest PBE band at the MACE deciding q; pbe_lattice_softest = softest PBE mode of the whole q mesh; pbe_mlip_lattice = production PBE at MACE's lattice along MACE's eigenvector",
+  "systems": {
+   "batio3_cubic": {
+    "phase_A": "done",
+    "phase_B": "pending",
+    "phase_C": "pending",
+    "lattice": {
+     "a_pbe_A": 4.02374737,
+     "registry_start_A": 4.0,
+     "cubic_deviation_A": 0.0,
+     "volume_A3": 65.14665,
+     "bfgs_steps": 3,
+     "final_scf_pressure_kbar": 0.02,
+     "mlip_a_A": {
+      "mace_mp0": 4.034047026810173,
+      "chgnet": 4.036145475211161,
+      "orb_v2": 4.03576277289557,
+      "sevennet0": 4.0354980761148775,
+      "mattersim": 4.034090028841365
+     },
+     "mlip_minus_pbe_pct": {
+      "mace_mp0": 0.25597175625300744,
+      "chgnet": 0.30812335047668993,
+      "orb_v2": 0.2986122584423119,
+      "sevennet0": 0.29203389364073895,
+      "mattersim": 0.25704046229336447
+     }
+    },
+    "profiles": {}
+   },
+   "cssnbr3_cubic": {
+    "phase_A": "done",
+    "phase_B": "pending",
+    "phase_C": "pending",
+    "lattice": {
+     "a_pbe_A": 5.887105496,
+     "registry_start_A": 5.8,
+     "cubic_deviation_A": 0.0,
+     "volume_A3": 204.03537,
+     "bfgs_steps": 6,
+     "final_scf_pressure_kbar": 0.02,
+     "mlip_a_A": {
+      "mace_mp0": 5.894712192246898,
+      "chgnet": 5.920543726479513,
+      "orb_v2": 5.896575247967567,
+      "sevennet0": 5.894929029740394,
+      "mattersim": 5.894114900385775
+     },
+     "mlip_minus_pbe_pct": {
+      "mace_mp0": 0.1292094434534229,
+      "chgnet": 0.5679910187142518,
+      "orb_v2": 0.16085582250905545,
+      "sevennet0": 0.1328927050094322,
+      "mattersim": 0.11906367892570013
+     }
+    },
+    "profiles": {}
+   },
+   "knbo3_cubic": {
+    "phase_A": "done",
+    "phase_B": "pending",
+    "phase_C": "pending",
+    "lattice": {
+     "a_pbe_A": 4.026883539,
+     "registry_start_A": 4.02,
+     "cubic_deviation_A": 0.0,
+     "volume_A3": 65.2991,
+     "bfgs_steps": 2,
+     "final_scf_pressure_kbar": -0.02,
+     "mlip_a_A": {
+      "mace_mp0": 4.056679335279731,
+      "chgnet": 4.057435175083046,
+      "orb_v2": 4.058372670663433,
+      "sevennet0": 4.057819315298832,
+      "mattersim": 4.058994007757379
+     },
+     "mlip_minus_pbe_pct": {
+      "mace_mp0": 0.7399219766641246,
+      "chgnet": 0.7586918217811858,
+      "orb_v2": 0.7819727429031242,
+      "sevennet0": 0.7682312140200144,
+      "mattersim": 0.7974024688420223
+     }
+    },
+    "profiles": {}
+   }
+  }
+ },
+ "cost": {
+  "n_jobs": 323,
+  "by_status": {
+   "ok": 323
+  },
+  "core_h_spent": 431.09305555555557,
+  "core_h_spent_by_prefix": {
+   "cv_": 151.70915555555555,
+   "xs_": 277.92075555555556,
+   "pl_": 1.4631444444444446
+  },
+  "c0_core_s_measured_median": 6.599498728587367,
+  "n_measured": 323,
+  "core_h_remaining_model": 0.0
+ },
+ "conventions": {
+  "energies": "E(Q)-E(0) within one settings set, scaled by the image count of a reduced cell, per modulated cell, as in dft_reference.stage_analyze",
+  "production": "PBE curve of the same path from results/revision/dft/c3a_curves.json (MLIP relaxed lattice, production settings), re-solved here",
+  "calls": "mlip_dynstab.finite_t._solve_scha via dft_reference._screen_call, T in T_SCREEN",
+  "xc_approximation": "PBEsol via input_dft on SSSP PBE pseudopotentials"
+ }
+}
