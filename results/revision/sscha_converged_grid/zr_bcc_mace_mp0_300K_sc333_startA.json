@@ -1,0 +1,1029 @@
+{
+ "schema": "sscha_converged/v1",
+ "study": "C1c converged SSCHA, start A vs B (R1.4)",
+ "dry_run": false,
+ "unit": {
+  "system": "zr_bcc",
+  "model": "mace_mp0",
+  "T": 300.0,
+  "supercell": [
+   3,
+   3,
+   3
+  ]
+ },
+ "unit_tag": "zr_bcc_mace_mp0_300K_sc333",
+ "start": "A",
+ "item": "C1c-grid",
+ "why": "bcc method-agreement unit of Sec. 3.3, in the 3x3x3 cell",
+ "recipe": {
+  "n_configs": 1000,
+  "max_pop": 30,
+  "n_hessian": 2000,
+  "disp": 0.03,
+  "relax": true,
+  "fmax": 0.001,
+  "root_representation": "root2",
+  "min_step_dyn": 0.5,
+  "meaningful_factor": 0.2,
+  "max_ka": "per_population",
+  "imag_tol_thz": -0.1,
+  "max_steps_per_pop": 400,
+  "kong_liu_ratio": 0.5,
+  "converge_min_kl_ratio": 0.7,
+  "gradient_error": "serial_stochastic_error",
+  "start_b_thz": 0.3,
+  "use_julia": false,
+  "seed": 0,
+  "seed_rule": "np.random.seed(seed + index of start), A=0, B=1",
+  "fresh_splits": 8
+ },
+ "recipe_source": "production_recipe() + converged_recipe() (scripts/sscha_seed_study_grid.py)",
+ "provenance_created": {
+  "script": "scripts/sscha_seed_study_grid.py",
+  "script_sha256": "e1193d70ab732af5b2fc2683c976e002e321f9c8de4c149fe0038db978c66be8",
+  "finite_t_sha256": "ed801a9506a74f50158681956da2e7cf52dca493058734cf228f987e5b795e08",
+  "git_head": "c42b6e4",
+  "git_dirty_production_code": [],
+  "host": "bdba2284f8cf",
+  "utc": "2026-10-03T18:12:55Z",
+  "python": "3.11.17",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "packages": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "torch": "2.6.0+cu124",
+   "pandas": "3.0.5",
+   "pyarrow": "25.0.1",
+   "pymatgen": "2026.5.4",
+   "python-sscha": "1.6.1",
+   "CellConstructor": "1.6.2",
+   "julia": null,
+   "mace-torch": "0.3.16"
+  },
+  "env_lock": {
+   "lock_file": "envs/lock-mace-2026-08-17.txt",
+   "packages": {
+    "numpy": {
+     "pinned": "2.2.2",
+     "installed": "2.2.2",
+     "match": true
+    },
+    "scipy": {
+     "pinned": "1.17.1",
+     "installed": "1.17.1",
+     "match": true
+    },
+    "ase": {
+     "pinned": "3.29.0",
+     "installed": "3.29.0",
+     "match": true
+    },
+    "phonopy": {
+     "pinned": "4.4.0",
+     "installed": "4.4.0",
+     "match": true
+    },
+    "spglib": {
+     "pinned": "2.7.0",
+     "installed": "2.7.0",
+     "match": true
+    },
+    "torch": {
+     "pinned": "2.6.0+cu124",
+     "installed": "2.6.0+cu124",
+     "match": true
+    },
+    "pandas": {
+     "pinned": "3.0.5",
+     "installed": "3.0.5",
+     "match": true
+    },
+    "pyarrow": {
+     "pinned": "25.0.1",
+     "installed": "25.0.1",
+     "match": true
+    },
+    "pymatgen": {
+     "pinned": "2026.5.4",
+     "installed": "2026.5.4",
+     "match": true
+    },
+    "python-sscha": {
+     "pinned": "1.6.1",
+     "installed": "1.6.1",
+     "match": true
+    },
+    "CellConstructor": {
+     "pinned": "1.6.2",
+     "installed": "1.6.2",
+     "match": true
+    },
+    "mace-torch": {
+     "pinned": "0.3.16",
+     "installed": "0.3.16",
+     "match": true
+    }
+   },
+   "all_pinned_match": true
+  },
+  "omp_num_threads": "2",
+  "cpu": {
+   "os_cpu_count": 128,
+   "affinity": 128,
+   "cgroup_quota": 61.43999,
+   "usable": 61
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "cuda_device": "NVIDIA GeForce RTX 3090",
+  "julia_ext_available": false,
+  "julia_error": "",
+  "schamodules": {
+   "file": "/root/env-mace/lib/python3.11/site-packages/SCHAModules.cpython-311-x86_64-linux-gnu.so",
+   "ldd": [
+    "liblapack.so.3 => /lib/x86_64-linux-gnu/liblapack.so.3 (0x00007461bb049000)",
+    "libblas.so.3 => /lib/x86_64-linux-gnu/libblas.so.3 (0x00007461bafa3000)",
+    "libgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (0x00007461bacc8000)"
+   ]
+  },
+  "model_version": "mace-torch=0.3.16;ckpt=medium"
+ },
+ "previous_runs": [],
+ "ledger": {
+  "source": "mlip_dynstab.analysis.load_canonical(), method == 'sscha'",
+  "found": false,
+  "n_rows": 0,
+  "other_supercells": [
+   {
+    "supercell": [
+     2,
+     2,
+     2
+    ],
+    "min_eff_freq_thz": 1.7971648303093835,
+    "uhash": "80d90630bc17d029"
+   }
+  ]
+ },
+ "provenance_last_run": {
+  "script": "scripts/sscha_seed_study_grid.py",
+  "script_sha256": "e1193d70ab732af5b2fc2683c976e002e321f9c8de4c149fe0038db978c66be8",
+  "finite_t_sha256": "ed801a9506a74f50158681956da2e7cf52dca493058734cf228f987e5b795e08",
+  "git_head": "c42b6e4",
+  "git_dirty_production_code": [],
+  "host": "bdba2284f8cf",
+  "utc": "2026-10-03T18:12:55Z",
+  "python": "3.11.17",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "packages": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "torch": "2.6.0+cu124",
+   "pandas": "3.0.5",
+   "pyarrow": "25.0.1",
+   "pymatgen": "2026.5.4",
+   "python-sscha": "1.6.1",
+   "CellConstructor": "1.6.2",
+   "julia": null,
+   "mace-torch": "0.3.16"
+  },
+  "env_lock": {
+   "lock_file": "envs/lock-mace-2026-08-17.txt",
+   "packages": {
+    "numpy": {
+     "pinned": "2.2.2",
+     "installed": "2.2.2",
+     "match": true
+    },
+    "scipy": {
+     "pinned": "1.17.1",
+     "installed": "1.17.1",
+     "match": true
+    },
+    "ase": {
+     "pinned": "3.29.0",
+     "installed": "3.29.0",
+     "match": true
+    },
+    "phonopy": {
+     "pinned": "4.4.0",
+     "installed": "4.4.0",
+     "match": true
+    },
+    "spglib": {
+     "pinned": "2.7.0",
+     "installed": "2.7.0",
+     "match": true
+    },
+    "torch": {
+     "pinned": "2.6.0+cu124",
+     "installed": "2.6.0+cu124",
+     "match": true
+    },
+    "pandas": {
+     "pinned": "3.0.5",
+     "installed": "3.0.5",
+     "match": true
+    },
+    "pyarrow": {
+     "pinned": "25.0.1",
+     "installed": "25.0.1",
+     "match": true
+    },
+    "pymatgen": {
+     "pinned": "2026.5.4",
+     "installed": "2026.5.4",
+     "match": true
+    },
+    "python-sscha": {
+     "pinned": "1.6.1",
+     "installed": "1.6.1",
+     "match": true
+    },
+    "CellConstructor": {
+     "pinned": "1.6.2",
+     "installed": "1.6.2",
+     "match": true
+    },
+    "mace-torch": {
+     "pinned": "0.3.16",
+     "installed": "0.3.16",
+     "match": true
+    }
+   },
+   "all_pinned_match": true
+  },
+  "omp_num_threads": "2",
+  "cpu": {
+   "os_cpu_count": 128,
+   "affinity": 128,
+   "cgroup_quota": 61.43999,
+   "usable": 61
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "cuda_device": "NVIDIA GeForce RTX 3090",
+  "julia_ext_available": false,
+  "julia_error": "",
+  "schamodules": {
+   "file": "/root/env-mace/lib/python3.11/site-packages/SCHAModules.cpython-311-x86_64-linux-gnu.so",
+   "ldd": [
+    "liblapack.so.3 => /lib/x86_64-linux-gnu/liblapack.so.3 (0x00007461bb049000)",
+    "libblas.so.3 => /lib/x86_64-linux-gnu/libblas.so.3 (0x00007461bafa3000)",
+    "libgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (0x00007461bacc8000)"
+   ]
+  },
+  "model_version": "mace-torch=0.3.16;ckpt=medium"
+ },
+ "calculator_fallback": false,
+ "run": {
+  "start": {
+   "min_nonac_thz": 1.567444273598033,
+   "lowest6_thz": [
+    0.0,
+    0.0,
+    0.0,
+    1.567444273598033,
+    1.567444273598033,
+    1.567444273598033
+   ],
+   "n_imag_nonac": 0,
+   "acoustic_max_abs_thz": 0.0
+  },
+  "status": "ok",
+  "utc_start": "2026-10-03T18:12:55Z",
+  "host": "bdba2284f8cf",
+  "pid": 7609,
+  "work_dir": "results/revision/sscha_converged_grid/work/zr_bcc_mace_mp0_300K_sc333_startA",
+  "settings": {
+   "n_boot": 10,
+   "n_splits_fallback": 4,
+   "unit_timeout_s": 7200.0,
+   "device": "cuda"
+  },
+  "timings_s": {
+   "relax_and_harmonic_fc": 3.62384033203125,
+   "sscha_relax": 244.76840662956238,
+   "hessian_ensemble": 473.0606999397278,
+   "hessian": 6.634386777877808,
+   "bootstrap": 73.54903483390808,
+   "total": 803.6341998577118
+  },
+  "julia_ext_available": false,
+  "relaxed_cellpar": [
+   3.1230853402974623,
+   3.1230853402974623,
+   3.1230853402974628,
+   109.47122063449069,
+   109.47122063449069,
+   109.47122063449069
+  ],
+  "harmonic_pre_fpd": {
+   "min_nonac_thz": 1.5674442735980318,
+   "lowest6_thz": [
+    -3.511562585388554e-08,
+    -2.860431112083812e-08,
+    -2.645807463687488e-08,
+    1.5674442735980318,
+    1.5674442735980318,
+    1.5674442735980318
+   ],
+   "n_imag_nonac": 0,
+   "acoustic_max_abs_thz": 3.511562585388554e-08
+  },
+  "start_construction": {
+   "start": "A",
+   "rule": "ForcePositiveDefinite (imaginary w -> |w|) + Symmetrize",
+   "source": "finite_t.py:1039-1040 (the production start)"
+  },
+  "dyn_meta": {
+   "nqirr": 4,
+   "nq": 27,
+   "nat_prim": 1,
+   "nat_supercell": 27
+  },
+  "global_seed": 0,
+  "stopping_criteria": {
+   "meaningful_factor": 0.2,
+   "abs_conv_thr": 1e-08,
+   "kong_liu_ratio": 0.5,
+   "converge_min_kl_ratio": 0.7,
+   "gradi_op": "all",
+   "minim_struct": true,
+   "max_steps_per_pop": 400,
+   "max_pop": 30,
+   "n_configs_per_population": 1000,
+   "root_representation": "root2",
+   "min_step_dyn": 0.5,
+   "precond_dyn": true,
+   "use_julia": false,
+   "gradient_error_source": "serial get_preconditioned_gradient error via RealErrorEnsemble",
+   "semantics": {
+    "converged": "gc < meaningful_factor * gc_err AND gw < meaningful_factor * gw_err (or < abs_conv_thr), gradi_op 'all' (SchaMinimizer.py:1622-1651). gc_err is the library's serial stochastic error (module_stochastic.f90:270-274), not the parallel wrapper's placeholder (Ensemble.py:2657); it is set to zero where KL/N at the gradient is below converge_min_kl_ratio, so convergence cannot be declared at a statistically invalid point. Its scale is the Fourier transform of the real-space error matrix (coherent at Gamma), divided by sqrt(nsym*nq) (:456): a 1/sqrt(N_eff) noise scale, not a calibrated z-score. The structures here have no free Wyckoff parameter, so gw is zero by symmetry and the test reduces to gc",
+    "converged_dyn": "a converged population is not restored (:1391), so the final dyn is one step past the gradient that passed; kl_ratio_at_end is the KL after it",
+    "population_end": "converged, KL/N < kong_liu_ratio on a new direction (:1654-1661), or max_steps_per_pop steps (max_ka reset per population by the pre hook)",
+    "relax_end": "a converged population (Relax.py:410-411), max_pop populations, or the wall-clock cap (the post hook ends the current population after one more step and sets max_pop so no new population is drawn, Relax.py:412-416)",
+    "restore": "an unconverged population discards its last step (SchaMinimizer.py:1389-1397)"
+   }
+  },
+  "relax": {
+   "converged": true,
+   "stop_reason": "converged",
+   "not_converged_within_cap": false,
+   "n_populations": 1,
+   "n_steps_total": 12,
+   "n_force_evaluations_relax": 1000,
+   "kl_ratio_at_end": 0.8846335312295721,
+   "kl_ratio_at_gradient_end": 0.8845600443081717,
+   "gc_over_err_real_end": 0.10497911882902639,
+   "faq_hessian_kl_ok": true,
+   "gradient_checks": {
+    "n_calls": 12,
+    "n_guarded": 0,
+    "n_errors": 0,
+    "max_rel_diff_parallel_vs_serial": 1.477688405276499e-14,
+    "mean_t_parallel_s": 0.12937194108963013,
+    "mean_t_serial_s": 0.0843008557955424
+   },
+   "wall_cap": null,
+   "controller": {
+    "steps_per_pop": 400,
+    "pops": {
+     "1": {
+      "n_fe_at_start": 1,
+      "max_ka_set": 400,
+      "t_first_step_s": 238.6203956604004,
+      "t_last_step_s": 244.61815404891968
+     }
+    },
+    "capped": null,
+    "deadline_after_s": 7199.99999499321,
+    "errors": []
+   },
+   "populations": [
+    {
+     "pop": 1,
+     "n_steps": 12,
+     "n_steps_kept": 12,
+     "stop_reason": "converged",
+     "fe_first_Ry": -0.6338280455041376,
+     "fe_last_Ry": -0.6338291491377767,
+     "fe_err_last_Ry": 1.8378000110584253e-06,
+     "gc_last": 0.00011650606222156572,
+     "gc_err_last": 0.0011098022494484129,
+     "kl_ratio_last": 0.8846335312295721,
+     "start_aux_min_nonac_thz": 1.567444273598033,
+     "end_aux_min_nonac_thz": 1.5674909411232456,
+     "rel_change_vs_prev_end": 0.07634192434302739,
+     "end_dyn_file": "results/revision/sscha_converged_grid/work/zr_bcc_mace_mp0_300K_sc333_startA/dyn_pop1_1",
+     "converged_at_end": true,
+     "gc_err_real_last": 0.0011098022494484129,
+     "gc_over_err_real_last": 0.10497911882902639,
+     "kl_ratio_at_gradient_last": 0.8845600443081717,
+     "guarded_last": false,
+     "gw_last": 0.0,
+     "gw_err_last": 2.756812295550588e-21,
+     "n_fe_at_start": 1,
+     "max_ka_set": 400,
+     "t_first_step_s": 238.6203956604004,
+     "t_last_step_s": 244.61815404891968,
+     "minimization_wall_s": 5.997758388519287,
+     "ensemble_and_overhead_before_s": 238.6203956604004
+    }
+   ],
+   "steps": [
+    {
+     "pop": 1,
+     "n_fe_cumulative": 2,
+     "fe_Ry": -0.6338280455041376,
+     "fe_err_Ry": 1.97382571484351e-06,
+     "gc": 0.07011149317958887,
+     "gc_err": 0.0012644042323871818,
+     "gw": 0.0,
+     "gw_err": 4.3568756635101235e-21,
+     "kl_eff": 979.8899541391806,
+     "kl_ratio": 0.9798899541391807,
+     "aux_min_nonac_thz": 1.5674229949842953,
+     "line_step": 0.75,
+     "stop_converged": false,
+     "stop_kong_liu": false,
+     "stop_max_ka": false,
+     "t_s": 239.12459015846252,
+     "n_gradient_calls": 1,
+     "gc_err_real": 0.0012644042323871816,
+     "gc_err_placeholder": 0.43301270189221935,
+     "gc_over_err_real": 55.4502202568708,
+     "kl_ratio_at_gradient": 1.0000000000000002,
+     "convergence_guarded": false,
+     "grad_rel_diff_parallel_vs_serial": 9.298397496430718e-16,
+     "t_gradient_s": 0.2131636142730713
+    },
+    {
+     "pop": 1,
+     "n_fe_cumulative": 3,
+     "fe_Ry": -0.6338280455041376,
+     "fe_err_Ry": 1.97382571484351e-06,
+     "gc": 0.04304137624846873,
+     "gc_err": 0.0011594775312326196,
+     "gw": 0.0,
+     "gw_err": 2.6325279284185792e-21,
+     "kl_eff": 979.8899541391806,
+     "kl_ratio": 0.9798899541391807,
+     "aux_min_nonac_thz": 1.5674229949842953,
+     "line_step": 0.75,
+     "stop_converged": false,
+     "stop_kong_liu": false,
+     "stop_max_ka": false,
+     "t_s": 239.61496567726135,
+     "n_gradient_calls": 1,
+     "gc_err_real": 0.0011594775312326199,
+     "gc_err_placeholder": 0.43301270189221935,
+     "gc_over_err_real": 37.12135430749763,
+     "kl_ratio_at_gradient": 0.9798899541391807,
+     "convergence_guarded": false,
+     "grad_rel_diff_parallel_vs_serial": 1.3121041031203691e-15,
+     "t_gradient_s": 0.21387219429016113
+    },
+    {
+     "pop": 1,
+     "n_fe_cumulative": 4,
+     "fe_Ry": -0.6338291782329883,
+     "fe_err_Ry": 1.8571177415320954e-06,
+     "gc": 0.04304137624846873,
+     "gc_err": 0.0011594775312326196,
+     "gw": 0.0,
+     "gw_err": 2.6325279284185792e-21,
+     "kl_eff": 931.6446167476494,
+     "kl_ratio": 0.9316446167476493,
+     "aux_min_nonac_thz": 1.5674091664999834,
+     "line_step": 1.125,
+     "stop_converged": false,
+     "stop_kong_liu": false,
+     "stop_max_ka": false,
+     "t_s": 240.11977863311768,
+     "n_gradient_calls": 1,
+     "gc_err_real": 0.0011594775312326199,
+     "gc_err_placeholder": 0.43301270189221935,
+     "gc_over_err_real": 37.12135430749763,
+     "kl_ratio_at_gradient": 0.9798899541391807,
+     "convergence_guarded": false,
+     "grad_rel_diff_parallel_vs_serial": 1.3121041031203691e-15,
+     "t_gradient_s": 0.2137770652770996
+    },
+    {
+     "pop": 1,
+     "n_fe_cumulative": 5,
+     "fe_Ry": -0.6338291782329883,
+     "fe_err_Ry": 1.8571177415320954e-06,
+     "gc": 0.018069480325960913,
+     "gc_err": 0.001113992529001441,
+     "gw": 0.0,
+     "gw_err": 2.722791815102648e-21,
+     "kl_eff": 931.6446167476494,
+     "kl_ratio": 0.9316446167476493,
+     "aux_min_nonac_thz": 1.5674091664999834,
+     "line_step": 1.125,
+     "stop_converged": false,
+     "stop_kong_liu": false,
+     "stop_max_ka": false,
+     "t_s": 240.6091194152832,
+     "n_gradient_calls": 1,
+     "gc_err_real": 0.0011139925290014412,
+     "gc_err_placeholder": 0.43301270189221935,
+     "gc_over_err_real": 16.22046814098296,
+     "kl_ratio_at_gradient": 0.9316446167476493,
+     "convergence_guarded": false,
+     "grad_rel_diff_parallel_vs_serial": 2.281663756847742e-15,
+     "t_gradient_s": 0.21328115463256836
+    },
+    {
+     "pop": 1,
+     "n_fe_cumulative": 6,
+     "fe_Ry": -0.6338291634641112,
+     "fe_err_Ry": 1.8367972628702581e-06,
+     "gc": 0.018069480325960913,
+     "gc_err": 0.001113992529001441,
+     "gw": 0.0,
+     "gw_err": 2.722791815102648e-21,
+     "kl_eff": 891.0356074264058,
+     "kl_ratio": 0.8910356074264059,
+     "aux_min_nonac_thz": 1.5674163603372464,
+     "line_step": 1.6875,
+     "stop_converged": false,
+     "stop_kong_liu": false,
+     "stop_max_ka": false,
+     "t_s": 241.11428952217102,
+     "n_gradient_calls": 1,
+     "gc_err_real": 0.0011139925290014412,
+     "gc_err_placeholder": 0.43301270189221935,
+     "gc_over_err_real": 16.22046814098296,
+     "kl_ratio_at_gradient": 0.9316446167476493,
+     "convergence_guarded": false,
+     "grad_rel_diff_parallel_vs_serial": 2.281663756847742e-15,
+     "t_gradient_s": 0.21359872817993164
+    },
+    {
+     "pop": 1,
+     "n_fe_cumulative": 7,
+     "fe_Ry": -0.6338291634641112,
+     "fe_err_Ry": 1.8367972628702581e-06,
+     "gc": 0.002965304732513247,
+     "gc_err": 0.0011091404388063437,
+     "gw": 0.0,
+     "gw_err": 2.6619340007797697e-21,
+     "kl_eff": 891.0356074264058,
+     "kl_ratio": 0.8910356074264059,
+     "aux_min_nonac_thz": 1.5674163603372464,
+     "line_step": 1.6875,
+     "stop_converged": false,
+     "stop_kong_liu": false,
+     "stop_max_ka": false,
+     "t_s": 241.6049883365631,
+     "n_gradient_calls": 1,
+     "gc_err_real": 0.0011091404388063437,
+     "gc_err_placeholder": 0.43301270189221935,
+     "gc_over_err_real": 2.673516020842686,
+     "kl_ratio_at_gradient": 0.8910356074264059,
+     "convergence_guarded": false,
+     "grad_rel_diff_parallel_vs_serial": 7.776334477959143e-15,
+     "t_gradient_s": 0.21434617042541504
+    },
+    {
+     "pop": 1,
+     "n_fe_cumulative": 8,
+     "fe_Ry": -0.6338291337257668,
+     "fe_err_Ry": 1.8384655243408024e-06,
+     "gc": 0.002965304732513247,
+     "gc_err": 0.0011091404388063437,
+     "gw": 0.0,
+     "gw_err": 2.6619340007797697e-21,
+     "kl_eff": 883.2492973328622,
+     "kl_ratio": 0.8832492973328622,
+     "aux_min_nonac_thz": 1.5674565798853644,
+     "line_step": 2.53125,
+     "stop_converged": false,
+     "stop_kong_liu": false,
+     "stop_max_ka": false,
+     "t_s": 242.11012244224548,
+     "n_gradient_calls": 1,
+     "gc_err_real": 0.0011091404388063437,
+     "gc_err_placeholder": 0.43301270189221935,
+     "gc_over_err_real": 2.673516020842686,
+     "kl_ratio_at_gradient": 0.8910356074264059,
+     "convergence_guarded": false,
+     "grad_rel_diff_parallel_vs_serial": 7.776334477959143e-15,
+     "t_gradient_s": 0.21380114555358887
+    },
+    {
+     "pop": 1,
+     "n_fe_cumulative": 9,
+     "fe_Ry": -0.6338291390955818,
+     "fe_err_Ry": 1.8381362643755368e-06,
+     "gc": 0.0006742853400654573,
+     "gc_err": 0.0011102513118003577,
+     "gw": 0.0,
+     "gw_err": 2.552521742503365e-21,
+     "kl_eff": 884.2592346623792,
+     "kl_ratio": 0.8842592346623792,
+     "aux_min_nonac_thz": 1.5674514953487824,
+     "line_step": 2.2112505513984373,
+     "stop_converged": false,
+     "stop_kong_liu": false,
+     "stop_max_ka": false,
+     "t_s": 242.61445307731628,
+     "n_gradient_calls": 1,
+     "gc_err_real": 0.0011102513118003577,
+     "gc_err_placeholder": 0.43301270189221935,
+     "gc_over_err_real": 0.607326767281231,
+     "kl_ratio_at_gradient": 0.8832492973328622,
+     "convergence_guarded": false,
+     "grad_rel_diff_parallel_vs_serial": 1.3791190892866754e-14,
+     "t_gradient_s": 0.2135608196258545
+    },
+    {
+     "pop": 1,
+     "n_fe_cumulative": 10,
+     "fe_Ry": -0.6338291434066503,
+     "fe_err_Ry": 1.8378765961007732e-06,
+     "gc": 0.00032982779770654,
+     "gc_err": 0.0011100558794268746,
+     "gw": 0.0,
+     "gw_err": 2.669826538504289e-21,
+     "kl_eff": 885.135513727928,
+     "kl_ratio": 0.885135513727928,
+     "aux_min_nonac_thz": 1.567447053596954,
+     "line_step": 1.9317052843693405,
+     "stop_converged": false,
+     "stop_kong_liu": false,
+     "stop_max_ka": false,
+     "t_s": 243.1190686225891,
+     "n_gradient_calls": 1,
+     "gc_err_real": 0.0011100558794268746,
+     "gc_err_placeholder": 0.43301270189221935,
+     "gc_over_err_real": 0.29712720217006655,
+     "kl_ratio_at_gradient": 0.8842592346623792,
+     "convergence_guarded": false,
+     "grad_rel_diff_parallel_vs_serial": 1.4326933913251084e-14,
+     "t_gradient_s": 0.2133784294128418
+    },
+    {
+     "pop": 1,
+     "n_fe_cumulative": 11,
+     "fe_Ry": -0.6338291434066503,
+     "fe_err_Ry": 1.8378765961007732e-06,
+     "gc": 0.0003729995599819309,
+     "gc_err": 0.001109898151991708,
+     "gw": 0.0,
+     "gw_err": 2.5024853341176316e-21,
+     "kl_eff": 885.135513727928,
+     "kl_ratio": 0.885135513727928,
+     "aux_min_nonac_thz": 1.567447053596954,
+     "line_step": 1.9317052843693405,
+     "stop_converged": false,
+     "stop_kong_liu": false,
+     "stop_max_ka": false,
+     "t_s": 243.60809564590454,
+     "n_gradient_calls": 1,
+     "gc_err_real": 0.001109898151991708,
+     "gc_err_placeholder": 0.43301270189221935,
+     "gc_over_err_real": 0.3360664753901829,
+     "kl_ratio_at_gradient": 0.885135513727928,
+     "convergence_guarded": false,
+     "grad_rel_diff_parallel_vs_serial": 1.477688405276499e-14,
+     "t_gradient_s": 0.21319174766540527
+    },
+    {
+     "pop": 1,
+     "n_fe_cumulative": 12,
+     "fe_Ry": -0.6338291499282973,
+     "fe_err_Ry": 1.8377916118430635e-06,
+     "gc": 0.0003729995599819309,
+     "gc_err": 0.001109898151991708,
+     "gw": 0.0,
+     "gw_err": 2.5024853341176316e-21,
+     "kl_eff": 884.5600443081717,
+     "kl_ratio": 0.8845600443081717,
+     "aux_min_nonac_thz": 1.5674972922733712,
+     "line_step": 2.897557926554011,
+     "stop_converged": false,
+     "stop_kong_liu": false,
+     "stop_max_ka": false,
+     "t_s": 244.11279606819153,
+     "n_gradient_calls": 1,
+     "gc_err_real": 0.001109898151991708,
+     "gc_err_placeholder": 0.43301270189221935,
+     "gc_over_err_real": 0.3360664753901829,
+     "kl_ratio_at_gradient": 0.885135513727928,
+     "convergence_guarded": false,
+     "grad_rel_diff_parallel_vs_serial": 1.477688405276499e-14,
+     "t_gradient_s": 0.21341800689697266
+    },
+    {
+     "pop": 1,
+     "n_fe_cumulative": 13,
+     "fe_Ry": -0.6338291491377767,
+     "fe_err_Ry": 1.8378000110584253e-06,
+     "gc": 0.00011650606222156572,
+     "gc_err": 0.0011098022494484129,
+     "gw": 0.0,
+     "gw_err": 2.756812295550588e-21,
+     "kl_eff": 884.6335312295721,
+     "kl_ratio": 0.8846335312295721,
+     "aux_min_nonac_thz": 1.5674909411232465,
+     "line_step": 2.531250000119099,
+     "stop_converged": true,
+     "stop_kong_liu": false,
+     "stop_max_ka": false,
+     "t_s": 244.61814951896667,
+     "n_gradient_calls": 1,
+     "gc_err_real": 0.0011098022494484129,
+     "gc_err_placeholder": 0.43301270189221935,
+     "gc_over_err_real": 0.10497911882902639,
+     "kl_ratio_at_gradient": 0.8845600443081717,
+     "convergence_guarded": false,
+     "grad_rel_diff_parallel_vs_serial": 1.3739207393833767e-14,
+     "t_gradient_s": 0.21468448638916016
+    }
+   ],
+   "hook_errors": [],
+   "units": {
+    "gc / gc_err": "as the minimiser compares them (SchaMinimizer.py:596-600, 456); gc_err is 0 where the KL guard fired",
+    "gc_err_real": "the serial stochastic error, same scaling, guard ignored",
+    "gc_err_placeholder": "what the library's own test would have used",
+    "kl_ratio": "KL/N after the step; kl_ratio_at_gradient: before it",
+    "fe_Ry": "Ry per primitive cell"
+   },
+   "minimizer_raw_histories": {
+    "fe": [
+     -0.6338249709318918,
+     -0.6338280455041376,
+     -0.6338280455041376,
+     -0.6338291782329883,
+     -0.6338291782329883,
+     -0.6338291634641112,
+     -0.6338291634641112,
+     -0.6338291337257668,
+     -0.6338291390955818,
+     -0.6338291434066503,
+     -0.6338291434066503,
+     -0.6338291499282973,
+     -0.6338291491377767
+    ],
+    "fe_err": [
+     2.2300154116600254e-06,
+     1.97382571484351e-06,
+     1.97382571484351e-06,
+     1.8571177415320954e-06,
+     1.8571177415320954e-06,
+     1.8367972628702581e-06,
+     1.8367972628702581e-06,
+     1.8384655243408024e-06,
+     1.8381362643755368e-06,
+     1.8378765961007732e-06,
+     1.8378765961007732e-06,
+     1.8377916118430635e-06,
+     1.8378000110584253e-06
+    ],
+    "gc": [
+     0.07011149317958887,
+     0.04304137624846873,
+     0.04304137624846873,
+     0.018069480325960913,
+     0.018069480325960913,
+     0.002965304732513247,
+     0.002965304732513247,
+     0.0006742853400654573,
+     0.00032982779770654,
+     0.0003729995599819309,
+     0.0003729995599819309,
+     0.00011650606222156572
+    ],
+    "gc_err": [
+     0.0012644042323871818,
+     0.0011594775312326196,
+     0.0011594775312326196,
+     0.001113992529001441,
+     0.001113992529001441,
+     0.0011091404388063437,
+     0.0011091404388063437,
+     0.0011102513118003577,
+     0.0011100558794268746,
+     0.001109898151991708,
+     0.001109898151991708,
+     0.0011098022494484129
+    ],
+    "gw": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "gw_err": [
+     4.3568756635101235e-21,
+     2.6325279284185792e-21,
+     2.6325279284185792e-21,
+     2.722791815102648e-21,
+     2.722791815102648e-21,
+     2.6619340007797697e-21,
+     2.6619340007797697e-21,
+     2.552521742503365e-21,
+     2.669826538504289e-21,
+     2.5024853341176316e-21,
+     2.5024853341176316e-21,
+     2.756812295550588e-21
+    ],
+    "KL": [
+     1000.0000000000002,
+     979.8899541391806,
+     979.8899541391806,
+     931.6446167476494,
+     931.6446167476494,
+     891.0356074264058,
+     891.0356074264058,
+     883.2492973328622,
+     884.2592346623792,
+     885.135513727928,
+     885.135513727928,
+     884.5600443081717,
+     884.6335312295721
+    ],
+    "good_kasteps": [
+     1,
+     3,
+     5,
+     9
+    ]
+   }
+  },
+  "final_aux": {
+   "min_nonac_thz": 1.5674909411232478,
+   "lowest6_thz": [
+    0.0,
+    0.0,
+    0.0,
+    1.5674909411232478,
+    1.5674909411232478,
+    1.567490941123249
+   ],
+   "n_imag_nonac": 0,
+   "acoustic_max_abs_thz": 0.0
+  },
+  "fresh_gradient_check": {
+   "gc": 0.0015385959965611659,
+   "gc_err": 0.0008130373359666919,
+   "gc_over_err": 1.8924050944496824,
+   "gc_over_err_note": "library error normalisation; not a calibrated z-score",
+   "kl_ratio": 1.0,
+   "n_configs": 2000,
+   "nsym": 48,
+   "split_null": {
+    "K": 8,
+    "split_sizes": [
+     125,
+     125,
+     125,
+     125,
+     125,
+     125,
+     125,
+     125
+    ],
+    "lin_rel_err": 4.272001494362098e-15,
+    "gnorm2": 2.367277640634047e-06,
+    "tr_cov": 7.19635093284013e-07,
+    "R": 3.289552806313423,
+    "noise_ratio": 1.8137124376023404,
+    "antithetic_pairs_verified": true,
+    "R_expected_if_converged": 3.2610110109192547,
+    "R_over_expected": 1.0087524376025099,
+    "threshold": 2.5
+   },
+   "consistent_with_minimum": true,
+   "wall_s": 1.7359912395477295
+  },
+  "ensemble_dir": "results/revision/sscha_converged_grid/work/zr_bcc_mace_mp0_300K_sc333_startA/hessian_ensemble",
+  "hessian": {
+   "min_nonac_thz": 1.5471504282278405,
+   "lowest6_thz": [
+    -2.249109614365998e-08,
+    -2.0775380928029485e-08,
+    -1.6026621861754982e-08,
+    1.5471504282278405,
+    1.5471504282278405,
+    1.5471504282278405
+   ],
+   "n_imag_nonac": 0,
+   "acoustic_max_abs_thz": 2.249109614365998e-08,
+   "dynamically_stable": true
+  },
+  "echo": {
+   "rel_change_final_aux_vs_start": 0.07634192434302743,
+   "rel_change_hessian_vs_final_aux": 0.026593358299213304,
+   "rel_change_hessian_vs_start": 0.05184387140013335,
+   "harmonic_along_hessian_softmode": {
+    "thz": 1.5674442735980327,
+    "degeneracy": 12,
+    "pols_orthonormality_err": 1.7763568394002505e-15
+   },
+   "start_along_hessian_softmode": {
+    "thz": 1.5674442735980323,
+    "degeneracy": 12,
+    "pols_orthonormality_err": 1.3322676295501878e-15
+   },
+   "final_aux_along_hessian_softmode": {
+    "thz": 1.567490941123248,
+    "degeneracy": 12,
+    "pols_orthonormality_err": 1.7763568394002505e-15
+   }
+  },
+  "dyn_files": {
+   "dyn_harmonic_": "results/revision/sscha_converged_grid/work/zr_bcc_mace_mp0_300K_sc333_startA/dyn_harmonic_1",
+   "dyn_startA_": "results/revision/sscha_converged_grid/work/zr_bcc_mace_mp0_300K_sc333_startA/dyn_startA_1",
+   "dyn_final_aux_": "results/revision/sscha_converged_grid/work/zr_bcc_mace_mp0_300K_sc333_startA/dyn_final_aux_1",
+   "dyn_hessian_": "results/revision/sscha_converged_grid/work/zr_bcc_mace_mp0_300K_sc333_startA/dyn_hessian_1"
+  },
+  "bootstrap": {
+   "full_ensemble_min_nonac_thz": 1.5471504282278405,
+   "n_configs": 2000,
+   "antithetic_pairs_verified": true,
+   "identity_replicate": {
+    "min_nonac_thz": 1.5471504282278403,
+    "abs_diff_thz": 2.220446049250313e-16,
+    "tol_thz": 0.001,
+    "passed": true,
+    "wall_s": 6.684641122817993
+   },
+   "method": "bootstrap_antithetic_pairs",
+   "B": 10,
+   "values_thz": [
+    1.5470306901249002,
+    1.5471832944165442,
+    1.5467808194690067,
+    1.546497812278359,
+    1.5485655320568545,
+    1.5473109139708754,
+    1.5471634284375926,
+    1.5494908132468592,
+    1.5463487418613604,
+    1.5484565887750605
+   ],
+   "n_ok": 10,
+   "mean_thz": 1.5474828634637414,
+   "std_thz": 0.0010180267252395975,
+   "p2_5_thz": 1.5463822827051852,
+   "p97_5_thz": 1.549282624979108,
+   "min_thz": 1.5463487418613604,
+   "max_thz": 1.5494908132468592,
+   "frac_unstable": 0.0,
+   "wall_s_per_replicate": 6.686323618888855
+  },
+  "wall_s": 803.6359832286835,
+  "utc_end": "2026-10-03T18:26:19Z",
+  "provenance": {
+   "git_head": "c42b6e4",
+   "host": "bdba2284f8cf",
+   "packages": {
+    "numpy": "2.2.2",
+    "scipy": "1.17.1",
+    "ase": "3.29.0",
+    "phonopy": "4.4.0",
+    "spglib": "2.7.0",
+    "torch": "2.6.0+cu124",
+    "pandas": "3.0.5",
+    "pyarrow": "25.0.1",
+    "pymatgen": "2026.5.4",
+    "python-sscha": "1.6.1",
+    "CellConstructor": "1.6.2",
+    "julia": null,
+    "mace-torch": "0.3.16"
+   },
+   "model_version": "mace-torch=0.3.16;ckpt=medium",
+   "device": "cuda",
+   "omp_num_threads": "2"
+  },
+  "ledger_reference": {
+   "ledger_thz": null,
+   "this_thz": 1.5471504282278405,
+   "abs_diff_thz": null,
+   "tol_thz": 0.02,
+   "reproduces_ledger": null,
+   "note": "informational: the converged recipe is not the production recipe, so no reproduction of the ledger is expected"
+  }
+ },
+ "last_written_utc": "2026-10-03T18:26:19Z"
+}

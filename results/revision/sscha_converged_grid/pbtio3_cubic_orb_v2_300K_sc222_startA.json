@@ -1,0 +1,408 @@
+{
+ "schema": "sscha_converged/v1",
+ "study": "C1c converged SSCHA, start A vs B (R1.4)",
+ "dry_run": false,
+ "unit": {
+  "system": "pbtio3_cubic",
+  "model": "orb_v2",
+  "T": 300.0,
+  "supercell": [
+   2,
+   2,
+   2
+  ]
+ },
+ "unit_tag": "pbtio3_cubic_orb_v2_300K_sc222",
+ "start": "A",
+ "item": "C1c-grid",
+ "why": "Sec. 3.3 displacive set, scored at T <= 300 K; production SSCHA unconverged",
+ "recipe": {
+  "n_configs": 1000,
+  "max_pop": 30,
+  "n_hessian": 2000,
+  "disp": 0.03,
+  "relax": true,
+  "fmax": 0.001,
+  "root_representation": "root2",
+  "min_step_dyn": 0.5,
+  "meaningful_factor": 0.2,
+  "max_ka": "per_population",
+  "imag_tol_thz": -0.1,
+  "max_steps_per_pop": 400,
+  "kong_liu_ratio": 0.5,
+  "converge_min_kl_ratio": 0.7,
+  "gradient_error": "serial_stochastic_error",
+  "start_b_thz": 0.3,
+  "use_julia": false,
+  "seed": 0,
+  "seed_rule": "np.random.seed(seed + index of start), A=0, B=1",
+  "fresh_splits": 8
+ },
+ "recipe_source": "production_recipe() + converged_recipe() (scripts/sscha_seed_study_grid.py)",
+ "provenance_created": {
+  "script": "scripts/sscha_seed_study_grid.py",
+  "script_sha256": "e1193d70ab732af5b2fc2683c976e002e321f9c8de4c149fe0038db978c66be8",
+  "finite_t_sha256": "ed801a9506a74f50158681956da2e7cf52dca493058734cf228f987e5b795e08",
+  "git_head": "c42b6e4",
+  "git_dirty_production_code": [],
+  "host": "bdba2284f8cf",
+  "utc": "2026-10-04T02:27:19Z",
+  "python": "3.12.15",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "packages": {
+   "numpy": "2.5.2",
+   "scipy": "1.18.0",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "torch": "2.13.0",
+   "pandas": "3.0.5",
+   "pyarrow": "25.0.1",
+   "pymatgen": "2026.5.4",
+   "python-sscha": "1.6.1",
+   "CellConstructor": "1.6.2",
+   "julia": null,
+   "orb-models": "0.7.0"
+  },
+  "env_lock": {
+   "lock_file": "envs/lock-orb-2026-08-17.txt",
+   "packages": {
+    "numpy": {
+     "pinned": "2.5.2",
+     "installed": "2.5.2",
+     "match": true
+    },
+    "scipy": {
+     "pinned": "1.18.0",
+     "installed": "1.18.0",
+     "match": true
+    },
+    "ase": {
+     "pinned": "3.29.0",
+     "installed": "3.29.0",
+     "match": true
+    },
+    "phonopy": {
+     "pinned": "4.4.0",
+     "installed": "4.4.0",
+     "match": true
+    },
+    "spglib": {
+     "pinned": "2.7.0",
+     "installed": "2.7.0",
+     "match": true
+    },
+    "torch": {
+     "pinned": "2.13.0",
+     "installed": "2.13.0",
+     "match": true
+    },
+    "pandas": {
+     "pinned": "3.0.5",
+     "installed": "3.0.5",
+     "match": true
+    },
+    "pyarrow": {
+     "pinned": "25.0.1",
+     "installed": "25.0.1",
+     "match": true
+    },
+    "pymatgen": {
+     "pinned": "2026.5.4",
+     "installed": "2026.5.4",
+     "match": true
+    },
+    "python-sscha": {
+     "pinned": "1.6.1",
+     "installed": "1.6.1",
+     "match": true
+    },
+    "CellConstructor": {
+     "pinned": "1.6.2",
+     "installed": "1.6.2",
+     "match": true
+    },
+    "orb-models": {
+     "pinned": "0.7.0",
+     "installed": "0.7.0",
+     "match": true
+    }
+   },
+   "all_pinned_match": true
+  },
+  "omp_num_threads": "2",
+  "cpu": {
+   "os_cpu_count": 128,
+   "affinity": 128,
+   "cgroup_quota": 61.43999,
+   "usable": 61
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "cuda_device": "NVIDIA GeForce RTX 3090",
+  "julia_ext_available": false,
+  "julia_error": "",
+  "schamodules": {
+   "file": "/root/env-orb/lib/python3.12/site-packages/SCHAModules.cpython-312-x86_64-linux-gnu.so",
+   "ldd": [
+    "liblapack.so.3 => /lib/x86_64-linux-gnu/liblapack.so.3 (0x00007f16fdb95000)",
+    "libblas.so.3 => /lib/x86_64-linux-gnu/libblas.so.3 (0x00007f16fdaef000)",
+    "libgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (0x00007f16fd814000)"
+   ]
+  },
+  "model_version": "orb-models=0.7.0;orb_v2"
+ },
+ "previous_runs": [],
+ "ledger": {
+  "source": "mlip_dynstab.analysis.load_canonical(), method == 'sscha'",
+  "found": false,
+  "n_rows": 0,
+  "other_supercells": []
+ },
+ "provenance_last_run": {
+  "script": "scripts/sscha_seed_study_grid.py",
+  "script_sha256": "e1193d70ab732af5b2fc2683c976e002e321f9c8de4c149fe0038db978c66be8",
+  "finite_t_sha256": "ed801a9506a74f50158681956da2e7cf52dca493058734cf228f987e5b795e08",
+  "git_head": "c42b6e4",
+  "git_dirty_production_code": [],
+  "host": "bdba2284f8cf",
+  "utc": "2026-10-04T02:27:19Z",
+  "python": "3.12.15",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "packages": {
+   "numpy": "2.5.2",
+   "scipy": "1.18.0",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "torch": "2.13.0",
+   "pandas": "3.0.5",
+   "pyarrow": "25.0.1",
+   "pymatgen": "2026.5.4",
+   "python-sscha": "1.6.1",
+   "CellConstructor": "1.6.2",
+   "julia": null,
+   "orb-models": "0.7.0"
+  },
+  "env_lock": {
+   "lock_file": "envs/lock-orb-2026-08-17.txt",
+   "packages": {
+    "numpy": {
+     "pinned": "2.5.2",
+     "installed": "2.5.2",
+     "match": true
+    },
+    "scipy": {
+     "pinned": "1.18.0",
+     "installed": "1.18.0",
+     "match": true
+    },
+    "ase": {
+     "pinned": "3.29.0",
+     "installed": "3.29.0",
+     "match": true
+    },
+    "phonopy": {
+     "pinned": "4.4.0",
+     "installed": "4.4.0",
+     "match": true
+    },
+    "spglib": {
+     "pinned": "2.7.0",
+     "installed": "2.7.0",
+     "match": true
+    },
+    "torch": {
+     "pinned": "2.13.0",
+     "installed": "2.13.0",
+     "match": true
+    },
+    "pandas": {
+     "pinned": "3.0.5",
+     "installed": "3.0.5",
+     "match": true
+    },
+    "pyarrow": {
+     "pinned": "25.0.1",
+     "installed": "25.0.1",
+     "match": true
+    },
+    "pymatgen": {
+     "pinned": "2026.5.4",
+     "installed": "2026.5.4",
+     "match": true
+    },
+    "python-sscha": {
+     "pinned": "1.6.1",
+     "installed": "1.6.1",
+     "match": true
+    },
+    "CellConstructor": {
+     "pinned": "1.6.2",
+     "installed": "1.6.2",
+     "match": true
+    },
+    "orb-models": {
+     "pinned": "0.7.0",
+     "installed": "0.7.0",
+     "match": true
+    }
+   },
+   "all_pinned_match": true
+  },
+  "omp_num_threads": "2",
+  "cpu": {
+   "os_cpu_count": 128,
+   "affinity": 128,
+   "cgroup_quota": 61.43999,
+   "usable": 61
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "cuda_device": "NVIDIA GeForce RTX 3090",
+  "julia_ext_available": false,
+  "julia_error": "",
+  "schamodules": {
+   "file": "/root/env-orb/lib/python3.12/site-packages/SCHAModules.cpython-312-x86_64-linux-gnu.so",
+   "ldd": [
+    "liblapack.so.3 => /lib/x86_64-linux-gnu/liblapack.so.3 (0x00007f16fdb95000)",
+    "libblas.so.3 => /lib/x86_64-linux-gnu/libblas.so.3 (0x00007f16fdaef000)",
+    "libgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (0x00007f16fd814000)"
+   ]
+  },
+  "model_version": "orb-models=0.7.0;orb_v2"
+ },
+ "calculator_fallback": false,
+ "run": {
+  "start": {
+   "min_nonac_thz": 0.1980684552390616,
+   "lowest6_thz": [
+    -1.62139921169095e-07,
+    -1.1340856161724568e-07,
+    -5.8786118090895475e-08,
+    0.1980684552390616,
+    0.9219090620414307,
+    0.961709625776971
+   ],
+   "n_imag_nonac": 0,
+   "acoustic_max_abs_thz": 1.62139921169095e-07
+  },
+  "status": "failed",
+  "utc_start": "2026-10-04T02:27:19Z",
+  "host": "bdba2284f8cf",
+  "pid": 8229,
+  "work_dir": "results/revision/sscha_converged_grid/work/pbtio3_cubic_orb_v2_300K_sc222_startA",
+  "settings": {
+   "n_boot": 10,
+   "n_splits_fallback": 4,
+   "unit_timeout_s": 7200.0,
+   "device": "cuda"
+  },
+  "timings_s": {
+   "relax_and_harmonic_fc": 1.4293692111968994
+  },
+  "julia_ext_available": false,
+  "relaxed_cellpar": [
+   3.972857534714304,
+   3.9738619884876174,
+   3.9728841820042486,
+   90.00022697651127,
+   90.0001533965522,
+   90.00010094749483
+  ],
+  "harmonic_pre_fpd": {
+   "min_nonac_thz": -1.452034669666825,
+   "lowest6_thz": [
+    -1.452034669666825,
+    -1.4050315614911932,
+    -1.3715586399543052,
+    -1.325172181628086,
+    -1.271326916526271,
+    -1.2481001243145224
+   ],
+   "n_imag_nonac": 11,
+   "acoustic_max_abs_thz": 2.0654631078030866e-07
+  },
+  "start_construction": {
+   "start": "A",
+   "rule": "ForcePositiveDefinite (imaginary w -> |w|) + Symmetrize",
+   "source": "finite_t.py:1039-1040 (the production start)"
+  },
+  "dyn_meta": {
+   "nqirr": 8,
+   "nq": 8,
+   "nat_prim": 5,
+   "nat_supercell": 40
+  },
+  "global_seed": 0,
+  "stopping_criteria": {
+   "meaningful_factor": 0.2,
+   "abs_conv_thr": 1e-08,
+   "kong_liu_ratio": 0.5,
+   "converge_min_kl_ratio": 0.7,
+   "gradi_op": "all",
+   "minim_struct": true,
+   "max_steps_per_pop": 400,
+   "max_pop": 30,
+   "n_configs_per_population": 1000,
+   "root_representation": "root2",
+   "min_step_dyn": 0.5,
+   "precond_dyn": true,
+   "use_julia": false,
+   "gradient_error_source": "serial get_preconditioned_gradient error via RealErrorEnsemble",
+   "semantics": {
+    "converged": "gc < meaningful_factor * gc_err AND gw < meaningful_factor * gw_err (or < abs_conv_thr), gradi_op 'all' (SchaMinimizer.py:1622-1651). gc_err is the library's serial stochastic error (module_stochastic.f90:270-274), not the parallel wrapper's placeholder (Ensemble.py:2657); it is set to zero where KL/N at the gradient is below converge_min_kl_ratio, so convergence cannot be declared at a statistically invalid point. Its scale is the Fourier transform of the real-space error matrix (coherent at Gamma), divided by sqrt(nsym*nq) (:456): a 1/sqrt(N_eff) noise scale, not a calibrated z-score. The structures here have no free Wyckoff parameter, so gw is zero by symmetry and the test reduces to gc",
+    "converged_dyn": "a converged population is not restored (:1391), so the final dyn is one step past the gradient that passed; kl_ratio_at_end is the KL after it",
+    "population_end": "converged, KL/N < kong_liu_ratio on a new direction (:1654-1661), or max_steps_per_pop steps (max_ka reset per population by the pre hook)",
+    "relax_end": "a converged population (Relax.py:410-411), max_pop populations, or the wall-clock cap (the post hook ends the current population after one more step and sets max_pop so no new population is drawn, Relax.py:412-416)",
+    "restore": "an unconverged population discards its last step (SchaMinimizer.py:1389-1397)"
+   }
+  },
+  "error": "ValueError: Error, the target structure must be of the same type of the current one",
+  "traceback": "Traceback (most recent call last):\n  File \"/root/mlip-dynamic-stability/scripts/sscha_seed_study_grid.py\", line 2815, in _run_converged_start\n    (run_converged_mock if args.dry_run else run_converged_sscha)(ctx, s, sp, entry)\n  File \"/root/mlip-dynamic-stability/scripts/sscha_seed_study_grid.py\", line 2271, in run_converged_sscha\n    converged = bool(relaxer.relax(get_stress=False))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-orb/lib/python3.12/site-packages/sscha/Relax.py\", line 388, in relax\n    self.minim.run(custom_function_pre = self.__cfpre__,\n  File \"/root/env-orb/lib/python3.12/site-packages/sscha/SchaMinimizer.py\", line 1300, in run\n    timer.execute_timed_function(self.minimization_step, custom_function_gradient)\n  File \"/root/env-orb/lib/python3.12/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-orb/lib/python3.12/site-packages/sscha/SchaMinimizer.py\", line 642, in minimization_step\n    timer.execute_timed_function(self.dyn.Symmetrize, use_spglib = self.use_spglib)\n  File \"/root/env-orb/lib/python3.12/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-orb/lib/python3.12/site-packages/cellconstructor/Phonons.py\", line 3271, in Symmetrize\n    timer.execute_timed_function(self.structure.impose_symmetries, syms)\n  File \"/root/env-orb/lib/python3.12/site-packages/cellconstructor/Timer.py\", line 114, in execute_timed_function\n    ret = function(*args, **kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-orb/lib/python3.12/site-packages/cellconstructor/Structure.py\", line 969, in impose_symmetries\n    eq_atoms = self.get_equivalent_atoms(aux_struct)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-orb/lib/python3.12/site-packages/cellconstructor/Structure.py\", line 1034, in get_equivalent_atoms\n    raise ValueError(\"Error, the target structure must be of the same type of the current one\")\nValueError: Error, the target structure must be of the same type of the current one\n",
+  "relax_partial": {
+   "reason": "exception",
+   "steps": [],
+   "hook_errors": [],
+   "pop_start_aux_min_nonac_thz": {},
+   "controller": {
+    "steps_per_pop": 400,
+    "pops": {
+     "1": {
+      "n_fe_at_start": 1,
+      "max_ka_set": 400,
+      "t_first_step_s": 28.087355613708496
+     }
+    },
+    "capped": null,
+    "deadline_after_s": 7199.999989748001,
+    "errors": []
+   }
+  },
+  "wall_s": 30.122339963912964,
+  "utc_end": "2026-10-04T02:27:49Z",
+  "provenance": {
+   "git_head": "c42b6e4",
+   "host": "bdba2284f8cf",
+   "packages": {
+    "numpy": "2.5.2",
+    "scipy": "1.18.0",
+    "ase": "3.29.0",
+    "phonopy": "4.4.0",
+    "spglib": "2.7.0",
+    "torch": "2.13.0",
+    "pandas": "3.0.5",
+    "pyarrow": "25.0.1",
+    "pymatgen": "2026.5.4",
+    "python-sscha": "1.6.1",
+    "CellConstructor": "1.6.2",
+    "julia": null,
+    "orb-models": "0.7.0"
+   },
+   "model_version": "orb-models=0.7.0;orb_v2",
+   "device": "cuda",
+   "omp_num_threads": "2"
+  }
+ },
+ "last_written_utc": "2026-10-04T02:27:49Z"
+}

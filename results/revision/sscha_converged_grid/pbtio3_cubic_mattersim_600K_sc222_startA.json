@@ -1,0 +1,408 @@
+{
+ "schema": "sscha_converged/v1",
+ "study": "C1c converged SSCHA, start A vs B (R1.4)",
+ "dry_run": false,
+ "unit": {
+  "system": "pbtio3_cubic",
+  "model": "mattersim",
+  "T": 600.0,
+  "supercell": [
+   2,
+   2,
+   2
+  ]
+ },
+ "unit_tag": "pbtio3_cubic_mattersim_600K_sc222",
+ "start": "A",
+ "item": "C1c-grid",
+ "why": "Sec. 3.3 false-stables and Table S17 false-unstables at 600/900 K",
+ "recipe": {
+  "n_configs": 1000,
+  "max_pop": 30,
+  "n_hessian": 2000,
+  "disp": 0.03,
+  "relax": true,
+  "fmax": 0.001,
+  "root_representation": "root2",
+  "min_step_dyn": 0.5,
+  "meaningful_factor": 0.2,
+  "max_ka": "per_population",
+  "imag_tol_thz": -0.1,
+  "max_steps_per_pop": 400,
+  "kong_liu_ratio": 0.5,
+  "converge_min_kl_ratio": 0.7,
+  "gradient_error": "serial_stochastic_error",
+  "start_b_thz": 0.3,
+  "use_julia": false,
+  "seed": 0,
+  "seed_rule": "np.random.seed(seed + index of start), A=0, B=1",
+  "fresh_splits": 8
+ },
+ "recipe_source": "production_recipe() + converged_recipe() (scripts/sscha_seed_study_grid2.py)",
+ "provenance_created": {
+  "script": "scripts/sscha_seed_study_grid2.py",
+  "script_sha256": "599f175233c2776df9dea01c00073297cf6fc4d534fec85d4d27f0e0bcd377e9",
+  "finite_t_sha256": "ed801a9506a74f50158681956da2e7cf52dca493058734cf228f987e5b795e08",
+  "git_head": "c42b6e4",
+  "git_dirty_production_code": [],
+  "host": "bdba2284f8cf",
+  "utc": "2026-10-03T22:23:04Z",
+  "python": "3.12.15",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "packages": {
+   "numpy": "2.5.2",
+   "scipy": "1.18.0",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "torch": "2.13.0",
+   "pandas": "3.0.5",
+   "pyarrow": "25.0.1",
+   "pymatgen": "2026.5.4",
+   "python-sscha": "1.6.1",
+   "CellConstructor": "1.6.2",
+   "julia": null,
+   "mattersim": "1.2.5"
+  },
+  "env_lock": {
+   "lock_file": "envs/lock-mattersim-2026-08-17.txt",
+   "packages": {
+    "numpy": {
+     "pinned": "2.5.2",
+     "installed": "2.5.2",
+     "match": true
+    },
+    "scipy": {
+     "pinned": "1.18.0",
+     "installed": "1.18.0",
+     "match": true
+    },
+    "ase": {
+     "pinned": "3.29.0",
+     "installed": "3.29.0",
+     "match": true
+    },
+    "phonopy": {
+     "pinned": "4.4.0",
+     "installed": "4.4.0",
+     "match": true
+    },
+    "spglib": {
+     "pinned": "2.7.0",
+     "installed": "2.7.0",
+     "match": true
+    },
+    "torch": {
+     "pinned": "2.13.0",
+     "installed": "2.13.0",
+     "match": true
+    },
+    "pandas": {
+     "pinned": "3.0.5",
+     "installed": "3.0.5",
+     "match": true
+    },
+    "pyarrow": {
+     "pinned": "25.0.1",
+     "installed": "25.0.1",
+     "match": true
+    },
+    "pymatgen": {
+     "pinned": "2026.5.4",
+     "installed": "2026.5.4",
+     "match": true
+    },
+    "python-sscha": {
+     "pinned": "1.6.1",
+     "installed": "1.6.1",
+     "match": true
+    },
+    "CellConstructor": {
+     "pinned": "1.6.2",
+     "installed": "1.6.2",
+     "match": true
+    },
+    "mattersim": {
+     "pinned": "1.2.5",
+     "installed": "1.2.5",
+     "match": true
+    }
+   },
+   "all_pinned_match": true
+  },
+  "omp_num_threads": "2",
+  "cpu": {
+   "os_cpu_count": 128,
+   "affinity": 128,
+   "cgroup_quota": 61.43999,
+   "usable": 61
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "cuda_device": "NVIDIA GeForce RTX 3090",
+  "julia_ext_available": false,
+  "julia_error": "",
+  "schamodules": {
+   "file": "/root/env-mattersim/lib/python3.12/site-packages/SCHAModules.cpython-312-x86_64-linux-gnu.so",
+   "ldd": [
+    "liblapack.so.3 => /lib/x86_64-linux-gnu/liblapack.so.3 (0x00007b522640f000)",
+    "libblas.so.3 => /lib/x86_64-linux-gnu/libblas.so.3 (0x00007b5226369000)",
+    "libgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (0x00007b522608e000)"
+   ]
+  },
+  "model_version": "mattersim=1.2.5;ckpt=mattersim-v1.0.0-5m"
+ },
+ "previous_runs": [],
+ "ledger": {
+  "source": "mlip_dynstab.analysis.load_canonical(), method == 'sscha'",
+  "found": false,
+  "n_rows": 0,
+  "other_supercells": []
+ },
+ "provenance_last_run": {
+  "script": "scripts/sscha_seed_study_grid2.py",
+  "script_sha256": "599f175233c2776df9dea01c00073297cf6fc4d534fec85d4d27f0e0bcd377e9",
+  "finite_t_sha256": "ed801a9506a74f50158681956da2e7cf52dca493058734cf228f987e5b795e08",
+  "git_head": "c42b6e4",
+  "git_dirty_production_code": [],
+  "host": "bdba2284f8cf",
+  "utc": "2026-10-03T22:23:04Z",
+  "python": "3.12.15",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "packages": {
+   "numpy": "2.5.2",
+   "scipy": "1.18.0",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "torch": "2.13.0",
+   "pandas": "3.0.5",
+   "pyarrow": "25.0.1",
+   "pymatgen": "2026.5.4",
+   "python-sscha": "1.6.1",
+   "CellConstructor": "1.6.2",
+   "julia": null,
+   "mattersim": "1.2.5"
+  },
+  "env_lock": {
+   "lock_file": "envs/lock-mattersim-2026-08-17.txt",
+   "packages": {
+    "numpy": {
+     "pinned": "2.5.2",
+     "installed": "2.5.2",
+     "match": true
+    },
+    "scipy": {
+     "pinned": "1.18.0",
+     "installed": "1.18.0",
+     "match": true
+    },
+    "ase": {
+     "pinned": "3.29.0",
+     "installed": "3.29.0",
+     "match": true
+    },
+    "phonopy": {
+     "pinned": "4.4.0",
+     "installed": "4.4.0",
+     "match": true
+    },
+    "spglib": {
+     "pinned": "2.7.0",
+     "installed": "2.7.0",
+     "match": true
+    },
+    "torch": {
+     "pinned": "2.13.0",
+     "installed": "2.13.0",
+     "match": true
+    },
+    "pandas": {
+     "pinned": "3.0.5",
+     "installed": "3.0.5",
+     "match": true
+    },
+    "pyarrow": {
+     "pinned": "25.0.1",
+     "installed": "25.0.1",
+     "match": true
+    },
+    "pymatgen": {
+     "pinned": "2026.5.4",
+     "installed": "2026.5.4",
+     "match": true
+    },
+    "python-sscha": {
+     "pinned": "1.6.1",
+     "installed": "1.6.1",
+     "match": true
+    },
+    "CellConstructor": {
+     "pinned": "1.6.2",
+     "installed": "1.6.2",
+     "match": true
+    },
+    "mattersim": {
+     "pinned": "1.2.5",
+     "installed": "1.2.5",
+     "match": true
+    }
+   },
+   "all_pinned_match": true
+  },
+  "omp_num_threads": "2",
+  "cpu": {
+   "os_cpu_count": 128,
+   "affinity": 128,
+   "cgroup_quota": 61.43999,
+   "usable": 61
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "cuda_device": "NVIDIA GeForce RTX 3090",
+  "julia_ext_available": false,
+  "julia_error": "",
+  "schamodules": {
+   "file": "/root/env-mattersim/lib/python3.12/site-packages/SCHAModules.cpython-312-x86_64-linux-gnu.so",
+   "ldd": [
+    "liblapack.so.3 => /lib/x86_64-linux-gnu/liblapack.so.3 (0x00007b522640f000)",
+    "libblas.so.3 => /lib/x86_64-linux-gnu/libblas.so.3 (0x00007b5226369000)",
+    "libgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (0x00007b522608e000)"
+   ]
+  },
+  "model_version": "mattersim=1.2.5;ckpt=mattersim-v1.0.0-5m"
+ },
+ "calculator_fallback": false,
+ "run": {
+  "start": {
+   "min_nonac_thz": 0.22562463943120256,
+   "lowest6_thz": [
+    -3.5905146347596787e-07,
+    5.8929008264278317e-08,
+    1.03073720140807e-07,
+    0.22562463943120256,
+    0.22562463959261975,
+    0.22562463960418577
+   ],
+   "n_imag_nonac": 0,
+   "acoustic_max_abs_thz": 3.5905146347596787e-07
+  },
+  "status": "failed",
+  "utc_start": "2026-10-03T22:23:04Z",
+  "host": "bdba2284f8cf",
+  "pid": 27554,
+  "work_dir": "results/revision/sscha_converged_grid/work/pbtio3_cubic_mattersim_600K_sc222_startA",
+  "settings": {
+   "n_boot": 10,
+   "n_splits_fallback": 4,
+   "unit_timeout_s": 7200.0,
+   "device": "cuda"
+  },
+  "timings_s": {
+   "relax_and_harmonic_fc": 0.6051232814788818
+  },
+  "julia_ext_available": false,
+  "relaxed_cellpar": [
+   3.9699914832133456,
+   3.969991488888542,
+   3.9699914892999026,
+   90.00000001200485,
+   89.99999996709953,
+   89.99999999856742
+  ],
+  "harmonic_pre_fpd": {
+   "min_nonac_thz": -5.428499533786921,
+   "lowest6_thz": [
+    -5.428499533786921,
+    -5.4284995274933445,
+    -5.428499525986283,
+    -3.217893378489435,
+    -3.2178933782330623,
+    -3.217893375363762
+   ],
+   "n_imag_nonac": 18,
+   "acoustic_max_abs_thz": 1.508725026097973e-07
+  },
+  "start_construction": {
+   "start": "A",
+   "rule": "ForcePositiveDefinite (imaginary w -> |w|) + Symmetrize",
+   "source": "finite_t.py:1039-1040 (the production start)"
+  },
+  "dyn_meta": {
+   "nqirr": 4,
+   "nq": 8,
+   "nat_prim": 5,
+   "nat_supercell": 40
+  },
+  "global_seed": 0,
+  "stopping_criteria": {
+   "meaningful_factor": 0.2,
+   "abs_conv_thr": 1e-08,
+   "kong_liu_ratio": 0.5,
+   "converge_min_kl_ratio": 0.7,
+   "gradi_op": "all",
+   "minim_struct": true,
+   "max_steps_per_pop": 400,
+   "max_pop": 30,
+   "n_configs_per_population": 1000,
+   "root_representation": "root2",
+   "min_step_dyn": 0.5,
+   "precond_dyn": true,
+   "use_julia": false,
+   "gradient_error_source": "serial get_preconditioned_gradient error via RealErrorEnsemble",
+   "semantics": {
+    "converged": "gc < meaningful_factor * gc_err AND gw < meaningful_factor * gw_err (or < abs_conv_thr), gradi_op 'all' (SchaMinimizer.py:1622-1651). gc_err is the library's serial stochastic error (module_stochastic.f90:270-274), not the parallel wrapper's placeholder (Ensemble.py:2657); it is set to zero where KL/N at the gradient is below converge_min_kl_ratio, so convergence cannot be declared at a statistically invalid point. Its scale is the Fourier transform of the real-space error matrix (coherent at Gamma), divided by sqrt(nsym*nq) (:456): a 1/sqrt(N_eff) noise scale, not a calibrated z-score. The structures here have no free Wyckoff parameter, so gw is zero by symmetry and the test reduces to gc",
+    "converged_dyn": "a converged population is not restored (:1391), so the final dyn is one step past the gradient that passed; kl_ratio_at_end is the KL after it",
+    "population_end": "converged, KL/N < kong_liu_ratio on a new direction (:1654-1661), or max_steps_per_pop steps (max_ka reset per population by the pre hook)",
+    "relax_end": "a converged population (Relax.py:410-411), max_pop populations, or the wall-clock cap (the post hook ends the current population after one more step and sets max_pop so no new population is drawn, Relax.py:412-416)",
+    "restore": "an unconverged population discards its last step (SchaMinimizer.py:1389-1397)"
+   }
+  },
+  "error": "AssertionError: Error, at point 2 (q = -q + G) the dynamical matrix is complex",
+  "traceback": "Traceback (most recent call last):\n  File \"/root/mlip-dynamic-stability/scripts/sscha_seed_study_grid2.py\", line 2815, in _run_converged_start\n    (run_converged_mock if args.dry_run else run_converged_sscha)(ctx, s, sp, entry)\n  File \"/root/mlip-dynamic-stability/scripts/sscha_seed_study_grid2.py\", line 2271, in run_converged_sscha\n    converged = bool(relaxer.relax(get_stress=False))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mattersim/lib/python3.12/site-packages/sscha/Relax.py\", line 388, in relax\n    self.minim.run(custom_function_pre = self.__cfpre__,\n  File \"/root/env-mattersim/lib/python3.12/site-packages/sscha/SchaMinimizer.py\", line 1300, in run\n    timer.execute_timed_function(self.minimization_step, custom_function_gradient)\n  File \"/root/env-mattersim/lib/python3.12/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mattersim/lib/python3.12/site-packages/sscha/SchaMinimizer.py\", line 652, in minimization_step\n    timer.execute_timed_function(self.update)\n  File \"/root/env-mattersim/lib/python3.12/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mattersim/lib/python3.12/site-packages/sscha/SchaMinimizer.py\", line 1008, in update\n    timer.execute_timed_function(self.ensemble.update_weights, self.dyn, self.ensemble.current_T)\n  File \"/root/env-mattersim/lib/python3.12/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mattersim/lib/python3.12/site-packages/sscha/Ensemble.py\", line 1926, in update_weights\n    w_new, pols, wqn, polsqn = timer.execute_timed_function(new_dynamical_matrix.DiagonalizeSupercell, return_qmodes=True)\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mattersim/lib/python3.12/site-packages/cellconstructor/Timer.py\", line 112, in execute_timed_function\n    ret = function(*args, timer=new_timer,**kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/env-mattersim/lib/python3.12/site-packages/cellconstructor/Phonons.py\", line 4015, in DiagonalizeSupercell\n    assert np.max(np.abs(np.imag(self.dynmats[iq]))) < __EPSILON__, \"Error, at point {} (q = -q + G) the dynamical matrix is complex\".format(iq)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Error, at point 2 (q = -q + G) the dynamical matrix is complex\n",
+  "relax_partial": {
+   "reason": "exception",
+   "steps": [],
+   "hook_errors": [],
+   "pop_start_aux_min_nonac_thz": {},
+   "controller": {
+    "steps_per_pop": 400,
+    "pops": {
+     "1": {
+      "n_fe_at_start": 1,
+      "max_ka_set": 400,
+      "t_first_step_s": 98.5249891281128
+     }
+    },
+    "capped": null,
+    "deadline_after_s": 7199.999997615814,
+    "errors": []
+   }
+  },
+  "wall_s": 99.763512134552,
+  "utc_end": "2026-10-03T22:24:43Z",
+  "provenance": {
+   "git_head": "c42b6e4",
+   "host": "bdba2284f8cf",
+   "packages": {
+    "numpy": "2.5.2",
+    "scipy": "1.18.0",
+    "ase": "3.29.0",
+    "phonopy": "4.4.0",
+    "spglib": "2.7.0",
+    "torch": "2.13.0",
+    "pandas": "3.0.5",
+    "pyarrow": "25.0.1",
+    "pymatgen": "2026.5.4",
+    "python-sscha": "1.6.1",
+    "CellConstructor": "1.6.2",
+    "julia": null,
+    "mattersim": "1.2.5"
+   },
+   "model_version": "mattersim=1.2.5;ckpt=mattersim-v1.0.0-5m",
+   "device": "cuda",
+   "omp_num_threads": "2"
+  }
+ },
+ "last_written_utc": "2026-10-03T22:24:43Z"
+}
