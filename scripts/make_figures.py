@@ -601,6 +601,302 @@ def fig_ensemble_guardrail():
               f"freq AUC {r['freq']['auc']:.3f} [{r['freq']['ci_lo']:.3f}, {r['freq']['ci_hi']:.3f}]")
 
 
+# Call colours shared by the two revision figures: a correct call is light grey so the errors
+# carry the colour; a false-stable is vermillion and a false-unstable blue (Okabe-Ito).
+C_OK, C_FS, C_FU = "#E3E3E3", "#D55E00", "#0072B2"
+PL_CALLS = "results/revision/dft_checks/pl_calls.csv"
+PL_PROFILE = "results/revision/dft_checks/pl_profile.csv"
+PL_LATTICE = "results/revision/dft_checks/pl_lattice.csv"
+FT_LATTICE = "results/revision/finetune_mace30/lattice_diag.json"
+
+
+def fig_sscha_map():
+    """Converged-recipe SSCHA (ESI Table S22) on every unit of the grid, one cell per (system,
+    model, temperature), start A. Non-bcc units are scored against the label; bcc units have no
+    label and are compared with the screen's call, as in the text. Units whose pre-registered
+    replicates disagree on the call (ESI Table S24) are hatched and left out of the counts, not
+    resolved by majority; units that failed or did not converge have no call. The counts printed
+    under the map are recomputed here, with the definitions of build_esi_tables.e3_resolved_counts."""
+    if not os.path.exists(CONV_SUMMARY):
+        return
+    c = pd.read_csv(CONV_SUMMARY)
+    c = c[c["start"] == "A"].copy()
+    unres = set()
+    if os.path.exists(E3_SUMMARY):
+        e3 = pd.read_csv(E3_SUMMARY)
+        unres = set(e3.loc[e3["verdict"] == "unresolved", "unit_tag"])
+    conv = (c["status"] == "ok") & (c["converged"].astype(str) == "True")
+    stable = c["stable_call"].astype(str) == "True"
+    bcc = c["family"] == "bcc"
+    c["unres"] = c["unit_tag"].isin(unres)
+    # Headline counts (Section 3.3): converged, label-unstable, non-bcc, replicates resolved.
+    lu = c[conv & ~bcc & ~c["gt_stable"].astype(bool) & c["label_scored"].astype(bool)]
+    lr = lu[~lu["unres"]]
+    fs = int(stable[lr.index].sum())
+    lr_no = lr[lr["model"] != "orb_v2"]
+    fs_no = int(stable[lr_no.index].sum())
+    ls = c[conv & ~bcc & c["gt_stable"].astype(bool) & ~c["unres"]]
+    fu = int((~stable[ls.index]).sum())
+    bc = c[conv & bcc & ~c["unres"]]
+    b_agree = int(bc["call_matches_screen"].astype(bool).sum())
+    counts = dict(fs=fs, n_lu=len(lr), fs_no=fs_no, n_lu_no=len(lr_no), n_unres_lu=int(lu["unres"].sum()),
+                  fu=fu, n_ls=len(ls), b_agree=b_agree, n_b=len(bc))
+
+    systems = ["batio3_cubic", "knbo3_cubic", "pbtio3_cubic", "srtio3_cubic", "cssni3_cubic",
+               "zro2_cubic", "hfo2_cubic", "ti_bcc", "zr_bcc", "hf_bcc"]
+    systems = [s for s in systems if s in set(c["system"])]
+    cols = []                                      # (system, T) in display order
+    for s in systems:
+        for T in sorted(c.loc[c["system"] == s, "T_K"].unique()):
+            cols.append((s, float(T)))
+    gap = 0.45                                     # space between system blocks
+    xpos, x, prev = [], 0.0, None
+    for s, T in cols:
+        if prev is not None and s != prev:
+            x += gap
+        xpos.append(x)
+        x += 1.0
+        prev = s
+    idx = {(r.system, r.model, float(r.T_K)): r for r in c.itertuples()}
+    C_BS, C_BU = "#F3B79A", "#9DC3E3"              # bcc: SSCHA v the screen, lighter tints
+    with plt.rc_context({"font.size": 7.5, "hatch.linewidth": 0.6}):
+        fig, ax = plt.subplots(figsize=(6.7, 3.0))
+        for yi, m in enumerate(MODELS):
+            for (s, T), x0 in zip(cols, xpos):
+                r = idx.get((s, m, T))
+                y0 = len(MODELS) - 1 - yi
+                if r is None:                      # not in the grid: no cell
+                    ax.add_patch(Rectangle((x0, y0), 1, 1, fc="white", ec="0.85", lw=0.4))
+                    continue
+                ok = r.status == "ok" and str(r.converged) == "True"
+                st = str(r.stable_call) == "True"
+                hatch, mark = None, None
+                if r.status != "ok":
+                    fc, mark = "white", "x"
+                elif not ok:
+                    fc, mark = "white", "o"
+                elif r.unres:
+                    fc, hatch = "#BDBDBD", "//////"
+                elif r.family == "bcc":
+                    fc = C_OK if bool(r.call_matches_screen) else (C_BS if st else C_BU)
+                elif bool(r.gt_stable):
+                    fc = C_OK if st else C_FU
+                else:
+                    fc = C_FS if st else C_OK
+                ax.add_patch(Rectangle((x0, y0), 1, 1, fc=fc, ec="white", lw=0.8, hatch=hatch))
+                if mark == "x":
+                    ax.plot(x0 + 0.5, y0 + 0.5, marker="x", ms=4, mew=0.9, color="0.3")
+                elif mark == "o":
+                    ax.plot(x0 + 0.5, y0 + 0.5, marker="o", ms=3.2, mew=0.8, mfc="none", mec="0.3")
+        ax.set_xlim(-0.1, xpos[-1] + 1.1)
+        ax.set_ylim(0, len(MODELS) + 1.25)
+        ax.set_yticks([len(MODELS) - 1 - i + 0.5 for i in range(len(MODELS))])
+        ax.set_yticklabels([NAME[m] for m in MODELS])
+        ax.set_xticks([x0 + 0.5 for x0 in xpos])
+        ax.set_xticklabels([f"{int(T) // 100}" for _, T in cols], fontsize=6.5)
+        ax.tick_params(length=0, pad=1.5)
+        for sp in ax.spines.values():
+            sp.set_visible(False)
+        for s in systems:
+            xs = [x0 for (ss, _), x0 in zip(cols, xpos) if ss == s]
+            ax.text((xs[0] + xs[-1] + 1) / 2, len(MODELS) + 0.15, sys_label(s), ha="center",
+                    va="bottom", fontsize=7.5)
+        # Brackets for the two comparisons.
+        xb = [x0 for (s, _), x0 in zip(cols, xpos) if s.endswith("_bcc")]
+        xn = [x0 for (s, _), x0 in zip(cols, xpos) if not s.endswith("_bcc")]
+        for xs, lab in ((xn, "scored against the label"), (xb, "compared with the screen")):
+            if xs:
+                ax.plot([xs[0] + 0.05, xs[-1] + 0.95], [len(MODELS) + 0.95] * 2, color="0.4", lw=0.7)
+                ax.text((xs[0] + xs[-1] + 1) / 2, len(MODELS) + 1.0, lab, ha="center", va="bottom",
+                        fontsize=7, color="0.3", style="italic")
+        ax.set_xlabel("Temperature (100 K)", labelpad=1.5)
+        handles = [Patch(fc=C_OK, label="correct / agrees with screen"),
+                   Patch(fc=C_FS, label="false-stable"),
+                   Patch(fc=C_FU, label="false-unstable"),
+                   Patch(fc=C_BS, label="bcc: stable, screen unstable"),
+                   Patch(fc=C_BU, label="bcc: unstable, screen stable"),
+                   Patch(fc="#BDBDBD", hatch="//////", ec="white",
+                         label="unresolved by replicates (not counted)"),
+                   Line2D([], [], ls="", marker="o", ms=3.2, mfc="none", mec="0.3",
+                          label="did not converge (no call)"),
+                   Line2D([], [], ls="", marker="x", ms=4, color="0.3", label="run failed"),
+                   Patch(fc="white", ec="0.75", label="not in the grid")]
+        fig.legend(handles=handles, loc="lower center", ncol=3, fontsize=6.5, frameon=False,
+                   bbox_to_anchor=(0.5, 0.0), handlelength=1.3, columnspacing=1.2)
+        fig.tight_layout(rect=(0, 0.2, 1, 1))
+        _save(fig, "fig_sscha_map")
+    print(f"  label-unstable non-bcc: false-stable {fs}/{len(lr)} ({fs_no}/{len(lr_no)} without "
+          f"ORB-v2), {counts['n_unres_lu']} unresolved; label-stable false-unstable {fu}/{len(ls)}; "
+          f"bcc agree with screen {b_agree}/{len(bc)}")
+    return counts
+
+
+def fig_lattice_flip():
+    """The lattice knife edge on BaTiO3 and KNbO3 (ESI Section S5.3, Table S23; Section 4).
+    (a) The screen's call at 100/300/600 K on PBE at the PBE lattice (on the two modes profiled
+    there; the X-point mode was not profiled), on PBE at MACE-MP-0's lattice along MACE-MP-0's
+    eigenvector, on MACE-MP-0 itself, and on the three 30-epoch MACE-MP-0 fine-tunes at their own
+    lattice and at the base model's lattice (300 K only; a post hoc check, not pre-registered).
+    (b, c) At 300 K, the depth of the profiled well against the lattice parameter relative to PBE:
+    filled markers are called unstable (correct), open ones stable (wrong). The lattice and the
+    eigenvector change together in the PBE pair, so the check does not separate the two."""
+    import json
+    if not all(os.path.exists(p) for p in (PL_CALLS, PL_PROFILE, PL_LATTICE, FT_LATTICE)):
+        return
+    calls = pd.read_csv(PL_CALLS)
+    prof = pd.read_csv(PL_PROFILE).set_index(["system", "curve"])
+    lat = pd.read_csv(PL_LATTICE)
+    ft = json.load(open(FT_LATTICE, encoding="utf-8"))
+    systems = [s for s in ("batio3_cubic", "knbo3_cubic", "cssnbr3_cubic") if s in set(calls["system"])]
+    Ts = [100.0, 300.0, 600.0]
+    seeds = ["seed0", "seed1", "seed2"]
+    a_pbe = {s: float(lat[(lat["system"] == s) & lat["source"].str.startswith("PBE")]["a_A"].iloc[0])
+             for s in systems}
+
+    def pct(s, a):
+        return 100.0 * (a / a_pbe[s] - 1.0)
+
+    def pbe_own(r):
+        """PBE at its lattice: unstable if either profiled mode condenses (softest may be absent)."""
+        v = [r["pbe_lattice_deciding_stable"], r.get("pbe_lattice_softest_stable")]
+        v = [bool(x) for x in v if pd.notna(x)]
+        return all(v)
+
+    rows = [("label (experiment)", "label"),
+            ("PBE, PBE lattice*", "pbe_own"),
+            ("PBE, MACE-MP-0 lattice", "pbe_mace"),
+            ("MACE-MP-0", "mace"),
+            ("fine-tuned, own lattice", "ft_own"),
+            ("fine-tuned, base lattice", "ft_base")]
+
+    def cell(s, T, key):
+        """(stable call or None, n_stable, n) for one cell."""
+        r = calls[(calls["system"] == s) & (calls["T"] == T)]
+        if r.empty:
+            return None
+        r = r.iloc[0]
+        if key == "label":
+            return bool(r["gt_stable"]), None
+        if key == "pbe_own":
+            return pbe_own(r), None
+        if key == "pbe_mace":
+            return bool(r["pbe_mlip_lattice_stable"]), None
+        if key == "mace":
+            return (None if pd.isna(r["mlip_ledger_stable"]) else bool(r["mlip_ledger_stable"])), None
+        if key in ("ft_own", "ft_base") and T == ft.get("T_K") and s in ft["systems"]:
+            k = "own_lattice" if key == "ft_own" else "base_lattice"
+            v = [bool(ft["systems"][s][sd][k]["pred_stable"]) for sd in seeds]
+            return (all(v) if len(set(v)) == 1 else None), (sum(v), len(v))
+        return None
+
+    with plt.rc_context({"font.size": 7.5, "axes.titlesize": 8.5, "axes.labelsize": 7.5,
+                         "xtick.labelsize": 7, "ytick.labelsize": 7}):
+        fig = plt.figure(figsize=(6.7, 5.0))
+        gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.05], hspace=0.42, wspace=0.08,
+                              left=0.2, right=0.985, top=0.93, bottom=0.17)
+        ax = fig.add_subplot(gs[0, :])
+        gap = 0.5
+        for si, s in enumerate(systems):
+            for ti, T in enumerate(Ts):
+                x0 = si * (len(Ts) + gap) + ti
+                gt = cell(s, T, "label")[0]
+                for ri, (_, key) in enumerate(rows):
+                    y0 = len(rows) - 1 - ri
+                    got = cell(s, T, key)
+                    if got is None or got[0] is None:
+                        ax.add_patch(Rectangle((x0, y0), 1, 1, fc="white", ec="0.85", lw=0.4))
+                        if got is None and key.startswith("ft"):
+                            pass
+                        continue
+                    st, frac = got
+                    if key == "label":
+                        fc, tc = "white", "k"
+                    else:
+                        fc = C_OK if st == gt else (C_FS if st else C_FU)
+                        tc = "k" if st == gt else "white"
+                    ax.add_patch(Rectangle((x0, y0), 1, 1, fc=fc, ec="0.7" if key == "label" else "white",
+                                           lw=0.8))
+                    txt = "stable" if st else "unstable"
+                    if frac is not None:
+                        txt += f"\n{frac[1]}/{frac[1]}"
+                    ax.text(x0 + 0.5, y0 + 0.5, txt, ha="center", va="center", fontsize=6.2, color=tc,
+                            linespacing=0.9)
+            xc = si * (len(Ts) + gap) + len(Ts) / 2
+            ax.text(xc, len(rows) + 0.55, sys_label(s), ha="center", va="bottom", fontsize=8)
+        ax.set_xlim(-0.05, len(systems) * (len(Ts) + gap) - gap + 0.05)
+        ax.set_ylim(0, len(rows) + 1.3)
+        ax.set_yticks([len(rows) - 1 - i + 0.5 for i in range(len(rows))])
+        ax.set_yticklabels([lab for lab, _ in rows])
+        ax.set_xticks([si * (len(Ts) + gap) + ti + 0.5 for si in range(len(systems)) for ti in range(len(Ts))])
+        ax.set_xticklabels([f"{int(T)} K" for _ in systems for T in Ts])
+        ax.xaxis.tick_top()
+        ax.tick_params(length=0, pad=1)
+        for sp in ax.spines.values():
+            sp.set_visible(False)
+        ax.text(-0.02, 1.07, "(a)", transform=ax.transAxes, ha="right", fontsize=9, fontweight="bold")
+
+        # (b, c): well depth against the lattice offset at 300 K.
+        CP, CM, CF = "#000000", COLOR["mace_mp0"], "#009E73"
+        axb = None
+        for k, s in enumerate([x for x in systems if x in ft["systems"]][:2]):
+            a2 = fig.add_subplot(gs[1, k], sharey=axb)
+            axb = axb or a2
+            r300 = calls[(calls["system"] == s) & (calls["T"] == 300.0)].iloc[0]
+            a_mace = float(lat[(lat["system"] == s) & (lat["source"] == "mace_mp0 relaxed")]["a_A"].iloc[0])
+            pts = [  # (x %, depth meV, stable call, colour, marker)
+                (0.0, prof.loc[(s, "pbe_lattice_deciding"), "depth_meV"], pbe_own(r300), CP, "o"),
+                (pct(s, a_mace), prof.loc[(s, "pbe_mlip_lattice"), "depth_meV"],
+                 bool(r300["pbe_mlip_lattice_stable"]), CP, "o"),
+                (pct(s, ft["systems"][s]["base"]["a_relaxed_A"]),
+                 ft["systems"][s]["base"]["own_lattice"]["well_depth_meV"],
+                 bool(ft["systems"][s]["base"]["own_lattice"]["pred_stable"]), CM, "s")]
+            for sd in seeds:
+                e = ft["systems"][s][sd]
+                pts.append((pct(s, e["a_relaxed_A"]), e["own_lattice"]["well_depth_meV"],
+                            bool(e["own_lattice"]["pred_stable"]), CF, "D"))
+                pts.append((pct(s, ft["systems"][s]["base"]["a_relaxed_A"]), e["base_lattice"]["well_depth_meV"],
+                            bool(e["base_lattice"]["pred_stable"]), CF, "D"))
+            for xx, dd, st, col, mk in pts:
+                a2.scatter(xx, dd, s=30, marker=mk, facecolors="none" if st else col, edgecolors=col,
+                           linewidths=1.1, zorder=3)
+            # Connect each method's own-lattice point to its point at the MACE-MP-0 lattice.
+            a2.plot([0.0, pct(s, a_mace)], [pts[0][1], pts[1][1]], color=CP, lw=0.8, ls="--", zorder=2)
+            for sd in seeds:
+                e = ft["systems"][s][sd]
+                a2.plot([pct(s, e["a_relaxed_A"]), pct(s, ft["systems"][s]["base"]["a_relaxed_A"])],
+                        [e["own_lattice"]["well_depth_meV"], e["base_lattice"]["well_depth_meV"]],
+                        color=CF, lw=0.6, ls=":", zorder=2)
+            a2.axvline(0, color="0.6", lw=0.6)
+            a2.axvline(pct(s, a_mace), color=CM, lw=0.6, alpha=0.6)
+            a2.set_xlabel("lattice parameter relative to PBE (%)")
+            a2.set_title(f"{sys_label(s)}, 300 K (label: unstable)")
+            a2.text(-0.02 if k == 0 else -0.02, 1.04, "(b)" if k == 0 else "(c)", transform=a2.transAxes,
+                    ha="right", fontsize=9, fontweight="bold")
+            a2.set_xlim(-0.55, 1.0)
+            if k == 0:
+                a2.set_ylabel("well depth (meV per modulated cell)")
+            else:
+                plt.setp(a2.get_yticklabels(), visible=False)
+        axb.set_ylim(0, None)
+        h = [Line2D([], [], ls="", marker="o", ms=5, mfc=CP, mec=CP, label="PBE"),
+             Line2D([], [], ls="", marker="s", ms=5, mfc=CM, mec=CM, label="MACE-MP-0"),
+             Line2D([], [], ls="", marker="D", ms=4.5, mfc=CF, mec=CF, label="MACE-MP-0 fine-tuned (3 seeds)"),
+             Line2D([], [], ls="", marker="o", ms=5, mfc="0.4", mec="0.4", label="filled: called unstable"),
+             Line2D([], [], ls="", marker="o", ms=5, mfc="none", mec="0.4", label="open: called stable"),
+             Patch(fc=C_OK, label="correct"), Patch(fc=C_FS, label="false-stable"),
+             Patch(fc=C_FU, label="false-unstable")]
+        fig.legend(handles=h, loc="lower center", ncol=4, fontsize=6.5, frameon=False,
+                   bbox_to_anchor=(0.55, 0.0), columnspacing=1.0)
+        ax.text(0.0, -0.04, "* On the two modes profiled; PBE's X-point mode, also imaginary, was not "
+                "profiled.\nBlank: not computed (fine-tunes: 300 K, BaTiO₃ and KNbO₃ only).",
+                transform=ax.transAxes, fontsize=6, ha="left", va="top", color="0.25")
+        _save(fig, "fig_lattice_flip")
+    for s in systems:
+        print(f"  {s}: a_PBE {a_pbe[s]:.4f} A; " + "; ".join(
+            f"{lab} " + "/".join("-" if cell(s, T, key) is None or cell(s, T, key)[0] is None else
+                                 ("S" if cell(s, T, key)[0] else "U") for T in Ts) for lab, key in rows))
+
+
 if __name__ == "__main__":
     _check_numbering()
     fig_tolerance_sweep()
@@ -609,4 +905,7 @@ if __name__ == "__main__":
     fig_method_agreement()
     fig_displacive_recall()
     fig_ensemble_guardrail()
+    # Revision figures, not yet numbered (add them to FIG_NUMBER when the manuscript links them).
+    fig_sscha_map()
+    fig_lattice_flip()
     print("FIGURES_DONE")
