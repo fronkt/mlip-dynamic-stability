@@ -9,6 +9,22 @@ each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ..
 **Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
 false.
 
+## ▶ 2026-10-09 (late) — two new figures + length trim (Frank: "both figures plus the trim, but the revisions must stay fully emphasized")
+
+Why: body ~20.6k words / 53 Word pp, 6 figures, ~25 tables; the revision's three new results (PBE-lattice,
+E3 replicates, E5 lattice) have no figure. Rule for the trim: **nothing a response-letter "Changes." pointer
+names leaves the main text** unless the letter pointer is updated in the same commit; trim pre-revision
+methods detail and robustness tables first. Every moved block goes to the ESI verbatim, with a pointer left.
+- [x] F-A (7208006, results/figures/fig_lattice_flip; todo: MACE marker blue reads as "false-unstable", recolour or split legend) Lattice figure (BaTiO3/KNbO3 soft-mode call/frequency: PBE@PBE a, PBE@MACE a, base v fine-tuned
+      MLIPs at both lattices). Script function in `scripts/make_figures.py`, 600 dpi, numbered in citation order.
+- [x] F-B (7208006, fig_sscha_map; reproduces 27/77, 23/67, 7 unresolved, bcc 33/40) Converged-SSCHA results map (system x model x T; correct / false-stable / false-unstable;
+      E3-unresolved hatched; not-converged marked). Candidate to replace a Section 3.3 table.
+- [x] T1 Trim proposal (read-only; scratchpad/trim_proposal_2026-10-09.md: 21 moves, ~4.8k words, body -> ~14.3k): words per subsection, which blocks are revision-response content
+      (letter pointers), candidate moves to the ESI totalling 4–6k words. Frank sees it before edits.
+- [ ] T2 Apply trim (one writer) + insert F-A/F-B + renumber figures + letter pointers (R3.6 figure order!).
+- [ ] T3 Abstract: check the RSC Advances limit in the portal guidelines (third-party says 200; ours 247).
+- [ ] T4 verify_claims, ESI check, renumber_refs, build_docx + build_marked_changes drafts, stale scan.
+
 ## ▶ 2026-10-08 — fold everything in + re-check every referee ask (supersedes the "Next" lines below)
 
 Editor agreed to **9 Oct** (RSC, 09-28). The 14 Oct request is still an UNSENT Gmail draft (thread
