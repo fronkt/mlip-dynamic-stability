@@ -1,0 +1,174 @@
+{
+ "provenance": {
+  "script": "scripts/dft_checks.py",
+  "stage": "pbe-lattice-C",
+  "git_head": "a9fa30a",
+  "versions": {
+   "numpy": "2.3.5",
+   "scipy": "1.17.1",
+   "ase": "3.28.0",
+   "phonopy": "3.5.1",
+   "spglib": "2.7.0",
+   "pandas": "3.0.6",
+   "torch": null,
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": null,
+   "cellconstructor": null
+  },
+  "python": "3.12.15",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "host": "427cd5d94dd5",
+  "utc": "2026-10-09T02:17:17Z",
+  "settings": {
+   "stage": "pbe-lattice",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft_checks",
+   "dft_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "sssp_dir": "/root/sssp",
+   "sssp_json": null,
+   "kspacing_insulator": null,
+   "degauss_insulator": null,
+   "no_require_pbe": false,
+   "phase": "C",
+   "model": "mace_mp0",
+   "select": [
+    "deciding",
+    "softest"
+   ],
+   "fd_disp": 0.01,
+   "fd_plusminus": false,
+   "fd_supercell": null,
+   "pos_tol": 0.001
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "script_sha256": "34fceb0fb1e45204b16e7d977d45cdefcbecd0a3b378ee50e8935320d47d037e",
+  "dft_reference_sha256": "c636c66408c17c067b30f170bd175c57ae41247bbdb14cceaa56769cca6796cf"
+ },
+ "system": "knbo3_cubic",
+ "tag": "profsoft",
+ "select": "softest",
+ "q": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "band": 0,
+ "freq_thz": -6.966078411536748,
+ "n_degenerate": 3,
+ "dim": [
+  1,
+  1,
+  1
+ ],
+ "m_eff": 86.40684711958721,
+ "n_atoms_supercell": 5,
+ "n_atoms_run": 5,
+ "Qs": [
+  0.0,
+  0.005555555555555556,
+  0.022222222222222223,
+  0.049999999999999996,
+  0.08888888888888889,
+  0.13888888888888892,
+  0.19999999999999998,
+  0.27222222222222214,
+  0.35555555555555557,
+  0.45
+ ],
+ "reduction": null,
+ "u": [
+  [
+   0.00027279419878910554,
+   0.03527243571881476,
+   -0.03421648337173939
+  ],
+  [
+   -0.003148828880330185,
+   -0.40714525735518897,
+   0.39495653317599494
+  ],
+  [
+   0.007733920077529701,
+   0.639020829580295,
+   -0.6198904369358874
+  ],
+  [
+   0.00494213602385037,
+   1.0,
+   -0.6198904369358876
+  ],
+  [
+   0.004942136023850358,
+   0.6390208295802965,
+   -0.9700629592043614
+  ]
+ ],
+ "a_pbe_A": 4.026883539,
+ "jobs": [
+  "pl_knbo3_cubic_profsoft_i00",
+  "pl_knbo3_cubic_profsoft_i01",
+  "pl_knbo3_cubic_profsoft_i02",
+  "pl_knbo3_cubic_profsoft_i03",
+  "pl_knbo3_cubic_profsoft_i04",
+  "pl_knbo3_cubic_profsoft_i05",
+  "pl_knbo3_cubic_profsoft_i06",
+  "pl_knbo3_cubic_profsoft_i07",
+  "pl_knbo3_cubic_profsoft_i08",
+  "pl_knbo3_cubic_profsoft_i09"
+ ],
+ "q_decide": [
+  0.0,
+  0.5,
+  0.5
+ ],
+ "q_decide_stem": "knbo3_cubic_mace_mp0_q0-1d2-1d2-b0",
+ "n_imaginary_modes_total": 3,
+ "imaginary_modes": [
+  {
+   "q": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "band": 0,
+   "freq_thz": -6.966078411536748
+  },
+  {
+   "q": [
+    0.5,
+    0.0,
+    0.0
+   ],
+   "band": 0,
+   "freq_thz": -5.471067655165845
+  },
+  {
+   "q": [
+    0.5,
+    0.0,
+    0.5
+   ],
+   "band": 0,
+   "freq_thz": -4.1743011798220975
+  }
+ ],
+ "mode_pattern": "phonopy eigenvector via mlip_dynstab.finite_t._mode_pattern (the screen's own construction; arbitrary inside a degenerate band)",
+ "est_core_h": 0.8788093023255815
+}

@@ -1,24 +1,168 @@
-system,source,stem,q,band,freq_thz
-batio3_cubic,chgnet (MLIP lattice),batio3_cubic_chgnet_q0-0-0-b0,"0,0,0",0,-6.904083568220142
-batio3_cubic,chgnet (MLIP lattice),batio3_cubic_chgnet_q1d2-1d2-0-b0,"1d2,1d2,0",0,-4.910529461895992
-batio3_cubic,mace_mp0 (MLIP lattice),batio3_cubic_mace_mp0_q1d2-0-1d2-b0,"1d2,0,1d2",0,-5.404168005352761
-batio3_cubic,mattersim (MLIP lattice),batio3_cubic_mattersim_q0-0-0-b0,"0,0,0",0,-7.082111994191451
-batio3_cubic,mattersim (MLIP lattice),batio3_cubic_mattersim_q1d2-0-1d2-b0,"1d2,0,1d2",0,-5.769300943112884
-batio3_cubic,orb_v2 (MLIP lattice),batio3_cubic_orb_v2_q1d2-1d2-0-b0,"1d2,1d2,0",0,-2.0328773228620327
-batio3_cubic,sevennet0 (MLIP lattice),batio3_cubic_sevennet0_q1d2-0-0-b0,"1d2,0,0",0,-6.5840920997396415
-batio3_cubic,sevennet0 (MLIP lattice),batio3_cubic_sevennet0_q1d2-0-1d2-b0,"1d2,0,1d2",0,-5.94806055093323
-cssnbr3_cubic,chgnet (MLIP lattice),cssnbr3_cubic_chgnet_q1d2-1d2-1d2-b0,"1d2,1d2,1d2",0,-0.6799672278398102
-cssnbr3_cubic,mace_mp0 (MLIP lattice),cssnbr3_cubic_mace_mp0_q1d2-1d2-0-b0,"1d2,1d2,0",0,-0.6606955048283176
-cssnbr3_cubic,mace_mp0 (MLIP lattice),cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0,"1d2,1d2,1d2",0,-0.665887243564172
-cssnbr3_cubic,mattersim (MLIP lattice),cssnbr3_cubic_mattersim_q0-1d2-1d2-b0,"0,1d2,1d2",0,-0.6779739392015262
-cssnbr3_cubic,mattersim (MLIP lattice),cssnbr3_cubic_mattersim_q1d2-1d2-1d2-b0,"1d2,1d2,1d2",0,-0.6779204492078897
-cssnbr3_cubic,orb_v2 (MLIP lattice),cssnbr3_cubic_orb_v2_q1d2-1d2-1d2-b1,"1d2,1d2,1d2",1,-0.1499774944466558
-cssnbr3_cubic,orb_v2 (MLIP lattice),cssnbr3_cubic_orb_v2_q1d2-1d2-1d2-b2,"1d2,1d2,1d2",2,-0.1337879414738934
-cssnbr3_cubic,sevennet0 (MLIP lattice),cssnbr3_cubic_sevennet0_q1d2-1d2-1d2-b0,"1d2,1d2,1d2",0,-0.6725161509518136
-knbo3_cubic,chgnet (MLIP lattice),knbo3_cubic_chgnet_q0-0-0-b0,"0,0,0",0,-2.227503572393719
-knbo3_cubic,mace_mp0 (MLIP lattice),knbo3_cubic_mace_mp0_q0-1d2-1d2-b0,"0,1d2,1d2",0,-4.225624696779636
-knbo3_cubic,mattersim (MLIP lattice),knbo3_cubic_mattersim_q0-0-0-b0,"0,0,0",0,-6.704034392004276
-knbo3_cubic,mattersim (MLIP lattice),knbo3_cubic_mattersim_q0-1d2-1d2-b0,"0,1d2,1d2",0,-4.386225363603934
-knbo3_cubic,orb_v2 (MLIP lattice),knbo3_cubic_orb_v2_q0-1d2-1d2-b0,"0,1d2,1d2",0,-2.2269396815915927
-knbo3_cubic,orb_v2 (MLIP lattice),knbo3_cubic_orb_v2_q1d2-1d2-0-b0,"1d2,1d2,0",0,-2.2523483096038985
-knbo3_cubic,sevennet0 (MLIP lattice),knbo3_cubic_sevennet0_q0-1d2-1d2-b0,"0,1d2,1d2",0,-4.279749514897412
+system,source,q,band,freq_thz,stem
+batio3_cubic,PBE FD at PBE lattice,"0,0,0",0,-7.442693315488787,
+batio3_cubic,PBE FD at PBE lattice,"0,0,0",1,-7.442693315488786,
+batio3_cubic,PBE FD at PBE lattice,"0,0,0",2,-7.4426933154887855,
+batio3_cubic,PBE FD at PBE lattice,"0,0,0",3,-1.6409607112801678e-07,
+batio3_cubic,PBE FD at PBE lattice,"0,0,0",4,-1.1450102258941775e-07,
+batio3_cubic,PBE FD at PBE lattice,"0,0,0",5,-7.157603804002702e-08,
+batio3_cubic,PBE FD at PBE lattice,"0,0,1d2",0,-6.625624088832853,
+batio3_cubic,PBE FD at PBE lattice,"0,0,1d2",1,-6.6256240888328435,
+batio3_cubic,PBE FD at PBE lattice,"0,0,1d2",2,3.1369532228199914,
+batio3_cubic,PBE FD at PBE lattice,"0,0,1d2",3,3.1369532228199923,
+batio3_cubic,PBE FD at PBE lattice,"0,0,1d2",4,4.388645858994442,
+batio3_cubic,PBE FD at PBE lattice,"0,0,1d2",5,5.793626946051497,
+batio3_cubic,PBE FD at PBE lattice,"0,1d2,0",0,-6.625624088832844,
+batio3_cubic,PBE FD at PBE lattice,"0,1d2,0",1,-6.625624088832842,
+batio3_cubic,PBE FD at PBE lattice,"0,1d2,0",2,3.1369532228199914,
+batio3_cubic,PBE FD at PBE lattice,"0,1d2,0",3,3.1369532228200017,
+batio3_cubic,PBE FD at PBE lattice,"0,1d2,0",4,4.388645858994435,
+batio3_cubic,PBE FD at PBE lattice,"0,1d2,0",5,5.7936269460514955,
+batio3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",0,-5.951498474266971,
+batio3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",1,3.0891285360218914,
+batio3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",2,3.089128536021895,
+batio3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",3,3.1077404244846947,
+batio3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",4,6.101880461211519,
+batio3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",5,8.17111419320262,
+batio3_cubic,PBE FD at PBE lattice,"1d2,0,0",0,-6.625624088832846,
+batio3_cubic,PBE FD at PBE lattice,"1d2,0,0",1,-6.6256240888328435,
+batio3_cubic,PBE FD at PBE lattice,"1d2,0,0",2,3.1369532228199875,
+batio3_cubic,PBE FD at PBE lattice,"1d2,0,0",3,3.136953222819999,
+batio3_cubic,PBE FD at PBE lattice,"1d2,0,0",4,4.3886458589944395,
+batio3_cubic,PBE FD at PBE lattice,"1d2,0,0",5,5.793626946051499,
+batio3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",0,-5.951498474266975,
+batio3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",1,3.089128536021901,
+batio3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",2,3.089128536021901,
+batio3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",3,3.107740424484686,
+batio3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",4,6.101880461211521,
+batio3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",5,8.17111419320262,
+batio3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",0,-5.951498474266963,
+batio3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",1,3.0891285360218967,
+batio3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",2,3.0891285360219025,
+batio3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",3,3.107740424484689,
+batio3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",4,6.101880461211523,
+batio3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",5,8.171114193202621,
+batio3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",0,3.8554503064169583,
+batio3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",1,3.855450306416961,
+batio3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",2,3.855450306416965,
+batio3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",3,5.390863012179202,
+batio3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",4,5.390863012179207,
+batio3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",5,5.39086301217921,
+batio3_cubic,chgnet (MLIP lattice),"0,0,0",0,-6.904083568220142,batio3_cubic_chgnet_q0-0-0-b0
+batio3_cubic,chgnet (MLIP lattice),"1d2,1d2,0",0,-4.910529461895992,batio3_cubic_chgnet_q1d2-1d2-0-b0
+batio3_cubic,mace_mp0 (MLIP lattice),"1d2,0,1d2",0,-5.404168005352761,batio3_cubic_mace_mp0_q1d2-0-1d2-b0
+batio3_cubic,mattersim (MLIP lattice),"0,0,0",0,-7.082111994191451,batio3_cubic_mattersim_q0-0-0-b0
+batio3_cubic,mattersim (MLIP lattice),"1d2,0,1d2",0,-5.769300943112884,batio3_cubic_mattersim_q1d2-0-1d2-b0
+batio3_cubic,orb_v2 (MLIP lattice),"1d2,1d2,0",0,-2.0328773228620327,batio3_cubic_orb_v2_q1d2-1d2-0-b0
+batio3_cubic,sevennet0 (MLIP lattice),"1d2,0,0",0,-6.5840920997396415,batio3_cubic_sevennet0_q1d2-0-0-b0
+batio3_cubic,sevennet0 (MLIP lattice),"1d2,0,1d2",0,-5.94806055093323,batio3_cubic_sevennet0_q1d2-0-1d2-b0
+cssnbr3_cubic,PBE FD at PBE lattice,"0,0,0",0,-2.3105484993533995e-08,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,0,0",1,-2.011669468876791e-08,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,0,0",2,9.199761890645113e-09,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,0,0",3,0.47374554138430025,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,0,0",4,0.47374554138430053,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,0,0",5,0.4737455413843008,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,0,1d2",0,0.4679312247666246,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,0,1d2",1,0.4679312247666248,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,0,1d2",2,0.577319747917915,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,0,1d2",3,0.5773197479179164,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,0,1d2",4,1.0674307191138497,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,0,1d2",5,1.0930809116551312,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,1d2,0",0,0.4679312247666247,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,1d2,0",1,0.4679312247666268,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,1d2,0",2,0.5773197479179123,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,1d2,0",3,0.5773197479179153,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,1d2,0",4,1.0674307191138497,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,1d2,0",5,1.0930809116551314,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",0,-0.6900920863104398,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",1,0.4982646629368673,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",2,0.5929908491986072,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",3,0.5929908491986089,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",4,1.100872925838361,
+cssnbr3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",5,1.1008729258383612,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,0,0",0,0.4679312247666236,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,0,0",1,0.4679312247666253,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,0,0",2,0.5773197479179164,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,0,0",3,0.5773197479179171,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,0,0",4,1.0674307191138497,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,0,0",5,1.0930809116551312,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",0,-0.6900920863104385,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",1,0.49826466293687194,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",2,0.5929908491986083,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",3,0.592990849198609,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",4,1.100872925838361,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",5,1.100872925838363,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",0,-0.6900920863104351,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",1,0.4982646629368677,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",2,0.5929908491986068,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",3,0.5929908491986088,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",4,1.1008729258383605,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",5,1.1008729258383607,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",0,-0.6963490064520635,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",1,-0.6963490064520612,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",2,-0.6963490064520604,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",3,0.5898876132289117,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",4,0.5898876132289131,
+cssnbr3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",5,0.5898876132289153,
+cssnbr3_cubic,chgnet (MLIP lattice),"1d2,1d2,1d2",0,-0.6799672278398102,cssnbr3_cubic_chgnet_q1d2-1d2-1d2-b0
+cssnbr3_cubic,mace_mp0 (MLIP lattice),"1d2,1d2,0",0,-0.6606955048283176,cssnbr3_cubic_mace_mp0_q1d2-1d2-0-b0
+cssnbr3_cubic,mace_mp0 (MLIP lattice),"1d2,1d2,1d2",0,-0.665887243564172,cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0
+cssnbr3_cubic,mattersim (MLIP lattice),"0,1d2,1d2",0,-0.6779739392015262,cssnbr3_cubic_mattersim_q0-1d2-1d2-b0
+cssnbr3_cubic,mattersim (MLIP lattice),"1d2,1d2,1d2",0,-0.6779204492078897,cssnbr3_cubic_mattersim_q1d2-1d2-1d2-b0
+cssnbr3_cubic,orb_v2 (MLIP lattice),"1d2,1d2,1d2",1,-0.1499774944466558,cssnbr3_cubic_orb_v2_q1d2-1d2-1d2-b1
+cssnbr3_cubic,orb_v2 (MLIP lattice),"1d2,1d2,1d2",2,-0.1337879414738934,cssnbr3_cubic_orb_v2_q1d2-1d2-1d2-b2
+cssnbr3_cubic,sevennet0 (MLIP lattice),"1d2,1d2,1d2",0,-0.6725161509518136,cssnbr3_cubic_sevennet0_q1d2-1d2-1d2-b0
+knbo3_cubic,PBE FD at PBE lattice,"0,0,0",0,-6.966078411536749,
+knbo3_cubic,PBE FD at PBE lattice,"0,0,0",1,-6.966078411536749,
+knbo3_cubic,PBE FD at PBE lattice,"0,0,0",2,-6.966078411536742,
+knbo3_cubic,PBE FD at PBE lattice,"0,0,0",3,-1.47697039509061e-07,
+knbo3_cubic,PBE FD at PBE lattice,"0,0,0",4,-4.98334192734117e-08,
+knbo3_cubic,PBE FD at PBE lattice,"0,0,0",5,6.093895891681661e-08,
+knbo3_cubic,PBE FD at PBE lattice,"0,0,1d2",0,-5.471067655165843,
+knbo3_cubic,PBE FD at PBE lattice,"0,0,1d2",1,-5.4710676551658395,
+knbo3_cubic,PBE FD at PBE lattice,"0,0,1d2",2,4.188923192425563,
+knbo3_cubic,PBE FD at PBE lattice,"0,0,1d2",3,4.188923192425575,
+knbo3_cubic,PBE FD at PBE lattice,"0,0,1d2",4,4.7009577026167575,
+knbo3_cubic,PBE FD at PBE lattice,"0,0,1d2",5,4.700957702616765,
+knbo3_cubic,PBE FD at PBE lattice,"0,1d2,0",0,-5.471067655165844,
+knbo3_cubic,PBE FD at PBE lattice,"0,1d2,0",1,-5.471067655165843,
+knbo3_cubic,PBE FD at PBE lattice,"0,1d2,0",2,4.188923192425565,
+knbo3_cubic,PBE FD at PBE lattice,"0,1d2,0",3,4.1889231924255705,
+knbo3_cubic,PBE FD at PBE lattice,"0,1d2,0",4,4.700957702616738,
+knbo3_cubic,PBE FD at PBE lattice,"0,1d2,0",5,4.700957702616765,
+knbo3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",0,-4.174301179822097,
+knbo3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",1,4.537989858459995,
+knbo3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",2,4.537989858460002,
+knbo3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",3,4.699661963765991,
+knbo3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",4,4.7009374015217515,
+knbo3_cubic,PBE FD at PBE lattice,"0,1d2,1d2",5,7.742538444987641,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,0,0",0,-5.471067655165844,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,0,0",1,-5.4710676551658395,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,0,0",2,4.188923192425566,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,0,0",3,4.188923192425571,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,0,0",4,4.7009577026167495,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,0,0",5,4.700957702616754,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",0,-4.1743011798220975,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",1,4.537989858460004,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",2,4.537989858460006,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",3,4.699661963765987,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",4,4.700937401521749,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,0,1d2",5,7.742538444987643,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",0,-4.174301179822094,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",1,4.537989858460001,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",2,4.537989858460004,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",3,4.699661963765987,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",4,4.700937401521749,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,1d2,0",5,7.742538444987641,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",0,4.483120541903854,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",1,4.483120541903859,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",2,4.483120541903869,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",3,5.148156468404305,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",4,5.148156468404305,
+knbo3_cubic,PBE FD at PBE lattice,"1d2,1d2,1d2",5,5.148156468404313,
+knbo3_cubic,chgnet (MLIP lattice),"0,0,0",0,-2.227503572393719,knbo3_cubic_chgnet_q0-0-0-b0
+knbo3_cubic,mace_mp0 (MLIP lattice),"0,1d2,1d2",0,-4.225624696779636,knbo3_cubic_mace_mp0_q0-1d2-1d2-b0
+knbo3_cubic,mattersim (MLIP lattice),"0,0,0",0,-6.704034392004276,knbo3_cubic_mattersim_q0-0-0-b0
+knbo3_cubic,mattersim (MLIP lattice),"0,1d2,1d2",0,-4.386225363603934,knbo3_cubic_mattersim_q0-1d2-1d2-b0
+knbo3_cubic,orb_v2 (MLIP lattice),"0,1d2,1d2",0,-2.2269396815915927,knbo3_cubic_orb_v2_q0-1d2-1d2-b0
+knbo3_cubic,orb_v2 (MLIP lattice),"1d2,1d2,0",0,-2.2523483096038985,knbo3_cubic_orb_v2_q1d2-1d2-0-b0
+knbo3_cubic,sevennet0 (MLIP lattice),"0,1d2,1d2",0,-4.279749514897412,knbo3_cubic_sevennet0_q0-1d2-1d2-b0

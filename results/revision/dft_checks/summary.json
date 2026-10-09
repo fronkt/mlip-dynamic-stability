@@ -2,7 +2,7 @@
  "provenance": {
   "script": "scripts/dft_checks.py",
   "stage": "analyze-checks",
-  "git_head": "f45e77e-dirty",
+  "git_head": "a7db326",
   "versions": {
    "numpy": "2.3.5",
    "scipy": "1.17.1",
@@ -22,7 +22,7 @@
   "python": "3.12.10",
   "platform": "Windows-11-10.0.26200-SP0",
   "host": "frank",
-  "utc": "2026-10-08T21:38:32Z",
+  "utc": "2026-10-09T05:18:56Z",
   "settings": {
    "stage": "analyze-checks",
    "out_root": "C:\\Users\\frank\\mlip-dynamic-stability\\results\\revision\\dft_checks",
@@ -39,7 +39,7 @@
     "pbe-lattice"
    ],
    "pos_tol": 0.001,
-   "workers": 8
+   "workers": 1
   },
   "screen_settings": {
    "q_max_A": 0.45,
@@ -486,8 +486,11 @@
   "systems": {
    "batio3_cubic": {
     "phase_A": "done",
-    "phase_B": "pending",
-    "phase_C": "pending",
+    "phase_B": "done",
+    "phase_C": {
+     "deciding": "complete",
+     "softest": "complete"
+    },
     "lattice": {
      "a_pbe_A": 4.02374737,
      "registry_start_A": 4.0,
@@ -510,12 +513,171 @@
       "mattersim": 0.25704046229336447
      }
     },
-    "profiles": {}
+    "gamma_acoustic_max_abs_thz": 1.6409607112801678e-07,
+    "n_displacements": 3,
+    "supercell": [
+     2,
+     2,
+     2
+    ],
+    "profiles": {
+     "deciding": {
+      "status": "complete",
+      "tag": "prof",
+      "q": [
+       0.5,
+       0.0,
+       0.5
+      ],
+      "band": 0,
+      "freq_thz": -5.951498474266979,
+      "n_degenerate": 1,
+      "dim": [
+       2,
+       1,
+       2
+      ],
+      "m_eff": 242.60695936412907,
+      "q_decide": [
+       0.5,
+       0.0,
+       0.5
+      ],
+      "n_atoms_run": 10,
+      "n_imaginary_modes_total": 3,
+      "imaginary_modes": [
+       {
+        "q": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "band": 0,
+        "freq_thz": -7.44269331548879
+       },
+       {
+        "q": [
+         0.5,
+         0.0,
+         0.0
+        ],
+        "band": 0,
+        "freq_thz": -6.625624088832853
+       },
+       {
+        "q": [
+         0.5,
+         0.0,
+         0.5
+        ],
+        "band": 0,
+        "freq_thz": -5.951498474266979
+       }
+      ]
+     },
+     "softest": {
+      "status": "complete",
+      "tag": "profsoft",
+      "q": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "band": 0,
+      "freq_thz": -7.44269331548879,
+      "n_degenerate": 3,
+      "dim": [
+       1,
+       1,
+       1
+      ],
+      "m_eff": 39.34147975635864,
+      "q_decide": [
+       0.5,
+       0.0,
+       0.5
+      ],
+      "n_atoms_run": 5,
+      "n_imaginary_modes_total": 3,
+      "imaginary_modes": [
+       {
+        "q": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "band": 0,
+        "freq_thz": -7.44269331548879
+       },
+       {
+        "q": [
+         0.5,
+         0.0,
+         0.0
+        ],
+        "band": 0,
+        "freq_thz": -6.625624088832853
+       },
+       {
+        "q": [
+         0.5,
+         0.0,
+         0.5
+        ],
+        "band": 0,
+        "freq_thz": -5.951498474266979
+       }
+      ]
+     }
+    },
+    "mlip_path_stem": "batio3_cubic_mace_mp0_q1d2-0-1d2-b0",
+    "mlip_path_decide_T": [
+     100.0,
+     300.0,
+     600.0,
+     900.0
+    ],
+    "mlip_path_q": [
+     0.5,
+     0.0,
+     0.5
+    ],
+    "profile": {
+     "pbe_lattice_deciding": {
+      "depth_meV": 48.74130289681489,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "omega_harm_thz": -5.860093364075716,
+      "a": -17.04436284913272,
+      "b": 1370.451429434819,
+      "c": 0.0
+     },
+     "pbe_lattice_softest": {
+      "depth_meV": 21.82611494208686,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "omega_harm_thz": -7.340845389426458,
+      "a": -4.3372183959269,
+      "b": 197.78751261530235,
+      "c": 0.0
+     },
+     "pbe_mlip_lattice": {
+      "depth_meV": 73.4979478220339,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "omega_harm_thz": -6.277758985060443,
+      "a": -19.191107893804116,
+      "b": 1246.0567295563283,
+      "c": 0.0
+     }
+    }
    },
    "cssnbr3_cubic": {
     "phase_A": "done",
-    "phase_B": "pending",
-    "phase_C": "pending",
+    "phase_B": "done",
+    "phase_C": {
+     "deciding": "complete"
+    },
     "lattice": {
      "a_pbe_A": 5.887105496,
      "registry_start_A": 5.8,
@@ -538,12 +700,99 @@
       "mattersim": 0.11906367892570013
      }
     },
-    "profiles": {}
+    "gamma_acoustic_max_abs_thz": 2.3105484993533995e-08,
+    "n_displacements": 3,
+    "supercell": [
+     2,
+     2,
+     2
+    ],
+    "profiles": {
+     "deciding": {
+      "status": "complete",
+      "tag": "prof",
+      "q": [
+       0.5,
+       0.5,
+       0.5
+      ],
+      "band": 0,
+      "freq_thz": -0.6963490064520648,
+      "n_degenerate": 3,
+      "dim": [
+       2,
+       2,
+       2
+      ],
+      "m_eff": 2022.5427612445324,
+      "q_decide": [
+       0.5,
+       0.5,
+       0.5
+      ],
+      "n_atoms_run": 10,
+      "n_imaginary_modes_total": 2,
+      "imaginary_modes": [
+       {
+        "q": [
+         0.5,
+         0.5,
+         0.5
+        ],
+        "band": 0,
+        "freq_thz": -0.6963490064520648
+       },
+       {
+        "q": [
+         0.0,
+         0.5,
+         0.5
+        ],
+        "band": 0,
+        "freq_thz": -0.6900920863104401
+       }
+      ]
+     }
+    },
+    "mlip_path_stem": "cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0",
+    "mlip_path_decide_T": [
+     300.0,
+     600.0,
+     900.0
+    ],
+    "mlip_path_q": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "profile": {
+     "pbe_lattice_deciding": {
+      "depth_meV": 131.1735643830616,
+      "Q_min_A": 0.35555555555555557,
+      "min_at_edge": false,
+      "omega_harm_thz": -0.6766512633453806,
+      "a": -1.8945058560915295,
+      "b": 6.7448880105425575,
+      "c": 0.26681135928142363
+     },
+     "pbe_mlip_lattice": {
+      "depth_meV": 127.20886574970791,
+      "Q_min_A": 0.45,
+      "min_at_edge": true,
+      "omega_harm_thz": -0.6648697138017649,
+      "a": -1.3325105424956456,
+      "b": 3.478452369952577,
+      "c": 0.0
+     }
+    }
    },
    "knbo3_cubic": {
     "phase_A": "done",
-    "phase_B": "pending",
-    "phase_C": "pending",
+    "phase_B": "done",
+    "phase_C": {
+     "deciding": "complete",
+     "softest": "complete"
+    },
     "lattice": {
      "a_pbe_A": 4.026883539,
      "registry_start_A": 4.02,
@@ -566,23 +815,180 @@
       "mattersim": 0.7974024688420223
      }
     },
-    "profiles": {}
+    "gamma_acoustic_max_abs_thz": 1.47697039509061e-07,
+    "n_displacements": 3,
+    "supercell": [
+     2,
+     2,
+     2
+    ],
+    "profiles": {
+     "deciding": {
+      "status": "complete",
+      "tag": "prof",
+      "q": [
+       0.0,
+       0.5,
+       0.5
+      ],
+      "band": 0,
+      "freq_thz": -4.174301179822086,
+      "n_degenerate": 1,
+      "dim": [
+       1,
+       2,
+       2
+      ],
+      "m_eff": 393.3524634158717,
+      "q_decide": [
+       0.0,
+       0.5,
+       0.5
+      ],
+      "n_atoms_run": 10,
+      "n_imaginary_modes_total": 3,
+      "imaginary_modes": [
+       {
+        "q": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "band": 0,
+        "freq_thz": -6.966078411536748
+       },
+       {
+        "q": [
+         0.5,
+         0.0,
+         0.0
+        ],
+        "band": 0,
+        "freq_thz": -5.471067655165845
+       },
+       {
+        "q": [
+         0.5,
+         0.0,
+         0.5
+        ],
+        "band": 0,
+        "freq_thz": -4.1743011798220975
+       }
+      ]
+     },
+     "softest": {
+      "status": "complete",
+      "tag": "profsoft",
+      "q": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "band": 0,
+      "freq_thz": -6.966078411536748,
+      "n_degenerate": 3,
+      "dim": [
+       1,
+       1,
+       1
+      ],
+      "m_eff": 86.40684711958721,
+      "q_decide": [
+       0.0,
+       0.5,
+       0.5
+      ],
+      "n_atoms_run": 5,
+      "n_imaginary_modes_total": 3,
+      "imaginary_modes": [
+       {
+        "q": [
+         0.0,
+         0.0,
+         0.0
+        ],
+        "band": 0,
+        "freq_thz": -6.966078411536748
+       },
+       {
+        "q": [
+         0.5,
+         0.0,
+         0.0
+        ],
+        "band": 0,
+        "freq_thz": -5.471067655165845
+       },
+       {
+        "q": [
+         0.5,
+         0.0,
+         0.5
+        ],
+        "band": 0,
+        "freq_thz": -4.1743011798220975
+       }
+      ]
+     }
+    },
+    "mlip_path_stem": "knbo3_cubic_mace_mp0_q0-1d2-1d2-b0",
+    "mlip_path_decide_T": [
+     100.0,
+     300.0,
+     600.0,
+     900.0
+    ],
+    "mlip_path_q": [
+     0.0,
+     0.5,
+     0.5
+    ],
+    "profile": {
+     "pbe_lattice_deciding": {
+      "depth_meV": 29.972522985190153,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "omega_harm_thz": -4.163784013317629,
+      "a": -13.951686431792034,
+      "b": 1285.6789705855854,
+      "c": 0.0
+     },
+     "pbe_lattice_softest": {
+      "depth_meV": 32.16453601271496,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "omega_harm_thz": -6.650126039481183,
+      "a": -7.81765241834059,
+      "b": 465.436789368435,
+      "c": 0.0
+     },
+     "pbe_mlip_lattice": {
+      "depth_meV": 87.7958973578643,
+      "Q_min_A": 0.08888888888888889,
+      "min_at_edge": false,
+      "omega_harm_thz": -5.136159399507382,
+      "a": -21.496737721673966,
+      "b": 1305.095314890097,
+      "c": 0.0
+     }
+    }
    }
   }
  },
  "cost": {
-  "n_jobs": 323,
+  "n_jobs": 382,
   "by_status": {
-   "ok": 323
+   "ok": 382
   },
-  "core_h_spent": 431.09305555555557,
+  "core_h_spent": 526.95305,
   "core_h_spent_by_prefix": {
    "cv_": 151.70915555555555,
    "xs_": 277.92075555555556,
-   "pl_": 1.4631444444444446
+   "pl_": 97.32313888888889
   },
-  "c0_core_s_measured_median": 6.599498728587367,
-  "n_measured": 323,
+  "c0_core_s_measured_median": 7.353854201159314,
+  "n_measured": 382,
   "core_h_remaining_model": 0.0
  },
  "conventions": {
