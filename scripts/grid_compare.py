@@ -489,11 +489,22 @@ def block_iv(frame: pd.DataFrame) -> dict:
     return out
 
 
+def block_v(frame: pd.DataFrame) -> dict:
+    """Claim (v). stats_hardening.screen_vs_sscha_paired on the three displacive system sets."""
+    out = {}
+    for tag, excl in MODEL_SETS:
+        out[tag] = {label: SH.screen_vs_sscha_paired(frame, systems, exclude_models=tuple(excl))
+                    for label, systems in (("fe_oxide", FE), ("fluorite", SH.FLUORITE),
+                                           ("displacive_combined", FE + SH.FLUORITE))}
+    return out
+
+
 def analyse(frame: pd.DataFrame) -> dict:
     """The four claims on one frame. A claim the frame cannot answer is recorded with its error,
     never dropped silently."""
     out = {}
-    for key, fn in (("i", block_i), ("ii", block_ii), ("iii", block_iii), ("iv", block_iv)):
+    for key, fn in (("i", block_i), ("ii", block_ii), ("iii", block_iii), ("iv", block_iv),
+                    ("v", block_v)):
         try:
             out[key] = fn(frame)
         except (KeyError, IndexError, ValueError, AssertionError) as exc:
@@ -784,9 +795,15 @@ DEFINITIONS = {
             "the grid the bcc cell is 3x3x3, in production 2x2x2."),
     "iv": ("Table S17 (stats_hardening.sscha_high_t): non-bcc SSCHA rows, false-unstable = SSCHA "
            "calls unstable and the label is stable, per temperature; blow-ups are included and "
-           "tallied. Production has 0/0, 5/5, 10/13 and 15/19 at 100/300/600/900 K; the grid "
-           "stops at 300 K, so 600 and 900 K are covered only by the two SrTiO3/MACE-MP-0 units "
-           "of the converged-mode directory."),
+           "tallied. Production has 0/0, 5/5, 10/13 and 15/19 at 100/300/600/900 K. Since the "
+           "2026-10-03 extension the grid covers the non-bcc systems at 100-900 K (2x2x2), so the "
+           "two SrTiO3/MACE-MP-0 units of the converged-mode directory are replicates of grid "
+           "units (c1c_overlap), not extra coverage."),
+    "v": ("stats_hardening.screen_vs_sscha_paired: the paired screen-v-SSCHA contrast at "
+          "T <= 300 K on the ferroelectric oxides (BaTiO3, KNbO3, PbTiO3), the fluorites and both "
+          "together (units with an SSCHA value, |f| <= 50 THz); screen right and SSCHA wrong "
+          "against the reverse, with stats.cluster_exact_paired over systems. Production: 33 v 3 "
+          "on 47 units, p = 0.125."),
     "matched": ("production_matched uses the production rows of exactly the (system, model, T) "
                 "units the grid evaluated (those with a production SSCHA row); converged_matched "
                 "the converged values on the same units; converged_all every evaluated unit, "
