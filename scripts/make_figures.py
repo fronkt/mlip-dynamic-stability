@@ -40,6 +40,9 @@ LEDGER = os.environ.get("LEDGER", "results/ledger.parquet")
 OUT = os.environ.get("FIGDIR", "results/figures")
 MANUSCRIPT = "paper/manuscript.md"
 SSCHA_GRID = "results/sscha_units_v1.csv"     # the attempted SSCHA grid (208 units)
+# The converged-recipe SSCHA grid (ESI Table S22) and its comparison with the production claims.
+CONV_SUMMARY = "results/revision/sscha_converged_grid/summary.csv"
+GRID_COMPARE = "results/revision/grid_compare.json"
 os.makedirs(OUT, exist_ok=True)
 from mlip_dynstab import DEFAULT_IMAG_TOL_THZ
 from mlip_dynstab import analysis as A
@@ -148,6 +151,11 @@ def fig_sscha_bcc():
     if not have:
         return
     trivial = _trivial_bcc_pairs()
+    conv = None
+    if os.path.exists(CONV_SUMMARY):
+        conv = pd.read_csv(CONV_SUMMARY)
+        conv = conv[(conv["start"] == "A") & (conv["family"] == "bcc") & (conv["status"] == "ok")
+                    & (conv["converged"].astype(str) == "True")]
     # Sized for the 17.1 cm double column, so the text prints at its set size (not shrunk ~56%).
     with plt.rc_context({"font.size": 8, "axes.titlesize": 9, "axes.labelsize": 8.5,
                          "xtick.labelsize": 8, "ytick.labelsize": 8}):
@@ -160,6 +168,12 @@ def fig_sscha_bcc():
                 triv = (s, m) in trivial
                 ax.plot(piv.index, piv[m], marker="o", ms=4, lw=1.3, color=COLOR[m],
                         ls="--" if triv else "-", mfc="white" if triv else COLOR[m])
+            if conv is not None:
+                cs = conv[conv["system"] == s]
+                for m in [c for c in MODELS if c in set(cs["model"])]:
+                    g = cs[cs["model"] == m].sort_values("T_K")
+                    ax.scatter(g["T_K"], g["hessian_min_thz"], marker="s", s=22,
+                               facecolors="none", edgecolors=COLOR[m], linewidths=1.1, zorder=4)
             ax.axhline(0, color="k", lw=0.8, ls=":")
             ax.set_xticks([0, 200, 400, 600])
             ax.set_xlabel("Temperature (K)")
@@ -170,11 +184,18 @@ def fig_sscha_bcc():
         if trivial:
             handles.append(Line2D([], [], color="0.35", marker="o", ms=4, ls="--", mfc="white",
                                   label="no harmonic instability on this model's PES"))
+        handles.append(Line2D([], [], color="0.35", marker="o", ms=4,
+                              label="production recipe, 2×2×2"))
+        if conv is not None:
+            handles.append(Line2D([], [], ls="", marker="s", ms=4, mfc="none", mec="0.35",
+                                  label="converged recipe, 3×3×3"))
         fig.legend(handles=handles, fontsize=7.5, loc="lower center", ncol=3,
                    frameon=False, bbox_to_anchor=(0.5, 0.0))
-        fig.suptitle("SSCHA on bcc Ti, Zr and Hf: free-energy Hessian at the bcc reference",
+        fig.suptitle("SSCHA on bcc Ti, Zr and Hf: free-energy Hessian at the bcc reference\n"
+                     "(lines: production recipe, 2×2×2; squares: converged recipe, "
+                     "3×3×3)",
                      fontsize=9.5)
-        fig.tight_layout(rect=(0, 0.14, 1, 1))
+        fig.tight_layout(rect=(0, 0.14, 1, 0.97))
         _save(fig, "fig_sscha_bcc")
 
 
@@ -375,18 +396,13 @@ def fig_method_agreement():
                         color=COLOR[mod], arrowprops=dict(arrowstyle="-", color=COLOR[mod], lw=0.6))
     ax.set_xlim(lo, hi)
     ax.set_ylim(ylo, yhi)
-    ax.text(hi - 0.05, yhi - 0.08, "curvature signs agree", ha="right", va="top", fontsize=7.5,
-            color="0.4")
-    ax.text(lo + 0.05, yhi - 0.08, "signs disagree", ha="left", va="top", fontsize=7.5,
-            color="0.4")
     ax.text(0.98, 0.03,
-            f"curvature-sign agreement {S.fmt_rate(sign)}\n"
             f"stability-call agreement {S.fmt_rate(call)}\n"
             f"Spearman \u03c1 = {summ.get('spearman_freq', float('nan')):.2f} (descriptive)",
             transform=ax.transAxes, ha="right", va="bottom", fontsize=7.5,
             bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="0.7"))
     ax.set_xlabel("screen: symmetric-point curvature frequency (THz)")
-    ax.set_ylabel("SSCHA: lowest free-energy Hessian frequency (THz)")
+    ax.set_ylabel("SSCHA (production recipe, 2×2×2):\nlowest free-energy Hessian frequency (THz)")
     ax.set_title("bcc Ti, Zr, Hf at " + ", ".join(str(int(t)) for t in temps)
                  + f" K: screen vs SSCHA (n = {len(m)})")
     handles = [Line2D([], [], ls="", marker="o", ms=6, color=COLOR[c], label=NAME[c])
@@ -407,7 +423,8 @@ def fig_displacive_recall():
     SSCHA units that blew up numerically (|f| > 50 THz) or returned no result are left out of its
     denominator and counted under the bar. Both methods see the same units, so the comparison is
     a paired one; its system-clustered test is in the text, and two marginal intervals are not
-    that test."""
+    that test. The first two bars are the screen and converged SSCHA on the units where converged
+    SSCHA returned a value (ESI Table S22); the hatched bar is the production recipe."""
     r = A.displacive_recall(df)
     if r.empty:
         return
@@ -419,34 +436,54 @@ def fig_displacive_recall():
         ran = df[(df["method"] == "sscha") & df["system"].isin(fe) & (df["temperature_K"] <= 300.0)]
         n_failed = int(len(grid.merge(ran[KEY], on=KEY, how="left", indicator=True)
                            .query("_merge == 'left_only'")))
-    label = {"softmode": "soft-mode\nscreen", "sscha": "SSCHA\n(default criterion)"}
-    fig, ax = plt.subplots(figsize=(4.6, 4.9))
-    note = ""
-    for i, (_, row) in enumerate(r.iterrows()):
-        rc = S.rate_ci(int(row["correct_unstable"]), int(row["n_valid"]))
-        ax.bar(i, rc.p, width=0.55, color=C_A if row["method"] == "softmode" else C_B)
+    prod = {row["method"]: row for _, row in r.iterrows()}
+    # Bars: the screen and converged SSCHA on the same units (the converged-recipe grid,
+    # grid_compare.json, converged_only / converged_matched), then production SSCHA for reference.
+    bars = []
+    conv_note = ""
+    if os.path.exists(GRID_COMPARE) and os.path.exists(CONV_SUMMARY):
+        import json
+        gc = json.load(open(GRID_COMPARE, encoding="utf-8"))
+        cii = gc["variants"]["converged_only"]["converged_matched"]["ii"]["all_models"]
+        bars.append(("soft-mode screen\n(same units)", cii["softmode"]["recall"]["k"],
+                     cii["softmode"]["recall"]["n"], C_A, None))
+        bars.append(("SSCHA, converged\n(default criterion)", cii["sscha"]["recall"]["k"],
+                     cii["sscha"]["recall"]["n"], C_B, None))
+        cs = pd.read_csv(CONV_SUMMARY)
+        cs = cs[(cs["start"] == "A") & cs["system"].isin(fe) & (cs["T_K"] <= 300.0)]
+        n_cf = int((cs["status"] == "failed").sum())
+        n_cu = int(((cs["status"] == "ok") & (cs["converged"].astype(str) != "True")).sum())
+        conv_note = (f"Converged SSCHA: {len(cs)} units, {n_cf} failed and {n_cu} did not "
+                     f"converge; the screen is scored on the same {cii['sscha']['recall']['n']}.")
+    ps = prod["sscha"]
+    bars.append(("SSCHA, production\n(not converged)", int(ps["correct_unstable"]),
+                 int(ps["n_valid"]), "0.75", "//"))
+    parts = []
+    if int(ps["n_numerical_blowup"]):
+        parts.append(f"{int(ps['n_numerical_blowup'])} numerical blow-up (|f| > 50 THz)")
+    if n_failed:
+        parts.append(f"{n_failed} failed run{'s' if n_failed != 1 else ''}")
+    note = conv_note
+    if parts:
+        note += ("\n" if note else "") + "Production SSCHA excludes " + " and ".join(parts) + "."
+    fig, ax = plt.subplots(figsize=(5.2, 5.0))
+    for i, (lab, k, n, col, hatch) in enumerate(bars):
+        rc = S.rate_ci(int(k), int(n))
+        ax.bar(i, rc.p, width=0.55, color=col, hatch=hatch, edgecolor="0.3" if hatch else col)
         ax.errorbar(i, rc.p, yerr=[[rc.p - rc.lo], [rc.hi - rc.p]], color="k", capsize=5, lw=1)
         ax.text(i, rc.hi + 0.025, f"{rc.k}/{rc.n}", ha="center", va="bottom", fontsize=9)
-        if row["method"] == "sscha":
-            parts = []
-            if int(row["n_numerical_blowup"]):
-                parts.append(f"{int(row['n_numerical_blowup'])} numerical blow-up "
-                             "(|f| > 50 THz)")
-            if n_failed:
-                parts.append(f"{n_failed} failed run{'s' if n_failed != 1 else ''}")
-            if parts:
-                note = "SSCHA denominator excludes " + " and ".join(parts) + "."
-    ax.set_xticks(range(len(r)))
-    ax.set_xticklabels([label.get(mth, mth) for mth in r["method"]])
+    ax.set_xticks(range(len(bars)))
+    ax.set_xticklabels([b[0] for b in bars], fontsize=8)
     ax.set_ylim(0, 1.05)
     ax.set_ylabel("recall: cubic phase called unstable")
-    ax.set_title("FE oxide perovskites, T \u2264 300 K\n(below every T$_\\mathrm{c}$; "
+    ax.set_title("FE oxide perovskites, T ≤ 300 K\n(below every T$_\\mathrm{c}$; "
                  "Wilson 95% intervals)", fontsize=10)
     if note:
-        fig.text(0.02, 0.01, note, fontsize=7, ha="left", va="bottom")
-    fig.tight_layout(rect=(0, 0.035 if note else 0, 1, 1))
+        fig.text(0.02, 0.01, note, fontsize=6.5, ha="left", va="bottom")
+    fig.tight_layout(rect=(0, 0.07 if note else 0, 1, 1))
     _save(fig, "fig_displacive_recall")
-    print(f"  recall {r.to_dict('records')}, SSCHA failed runs {n_failed}")
+    print(f"  bars {[(b[0].replace(chr(10), ' '), b[1], b[2]) for b in bars]}, "
+          f"production SSCHA failed runs {n_failed}")
 
 
 def fig_tolerance_sweep():
