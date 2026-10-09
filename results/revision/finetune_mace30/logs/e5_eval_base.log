@@ -1,0 +1,96 @@
+/root/env-mace/lib/python3.11/site-packages/e3nn/o3/_wigner.py:10: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  _Jd, _W3j_flat, _W3j_indices = torch.load(os.path.join(os.path.dirname(__file__), 'constants.pt'))
+cuequivariance or cuequivariance_torch is not available. Cuequivariance acceleration will be disabled.
+Using Materials Project MACE for MACECalculator with /root/.cache/mace/20231203mace128L1_epoch199model
+Using float64 for MACECalculator, which is slower but more accurate. Recommended for geometry optimization.
+/root/env-mace/lib/python3.11/site-packages/mace/calculators/mace.py:226: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  torch.load(f=model_path, map_location=device)
+[evaluate] mace_mp0/base: mace-torch=0.3.16;ckpt=medium
+[evaluate] PBE: 650 finished jobs; flags 0
+[c3a] mace_mp0/base: 10/65 paths (47 s)
+[c3a] mace_mp0/base: 20/65 paths (101 s)
+[c3a] mace_mp0/base: 30/65 paths (161 s)
+[c3a] mace_mp0/base: 40/65 paths (224 s)
+[c3a] mace_mp0/base: 50/65 paths (291 s)
+[c3a] mace_mp0/base: 60/65 paths (342 s)
+[evaluate] wrote results/revision/finetune_mace30/eval/c3a_mace_mp0_base.json
+Traceback (most recent call last):
+  File "/root/mlip-dynamic-stability/scripts/finetune_trial.py", line 161, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/root/mlip-dynamic-stability/scripts/finetune_trial.py", line 153, in main
+    return evalu.stage_evaluate(args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/mlip-dynamic-stability/scripts/finetune/evalu.py", line 348, in stage_evaluate
+    res = part_c3b(args, handle, args.model, args.tag, out, pbe)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/mlip-dynamic-stability/scripts/finetune/evalu.py", line 208, in part_c3b
+    cache[rel] = eval_frames(handle.calc, frames)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/mlip-dynamic-stability/scripts/finetune/evalu.py", line 69, in eval_frames
+    E.append(float(b.get_potential_energy()))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/ase/atoms.py", line 1971, in get_potential_energy
+    energy = self._calc.get_potential_energy(self)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/ase/calculators/abc.py", line 25, in get_potential_energy
+    return self.get_property(name, atoms)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/ase/calculators/calculator.py", line 517, in get_property
+    self.calculate(atoms, [name], system_changes)
+  File "/root/env-mace/lib/python3.11/site-packages/mace/calculators/mace.py", line 635, in calculate
+    out = model(
+          ^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/mace/modules/models.py", line 549, in forward
+    node_feats, sc = interaction(
+                     ^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/mace/modules/blocks.py", line 791, in forward
+    mji = self.conv_tp(
+          ^^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/e3nn/o3/_tensor_product/_tensor_product.py", line 529, in forward
+    return self._compiled_main_left_right(x, y, real_weight)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/env-mace/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: The following operation failed in the TorchScript interpreter.
+Traceback of TorchScript, serialized code (most recent call last):
+  File "code/__torch__/torch/fx/graph_module/___torch_mangle_11.py", line 130, in forward
+    reshape_31 = torch.reshape(reshape_3, [getitem_4, 128])
+    einsum_21 = torch.einsum("ca,cab->cab", [reshape_31, reshape_30])
+    einsum_22 = torch.einsum("dbc,dca->dba", [einsum_21, reshape_8])
+                ~~~~~~~~~~~~ <--- HERE
+    reshape_32 = torch.reshape(einsum_22, [getitem_4, 896])
+    _16 = torch.slice(reshape_2, 0, 0, 9223372036854775807)
+
+Traceback of TorchScript, original code (most recent call last):
+  File "<eval_with_key>.127", line 106, in forward
+    reshape_31 = reshape_3.reshape(getitem_4, 128);  reshape_3 = None
+    einsum_21 = torch.functional.einsum('ca,cab->cab', reshape_31, reshape_30);  reshape_31 = reshape_30 = None
+    einsum_22 = torch.functional.einsum('dbc,dca->dba', einsum_21, reshape_8);  einsum_21 = reshape_8 = None
+                ~~~~~~~~~~~~~~~~~~~~~~~ <--- HERE
+    reshape_32 = einsum_22.reshape(getitem_4, 896);  einsum_22 = None
+    getitem_20 = reshape_2[(slice(None, None, None), slice(1152, 1280, None))];  reshape_2 = None
+RuntimeError: CUDA out of memory. Tried to allocate 18.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 20.50 MiB is free. Process 6807 has 424.00 MiB memory in use. Process 6803 has 4.32 GiB memory in use. Process 6797 has 4.32 GiB memory in use. Including non-PyTorch memory, this process has 688.00 MiB memory in use. Process 6808 has 4.03 GiB memory in use. Process 6881 has 424.00 MiB memory in use. Process 6936 has 932.00 MiB memory in use. Process 7003 has 932.00 MiB memory in use. Process 7081 has 932.00 MiB memory in use. Process 7131 has 1.25 GiB memory in use. Process 7180 has 1018.00 MiB memory in use. Process 7229 has 400.00 MiB memory in use. Process 7297 has 604.00 MiB memory in use. Process 7400 has 826.00 MiB memory in use. Process 7452 has 826.00 MiB memory in use. Process 7611 has 526.00 MiB memory in use. Process 7828 has 604.00 MiB memory in use. Process 7877 has 604.00 MiB memory in use. Of the allocated memory 311.97 MiB is allocated by PyTorch, and 22.03 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+

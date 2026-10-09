@@ -1,0 +1,6 @@
+[summary] wrote results/revision/finetune_mace30/summary.json; 13 evaluation files, 19 missing
+   P1 mace_mp0: median 0.9938922285418459 -> supported
+   P2 mace_mp0: refuted=2, supported=3
+   P1 chgnet: median None -> pending
+   P2 chgnet: pending (replicates missing)=5
+   P3: supported

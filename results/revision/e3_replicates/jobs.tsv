@@ -1,0 +1,150 @@
+utc_end	kind	tag	rc	wall_s	status	error
+2026-10-09T01:05:31Z	B	cssni3_cubic_mattersim_600K_sc222	1	11	unreadable	FileNotFoundError: [Errno 2] No such file or directory: 'results/revision/sscha_converged_grid_startB/cssni3_cubic_mattersim_600K_sc222_startB.json'
+2026-10-09T01:09:01Z	B	pbtio3_cubic_sevennet0_300K_sc222	2	261	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T01:09:18Z	B	pbtio3_cubic_sevennet0_600K_sc222	2	262	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T01:12:55Z	B	batio3_cubic_chgnet_100K_sc222	2	519	failed	ValueError: Error, the target structure must be of the same type of the current one
+2026-10-09T01:13:35Z	B1	pbtio3_cubic_sevennet0_600K_sc222	2	257	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T01:16:59Z	B	pbtio3_cubic_mace_mp0_100K_sc222	2	787	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T01:17:27Z	B	pbtio3_cubic_mace_mp0_300K_sc222	2	799	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T01:30:24Z	B1	pbtio3_cubic_mace_mp0_300K_sc222	2	777	failed	AssertionError: Error, at point 7 (q = -q + G) the dynamical matrix is complex
+2026-10-09T01:59:26Z	S10	pbtio3_cubic_sevennet0_300K_sc222	0	3278	ok	
+2026-10-09T02:08:23Z	S10	pbtio3_cubic_sevennet0_600K_sc222	0	3288	ok	
+2026-10-09T02:14:06Z	S10	cssni3_cubic_mattersim_600K_sc222	0	4115	ok	
+2026-10-09T02:22:34Z	B1	pbtio3_cubic_sevennet0_300K_sc222	0	4413	ok	
+2026-10-09T02:25:19Z	B	batio3_cubic_sevennet0_100K_sc222	2	165	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T02:25:46Z	S10	pbtio3_cubic_mattersim_300K_sc222	0	4834	ok	
+2026-10-09T02:36:31Z	S10	batio3_cubic_chgnet_100K_sc222	0	5527	ok	
+2026-10-09T02:43:41Z	S10	srtio3_cubic_sevennet0_100K_sc222	0	2118	ok	
+2026-10-09T02:47:57Z	S10	cssni3_cubic_chgnet_900K_sc222	0	5702	ok	
+2026-10-09T02:54:00Z	S10	pbtio3_cubic_mace_mp0_100K_sc222	0	6600	ok	
+2026-10-09T02:55:43Z	B	srtio3_cubic_sevennet0_100K_sc222	0	3377	ok	
+2026-10-09T02:58:17Z	B	knbo3_cubic_sevennet0_100K_sc222	2	154	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T02:59:19Z	B	pbtio3_cubic_mattersim_300K_sc222	0	6855	ok	
+2026-10-09T02:59:40Z	B	knbo3_cubic_mace_mp0_100K_sc222	2	340	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T03:00:24Z	B1	batio3_cubic_sevennet0_100K_sc222	0	2105	ok	
+2026-10-09T03:04:23Z	S10	pbtio3_cubic_mace_mp0_300K_sc222	0	5639	ok	
+2026-10-09T03:11:51Z	S10	batio3_cubic_sevennet0_100K_sc222	0	1690	ok	
+2026-10-09T03:12:13Z	S10	hf_bcc_orb_v2_300K_sc333	0	7709	ok	
+2026-10-09T03:12:36Z	B1	pbtio3_cubic_mace_mp0_100K_sc222	0	6937	ok	
+2026-10-09T03:14:01Z	B	hf_bcc_orb_v2_300K_sc333	0	7825	ok	
+2026-10-09T03:14:36Z	B	knbo3_cubic_sevennet0_300K_sc222	2	165	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T03:14:43Z	B	cssni3_cubic_chgnet_900K_sc222	0	7811	ok	
+2026-10-09T03:25:56Z	S10	cssni3_cubic_mattersim_900K_sc222	0	3610	ok	
+2026-10-09T03:26:51Z	B	cssni3_cubic_mattersim_900K_sc222	0	4365	ok	
+2026-10-09T03:34:38Z	S10	knbo3_cubic_sevennet0_100K_sc222	0	2054	ok	
+2026-10-09T03:36:34Z	B1	knbo3_cubic_sevennet0_100K_sc222	0	2297	ok	
+2026-10-09T03:39:06Z	B	knbo3_cubic_sevennet0_600K_sc222	2	152	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T03:41:47Z	B1	knbo3_cubic_sevennet0_600K_sc222	2	161	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T03:46:12Z	S10	pbtio3_cubic_chgnet_300K_sc222	0	3495	ok	
+2026-10-09T03:49:51Z	B	srtio3_cubic_mattersim_100K_sc222	0	3032	ok	
+2026-10-09T03:55:28Z	S10	srtio3_cubic_mattersim_100K_sc222	0	1772	ok	
+2026-10-09T04:00:07Z	S10	knbo3_cubic_mace_mp0_100K_sc222	0	3344	ok	
+2026-10-09T04:03:26Z	B1	knbo3_cubic_sevennet0_300K_sc222	0	2929	ok	
+2026-10-09T04:06:03Z	B	batio3_cubic_sevennet0_300K_sc222	2	157	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T04:06:13Z	S10	knbo3_cubic_sevennet0_300K_sc222	0	1895	ok	
+2026-10-09T04:06:48Z	S10	knbo3_cubic_sevennet0_600K_sc222	0	1501	ok	
+2026-10-09T04:09:00Z	B1	batio3_cubic_sevennet0_300K_sc222	2	177	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T04:11:53Z	B	zr_bcc_mattersim_600K_sc333	0	2702	ok	
+2026-10-09T04:15:15Z	B1	knbo3_cubic_mace_mp0_100K_sc222	0	4535	ok	
+2026-10-09T04:18:04Z	S10	zr_bcc_mattersim_600K_sc333	0	1693	ok	
+2026-10-09T04:21:29Z	B	batio3_cubic_mace_mp0_100K_sc222	2	374	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T04:29:55Z	S10	batio3_cubic_sevennet0_300K_sc222	0	1422	ok	
+2026-10-09T04:30:17Z	B	zro2_cubic_sevennet0_100K_sc222	0	1409	ok	
+2026-10-09T04:30:31Z	S10	zro2_cubic_sevennet0_100K_sc222	0	1291	ok	
+2026-10-09T04:32:24Z	B	zro2_cubic_sevennet0_600K_sc222	2	149	failed	ValueError: Error, the passed q star does not match the one computed by QE
+2026-10-09T04:37:06Z	B	cssni3_cubic_chgnet_600K_sc222	0	4943	ok	
+2026-10-09T04:39:44Z	S10	knbo3_cubic_mattersim_300K_sc222	0	1671	ok	
+2026-10-09T04:42:37Z	B	zr_bcc_sevennet0_100K_sc333	0	726	ok	
+2026-10-09T04:43:54Z	S10	zr_bcc_sevennet0_100K_sc333	0	690	ok	
+2026-10-09T04:45:50Z	S10	zro2_cubic_sevennet0_600K_sc222	0	933	ok	
+2026-10-09T04:50:43Z	S10	cssni3_cubic_chgnet_600K_sc222	0	3871	ok	
+2026-10-09T04:50:55Z	S10	srtio3_cubic_mace_mp0_100K_sc222	0	3048	ok	
+2026-10-09T04:51:14Z	B	pbtio3_cubic_chgnet_300K_sc222	0	8083	ok	
+2026-10-09T04:54:45Z	B	hf_bcc_orb_v2_100K_sc333	0	6152	ok	
+2026-10-09T04:55:27Z	S10	hf_bcc_orb_v2_100K_sc333	0	6086	ok	
+2026-10-09T04:56:58Z	B	srtio3_cubic_mace_mp0_100K_sc222	0	6262	ok	
+2026-10-09T05:02:20Z	B	pbtio3_cubic_mace_mp0_600K_sc222	2	322	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T05:04:03Z	S10	knbo3_cubic_mattersim_100K_sc222	0	1459	ok	
+2026-10-09T05:07:35Z	B1	pbtio3_cubic_mace_mp0_600K_sc222	2	315	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T05:12:39Z	B1	batio3_cubic_mace_mp0_100K_sc222	0	3070	ok	
+2026-10-09T05:18:05Z	B	srtio3_cubic_mace_mp0_300K_sc222	2	326	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T05:29:45Z	B	knbo3_cubic_mattersim_300K_sc222	0	5657	ok	
+2026-10-09T05:33:10Z	S10	batio3_cubic_mace_mp0_100K_sc222	0	2535	ok	
+2026-10-09T05:38:26Z	S10	pbtio3_cubic_chgnet_600K_sc222	0	2863	ok	
+2026-10-09T05:39:06Z	B	srtio3_cubic_chgnet_100K_sc222	0	2872	ok	
+2026-10-09T05:44:08Z	B	knbo3_cubic_mattersim_100K_sc222	0	5164	ok	
+2026-10-09T05:55:19Z	S10	batio3_cubic_mattersim_100K_sc222	0	1534	ok	
+2026-10-09T06:14:20Z	S10	srtio3_cubic_chgnet_100K_sc222	0	2154	ok	
+2026-10-09T06:15:46Z	B	ti_bcc_orb_v2_100K_sc333	0	5572	ok	
+2026-10-09T06:16:40Z	S10	knbo3_cubic_mattersim_600K_sc222	0	1281	ok	
+2026-10-09T06:20:20Z	S10	pbtio3_cubic_mace_mp0_600K_sc222	0	4365	ok	
+2026-10-09T06:22:19Z	S10	ti_bcc_orb_v2_100K_sc333	0	5897	ok	
+2026-10-09T06:24:39Z	B	batio3_cubic_mace_mp0_300K_sc222	2	259	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T06:26:01Z	B	hf_bcc_orb_v2_600K_sc333	0	5990	ok	
+2026-10-09T06:26:12Z	B1	srtio3_cubic_mace_mp0_300K_sc222	0	4087	ok	
+2026-10-09T06:29:53Z	S10	srtio3_cubic_mace_mp0_300K_sc222	0	3403	ok	
+2026-10-09T06:31:37Z	B	batio3_cubic_mattersim_100K_sc222	0	5254	ok	
+2026-10-09T06:32:55Z	S10	hf_bcc_orb_v2_600K_sc333	0	5890	ok	
+2026-10-09T06:35:19Z	B	knbo3_cubic_mace_mp0_300K_sc222	2	326	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T06:36:29Z	B	ti_bcc_orb_v2_600K_sc333	0	6062	ok	
+2026-10-09T06:43:24Z	B	batio3_cubic_mattersim_300K_sc222	2	1604	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T06:48:38Z	S10	knbo3_cubic_chgnet_100K_sc222	0	2058	ok	
+2026-10-09T06:50:09Z	S10	batio3_cubic_mattersim_300K_sc222	0	1112	ok	
+2026-10-09T06:51:29Z	B	pbtio3_cubic_chgnet_600K_sc222	0	8063	ok	
+2026-10-09T07:05:40Z	S10	batio3_cubic_mace_mp0_300K_sc222	0	2368	ok	
+2026-10-09T07:17:12Z	B	knbo3_cubic_mattersim_600K_sc222	0	5584	ok	
+2026-10-09T07:17:51Z	B1	batio3_cubic_mattersim_300K_sc222	0	2067	ok	
+2026-10-09T07:21:07Z	S10	knbo3_cubic_chgnet_300K_sc222	0	1778	ok	
+2026-10-09T07:36:22Z	S10	ti_bcc_mattersim_600K_sc333	0	1150	ok	
+2026-10-09T07:39:54Z	B1	batio3_cubic_mace_mp0_300K_sc222	0	4515	ok	
+2026-10-09T07:46:41Z	B	knbo3_cubic_mace_mp0_600K_sc222	2	407	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T07:50:02Z	B	ti_bcc_mattersim_600K_sc333	0	3593	ok	
+2026-10-09T07:51:12Z	B1	knbo3_cubic_mace_mp0_600K_sc222	2	271	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T07:52:21Z	S10	knbo3_cubic_mace_mp0_300K_sc222	0	2801	ok	
+2026-10-09T07:54:28Z	S10	ti_bcc_orb_v2_600K_sc333	0	5922	ok	
+2026-10-09T07:54:50Z	B	ti_bcc_chgnet_100K_sc333	0	2023	ok	
+2026-10-09T07:57:31Z	B	knbo3_cubic_chgnet_100K_sc222	0	8305	ok	
+2026-10-09T08:15:46Z	B1	knbo3_cubic_mace_mp0_300K_sc222	0	6027	ok	
+2026-10-09T08:20:44Z	B	cssni3_cubic_mace_mp0_900K_sc222	0	3725	ok	
+2026-10-09T08:22:47Z	S10	ti_bcc_chgnet_300K_sc333	0	1516	ok	
+2026-10-09T08:25:03Z	S10	ti_bcc_chgnet_100K_sc333	0	2043	ok	
+2026-10-09T08:26:14Z	B	zro2_cubic_mace_mp0_300K_sc222	2	330	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T08:31:43Z	B	srtio3_cubic_orb_v2_600K_sc222	0	7764	ok	
+2026-10-09T08:32:56Z	S10	srtio3_cubic_orb_v2_600K_sc222	0	7615	ok	
+2026-10-09T08:34:34Z	S10	cssni3_cubic_mace_mp0_900K_sc222	0	3464	ok	
+2026-10-09T08:37:20Z	S10	knbo3_cubic_mace_mp0_600K_sc222	0	2768	ok	
+2026-10-09T08:42:18Z	B	batio3_cubic_mace_mp0_900K_sc222	2	298	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T08:44:10Z	B	cssni3_cubic_mace_mp0_600K_sc222	0	3109	ok	
+2026-10-09T08:44:15Z	B	srtio3_cubic_orb_v2_900K_sc222	0	7880	ok	
+2026-10-09T08:47:04Z	S10	srtio3_cubic_orb_v2_900K_sc222	0	7835	ok	
+2026-10-09T08:47:51Z	B1	batio3_cubic_mace_mp0_900K_sc222	2	333	failed	AssertionError: Error, at point 1 (q = -q + G) the dynamical matrix is complex
+2026-10-09T08:47:55Z	B	zr_bcc_orb_v2_100K_sc333	0	3207	ok	
+2026-10-09T08:48:34Z	B	ti_bcc_chgnet_300K_sc333	0	3224	ok	
+2026-10-09T08:55:13Z	B1	zro2_cubic_mace_mp0_300K_sc222	0	1739	ok	
+2026-10-09T09:03:02Z	B	knbo3_cubic_chgnet_300K_sc222	0	8064	ok	
+2026-10-09T09:04:33Z	S10	zro2_cubic_mace_mp0_300K_sc222	0	1799	ok	
+2026-10-09T09:04:34Z	S10	knbo3_cubic_chgnet_600K_sc222	0	2371	ok	
+2026-10-09T09:07:12Z	S10	cssni3_cubic_mace_mp0_600K_sc222	0	3086	ok	
+2026-10-09T09:15:51Z	S10	zr_bcc_orb_v2_100K_sc333	0	2648	ok	
+2026-10-09T09:19:01Z	S10	hfo2_cubic_mace_mp0_100K_sc222	0	1428	ok	
+2026-10-09T09:20:10Z	B	hfo2_cubic_mace_mp0_100K_sc222	0	1939	ok	
+2026-10-09T09:20:32Z	B	zr_bcc_orb_v2_300K_sc333	0	2008	ok	
+2026-10-09T09:21:19Z	S10	zr_bcc_orb_v2_300K_sc333	0	2004	ok	
+2026-10-09T09:22:02Z	B	knbo3_cubic_orb_v2_100K_sc222	2	43	failed	ValueError: Error, the target structure must be of the same type of the current one
+2026-10-09T09:22:31Z	S10	hfo2_cubic_chgnet_900K_sc222	0	1169	ok	
+2026-10-09T09:24:14Z	S10	batio3_cubic_mace_mp0_900K_sc222	0	2404	ok	
+2026-10-09T09:42:34Z	S10	knbo3_cubic_orb_v2_100K_sc222	0	1232	ok	
+2026-10-09T09:43:29Z	B	batio3_cubic_orb_v2_100K_sc222	2	55	failed	ValueError: Error, the target structure must be of the same type of the current one
+2026-10-09T09:59:18Z	B	srtio3_cubic_orb_v2_100K_sc222	0	2607	ok	
+2026-10-09T09:59:51Z	S10	batio3_cubic_orb_v2_100K_sc222	0	982	ok	
+2026-10-09T10:00:03Z	B	knbo3_cubic_orb_v2_300K_sc222	2	45	failed	ValueError: Error, the target structure must be of the same type of the current one
+2026-10-09T10:00:45Z	B	knbo3_cubic_orb_v2_600K_sc222	2	42	failed	ValueError: Error, the target structure must be of the same type of the current one
+2026-10-09T10:03:20Z	B	srtio3_cubic_orb_v2_300K_sc222	0	5424	ok	
+2026-10-09T10:08:21Z	S10	srtio3_cubic_orb_v2_300K_sc222	0	5046	ok	
+2026-10-09T10:08:41Z	B	knbo3_cubic_chgnet_600K_sc222	0	6354	ok	
+2026-10-09T10:08:50Z	B	hfo2_cubic_chgnet_900K_sc222	0	4816	ok	
+2026-10-09T10:12:45Z	S10	knbo3_cubic_orb_v2_300K_sc222	0	774	ok	
+2026-10-09T10:13:20Z	S10	hfo2_cubic_orb_v2_900K_sc222	0	299	ok	
+2026-10-09T10:14:32Z	S10	knbo3_cubic_orb_v2_600K_sc222	0	827	ok	
+2026-10-09T10:17:52Z	S10	srtio3_cubic_orb_v2_100K_sc222	0	3440	ok	
+2026-10-09T10:34:03Z	B	hfo2_cubic_orb_v2_900K_sc222	0	1843	ok	
