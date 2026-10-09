@@ -394,6 +394,8 @@ def table_s9_orb(df: pd.DataFrame, st: dict, sens: dict) -> str:
         "ladder without ORB-v2 is in Table S15, the paired screen-versus-SSCHA "
         "tests in Table S10, the bcc agreement by model in Table S16, and the SSCHA "
         "high-temperature false-unstables, blow-ups and failures by model in Table S17. "
+        "The SSCHA rows here are the production recipe, which did not converge (§S2.1); the "
+        "converged-recipe values, with and without ORB-v2, are in Table S22. "
         "`scripts/stats_hardening.py` (`orb_split_s3`, `bcc_agreement`); pooled finite-T "
         "accuracy from `scripts/screen_sensitivity.py`.\n\n"
     )
@@ -402,14 +404,34 @@ def table_s9_orb(df: pd.DataFrame, st: dict, sens: dict) -> str:
 
 def table_s10_paired(st: dict) -> str:
     rows = []
-    for key, v in st["screen_vs_sscha_paired"].items():
+    entries = [("production", key, v) for key, v in st["screen_vs_sscha_paired"].items()]
+    conv_txt = ""
+    if GRID_COMPARE.exists():
+        gcj = json.loads(GRID_COMPARE.read_text(encoding="utf-8"))
+        cv5 = gcj["variants"]["converged_only"]["converged_matched"].get("v") or {}
+        for tag, sets in cv5.items():
+            for setname, v in sets.items():
+                entries.append(("converged", f"{setname}__{tag}", v))
+        cc = (cv5.get("all_models") or {}).get("displacive_combined")
+        if cc:
+            cnets = ", ".join(("0" if x == 0 else f"{x:+d}").replace("-", MINUS)
+                              for x in cc["clustered_by_system"]["per_cluster_net"])
+            conv_txt = (
+                " The *converged* rows repeat the test with the converged-recipe SSCHA values of "
+                "Table S22 on the units where that recipe converged (`results/revision/"
+                "grid_compare.json`, block v): there "
+                f"{cc['clustered_by_system']['clusters_favouring_a']} of "
+                f"{cc['clustered_by_system']['n_clusters']} systems favour the screen (per-system "
+                f"net discordances {cnets}), the fluorites show no discordance at all, and the "
+                f"clustered p is {cc['clustered_by_system']['p_exact_clustered']:g}.")
+    for recipe, key, v in entries:
         if not v:
             continue
         setname, tag = key.rsplit("__", 1)
         c = v["clustered_by_system"]
         p_unit = v["mcnemar_exact_p_UNIT_LEVEL"]
         rows.append([
-            setname.replace("_", " "), tag.replace("_", " "),
+            recipe, setname.replace("_", " "), tag.replace("_", " "),
             v["n_paired_units"],
             f'{v["screen_right_sscha_wrong"]}/{v["sscha_right_screen_wrong"]}',
             f"{p_unit:.2g}" if p_unit >= 1e-6 else f"{p_unit:.0e}",
@@ -431,12 +453,12 @@ def table_s10_paired(st: dict) -> str:
         "fluorite systems none can go below 0.5. The reportable content of this table is the "
         f"size and the consistency of the effect ({comb['clusters_favouring_a']} of "
         f"{comb['n_clusters']} systems favour the screen, with per-system net discordances "
-        f"{nets}) rather than a significance claim. Why SSCHA loses these units is examined "
-        "separately, on the same MLIP energies, in Table S16 (lower part) and §3.3: on most of "
-        "them the screen's free-energy comparison finds a displaced minimum below the symmetric "
-        "point, which a criterion read at the symmetric reference does not see. "
-        "`scripts/stats_hardening.py`.\n\n"
-        + md(rows, ["System set", "Model set", "n paired", "Discordant (screen/SSCHA)",
+        f"{nets}, in the order BaTiO₃, KNbO₃, PbTiO₃, ZrO₂, HfO₂ where all five are present) "
+        "rather than a significance claim. The *production* rows use the production-recipe SSCHA, "
+        "which did not converge (§S2.1)." + conv_txt + " Why SSCHA loses these units is "
+        "examined separately, on the same MLIP energies, in Table S16 (lower part), Table S22 and "
+        "§3.3. `scripts/stats_hardening.py`, `scripts/grid_compare.py`.\n\n"
+        + md(rows, ["SSCHA recipe", "System set", "Model set", "n paired", "Discordant (screen/SSCHA)",
                     "Unit-level p (do not quote)", "Systems favouring screen",
                     "Clustered p", "Floor"])
     )
@@ -552,7 +574,8 @@ def table_s11_sscha_diag(df: pd.DataFrame) -> str:
         "revision re-ran four units that do carry an instability, four seeds each, with both "
         "recorded (Table S21): no seed converged, the seed spread of the lowest Hessian "
         "frequency is 0.007 to 0.075 THz on BaTiO₃, ZrO₂ and bcc Zr and 2.0 THz on SrTiO₃ at "
-        "600 K, and every seed gives the same call.\n\n"
+        "600 K, and every seed gives the same call. The converged-recipe grid records all of "
+        "these for every unit it ran (Table S22).\n\n"
         + md(rows, ["Family", "Model", "n units", "Acoustic zeros resolved",
                     "Max zero residual (THz)", "Swamped", "Wall time (s)"])
     )
@@ -950,8 +973,10 @@ def table_s16_bcc_agreement(st: dict) -> str:
     return (
         "**Table S16** Screen-versus-SSCHA agreement on the bcc metals, scored on the stability "
         "call, and the same-energy comparison behind the SSCHA false-stables on the displacive "
-        "systems. For SSCHA the call is the sign of the lowest free-energy-Hessian frequency; for "
-        "the screen it is the variational argmin of §2.4. Both methods run on the same MLIP "
+        "systems, with the production-recipe SSCHA (2×2×2, not converged, §S2.1; the same "
+        "comparisons with the converged recipe are in Table S22). For SSCHA the call is the sign "
+        "of the lowest free-energy-Hessian frequency; for the screen it is the variational argmin "
+        "of §2.4. Both methods run on the same MLIP "
         "potential-energy surface, so agreement between them is a consistency check and says "
         "nothing about agreement with first principles. *Trivial* pairs are (system, model) "
         "combinations whose harmonic layer has no instability, so both methods agree without "
@@ -968,7 +993,8 @@ def table_s16_bcc_agreement(st: dict) -> str:
         "while the symmetric point of the single-mode problem keeps a positive curvature, so a "
         "criterion read at the symmetric reference would report stable. That shows the local "
         "and the global question have different answers on these energies. It does not show "
-        "that SSCHA's positive Hessian has the same origin (§3.3).\n\n"
+        "that SSCHA's positive Hessian has the same origin; the converged recipe of Table S22 "
+        "keeps the false-stables on BaTiO₃ and KNbO₃ and removes those on the fluorites (§3.3).\n\n"
         + md(crows, ["Quantity", "All five models", "Excluding ORB-v2"])
     )
 
@@ -1032,8 +1058,8 @@ def table_s17_sscha_high_t(st: dict) -> str:
         prow.append([f"*{label}*", t["n_grid"], t["n_returned"], t["n_failed"], "", t["n_blowup"], ""])
 
     return (
-        "**Table S17** Where SSCHA calls a phase unstable that its label calls stable, and where "
-        "it fails numerically. Upper part: non-bcc SSCHA false-unstables by temperature, over "
+        "**Table S17** Where SSCHA, with the production recipe (not converged, §S2.1), calls a "
+        "phase unstable that its label calls stable, and where it fails numerically. Upper part: non-bcc SSCHA false-unstables by temperature, over "
         "the units whose label is stable at that temperature; numerical blow-ups "
         "(|f| > 50 THz) are included in the counts and also tallied separately. The count grows "
         "with temperature partly because more labels are stable at high temperature; the direct "
@@ -1046,10 +1072,11 @@ def table_s17_sscha_high_t(st: dict) -> str:
         "these data do not separate them. PBE forces on twelve configurations of the SrTiO₃ "
         "MACE-MP-0 600 K ensemble (Table S20) show the MLIPs extrapolating there (relative force "
         "error 0.19 against 0.11 near equilibrium, energy errors to 44 meV per atom), without "
-        "showing that this rather than the sampling drives the runaway. "
-        "<!-- PENDING-C1: the SrTiO3/MACE-MP-0 "
-        "600 K seed study records whether the relaxation reached the SCHA minimum (the third "
-        "candidate); one clause here, whichever way it falls --> "
+        "showing that this rather than the sampling drives the runaway. The seed study shows the "
+        "SrTiO₃ 600 K relaxation had not converged on any of four seeds (Table S21). With the "
+        "converged recipe these counts are 0/4, 3/12 and 3/18 at 300, 600 and 900 K (all "
+        "CsSnI₃), every SrTiO₃ unit above its transition is stable, and no unit turns negative "
+        "with temperature (Table S22): the runaway is the production relaxation, not the MLIP. "
         "`scripts/stats_hardening.py` (`sscha_high_t`, `orb_split_s3`).\n\n"
         + md(rows, ["T (K)", "Model set", "Non-bcc units returned",
                     "False-unstable / stable-labelled [95% CI]", "Of which blow-ups", "By system"])
@@ -1065,8 +1092,9 @@ def table_s17_sscha_high_t(st: dict) -> str:
         f"({signed(sox['sscha_freq_range_thz'][1], 1)} to {signed(sox['sscha_freq_range_thz'][0], 1)} THz "
         "without ORB-v2)"
         + (", each more negative than the same model's harmonic minimum. " if below_harm else ". ")
-        + "SSCHA never calls SrTiO₃ stable at any temperature, so a missing zone-boundary "
-        "q-point cannot be what produces a false-stable here." + no_imag_txt + "\n\n"
+        + "The production recipe never calls SrTiO₃ stable at any temperature; the converged "
+        "recipe calls it stable in every converged unit, including 100 K, below the transition "
+        "(Table S22)." + no_imag_txt + "\n\n"
         + md(srows, ["Model", "T (K)", "SSCHA min frequency (THz)", "Blow-up",
                      "Harmonic min frequency (THz)", "Screen deciding mode q",
                      "Its harmonic frequency (THz)"])
@@ -1170,6 +1198,8 @@ C3A_ORDER = ["batio3_cubic", "knbo3_cubic", "srtio3_cubic", "cssnbr3_cubic", "zr
 EDGE_Q_A = 0.449      # the scan's largest amplitude is 0.45 A; a minimum at or beyond this is at the edge
 SHORT = {"batio3_cubic": "BaTiO₃", "knbo3_cubic": "KNbO₃", "srtio3_cubic": "SrTiO₃",
          "cssnbr3_cubic": "CsSnBr₃", "zr_bcc": "bcc-Zr", "zro2_cubic": "ZrO₂"}
+SYSNAME = SHORT | {"ti_bcc": "bcc-Ti", "hf_bcc": "bcc-Hf", "hfo2_cubic": "HfO₂",
+                   "pbtio3_cubic": "PbTiO₃", "cssni3_cubic": "CsSnI₃"}
 
 
 def c3a_ladder_units() -> pd.DataFrame:
@@ -1192,7 +1222,7 @@ def _nz(x: float) -> float:
 
 
 def table_s19_c3a_pbe() -> str:
-    """Referee 1.1 (plan item C3a): PBE along the screen's own soft-mode coordinates.
+    """Referee 1.1: PBE along the screen's own soft-mode coordinates.
 
     Upper part: the unit calls, MLIP on the same paths against PBE, per system and in total with
     and without ORB-v2. Lower part: the well depth of each path's own model against PBE. Every
@@ -1216,21 +1246,39 @@ def table_s19_c3a_pbe() -> str:
     own = p[p["curve"] == p["path_model"]]
     pbe = p[p["curve"] == "pbe"]
     m = own.merge(pbe, on="stem", suffixes=("_own", "_pbe"))
-    m["ratio"] = m["depth_meV_own"].abs() / m["depth_meV_pbe"]
-    m["edge"] = m["Q_min_A_pbe"] >= EDGE_Q_A
+    m["pbe_well"] = m["depth_meV_pbe"] > 1e-6
+    m["ratio"] = np.where(m["pbe_well"], m["depth_meV_own"].abs() / m["depth_meV_pbe"].where(
+        m["pbe_well"], 1.0), np.nan)
+    m["edge"] = m["pbe_well"] & (m["Q_min_A_pbe"] >= EDGE_Q_A)
     m["order"] = m["system_own"].map({s: i for i, s in enumerate(C3A_ORDER)})
     m = m.sort_values(["order", "stem"])
     drows = []
     for r in m.itertuples():
         has_well = r.depth_meV_own > 0
-        drows.append([r.stem, r.role_own, f"{_nz(r.depth_meV_own):.1f}", f"{r.depth_meV_pbe:.1f}",
-                      f"{_nz(r.ratio):.2f}",
-                      f"{r.Q_min_A_own:.3f}" if has_well else "no well", f"{r.Q_min_A_pbe:.3f}",
+        drows.append([r.stem, r.role_own, f"{_nz(r.depth_meV_own):.1f}",
+                      f"{_nz(r.depth_meV_pbe):.1f}",
+                      f"{_nz(r.ratio):.2f}" if r.pbe_well else "no PBE well",
+                      f"{r.Q_min_A_own:.3f}" if has_well else "no well",
+                      f"{r.Q_min_A_pbe:.3f}" if r.pbe_well else "no well",
                       "yes" if r.edge else "no"])
     fe = m[m["system_own"].isin(["batio3_cubic", "knbo3_cubic"]) & (m["role_own"] == "decide")]
     fe4 = fe[fe["path_model_own"] != "orb_v2"]
     edge_sys = sorted({SHORT[s] for s in m.loc[m["edge"], "system_own"]})
     n_decide, n_ref = int((m["role_own"] == "decide").sum()), int((m["role_own"] == "ref").sum())
+    n_mode = int((m["role_own"] == "mode").sum())
+    n_pbe_nowell = int((~m["pbe_well"]).sum())
+    nowell_roles = sorted(set(m.loc[~m["pbe_well"], "role_own"]))
+    # coverage of the screened paths (summary.json lists every selected path, with or without PBE)
+    ps = pd.DataFrame([{k: e.get(k) for k in ("stem", "system", "path_model", "role", "status",
+                                              "cache_check_pass", "n_atoms")}
+                       for e in json.loads((C3A_PATHS.parent / "summary.json").read_text(
+                           encoding="utf-8"))["c3a"]["paths"]])
+    n_screened_paths, n_done = len(ps), int((ps["status"] == "complete").sum())
+    pend = ps[ps["status"] == "pending"]
+    big = pend[pend["n_atoms"] > 12]
+    n_copy = len(pend) - len(big)
+    dr_off = {(r.system, r.path_model) for r in ps[ps["role"].isin(["decide", "ref"])
+                                                   & (ps["cache_check_pass"] == False)].itertuples()}  # noqa: E712
 
     # caption facts, read from the data
     corr = u[u["corrected"]]
@@ -1242,14 +1290,14 @@ def table_s19_c3a_pbe() -> str:
     nw_txt = "; ".join(f"{SHORT[r.system]}/{PRETTY[r.model]} at {r.T:.0f} K" for r in nw.itertuples())
     same_ledger = int((u["mlip_pred_stable_ledger"].astype(bool) == u["mlip_same_paths_stable"].astype(bool)).sum())
     n_off_cache = int((~u["all_paths_match_cache"]).sum())
+    n_off_dr = int(sum((r.system, r.model) in dr_off for r in u.itertuples()))
     n_decide_pbe = int(u["deciding_mode_has_pbe"].sum())
     resid = u[~u["pbe_ok"]].groupby("system").size()
     resid_txt = ", ".join(f"{SHORT[s]} {resid[s]}" for s in C3A_ORDER if s in resid)
     n_nowell = int((m["depth_meV_own"] <= 0).sum())
     npb = u["n_paths_pbe"]
     return (
-        "**Table S19** PBE along the screen's own soft-mode coordinates (Referee 1.1, plan item "
-        f"C3a). Each of the {tot[1]} ladder units (6 systems × 5 models × 100, 300, 600 and 900 K) "
+        "**Table S19** PBE along the screen's own soft-mode coordinates. Each of the {tot[1]} ladder units (6 systems × 5 models × 100, 300, 600 and 900 K) "
         "is called twice by the screen's rule (unstable if any computed path condenses, §2.4), on "
         "the same structures: from the model's own energies (*MLIP, same paths*) and from "
         "Quantum ESPRESSO PBE single-point energies (*PBE-backed*). Both are scored against the "
@@ -1258,13 +1306,18 @@ def table_s19_c3a_pbe() -> str:
         "whose PBE-backed call is right; *newly wrong* counts the reverse. **PBE is evaluated at "
         "each MLIP's own relaxed lattice, along that MLIP's coordinate**, so it is a different "
         f"PBE potential for each model, not one reference curve per system. PBE covers "
+        f"{n_done} of the {n_screened_paths} screened paths: the deciding and reference paths and "
+        "every other screened mode whose modulated cell has at most 12 atoms; of the "
+        f"{len(pend)} without PBE, {n_copy} are symmetry copies of a computed path and {len(big)} "
+        f"lie in cells of {int(big['n_atoms'].min())} to {int(big['n_atoms'].max())} atoms, so a "
+        "PBE-backed *stable* means stable on the computed modes only. PBE covers "
         f"{int(npb.min())} to {int(npb.max())} paths per unit, out of the "
         f"{int(u['n_screened'].min())} to {int(u['n_screened'].max())} "
         f"modes the screen maps; the mode that decided the ledger's call has a PBE path in "
         f"{n_decide_pbe} of {len(u)} units. The MLIP column is the model's own call on those "
         f"same paths and equals the ledger's call in {same_ledger} of {len(u)} units. In "
-        f"{n_off_cache} units a path's regenerated E(Q) map did not reproduce the cached map the "
-        "ledger was computed from (a substitute direction inside a degenerate eigenspace; "
+        f"{n_off_cache} units ({n_off_dr} counting only deciding and reference paths) a path's "
+        "regenerated E(Q) map did not reproduce the cached map the ledger was computed from (a substitute direction inside a degenerate eigenspace; "
         "`all_paths_match_cache` in the deposited table), so those calls rest partly on a "
         f"substitute coordinate. Of the {tot[4]} corrections, {len(zr_ref)} are bcc-Zr units on a "
         "reference coordinate and "
@@ -1283,7 +1336,7 @@ def table_s19_c3a_pbe() -> str:
         + md(rows, ["System", "n units", "MLIP, same paths: correct", "PBE-backed: correct",
                     "Corrected by PBE", "Newly wrong"])
         + f"\n\nLower part: the well depth of each of the {len(m)} PBE paths ({n_decide} deciding, "
-        f"{n_ref} reference), the path model's own E(Q) against PBE on the same {int(p['n_Q_dft'].max())} "
+        f"{n_ref} reference, {n_mode} other screened modes), the path model's own E(Q) against PBE on the same {int(p['n_Q_dft'].max())} "
         "structures. Depth is −min E(Q) over the sampled amplitudes, zero when none is below "
         "E(0), and Q_min is the sampled amplitude at that minimum, so both are limited to the "
         f"{int(p['n_Q_dft'].max())}-point scan to 0.45 Å. *Ratio* is own depth over PBE depth. "
@@ -1293,15 +1346,18 @@ def table_s19_c3a_pbe() -> str:
         f"(median {fe4['ratio'].median():.3f}); with ORB-v2's {len(fe) - len(fe4)} paths the range is "
         f"{fe['ratio'].min():.3f} to {fe['ratio'].max():.3f}. **The PBE minimum is at the scan "
         f"edge (Q ≥ {EDGE_Q_A} Å) on {int(m['edge'].sum())} of {len(m)} paths, all "
-        f"{' and '.join(edge_sys)}**; there the sampled depth is a lower bound on the PBE depth "
-        "and the ratio is not a well-depth comparison.\n\n"
+        f"{' and '.join(edge_sys)} deciding paths**; there the sampled depth is a lower bound on "
+        "the PBE depth and the ratio is not a well-depth comparison. On "
+        f"{n_pbe_nowell} paths, all of role {' and '.join(nowell_roles)}, PBE has no well at all "
+        "(no sampled energy below E(0)) where the model has one; the ratio is not defined "
+        "there.\n\n"
         + md(drows, ["Path", "Role", "Own depth (meV)", "PBE depth (meV)", "Ratio own/PBE",
                      "Own Q_min (Å)", "PBE Q_min (Å)", "PBE minimum at scan edge"])
     )
 
 
 def table_s20_c3b() -> str:
-    """Referee 1.2 (plan item C3b): MLIP-versus-PBE forces and energies on SSCHA-sampled
+    """Referee 1.2: MLIP-versus-PBE forces and energies on SSCHA-sampled
     configurations, against a near-equilibrium baseline, from results/revision/dft/c3b_units.csv.
 
     One row per (system, owner model, T). The owner model is the one whose SSCHA ensemble
@@ -1347,8 +1403,8 @@ def table_s20_c3b() -> str:
     nb = sorted({int(x) for x in base["n_configs"]})
     ns = sorted({int(x) for x in ss["n_configs"]})
     return (
-        "**Table S20** MLIP errors on SSCHA-sampled configurations, scored against PBE (Referee "
-        "1.2, plan item C3b). The configurations are drawn from the C1 SSCHA ensembles "
+        "**Table S20** MLIP errors on SSCHA-sampled configurations, scored against PBE. The "
+        "configurations are drawn from the production-recipe seed-study SSCHA ensembles of Table S21 "
         "(`scripts/sscha_seed_study.py`), one temperature per system; the baseline is "
         "near-equilibrium rattled configurations of the same supercell. Per set there are "
         f"{' or '.join(str(x) for x in nb)} baseline and {' or '.join(str(x) for x in ns)} SSCHA "
@@ -1615,7 +1671,7 @@ def table_s21_sscha_seeds() -> str:
     if ms:
         flips = [(u["T"], t2, f["hess"]) for u, f, t2 in ms if t2 is not None and (t2 >= 0) != (f["hess"] >= 0)]
         ms_txt = (
-            f"The {len(ms)} MatterSim runs end at the cumulative cap as the C1 units do (final gradient "
+            f"The {len(ms)} MatterSim runs end at the cumulative cap as the seed-study units do (final gradient "
             f"{_span([f['ratio'] for _, f, _ in ms], _sig)} times its threshold; the Hessian lies "
             f"{_span([abs(f['hess'] - f['aux']) for _, f, _ in ms], _sig)} THz from the final auxiliary "
             "matrix). "
@@ -1625,8 +1681,8 @@ def table_s21_sscha_seeds() -> str:
              for m in ("mace_mp0", "mattersim")}
 
     caption = (
-        "**Table S21** SSCHA with the production recipe, re-run once per seed (Referee 1.4, plan items "
-        "C1 and C5; `scripts/sscha_seed_study.py --preset revision`). "
+        "**Table S21** SSCHA with the production recipe, re-run once per seed "
+        "(`scripts/sscha_seed_study.py --preset revision`). "
         f"**This is the production recipe, and no seed converged: {sum(f['converged'] for f in f1)} of "
         f"{len(f1)} runs ({n_seeds} seeds on each of {len(c1)} units) satisfy the minimiser's own "
         f"stopping test.** Converged values are in the converged-recipe grid ({CONVERGED_TABLE}), not here. "
@@ -1650,7 +1706,7 @@ def table_s21_sscha_seeds() -> str:
         "at every step of every run of a unit and equals 0.433 per primitive-cell atom, so *Recorded gc "
         "error* is not a measurement. The convergence threshold is that value times `meaningful_factor`, "
         f"and *Final gc ÷ threshold* is how far the last gradient sits above it: {_span([f['ratio'] for f in f1], _sig)} "
-        f"on the C1 units, while the gradient falls by a factor of only {_span(gfall, lambda v: f'{v:.1f}')} "
+        f"on the seed-study units, while the gradient falls by a factor of only {_span(gfall, lambda v: f'{v:.1f}')} "
         "from the first step to the last. "
         + ("The structure gradient is at or below its threshold at the last step of every run, so the "
            "dynamical-matrix gradient alone is unconverged. " if all(f["gw_ok"] for f in f1 + f5) else "")
@@ -1686,7 +1742,7 @@ def table_s21_sscha_seeds() -> str:
                    "Hessian, min to max (THz)", "Hessian mean (THz)", "SD over seeds (THz)",
                    "Median bootstrap SD (THz)", "Seed SD ÷ bootstrap SD", "Largest Hessian − start difference (THz)",
                    "Seeds converged", "Call"])
-        + "\n\nLower part: bcc-Zr cell size (plan item C5). The 3×3×3 cell was run once (seed 0) with the "
+        + "\n\nLower part: bcc-Zr cell size. The 3×3×3 cell was run once (seed 0) with the "
         "same production recipe in the current environments; the 2×2×2 value is the deposited canonical "
         "ledger row, not a re-run. The 3×3×3 minus 2×2×2 difference is "
         + " and ".join(f"{_span(v, lambda t: signed(t, 2))} THz for {PRETTY[m]}"
@@ -1727,7 +1783,7 @@ def _grid_compare():
 
 def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Path = GRID_SUMMARY,
                              allow_dry_run: bool = False) -> str:
-    """Referee 1.4 (plan item C1c): SSCHA with the converged recipe on the units behind the §3.3
+    """Referee 1.4: SSCHA with the converged recipe on the units behind the §3.3
     claims, beside the production numbers on the same units.
 
     Every number is read from results/revision/grid_compare.json, which ``scripts/grid_compare.py``
@@ -1808,13 +1864,42 @@ def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Pa
     by_unit: dict = {}
     for e in used:
         by_unit.setdefault((e["system"], e["model"]), []).append(f"{e['T_K']:.0f}")
+    gsum = pd.read_csv(summary_path)
+    gsum = gsum[gsum["start"] == "A"]
+    t_nb = sorted({int(t) for t in gsum.loc[gsum["family"] != "bcc", "T_K"]})
+    t_bcc = sorted({int(t) for t in gsum.loc[gsum["family"] == "bcc", "T_K"]})
     extra_txt = (
-        "The grid stops at 300 K for every non-bcc system; 600 and 900 K are covered only by "
-        + _and(f"{SHORT.get(s, s)} with {PRETTY.get(mo, mo)} at {' and '.join(Ts)} K"
-               for (s, mo), Ts in by_unit.items())
-        + ", run in the converged mode (`results/revision/sscha_converged/`) with the same recipe"
-        if used else "The grid stops at 300 K for every non-bcc system, and no converged value "
-                     "exists above 300 K")
+        f"The grid covers the non-bcc systems at {_and(str(t) for t in t_nb)} K in the 2×2×2 cell "
+        f"and the bcc metals at {_and(str(t) for t in t_bcc)} K in the 3×3×3 cell"
+        + ("; " + _and(f"{SHORT.get(s, s)} with {PRETTY.get(mo, mo)} at {' and '.join(Ts)} K"
+                       for (s, mo), Ts in by_unit.items())
+           + " come from the converged mode (`results/revision/sscha_converged/`) with the same "
+             "recipe" if used else ""))
+    # fresh-ensemble gradient check and bootstrap resolution of the converged units
+    okc = gsum[(gsum["status"] == "ok") & (gsum["converged"].astype(str) == "True")]
+    fresh_bad = []
+    for t in okc["unit_tag"]:
+        d = json.loads((summary_path.parent / f"{t}_startA.json").read_text(encoding="utf-8"))
+        if not d["run"]["fresh_gradient_check"]["consistent_with_minimum"]:
+            r = okc[okc["unit_tag"] == t].iloc[0]
+            fresh_bad.append(f"{SYSNAME.get(r.system, r.system)}/{PRETTY.get(r.model, r.model)} "
+                             f"{r.T_K:.0f} K")
+    fs_conv = okc[(okc["family"] != "bcc") & (okc["gt_stable"].astype(str) == "False")
+                  & (okc["stable_call"].astype(str) == "True")]
+    weak = fs_conv[fs_conv["hessian_min_thz"] < 2 * fs_conv["boot_sd_thz"]]
+    weak_txt = _and(f"{SYSNAME.get(r.system, r.system)}/{PRETTY.get(r.model, r.model)} at "
+                    f"{r.T_K:.0f} K ({signed(r.hessian_min_thz, 2)} ± {r.boot_sd_thz:.2f} THz)"
+                    for r in weak.itertuples())
+    fresh_txt = (
+        f"**Fresh-ensemble check.** At the final matrix of each converged unit the gradient was "
+        f"recomputed on an independent ensemble of {R['n_hessian']} configurations; it is consistent "
+        f"with a minimum on {len(okc) - len(fresh_bad)} of the {len(okc)} converged units and not on "
+        f"{len(fresh_bad)} ({_and(fresh_bad)}), so *converged* means the library's stopping test, "
+        f"not an independent verification. None of the {len(fs_conv)} converged false-stables is "
+        "among them"
+        + (f"; among the false-stables, {weak_txt} lie{'s' if len(weak) == 1 else ''} within two "
+           "bootstrap standard deviations of zero" if len(weak) else "")
+        + ". ")
     miss_T = cov["i"]["not_in_grid_by_T"]
     miss_txt = (", ".join(f"{k} at {t} K" for t, k in miss_T.items()) if miss_T else "")
     still = fo["outcomes"].get("still_false_stable", 0)
@@ -1833,7 +1918,7 @@ def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Pa
                     f"a Hessian ensemble of {P['n_hessian']}.")
     caption = (
         "**Table S22** SSCHA with the converged recipe on the units behind the §3.3 claims, beside "
-        "the production numbers on the same units (Referee 1.4, plan item C1c; "
+        "the production numbers on the same units ("
         "`scripts/sscha_seed_study.py --preset grid`, compared with the production ledger by "
         "`scripts/grid_compare.py`). "
         f"**Recipe:** {R['n_configs']} configurations per population, at most {R['max_pop']} "
@@ -1847,7 +1932,7 @@ def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Pa
         f"{' or '.join(str(x) for x in m['n_boot'])} bootstrap resamples, and a "
         f"{m['unit_timeout_s']:g} s wall cap on each relaxation." + prod_txt + " "
         "**Start A only** (the production ForcePositiveDefinite start): start dependence is the "
-        "six-unit start-A against start-B study (C1c), not repeated across the grid. A call is the "
+        "six-unit start-A against start-B study (§3.5), not repeated across the grid. A call is the "
         f"sign rule used throughout: stable iff the lowest free-energy-Hessian frequency is at or "
         f"above {signed(m['imag_tol_thz'], 1)} THz. "
         f"**Run status:** {n} planned units, {ok} finished, {conv} of them "
@@ -1867,7 +1952,7 @@ def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Pa
            f"converged recipe (the screen calls {fo['still_false_stable_screen_unstable']['short']} of "
            f"them unstable) and {now} are called unstable"
            + (f", and {rest} have no converged value ({rest_states})" if rest else "") + ". ")
-        + extra_txt + ". "
+        + extra_txt + ". " + fresh_txt +
         "**The bcc cell is 3×3×3 in the grid and 2×2×2 in production**, so on bcc a change of call "
         "mixes the cell change with the convergence (Table S21, lower part, measures the cell change "
         "at the production recipe), and the bcc agreement below compares the screen with a "
@@ -1913,6 +1998,129 @@ def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Pa
     )
 
 
+# ------------------------------- revision table S23 (checks on the persistent PBE errors) ----
+
+DFT_CHECKS = REPO / "results" / "revision" / "dft_checks"
+
+
+def table_s23_dft_checks() -> str:
+    """Referee 1.1: checks on the errors that persist on PBE (k-point and cutoff convergence,
+    PBEsol on the same structures, the PBE lattice). Every number is read from the outputs of
+    ``scripts/dft_checks.py analyze-checks`` under results/revision/dft_checks/."""
+    sp = DFT_CHECKS / "summary.json"
+    if not sp.exists():
+        print("Table S23 skipped: results/revision/dft_checks/summary.json does not exist",
+              file=sys.stderr)
+        return ""
+    chk = json.loads(sp.read_text(encoding="utf-8"))
+    order = ["batio3_cubic", "knbo3_cubic", "cssnbr3_cubic"]
+    names = {"batio3_cubic": "BaTiO₃", "knbo3_cubic": "KNbO₃", "cssnbr3_cubic": "CsSnBr₃"}
+
+    def pct(x: float) -> str:
+        v = 100 * x
+        return ("−" if v < 0 else "+") + f"{abs(v):.1f} %" if abs(v) >= 0.05 else "−0.0 %" if v < 0 else "+0.0 %"
+
+    def qtxt(stem: str) -> str:
+        q, b = stem.split("_q")[1].split("-b")
+        parts = [x.replace("d", "/") for x in q.split("-")]
+        return f"q = ({', '.join(parts)}), band {b}"
+
+    # upper part: convergence
+    conv = {c["system"]: c for c in chk["conv"]["paths"]}
+    crow, n_T = [], None
+    for sname in order:
+        c = conv[sname]
+        v = c["variants"]
+        n_T = len(chk["conv"]["acceptance"].split("[")[1].split("]")[0].split(","))
+        changed = sum(int(v[k]["n_T_call_changed"]) for k in ("k", "e", "ke"))
+        edge_all = all(v[k]["min_at_edge"] for k in ("prod", "k", "e", "ke"))
+        failed = c.get("failed_variants") or []
+        crow.append([names[sname], qtxt(c["stem"]), f"{v['prod']['depth_meV']:.1f}",
+                     pct(v["k"]["depth_rel_change"]), pct(v["e"]["depth_rel_change"]),
+                     pct(v["ke"]["depth_rel_change"]), str(changed),
+                     "yes, all variants" if edge_all else ("yes" if v["prod"]["min_at_edge"] else "no"),
+                     "met" if c["converged"] else f"missed (depth; {', '.join(failed)})"])
+    # middle part: PBEsol
+    xu = pd.read_csv(DFT_CHECKS / "xc_unit_calls.csv")
+    xu = xu[xu["in_ladder"].astype(bool) & xu["unit_complete"].astype(bool)]
+    xp = pd.read_csv(DFT_CHECKS / "xc_paths.csv")
+    xrow = []
+    tot = [0, 0, 0, 0, 0]
+    for sname in order:
+        g = xu[xu["system"] == sname]
+        gt = g["gt_stable"].astype(bool)
+        pbe_ok = g["pbe_backed_stable"].astype(bool) == gt
+        sol_ok = g["pbesol_backed_stable"].astype(bool) == gt
+        fixed, new = int((~pbe_ok & sol_ok).sum()), int((pbe_ok & ~sol_ok).sum())
+        pp = xp[xp["system"] == sname]
+        r = pp["depth_ratio_pbesol_over_pbe"]
+        edge = bool(pp["pbesol_min_at_edge"].astype(bool).any())
+        fixed_who = ""
+        if 0 < fixed <= 2:
+            fx = g[~pbe_ok & sol_ok]
+            fixed_who = " (" + "; ".join(f"{PRETTY[x.model]}, {x.T:.0f} K" for x in fx.itertuples()) + ")"
+        qsol = sorted({round(float(x), 3) for x in pp["pbesol_Q_min_A"]})
+        xrow.append([names[sname], len(g), int(pbe_ok.sum()), int(sol_ok.sum()),
+                     f"{fixed}{fixed_who}", new, f"{r.min():.2f}–{r.max():.2f}",
+                     "yes" if edge else ("no" if not pp["pbe_min_at_edge"].astype(bool).any()
+                                         else f"no ({'/'.join(f'{q:.2f}' for q in qsol)} Å; PBE at the 0.45 Å edge)")])
+        for i, x in enumerate((len(g), int(pbe_ok.sum()), int(sol_ok.sum()), fixed, new)):
+            tot[i] += x
+    xrow.append(["*total*", *[str(x) for x in tot], "", ""])
+    xc = chk["xc"]
+    left = xu[(xu["pbesol_backed_stable"].astype(bool) != xu["gt_stable"].astype(bool))]
+    left_txt = _and(f"{names[x.system]}/{PRETTY[x.model]} at {x.T:.0f} K" for x in left.itertuples())
+    # lower part: PBE lattice
+    pl = chk["pbe_lattice"]["systems"]
+    lrow = []
+    for sname in order:
+        L = pl[sname]["lattice"]
+        a = list(L["mlip_a_A"].values())
+        d = L["mlip_minus_pbe_pct"]
+        big = max(d, key=d.get)
+        lrow.append([names[sname], f"{L['a_pbe_A']:.4f}", f"{min(a):.4f}–{max(a):.4f}",
+                     f"+{min(d.values()):.2f} to +{max(d.values()):.2f} (largest {PRETTY[big]})"])
+    phases = {(v["phase_B"], v["phase_C"]) for v in pl.values()}
+    bc_txt = ("The PBE force constants and E(Q) profiles at the PBE lattice (phases B and C of "
+              "the check) were not computed, so whether the lattice or the eigenvector moves a "
+              "call is not tested." if phases == {("pending", "pending")} else
+              "Phases B and C: see `results/revision/dft_checks/pl_phonons.csv`.")
+    pmax = max(abs(v["lattice"]["final_scf_pressure_kbar"]) for v in pl.values())
+    jobs = pd.read_csv(DFT_CHECKS / "qe_jobs.csv")
+    jobs = jobs[jobs["job"].str.match(r"(cv|xs|pl)_") & (jobs["status"] == "ok")]
+    n_jobs = len(jobs)
+    return (
+        "**Table S23** Checks on the errors that persist on PBE (`scripts/dft_checks.py "
+        "analyze-checks` → `results/revision/dft_checks/`"
+        + (f"; {n_jobs} calculations" if n_jobs else "") + "). "
+        "Upper part: k-point and cutoff convergence of the MACE-MP-0 deciding path of each system, "
+        "as the relative change of the well depth (−min E(Q) over the ten sampled amplitudes, per "
+        "modulated cell) from the production settings (k-spacing 0.25 Å⁻¹ with 2π included, SSSP "
+        "cutoffs) to a k-spacing of 0.15 Å⁻¹ (*k*), cutoffs ×1.3 with the density cutoff kept at "
+        "eight times the wavefunction cutoff (*ecut*), and both. The criterion, fixed before any "
+        f"variant ran, is {chk['conv']['acceptance']}; the verdict is **{chk['conv']['verdict']}**. "
+        "It fails on CsSnBr₃ only, by the depth, and no call changes anywhere; *Calls changed* is "
+        f"over {n_T} temperatures × 3 variants. Middle part: the screen re-solved with PBEsol on "
+        "the same structures, over the ladder units of each system (5 models × 100, 300, 600, "
+        f"900 K), along the {xc['n_paths']} deciding paths; **PBEsol here is input_dft = 'pbesol' "
+        "on the SSSP 1.3 PBE pseudopotentials at each MLIP's lattice, not the SSSP PBEsol set and "
+        f"not PBEsol's own lattice**. PBEsol corrects {xc['pbe_errors_fixed_by_pbesol']} of the "
+        f"{xc['pbe_errors']} PBE errors and introduces {xc['new_errors_from_pbesol']}; the "
+        f"{len(left)} left wrong are {left_txt}. Lower part: the cubic lattice relaxed in PBE "
+        f"(vc-relax, production settings, final pressure within {pmax:.2f} kbar) against the MLIP "
+        "lattices the curves of Table S19 use. " + bc_txt + " Counts are descriptive (three "
+        "systems).\n\n"
+        + md(crow, ["System", "Path (MACE-MP-0, deciding)", "Production depth (meV)", "*k*",
+                    "*ecut*", "*k* + *ecut*", f"Calls changed (of {3 * n_T})",
+                    "PBE minimum at scan edge", "Criterion"])
+        + "\n\n"
+        + md(xrow, ["System", "Units", "Correct, PBE", "Correct, PBEsol", "PBE errors corrected",
+                    "New errors", "Depth PBEsol/PBE", "PBEsol minimum at scan edge"])
+        + "\n\n"
+        + md(lrow, ["System", "PBE a (Å)", "MLIP a (Å), five models", "MLIP − PBE (%)"])
+    )
+
+
 def build() -> str:
     raw = pd.read_parquet(LEDGER)
     df = A.canonical(raw)
@@ -1941,6 +2149,7 @@ def build() -> str:
         table_s20_c3b(),
         table_s21_sscha_seeds(),
         table_s22_converged_grid(),
+        table_s23_dft_checks(),
     ]
     blocks = [b for b in blocks if b]
     return "\n\n".join(blocks)
