@@ -373,7 +373,7 @@ representation, with `min_step_dyn` = 0.5 and `meaningful_factor` = 10⁻⁴, th
 threshold. The minimiser's steps are capped at `max_ka` = 20, a cap that python-sscha 1.6.1
 compares with the step count accumulated over all populations rather than resetting for each one
 (ESI §S2.1), and the relaxation runs for up to 8 populations of 256 configurations (2,048 at
-most). A dedicated 512-configuration ensemble at the final auxiliary matrix (2,560 configurations
+most; ESI Table S11 states every setting). A dedicated 512-configuration ensemble at the final auxiliary matrix (2,560 configurations
 per unit at most in all) then gives the free-energy
 (physical) Hessian at the bubble level (`include_v4 = False`, the python-sscha default). Its minimum
 frequency, excluding the three acoustic modes (taken as those nearest zero in magnitude), is called
@@ -1054,7 +1054,10 @@ and the permutation null does not remove that part.
 Without ORB-v2 the signal weakens. Only 8 units then split, against 14 with all five models; the
 consensus is wrong on 4/8 = 0.500 [0.215, 0.785] of them and on 8/52 = 0.154 [0.080, 0.275] of the
 unanimous units, and the vote-split AUC falls to 0.628 (system-clustered p = 0.047) with a
-cluster-bootstrap interval, [0.438, 0.839], that spans 0.5. With four models three units tie 2–2;
+cluster-bootstrap interval, [0.438, 0.839], that spans 0.5. The two disagree because they ask
+different things: the permutation test asks whether the split ranks errors above chance under
+relabelling of whole systems, and the bootstrap resamples only fifteen systems, so its interval
+is wide. With four models three units tie 2–2;
 the rule breaks a tie to "stable", and two of the three (PbTiO₃ at 100 and 300 K) are then wrong.
 The vote split is therefore a suggestive guardrail, not one that is robust to removing ORB-v2.
 
@@ -1268,7 +1271,7 @@ findings unevenly. Fine-tuning could change the per-model inputs: the harmonic c
 flattened Zr and Hf instabilities are the kind of softening these studies address), the well
 depths and shapes the screen reads, and so the per-model screen accuracies and the H2 counts built
 from them. Whether it would remove the mis-calls shared across models, which carry most of the H2
-count, we tested in a trial registered before any data were computed (ESI §S6). MACE-MP-0 and
+count, we tested in a trial registered before any data were computed (ESI §S6, Tables S25 and S26). MACE-MP-0 and
 CHGNet were each fine-tuned three times (seeds 0, 1 and 2), with each tool's documented small-data
 recipe and 30 epochs, on PBE energies and forces of 120 thermally rattled 2×2×2 cells of BaTiO₃,
 KNbO₃ and CsSnBr₃, and tested on the held-out PBE data of §2.6; a call counts as changed only if
@@ -1283,8 +1286,8 @@ MACE-MP-0 too (unresolved for CHGNet); and MACE-MP-0 loses a correct call, CsSnB
 all three replicates. MACE-MP-0 keeps its six control calls and CHGNet leaves four of six
 unresolved. The MACE-MP-0 fine-tunes first run had trained 6 epochs instead of the registered
 30, an execution error recorded as a deviation; their verdicts were the same, and the 30-epoch
-re-run is the registered result. A check made after the results, and not registered, places the
-gap in the lattice. Trained without stresses, the 30-epoch MACE-MP-0 replicates relax BaTiO₃ and
+re-run is the registered result. A check made after the results, and not registered, is consistent
+with the gap lying in the lattice, though it does not separate the lattice from the eigenvector. Trained without stresses, the 30-epoch MACE-MP-0 replicates relax BaTiO₃ and
 KNbO₃ about 0.5 % smaller than the base model, to within 0.3 % of the PBE lattice, and call both
 stable at 300 K there; at the base model's lattice, where the held-out PBE data were computed,
 all six replicate and system pairs call 300 K unstable. That is what PBE does itself (§3.2): at
