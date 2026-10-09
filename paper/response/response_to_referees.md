@@ -268,11 +268,11 @@ dynamic stability, so a label and a dynamic-stability call can differ near a tra
 either being wrong.
 
 *Agreement on one surface.* Section 2.5 now states that SSCHA inherits the MLIP potential-energy surface
-exactly as the screen does, and Section 3.3 and the caption of Fig. 4 describe screen–SSCHA agreement as a
+exactly as the screen does, and Section 3.3 and the caption of Fig. 5 describe screen–SSCHA agreement as a
 consistency check. The descriptions of SSCHA as a gold standard and of the screen as tracking it
 are gone. The bcc agreement is also reported more carefully than before: the stability calls agree
 in 31/45 = 0.69 [0.54, 0.80]; 12 of the agreeing units are MACE-MP-0 and CHGNet on Zr and Hf, where
-neither model has a harmonic instability to stabilise (Fig. 3 now marks them); and MatterSim, whose
+neither model has a harmonic instability to stabilise (Fig. 4 now marks them); and MatterSim, whose
 bcc instabilities are the deepest, agrees with production SSCHA on the call in none of its 9
 units (Table S16); with converged SSCHA in the 3×3×3 cell the calls agree in 33/40 units with a
 resolved call (33/41 from one start) and MatterSim in 7/9 (Tables S22 and S24), although for MatterSim the cell itself changes the call (Section 3.5). The reviewed text compared the two methods' frequencies directly. For the reason just given,
@@ -284,11 +284,12 @@ stable controls), not against SSCHA. Its SrTiO₃ gate, which on the 100/300 K l
 105 K transition without locating it, is passed by three of the five models (Section 2.4).
 
 **Changes.** Section 2.1; Section 2.4 ("Criterion and observable", SrTiO₃ gate); Section 2.5; Section 3.3 (the bcc paragraphs,
-and "Why the default criterion misses these wells"); Section 4 (Limitations); captions of Figs. 2, 3 and
-4; ESI Section S1.3 ("What the symmetric-point curvature is", last paragraph), Sections S2.2, S4, Table S16;
+and "Why the default criterion misses these wells"); Section 4 (Limitations); captions of Figs. 2, 4 and
+5; ESI Section S1.3 ("What the symmetric-point curvature is", last paragraph), Sections S2.2, S4, Table S16;
 `scripts/curvature_identity_check.py`.
-New Section 2.6 (first-principles reference) and the PBE paragraph of Section 3.2; ESI Sections S5.1, S5.3, Table S19
-and Table S23.
+New Section 2.6 (first-principles reference) and the PBE paragraph of Section 3.2; new Fig. 3 (the PBE
+call at its own lattice and at the MLIP's, with the well depths behind it); ESI Sections S5.1, S5.3,
+Table S19 and Table S23.
 
 ## R1.2 MLIP force-engine errors against method failures
 
@@ -363,7 +364,8 @@ configurations it reached may have amplified; the MLIP-error hypothesis is not n
 Section 3.3 no longer presents it as the signature the referee describes.
 
 **Changes.** Section 3.3 ("Why the default criterion misses these wells", "High-temperature
-false-unstables were the unconverged recipe", "Numerical failures"); Section 4 (Limitations); ESI Section S2.1,
+false-unstables were the unconverged recipe", "Numerical failures", now summarised there with the
+full list in ESI Section S2.3); Fig. 7; Section 4 (Limitations); ESI Section S2.1,
 Section S2.2 (Table S2), Sections S2.3, S2.4 (SrTiO₃), Tables S16, S17 and S22.
 New Section 2.6; Section 3.3 ("Why the default criterion misses these wells" and "High-temperature
 false-unstables were the unconverged recipe", last sentences); Section 4; ESI Section S5.2 and Table S20.
@@ -560,7 +562,9 @@ marginal: BaTiO₃ with CHGNet reads +1.65 THz on the full Hessian ensemble, but
 (B = 10 resamples) has a mean of −0.33 THz and 6 of the 10 resamples are unstable; Section 3.3 now says
 so. No resample is unstable on the other nine.
 
-**Changes.** Section 2.5; Section 3.3; Section 3.5 ("Stochastic reproducibility"); Section 4 (Limitations); ESI Section S2.1,
+**Changes.** Section 2.5; Section 3.3; new Fig. 7 (the converged call on every unit of the grid, the
+units the replicates leave unresolved hatched); Section 3.5 ("Stochastic reproducibility"); Section 4
+(Limitations); ESI Section S2.1,
 Section S2.2 (Table S2), Section S2.4, Table S11.
 ESI Table S21 (new: the seed study and the bcc cell-size re-measurement) and ESI Table S22 (new:
 the converged-recipe grid beside the production values).
@@ -573,8 +577,9 @@ the converged-recipe grid beside the production values).
 > polynomial fit windows, sampling ranges, and cell commensurability must be systematically
 > reported.
 
-**Response.** The derivation is now complete in ESI Section S1.3, which extends the Section 2.4 derivation added
-in August.
+**Response.** The derivation is now complete in ESI Section S1.3, which holds the derivation added to
+Section 2.4 in August, extended; Section 2.4 keeps the free energy, the width and the
+self-consistency condition, and points to it.
 
 - *Mode mass-weighting.* The effective mass M = Σᵢ mᵢ|**u**ᵢ|² follows from the kinetic energy of
   the frozen pattern. Section S1.3 also fixes what the reviewed text left open: the pattern is normalised
@@ -635,8 +640,8 @@ E(Q) maps with the production solver.
   that fixes which **q**-points are searched, was not enlarged; Section 2.4 and ESI Section S4 say so, and Table 1
   lists it as approximation A2. Cell size for SSCHA is under R3.2.
 
-**Changes.** Section 2.4 ("Definitions and numerical settings", "Criterion and observable", "Frozen-cell
-normalisation" and the paragraph after it); Table 1 (A3, A7); Section 3.2; Section 4 (Limitations); Section 5; ESI
+**Changes.** Section 2.4 ("Definitions and numerical settings", with its constants now in ESI
+Section S1.3, "Criterion and observable", "Frozen-cell normalisation" and the paragraph after it); Table 1 (A3, A7); Section 3.2; Section 4 (Limitations); Section 5; ESI
 Sections S1.1, S1.3, S1.4 (Table S12), Table S14, Section S4.
 
 ## R1.6 Statistical language and claims
@@ -783,7 +788,8 @@ experiment. How much of the finite-temperature gap fine-tuning closes in general
 and with how much data, is beyond what this benchmark can say; Section 4 says that too.
 
 **Changes.** Abstract; Section 2.2; Section 4 ("Scope: foundation models as shipped": the trial, replacing the
-estimate of how much a fine-tune would remove, "On model-reported uncertainty"); Section 5; refs 5 and
+estimate of how much a fine-tune would remove, "On model-reported uncertainty"); Fig. 3 (the fine-tunes at
+their own and at the base model's lattice); Section 5; refs 5 and
 45–48; ESI Section S6 and Tables S25 and S26; the registration, its deviations and all trial data are in
 the deposited repository (`results/revision/finetune/`, `results/revision/finetune_mace30/`,
 `scripts/finetune_lattice_diag.py`).
@@ -865,7 +871,7 @@ not run, and the paper says so.
 
 **Changes.** Section 3.4 (the ORB-v2 split, the tie rule, the part of the enrichment built into the
 construction, the frequency spread as a PES-level proxy, the force-level test and its result); Section 4
-("On model-reported uncertainty"); Section 5; Fig. 6 (both model sets); ESI Tables S8, S9 and S18.
+("On model-reported uncertainty"); Section 5; Fig. 8 (both model sets); ESI Tables S8, S9 and S18.
 
 ---
 
@@ -912,6 +918,7 @@ finite-temperature calls a screen makes with a model, not about the model's surf
 **Changes.** Title; Abstract; Section 1 (H2); Section 2.4; Section 3.2; Section 4; Section 5; ESI Section S1.3.
 
 ## R3.2 Zone-boundary convergence
+<!-- PENDING-4x4x4: a 4x4x4 SSCHA run (SrTiO3 and one fluorite) is being prepared; rewrite this response, its Changes line, Section 3.5 "Zone-boundary systems" and the verify_claims 'no 4x4x4 result' check when results exist. -->
 
 > Complete the deferred 4×4×4 SSCHA for SrTiO₃ and one fluorite, or remove all convergence claims
 > for zone-boundary systems. The manuscript concedes that the SrTiO₃ antiferrodistortive
@@ -975,7 +982,7 @@ Tables S17, S21 and S22.
 `results/stats_hardening.json`.
 
 *Counts and intervals.* Rates are now given as k/n, with a Wilson 95% interval in the tables, in
-Figs. 5 and 6 and at the main-text rates the argument turns on: the harmonic accuracies are
+Figs. 6 and 8 and at the main-text rates the argument turns on: the harmonic accuracies are
 19/19 [0.832, 1.000], 17/19 [0.686, 0.971] and 15/19 [0.567, 0.915]. Some rates the text quotes
 in passing carry their interval only in the ESI (the SSCHA high-temperature false-unstables, in
 Table S17). I used Wilson rather than Wald intervals because several rates sit at 0 or 1, where a
@@ -1026,8 +1033,8 @@ systems can give is 0.0625; with the production recipe it was 33 against 3 and p
 reports this as a difference that is not significant, and ESI Table S10 gives both recipes and
 marks its unit-level p-values as not to be quoted.
 
-**Changes.** Section 3.1 (table); Section 3.2 (both tables and the text after them); Section 3.3; Section 3.4; Section 5; Figs. 5 and
-6; ESI Section S3 (head), Tables S4–S10 and S15.
+**Changes.** Section 3.1 (table); Section 3.2 (both tables and the text after them); Section 3.3; Section 3.4; Section 5; Figs. 6, 7 and
+8; ESI Section S3 (head), Tables S4–S10 and S15.
 
 ## R3.4 Tables S1–S4
 
@@ -1137,28 +1144,34 @@ the guardrail), and the split in Tables S10, S13, S14, S15, S16, S17 and S18.
 > first citation, and the production editor may wish to check this.
 
 **Response.** It was in the submitted manuscript, not the proof: Fig. 6 was placed before Fig. 5 in
-the source. All six figures now appear in order of first citation, with Fig. 5 placed after Fig. 4
-in Section 3.3, and they are also supplied as separate numbered TIFF files at 600 dpi in that order.
+the source. The revision has eight figures, and all of them now appear in order of first citation,
+with the recall figure placed after the method-agreement figure in Section 3.3; they are also
+supplied as separate numbered TIFF files at 600 dpi in that order. Two figures are new, so the
+numbers below are the revised ones: reviewed Figs. 1 and 2 keep their numbers, reviewed Figs. 3,
+4, 5 and 6 are now Figs. 4, 5, 6 and 8, and the new Figs. 3 and 7 show the PBE lattice check and
+the fine-tuned models at two lattices (R1.1, R2.1) and the converged SSCHA call on every unit of
+the grid (R1.4, R3.3). The point the referee raised, the recall figure printed before the
+method-agreement figure, concerned reviewed Figs. 5 and 6.
 Every caption except that of Fig. 1 changed in substance. Fig. 2 is a new figure: the reviewed
 Fig. 2 plotted the screen's 100 K curvature observable, which the reviewed text cited in Section 3.1 as
 though it showed harmonic frequencies; that observable is positive by construction (ESI Section S1.3), so
 its negative values were numerical. The new Fig. 2 shows what Section 3.1 argues from, the harmonic
 minimum frequency of every system under every model, with the unstable calls boxed and the
 disagreements with the reference label marked; it also puts the per-system harmonic numbers behind
-Table S4 on the record (item 4). Fig. 3 no longer says that the SSCHA margins discriminate the
+Table S4 on the record (item 4). Fig. 4 no longer says that the SSCHA margins discriminate the
 models, marks the units with nothing to stabilise, and now adds the converged 3×3×3 values beside
 the production curves, with the one converged unit that the replicates leave unresolved (Ti with
-ORB-v2 at 600 K) marked separately. Fig. 4 no longer describes SSCHA as a "gold standard" or says
+ORB-v2 at 600 K) marked separately. Fig. 5 no longer describes SSCHA as a "gold standard" or says
 the screen tracks it, and gives the call agreement; it now plots the SSCHA frequency against the
 screen's stability call instead of against the screen's curvature, since that curvature is
-positive by construction and its negative values are numerical. Fig. 5 no longer says SSCHA is less reliable than
+positive by construction and its negative values are numerical. Fig. 6 no longer says SSCHA is less reliable than
 the screen, gives both recalls as counts with intervals, and now plots converged SSCHA (4/22)
 against the screen on the same 22 units (14/22), the units where the replicates of R1.4 leave the
-call resolved, with the production value (5/27) beside them. Fig. 6 adds the panel without
+call resolved, with the production value (5/27) beside them. Fig. 8 adds the panel without
 ORB-v2 and says that no signal could be resolved for the frequency spread.
 
-**Changes.** Placement of Figs. 5 and 6; captions of Figs. 2–6; Fig. 2 new; Figs. 3, 4 and 5
-regenerated. The three main-text tables that had no number now have numbers and captions
+**Changes.** Placement of Figs. 6 and 8 (reviewed Figs. 5 and 6); captions of Figs. 2 and 4–8; Figs. 2,
+3 and 7 new; Figs. 4, 5 and 6 regenerated. The three main-text tables that had no number now have numbers and captions
 (Tables 2–4, in order of first citation).
 
 ---
@@ -1185,7 +1198,7 @@ checked against the title page and back matter.
 # Other changes
 
 - The harmonic layer's sensitivity to the finite-displacement amplitude is measured for all five
-  models (0.005, 0.02 and 0.03 Å against the production 0.01 Å; Section 3.2, ESI Table S13). MACE-MP-0,
+  models (0.005, 0.02 and 0.03 Å against the production 0.01 Å; Section 3.2, ESI Section S1.2 and Table S13). MACE-MP-0,
   MatterSim and SevenNet-0 change no call; CHGNet changes calls only on controls, so its harmonic
   accuracy runs from 14/19 to 17/19; ORB-v2 changes calls on test systems.
 - The MACE-MP-0 reference (ref 29) now cites its published version (*J. Chem. Phys.*, 2025, **163**,
@@ -1198,6 +1211,15 @@ checked against the title page and back matter.
 - A statement on the use of AI tools is added at the end of the Acknowledgements, in line with the
   journal's policy.
 <!-- DRAFT-FOR-FRANK: the AI-use statement in the manuscript is Option A of paper/response/ai_use_statement_DRAFT.md; confirm or replace its wording, and keep or drop this bullet accordingly. -->
+- Two figures are new and carry results the revision added: Fig. 3 shows the lattice knife edge
+  behind the PBE check and the fine-tuning trial (R1.1, R2.1), and Fig. 7 maps converged SSCHA's
+  call on every unit of the grid, with the units its replicates leave unresolved hatched (R1.4,
+  R3.3). To keep the paper readable the main text is shorter by about 2,900 words: methods detail and
+  robustness material that predate the revision (the screen's full derivation and numerical
+  constants, the harmonic replicate study, the T* comparison, the production-recipe bcc caveats,
+  the full list of SSCHA failures) now stand in the ESI as they were written, each with a pointer
+  in the main text, and results stated several times are stated once. Nothing added in answer to
+  the referees left the main text.
 - The PBE first-principles reference now carries its own convergence, functional and lattice checks
   (Section 2.6 (iii), ESI Section S5.3, Table S23), and the SSCHA results of Section 3.3 rest on a converged re-run of
   the SSCHA grid (Section 2.5, ESI Table S22).
@@ -1210,7 +1232,7 @@ checked against the title page and back matter.
    referees read).
 3. The revised manuscript as a clean .docx with the figures embedded.
 4. The revised ESI, clean, and with the changes marked against the version the referees read.
-5. Figs. 1–6 as separate numbered TIFF files at 600 dpi.
+5. Figs. 1–8 as separate numbered TIFF files at 600 dpi.
 6. The table of contents entry: a graphic within 8 cm × 4 cm and a text of at most 250 characters.
 
 Yours sincerely,

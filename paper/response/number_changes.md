@@ -58,7 +58,7 @@ The SSCHA rows above are the production recipe, which did not converge. The revi
 |---|---|---|---|
 | Converged SSCHA false-stables, label-unstable non-bcc units | 34/84 (30/74 without ORB-v2) | 27/77, 7 unresolved (23/67) | ESI Table S24 |
 | Of those, screen finds a lower displaced minimum | 17/34 (14/30) | 15/27 (12/23) | ESI Table S24 |
-| FE recall at T ≤ 300 K, screen v converged SSCHA | 15/26 v 4/26 | 14/22 v 4/22 | ESI Table S24, Fig. 5 |
+| FE recall at T ≤ 300 K, screen v converged SSCHA | 15/26 v 4/26 | 14/22 v 4/22 | ESI Table S24, Fig. 6 |
 | Paired contrast, displacive set at T ≤ 300 K | 13 v 2 on 44 units, p = 0.5 | 12 v 2 on 40 units, p = 0.5 | ESI Table S24 |
 | bcc call agreement, converged 3×3×3 | 33/41 | 33/40 (32/36 without ORB-v2 unchanged) | ESI Table S24 |
 | BaTiO₃/KNbO₃ 300 K mis-calls on PBE | called correctly (at each MLIP's lattice) | correct at the MLIP lattice only; PBE at its own lattice makes the same error | ESI Table S23 |
