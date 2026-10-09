@@ -265,7 +265,7 @@ Criterion and observable. Two distinct quantities come out of 𝓕, and we keep 
 state then has the lower free energy. The high-symmetry structure is dynamically unstable at T if
 **any** screened mode condenses, and stable only when none does; dynamical stability is a property
 of the phase, not of one mode. The **reported frequency** is the curvature of the free energy at
-the symmetric point, ω_eff = sign(𝓕″(0)) · [|𝓕″(0)|/M]^½, the single-mode analogue of the SSCHA
+the symmetric point, ω_eff = sign(𝓕″(0)) · [|𝓕″(0)|/M]^½^, the single-mode analogue of the SSCHA
 free-energy Hessian^38^ (𝓕 is even in Q₀ under the parity assumption above, so the curvature is
 evaluated by a symmetric finite difference). For a single mode that observable cannot signal an
 instability: at the symmetric point the parity of V removes every term but ⟨V″⟩, so
