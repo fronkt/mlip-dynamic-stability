@@ -3,10 +3,10 @@
 *Supplementary information for* "Neither harmonic benchmarks nor a default SSCHA cross-check
 certifies a foundation machine-learning interatomic potential for finite-temperature dynamic
 stability", F. Cai, *RSC Advances*. Section numbers without an S (§2.4, §3.3 and so on) and
-numbered references refer to the main article. Tables S4-S11 and S13-S26 are generated from the
+numbered references refer to the main article. Tables S4-S26 are generated from the
 deposited ledger (`results/ledger.parquet`) and the deposited analysis outputs
 (`results/stats_hardening.json`, `results/screen_sensitivity.json`,
-`results/curvature_identity_check.json`, `results/revision/force_spread/summary.json`,
+`results/curvature_identity_check.json`, `results/scha_vs_exact.json`, `results/revision/force_spread/summary.json`,
 `results/revision/dft/`, `results/revision/dft_checks/`, `results/revision/sscha_seeds/`,
 `results/revision/sscha_converged_grid/`, `results/revision/grid_compare.json`,
 `results/revision/e3_replicates/`, `results/revision/finetune/`, `results/revision/finetune_mace30/`) by
@@ -388,15 +388,7 @@ thermally stabilise. Any disagreement between this criterion and the screen must
 **not** be read as an error in the SCHA approximation; the two criteria answer different
 questions.
 
-**Table S12** The exact isolated-mode criterion against the variational one, over the same 228
-mode-temperature evaluations: 57 (system, model) units, involving 75 distinct fitted potentials.
-
-| T (K) | exact: fraction bimodal | SCHA screen: fraction condensed |
-|---|---|---|
-| 100 | 0.9649 | 0.8596 |
-| 300 | 0.9649 | 0.6667 |
-| 600 | 0.9649 | 0.5614 |
-| 900 | 0.9649 | 0.4912 |
+The fractions are in Table S12 (§S3).
 
 That contrast is itself the argument for the variational criterion. The temperature dependence
 that lets the screen bracket the SrTiO₃ transition at 105 K is supplied by the SCHA
@@ -608,7 +600,7 @@ print to the run log rather than to a ledger).
   registered; 1 wrote no result. On the 51 units with three values the call is the same in 43
   (43/51 = 0.843 [0.720, 0.918]; 32/39 without ORB-v2), with a median range of 0.22 THz. The
   other eight are unresolved and §3.3 counts them as such: seven PbTiO₃ and KNbO₃ units of CHGNet
-  and MatterSim at 300–600 K, where start B ended at its wall or population cap at −209 to
+  and MatterSim at 300–600 K (PbTiO₃ with MatterSim at 600 K failed under both recipes), where start B ended at its wall or population cap at −209 to
   −6230 THz while start A and the second seed agree on a converged stable call, and bcc Ti with
   ORB-v2 at 600 K (+2.53, −26.4 and −3.73 THz, the last two not converged). Not pre-registered:
   the second seed reproduces the start-A call on 64 of 65 units and every call agrees on the 31
@@ -667,18 +659,18 @@ blow-up and failure tallies, the per-system breakdowns) do not. Where units clus
 test is a system-level permutation or exact enumeration, and
 any unit-level p-value is labelled as a companion that should not be quoted.
 
-**Reading order.** Table numbers are fixed identifiers, not an order of appearance. Four tables
-sit in the section whose method they document: Table S1 (harmonic replicate, §S1.2), Table S12
-(exact isolated-mode solution, §S1.4, so it is printed before Table S2), Table S2 (SSCHA
-stage-by-stage diagnostic, §S2.2) and Table S3 (SSCHA numerical outcome by family, §S2.3). The
-rest are collected here in numerical order:
+**Reading order.** Three tables sit in the section whose method they document: Table S1
+(harmonic replicate, §S1.2), Table S2 (SSCHA stage-by-stage diagnostic, §S2.2) and Table S3 (SSCHA
+numerical outcome by family, §S2.3). The rest are collected here in numerical order, so every
+table is printed in numerical order:
 
 - Table S4, harmonic confusion matrices per model; Table S5, finite-temperature screen rates per
   model; Table S6, predicted T* against experiment.
 - Table S7, composition of the two analysis sets; Table S8, the guardrail set in full.
 - Table S9, every pooled rate with and without ORB-v2; Table S10, the paired screen-versus-SSCHA
   tests.
-- Table S11, SSCHA settings and numerical quality; Table S13, displacement-amplitude sensitivity
+- Table S11, SSCHA settings and numerical quality; Table S12, the exact isolated-mode
+  criterion against the variational one (§S1.4); Table S13, displacement-amplitude sensitivity
   of the harmonic layer.
 - Table S14, sensitivity of the soft-mode screen (fit window, sampling range, frozen-cell
   normalisation, solver constants).
@@ -989,6 +981,15 @@ Two quantities are tabulated from the six lowest recorded Hessian frequencies. *
 | perovskite | MatterSim | 18 | 9/18 | 3.3e-07 | 9 | 157–180 |
 | perovskite | ORB-v2 | 12 | 4/12 | 1.5e-06 | 8 | 96–104 |
 | perovskite | SevenNet-0 | 17 | 9/17 | 3.5e-07 | 8 | 190–228 |
+
+**Table S12** The exact isolated-mode criterion against the variational one (§S1.4), over the same 228 mode-temperature evaluations: 57 (system, model) units, involving 75 distinct fitted potentials. `scripts/scha_vs_exact.py` → `results/scha_vs_exact.json`.
+
+| T (K) | exact: fraction bimodal | SCHA screen: fraction condensed |
+|---|---|---|
+| 100 | 0.9649 | 0.8596 |
+| 300 | 0.9649 | 0.6667 |
+| 600 | 0.9649 | 0.5614 |
+| 900 | 0.9649 | 0.4912 |
 
 **Table S13** Sensitivity of the harmonic layer to the finite-displacement amplitude (0.005, 0.02 and 0.03 Å against the production 0.01 Å), all five models: an axis that ESI §S1.2's v1/v2 replicate cannot probe. Deviations are against the same model's production 0.01 Å row.
 
@@ -1502,7 +1503,7 @@ Calls that differ from production, with the old and new Hessian minimum: 82 of t
 | KNbO₃ | (0, 0, 0) −6.97; (½, 0, 0) −5.47; (½, 0, ½) −4.17 | (0, ½, ½) | 30.0 / 32.2 | 87.8 | U S* S* S / U S* S* S | U U S* S | U U U S |
 | CsSnBr₃ | (½, ½, ½) −0.70; (0, ½, ½) −0.69 | (½, ½, ½) | 131.2 | 127.2 | U U* U* S | U U* U* S | U S S S |
 
-**Table S24** Pre-registered replicates of the converged SSCHA grid (Referee 1.4; registration `tasks/preregistration-repeats-2026-10-03.md`, selection and runner fixed before any replicate ran; `scripts/box/as_run/e3_summarize.py` → `results/revision/e3_replicates/`). Selected: every grid unit with status ok whose converged call disagrees with its comparison (the label for non-bcc units, the screen's call for bcc), and 12 of the rest drawn at random, 65 units. *A*, the grid's own start-A run (Table S22); *B*, a second starting matrix with imaginary modes set to +0.3 THz, re-run once from 1.0 THz after the cellconstructor assertion that the dynamical matrix is complex at q = −q + G; *seed 10*, start A with a second random stream. Lowest free-energy-Hessian frequency in THz; (nc), the relaxation did not meet its stopping test; a call is stable at or above −0.1 THz. The seed-10 replicate finished on 65 of 65 units and start B on 51: 19 hit the complex-matrix assertion at 0.3 THz, of which 12 finished at 1.0 THz and 7 failed again, 6 stopped at other cellconstructor symmetry errors (not retried, as registered) and 1 wrote no result. On the 51 units with three values the call is the same in 43/51 = 0.843 [0.720, 0.918] (without ORB-v2 32/39 = 0.821 [0.673, 0.910]); the median range is 0.22 THz. Unresolved, and counted as such in §3.3 rather than by majority: KNbO₃/CHGNet at 300 K, KNbO₃/CHGNet at 600 K, KNbO₃/MatterSim at 300 K, KNbO₃/MatterSim at 600 K, PbTiO₃/CHGNet at 300 K, PbTiO₃/CHGNet at 600 K, PbTiO₃/MatterSim at 300 K and bcc-Ti/ORB-v2 at 600 K. Not pre-registered: the seed-10 call equals the start-A call on 64 of 65 units, and on the 31 units converged in all three the call is the same in 31. Lower part: the §3.3 counts from start A alone and with the unresolved units left out of numerator and denominator.
+**Table S24** Pre-registered replicates of the converged SSCHA grid (registration `tasks/preregistration-repeats-2026-10-03.md`, selection and runner fixed before any replicate ran; `scripts/box/as_run/e3_summarize.py` → `results/revision/e3_replicates/`). Selected: every grid unit with status ok whose converged call disagrees with its comparison (the label for non-bcc units, the screen's call for bcc), and 12 of the rest drawn at random, 65 units. *A*, the grid's own start-A run (Table S22); *B*, a second starting matrix with imaginary modes set to +0.3 THz, re-run once from 1.0 THz after the cellconstructor assertion that the dynamical matrix is complex at q = −q + G; *seed 10*, start A with a second random stream. Lowest free-energy-Hessian frequency in THz; (nc), the relaxation did not meet its stopping test; a call is stable at or above −0.1 THz. The seed-10 replicate finished on 65 of 65 units and start B on 51: 19 hit the complex-matrix assertion at 0.3 THz, of which 12 finished at 1.0 THz and 7 failed again, 6 stopped at other cellconstructor symmetry errors (not retried, as registered) and 1 wrote no result. On the 51 units with three values the call is the same in 43/51 = 0.843 [0.720, 0.918] (without ORB-v2 32/39 = 0.821 [0.673, 0.910]); the median range is 0.22 THz. Unresolved, and counted as such in §3.3 rather than by majority: KNbO₃/CHGNet at 300 K, KNbO₃/CHGNet at 600 K, KNbO₃/MatterSim at 300 K, KNbO₃/MatterSim at 600 K, PbTiO₃/CHGNet at 300 K, PbTiO₃/CHGNet at 600 K, PbTiO₃/MatterSim at 300 K and bcc-Ti/ORB-v2 at 600 K. Not pre-registered: the seed-10 call equals the start-A call on 64 of 65 units, and on the 31 units converged in all three the call is the same in 31. Lower part: the §3.3 counts from start A alone and with the unresolved units left out of numerator and denominator.
 
 | System | Model | T (K) | Selected as | A | B | Seed 10 | Range (THz) | Verdict |
 |---|---|---|---|---|---|---|---|---|
@@ -1581,7 +1582,7 @@ Calls that differ from production, with the old and new Hessian minimum: 82 of t
 | bcc, 100–600 K (3×3×3): screen call = SSCHA call | 33/41 | 33/40 | 32/36 | 32/36 |
 | displacive set, T ≤ 300 K: screen right & SSCHA wrong v the reverse (units) | 13 v 2 (44) | 12 v 2 (40) | 10 v 2 (39) | 9 v 2 (35) |
 
-**Table S25** Pre-registered fine-tuning trial (Referee 2.1; §S6): the production screen (relaxation, harmonic force constants, every imaginary commensurate mode, soft-mode solve; 2×2×2) re-run with each fine-tuned replicate (seeds 0, 1, 2) on the three test systems, against the labels. S stable, U unstable, an asterisk marking disagreement with the label. A call counts as changed only if all three replicates differ from the base call and unchanged only if all three equal it; otherwise unresolved. Where a call was predicted (P2), the prediction and its verdict follow. MACE-MP-0, 30 epochs: the registered run (`results/revision/finetune_mace30/`, deviation D4; base call from the ledger). CHGNet, 30 epochs, and MACE-MP-0, 6 epochs (the first run, which did not apply the registered 30-epoch budget, kept as the record of deviation D4): `results/revision/finetune/` (base re-run reproduces the ledger call in every cell). Correct calls of 12: MACE-MP-0 base 7, 30-epoch replicates 6/6/6; CHGNet base 6, replicates 6/7/7.
+**Table S25** Pre-registered fine-tuning trial (§S6): the production screen (relaxation, harmonic force constants, every imaginary commensurate mode, soft-mode solve; 2×2×2) re-run with each fine-tuned replicate (seeds 0, 1, 2) on the three test systems, against the labels. S stable, U unstable, an asterisk marking disagreement with the label. A call counts as changed only if all three replicates differ from the base call and unchanged only if all three equal it; otherwise unresolved. Where a call was predicted (P2), the prediction and its verdict follow. MACE-MP-0, 30 epochs: the registered run (`results/revision/finetune_mace30/`, deviation D4; base call from the ledger). CHGNet, 30 epochs, and MACE-MP-0, 6 epochs (the first run, which did not apply the registered 30-epoch budget, kept as the record of deviation D4): `results/revision/finetune/` (base re-run reproduces the ledger call in every cell). Correct calls of 12: MACE-MP-0 base 7, 30-epoch replicates 6/6/6; CHGNet base 6, replicates 6/7/7.
 
 | System | T (K) | Label | MACE-MP-0 base | MACE-MP-0 30 ep, s0 s1 s2 | MACE-MP-0 30 ep, outcome | CHGNet base | CHGNet, s0 s1 s2 | CHGNet, outcome | MACE-MP-0 base (re-run) | MACE-MP-0 6 ep, s0 s1 s2 | MACE-MP-0 6 ep, outcome |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -1598,7 +1599,7 @@ Calls that differ from production, with the old and new Hessian minimum: 82 of t
 | CsSnBr₃ | 600 | S | U* | U* U* U* | unchanged; persist: **supported** | U* | U* S U* | unresolved; persist: **unresolved** | U* | U* U* U* | unchanged; persist: **supported** |
 | CsSnBr₃ | 900 | S | S | U* U* U* | changed | U* | U* S S | unresolved | S | U* U* U* | changed |
 
-**Table S26** Pre-registered fine-tuning trial (§S6), the surface and the controls. P1, the median over the BaTiO₃ and KNbO₃ deciding paths of each model's own C3a set (at the base model's relaxed lattice; Table S19) of the fine-tuned to PBE well-depth ratio, base and per replicate (seeds 0 / 1 / 2); registered band 0.8–1.2, supported only if the pooled median and each replicate's median lie in it. S1, force RMSE against PBE on the held-out C3a points in the well window the screen fits (the 30-epoch evaluation includes the extra-mode points, deviation D5; the CHGNet one does not). S2, harmonic calls of Si, MgO, NaCl, Cu, C and CeO₂. P3, converged SSCHA (grid recipe, start A). Lower part, **not pre-registered** (`scripts/finetune_lattice_diag.py`, CPU, archived weights checked against their sha256): the cubic cell relaxed by each 30-epoch MACE-MP-0 replicate, its offset from the PBE vc-relax lattice, the pressure each model reports at the base model's lattice, and the 300 K screen call and deciding well depth (meV, per modulated cell) at the model's own lattice and at the base model's lattice. At its own lattice each replicate reproduces its deposited 300 K call.
+**Table S26** Pre-registered fine-tuning trial (§S6), the surface and the controls. P1, the median over the BaTiO₃ and KNbO₃ deciding paths of each model's own §S5.1 path set (at the base model's relaxed lattice; Table S19) of the fine-tuned to PBE well-depth ratio, base and per replicate (seeds 0 / 1 / 2); registered band 0.8–1.2, supported only if the pooled median and each replicate's median lie in it. S1, force RMSE against PBE on the held-out §S5.1 path points in the well window the screen fits (the 30-epoch evaluation includes the extra-mode points, deviation D5; the CHGNet one does not). S2, harmonic calls of Si, MgO, NaCl, Cu, C and CeO₂. P3, converged SSCHA (grid recipe, start A). Lower part, **not pre-registered** (`scripts/finetune_lattice_diag.py`, CPU, archived weights checked against their sha256): the cubic cell relaxed by each 30-epoch MACE-MP-0 replicate, its offset from the PBE vc-relax lattice, the pressure each model reports at the base model's lattice, and the 300 K screen call and deciding well depth (meV, per modulated cell) at the model's own lattice and at the base model's lattice. At its own lattice each replicate reproduces its deposited 300 K call.
 
 | Model | Quantity | Base | Replicates | Outcome |
 |---|---|---|---|---|
@@ -1704,7 +1705,7 @@ non-cubic CHGNet cell; `NOSYM_NOTE.txt`). The checks of §S5.3 add 382 (`scripts
 `results/revision/dft_checks/`). The 246 fine-tuning single points in the same directory are not
 counted here.
 
-**S5.1 The screen on PBE energies (Referee 1.1).** For each of 120 ladder units of six systems
+**S5.1 The screen on PBE energies.** For each of 120 ladder units of six systems
 we compare the screen's call on the MLIP energies along the PBE-covered paths with the call on PBE
 energies along the same paths (Table S19). The comparison changes the energy engine only: the mode
 pattern, amplitudes, fit and solver are the same. PBE covers every mode the screen mapped
@@ -1745,7 +1746,7 @@ bcc-Zr/MatterSim at 900 K). Twenty-eight units rest on a deciding or reference p
 regenerated map differs from the cached one, and 40 on some covered path (Table S19). The counts are descriptive: six systems,
 with the five models sharing each system's label, so no unit-level test is attached.
 
-**S5.2 MLIP error on SSCHA-sampled configurations (Referee 1.2).** Table S20 scores all five
+**S5.2 MLIP error on SSCHA-sampled configurations.** Table S20 scores all five
 models against PBE on twelve configurations from each of four seed-study ensembles and on four
 rattled near-equilibrium cells. At 50–100 K (0.09 Å root-mean-square displacement) the owner
 model's force error relative to the PBE forces is 1.04, 0.78 and 0.74 times its near-equilibrium
@@ -1757,7 +1758,7 @@ The low-temperature false-stables therefore show no sign of MLIP extrapolation; 
 high-temperature SrTiO₃ ensemble does. These ensembles come from the production recipe, which did
 not converge (§2.5), and twelve configurations per unit support a description, not a test.
 
-**S5.3 Checks on the errors that persist on PBE (Referee 1.1).** BaTiO₃, KNbO₃ and CsSnBr₃ hold
+**S5.3 Checks on the errors that persist on PBE.** BaTiO₃, KNbO₃ and CsSnBr₃ hold
 13 of the 16 persistent errors and 15 of the 19 PBE errors. Three checks were run on them, with
 the acceptance criterion fixed in `scripts/dft_checks.py` before any variant ran (Table S23; 382
 calculations, 62 of them for the PBE-lattice check).
@@ -1813,7 +1814,7 @@ functional describes CsSnBr₃ better is not settled here; three of the five mod
 PBE wells within 20 % at the sampled amplitudes, which puts their wells at 2.4–3.1 times the
 PBEsol depth.
 
-## S6. Pre-registered fine-tuning trial (Referee 2.1)
+## S6. Pre-registered fine-tuning trial
 
 **Protocol.** The trial was registered before any training data existed
 (`tasks/preregistration-finetune-2026-10-03.md`, commit 033b3d8), with three deviations recorded
@@ -1833,11 +1834,15 @@ points, none unconverged), split 108/12 for training and validation, with the na
 command of the MACE documentation and the fine-tuning notebook of CHGNet (embeddings and all but
 the last atom-convolution layer frozen); checkpoints were selected on the validation split only
 (MACE-MP-0 30-epoch runs: epochs 12, 11 and 13). No training configuration lies within 0.05 Å RMS
-of a held-out geometry (closest 0.080 Å). The held-out set is every PBE C3a path point and C3b
-configuration of the three systems (§S5). A call counts as changed only if all three replicates
+of a held-out geometry (closest 0.080 Å). The held-out set is every PBE soft-mode path point (§S5.1) and
+SSCHA-sampled configuration (§S5.2) of the three systems. A call counts as changed only if all three replicates
 differ from the base call. The registered MACE-MP-0 result is the 30-epoch run; the 6-epoch run
 is reported beside it (Table S25) as the record of D4, and the CHGNet runs are those of the first
-run, which applied the 30-epoch budget.
+run, which applied the 30-epoch budget. The deposited outcome files are
+`results/revision/finetune_mace30/summary.json` (the 30-epoch MACE-MP-0 run; the base-model
+evaluations, which do not depend on training, are read from the first run and listed in its
+`base_loaded_from`, and CHGNet is marked as not part of that run) and
+`results/revision/finetune/summary.json` (CHGNet and the 6-epoch MACE-MP-0 record).
 
 **Outcomes** (Tables S25 and S26). P1, the well depth along the held-out deciding paths: supported
 for MACE-MP-0 (median fine-tuned/PBE ratio 0.99, base 0.45, each replicate 0.99–1.01) and

@@ -320,7 +320,8 @@ def stage_evaluate(args) -> int:
     out = Path(args.out)
     if args.part == "summary":
         from . import summary
-        return summary.build(out, Path(args.dft_root))
+        bf = getattr(args, "base_eval_from", None)
+        return summary.build(out, Path(args.dft_root), Path(bf) if bf else None)
     if args.part == "p3-cmd":
         text = p3_commands(Path(C.rel(out)))
         p = out / "train" / "box_p3.sh"

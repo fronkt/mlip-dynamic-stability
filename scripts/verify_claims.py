@@ -171,6 +171,14 @@ def text_vs_data(ms_txt: str) -> None:
     bysys = fs.groupby("system").size().to_dict()
     has(s33, "3.3 FS by system", f"BaTiO₃ ({bysys['batio3_cubic']}), KNbO₃ ({bysys['knbo3_cubic']}), "
         f"PbTiO₃ at 300 and 600 K ({bysys['pbtio3_cubic']}) and SrTiO₃ at 100 K ({bysys['srtio3_cubic']})")
+    # audit 2026-10-09 M5: the count without the SrTiO3 100 K units (2x2x2, no size test, §3.5)
+    no_sto = ~((lu.system == "srtio3_cubic") & (lu["T"] == 100.0))
+    k_ns, n_ns = int((no_sto & lu.stable).sum()), int(no_sto.sum())
+    check(k - k_ns == 4 and set(fs[~fs.index.isin(lu[no_sto].index)].system) == {"srtio3_cubic"}
+          and set(lu[no_sto & lu.stable].system) <= set(FE_OXIDE),
+          f"[text] M5: dropping SrTiO3 100 K removes 4 false-stables ({k_ns}/{n_ns} left, all ferroelectric)")
+    has(s33, "3.3 FS without SrTiO3 100 K", f"without them the count is {k_ns}/{n_ns} = {k_ns / n_ns:.2f} "
+        f"{wil(k_ns, n_ns)}, all on the three ferroelectrics")
     ks = int((fs.scr == False).sum())  # noqa: E712
     ksA = int((fsA.scr == False).sum())  # noqa: E712
     has(abst, "abstract screen on FS", f"cannot exclude, in {ks} of them")
@@ -239,7 +247,7 @@ def text_vs_data(ms_txt: str) -> None:
     dm = dm[dm.system.isin(["batio3_cubic", "knbo3_cubic"]) & (dm.path_model != "orb_v2")]
     ratio = dm.depth_meV / dm.depth_meV_p
     has(s32, "3.2 depth ratio, 12 deciding paths", f"(median {ratio[dm.role == 'decide'].median():.2f})."
-        " That is the PES softening")
+        " That is a softening relative to PBE at fixed geometry")
     has(s32, "3.2 depth ratio, all 26 paths", f"are {ratio.min():.2f}–{ratio.max():.2f} of PBE's "
         f"(median {ratio.median():.2f})")
 
@@ -801,6 +809,33 @@ def main() -> int:
            for s_ in ("batio3_cubic", "knbo3_cubic")}
     check((round(md_["batio3_cubic"], 1), round(md_["knbo3_cubic"], 1)) == (42.6, 27.9),
           "[3.2/S5.3] MACE-MP-0's own wells at its own lattice on the same paths: 42.6 / 27.9 meV")
+    # audit 2026-10-09 M3: own-equilibrium ratio MACE-MP-0 / PBE within 15 % on both systems
+    rat_ = {s_: md_[s_] / float(plp.loc[(s_, "pbe_lattice_deciding"), "depth_meV"]) for s_ in md_}
+    check(all(0.85 <= r_ <= 1.0 for r_ in rat_.values()),
+          f"[3.2 M3] own-lattice MACE-MP-0/PBE well ratio within 15 % ({ {k: round(v, 2) for k, v in rat_.items()} })")
+    # audit 2026-10-09 M8: Hessian bootstrap on the ten BaTiO3/KNbO3 100 K converged false-stables
+    bs_ = {}
+    for s_ in ("batio3_cubic", "knbo3_cubic"):
+        for m_ in ("chgnet", "mace_mp0", "mattersim", "orb_v2", "sevennet0"):
+            r_ = json.load(open(f"results/revision/sscha_converged_grid/{s_}_{m_}_100K_sc222_startA.json",
+                                encoding="utf-8"))["run"]["bootstrap"]
+            bs_[(s_, m_)] = r_
+    cb_ = bs_[("batio3_cubic", "chgnet")]
+    check(all(b_["B"] == 10 and b_["n_ok"] == 10 for b_ in bs_.values())
+          and round(cb_["frac_unstable"], 2) == 0.6 and round(cb_["mean_thz"], 2) == -0.33
+          and round(cb_["full_ensemble_min_nonac_thz"], 2) == 1.65 and round(cb_["std_thz"], 2) == 1.50
+          and all(b_["frac_unstable"] == 0 for k_, b_ in bs_.items() if k_ != ("batio3_cubic", "chgnet")),
+          "[3.3 M8] bootstrap B = 10 on all ten units; BaTiO3/CHGNet 6/10 resamples unstable (mean -0.33, "
+          "full +1.65 +- 1.50 THz); the other nine 0/10")
+    # audit 2026-10-09 M1: at the PBE lattice the X mode (q = (1/2,0,0)) is imaginary and was NOT
+    # profiled; the two profiled modes are the deciding M band and the softest (Gamma) mode
+    for s_ in ("batio3_cubic", "knbo3_cubic"):
+        prof_q = {tuple(sorted(pl[s_]["profiles"][k_]["q"])) for k_ in ("deciding", "softest")}
+        xm = [m_ for m_ in pl[s_]["profiles"]["deciding"]["imaginary_modes"] if sorted(m_["q"]) == [0.0, 0.0, 0.5]]
+        fr = sorted(m_["freq_thz"] for m_ in pl[s_]["profiles"]["deciding"]["imaginary_modes"])
+        check(prof_q == {(0.0, 0.0, 0.0), (0.0, 0.5, 0.5)} and len(xm) == 1 and fr[0] < xm[0]["freq_thz"] < fr[2],
+              f"[3.2/4/5 M1] {s_}: X mode ({xm[0]['freq_thz']:.2f} THz) imaginary at the PBE lattice, not "
+              "profiled, between the two profiled modes in frequency")
     qc = pd.read_csv("results/revision/dft_checks/qe_jobs.csv")
     n_chk = int((qc.job.str.match(r"(cv|xs|pl)_") & (qc.status == "ok")).sum())
     check(n_chk == 382 and len(qc) == 382, f"[2.6/S5.3] E2: {n_chk} check calculations (cv_, xs_, pl_), all ok")
@@ -1313,6 +1348,19 @@ def main() -> int:
                  "about 0.5 % smaller than the base model, to within 0.3 % of the PBE lattice",
                  "(+1.73 THz)", "trained 6 epochs instead of the registered 30"):
         check(frag in s4n, f"[text §4 E5] '{frag}'")
+    # audit 2026-10-09: the new numbers in the text, each pinned to data above (M1, M3, M8)
+    s32n = " ".join(ms_txt.split("### 3.2", 1)[1].split("### 3.3", 1)[0].split())
+    s33n = " ".join(ms_txt.split("### 3.3", 1)[1].split("### 3.4", 1)[0].split())
+    xs_ = {s_: next(m_["freq_thz"] for m_ in pl[s_]["profiles"]["deciding"]["imaginary_modes"]
+                    if sorted(m_["q"]) == [0.0, 0.0, 0.5]) for s_ in ("batio3_cubic", "knbo3_cubic")}
+    for frag in (f"at X ({xs_['batio3_cubic']:.2f} THz in BaTiO₃, {xs_['knbo3_cubic']:.2f} THz in KNbO₃".replace("-", "−"),
+                 f"({md_['batio3_cubic']:.1f} against {dep('batio3_cubic', 'pbe_lattice_deciding'):.1f} meV and "
+                 f"{md_['knbo3_cubic']:.1f} against {dep('knbo3_cubic', 'pbe_lattice_deciding'):.1f} meV)"):
+        check(frag in s32n, f"[text §3.2 audit] '{frag}'")
+    frag = (f"B = {cb_['B']} resamples of the Hessian ensemble, has a mean of "
+            f"{cb_['mean_thz']:.2f} THz, and {round(cb_['frac_unstable'] * cb_['B'])} of the {cb_['B']} "
+            "resamples are unstable").replace("-0.", "−0.")
+    check(frag in s33n, f"[text §3.3 audit M8] '{frag}'")
     abs_txt = ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0]
     n_words = len(abs_txt.split())
     check(n_words <= 250, f"[abstract] {n_words} words (RSC Advances limit 250)")

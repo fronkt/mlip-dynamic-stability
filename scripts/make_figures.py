@@ -5,7 +5,7 @@ Figures, in the order the manuscript first cites them:
   Fig. 1  fig_tolerance_sweep     harmonic false-stable / false-unstable calls vs imaginary tolerance
   Fig. 2  fig_harmonic_heat       harmonic layer: minimum phonon frequency per unit, with its call
   Fig. 3  fig_sscha_bcc           SSCHA lowest free-energy-Hessian frequency vs T, bcc Ti/Zr/Hf
-  Fig. 4  fig_method_agreement    screen curvature vs SSCHA Hessian frequency on the bcc metals
+  Fig. 4  fig_method_agreement    SSCHA Hessian frequency vs the screen's call on the bcc metals
   Fig. 5  fig_displacive_recall   recall of the unstable cubic phase, FE perovskites, T <= 300 K
   Fig. 6  fig_ensemble_guardrail  consensus error on split-vote vs unanimous units, +/- ORB-v2
 
@@ -156,7 +156,14 @@ def fig_sscha_bcc():
     if os.path.exists(CONV_SUMMARY):
         conv = pd.read_csv(CONV_SUMMARY)
         conv = conv[(conv["start"] == "A") & (conv["family"] == "bcc") & (conv["status"] == "ok")
-                    & (conv["converged"].astype(str) == "True")]
+                    & (conv["converged"].astype(str) == "True")].copy()
+        # A converged unit whose pre-registered replicates disagree on the call (ESI Table S24) is
+        # unresolved and is not drawn as a converged value: it gets its own marker (Ti/ORB-v2/600 K).
+        unres = set()
+        if os.path.exists(E3_SUMMARY):
+            e3 = pd.read_csv(E3_SUMMARY)
+            unres = set(e3.loc[e3["verdict"] == "unresolved", "unit_tag"])
+        conv["unresolved"] = conv["unit_tag"].isin(unres)
     # Sized for the 17.1 cm double column, so the text prints at its set size (not shrunk ~56%).
     with plt.rc_context({"font.size": 8, "axes.titlesize": 9, "axes.labelsize": 8.5,
                          "xtick.labelsize": 8, "ytick.labelsize": 8}):
@@ -173,8 +180,11 @@ def fig_sscha_bcc():
                 cs = conv[conv["system"] == s]
                 for m in [c for c in MODELS if c in set(cs["model"])]:
                     g = cs[cs["model"] == m].sort_values("T_K")
-                    ax.scatter(g["T_K"], g["hessian_min_thz"], marker="s", s=22,
+                    gr, gu = g[~g["unresolved"]], g[g["unresolved"]]
+                    ax.scatter(gr["T_K"], gr["hessian_min_thz"], marker="s", s=22,
                                facecolors="none", edgecolors=COLOR[m], linewidths=1.1, zorder=4)
+                    ax.scatter(gu["T_K"], gu["hessian_min_thz"], marker="x", s=26,
+                               color=COLOR[m], linewidths=1.2, zorder=4)
             ax.axhline(0, color="k", lw=0.8, ls=":")
             ax.set_xticks([0, 200, 400, 600])
             ax.set_xlabel("Temperature (K)")
@@ -190,6 +200,9 @@ def fig_sscha_bcc():
         if conv is not None:
             handles.append(Line2D([], [], ls="", marker="s", ms=4, mfc="none", mec="0.35",
                                   label="converged recipe, 3×3×3"))
+            if conv["unresolved"].any():
+                handles.append(Line2D([], [], ls="", marker="x", ms=4, color="0.35",
+                                      label="converged, unresolved by replicates"))
         fig.legend(handles=handles, fontsize=7.5, loc="lower center", ncol=3,
                    frameon=False, bbox_to_anchor=(0.5, 0.0))
         fig.suptitle("SSCHA on bcc Ti, Zr and Hf: free-energy Hessian at the bcc reference\n"
@@ -350,71 +363,65 @@ def fig_softmode_heat():
 
 
 def fig_method_agreement():
-    """Fig. 4. Screen vs SSCHA on the bcc metals at the temperatures both ran: the screen's
-    symmetric-point curvature frequency against the SSCHA lowest free-energy-Hessian frequency,
-    both computed on the same MLIP energies. Points in the upper-right and lower-left quadrants
-    agree in curvature sign. Reported on the panel: curvature-sign agreement and stability-call
-    agreement as k/n with Wilson 95% intervals, and the Spearman rho of the magnitudes as a
-    descriptive number (no test; the pairs cluster by system and model). Open markers are pairs
-    with no harmonic instability on that model's PES, where agreement is trivial. A point outside
-    the plotting window is drawn at its edge and labelled with its value from the ledger."""
+    """Fig. 4. Screen vs SSCHA on the bcc metals at the temperatures both ran: the production
+    SSCHA lowest free-energy-Hessian frequency (2x2x2) against the screen's stability CALL, both on
+    the same MLIP energies. The x-axis is the call, not the screen's symmetric-point curvature:
+    for a single even mode that curvature is positive by construction and its negative values are
+    numerical (scripts/curvature_identity_check.py), so it is not plotted against SSCHA (audit
+    2026-10-09, M7). Points in the screen-stable column above the SSCHA tolerance, and in the
+    screen-unstable column below it, agree on the call. Reported on the panel: stability-call
+    agreement as k/n with a Wilson 95% interval. Open markers are pairs with no harmonic
+    instability on that model's PES, where agreement is trivial."""
     dfb = df[df["system"].str.contains("bcc")]
     m = A.method_agreement(dfb)
     if m.empty:
         return
-    summ = A.method_agreement_summary(dfb)
     calls = dfb[dfb["method"] == "softmode"][KEY + ["pred_stable"]].merge(
         dfb[dfb["method"] == "sscha"][KEY + ["pred_stable"]], on=KEY, suffixes=("_scr", "_ss"))
     m = m.merge(calls, on=KEY)
     call_agree = m["pred_stable_scr"].astype(bool) == m["pred_stable_ss"].astype(bool)
-    sign = S.rate_ci(int(m["agree"].sum()), len(m))
     call = S.rate_ci(int(call_agree.sum()), len(m))
     trivial = _trivial_bcc_pairs()
     temps = sorted(m["temperature_K"].unique())
-    x, y = m["min_eff_freq_thz_softmode"], m["min_eff_freq_thz_sscha"]
-
-    # Window on the bulk of the points; anything beyond it is drawn at the edge and labelled.
-    lo, hi = -2.0, max(3.0, float(x.max()) + 1.6)   # right margin holds the legend
-    ylo, yhi = min(-0.3, float(y.min()) - 0.3), max(2.5, float(y.max()) + 0.3)
-    fig, ax = plt.subplots(figsize=(6.0, 5.6))
-    ax.axhline(0, color="grey", lw=0.8, ls="--")
-    ax.axvline(0, color="grey", lw=0.8, ls="--")
-    for mod in [c for c in MODELS if c in set(m["model"])]:
-        g = m[m["model"] == mod]
-        triv = np.array([(s, mod) in trivial for s in g["system"]])
-        gx = g["min_eff_freq_thz_softmode"].clip(lower=lo + 0.06)
-        gy = g["min_eff_freq_thz_sscha"]
-        off = (g["min_eff_freq_thz_softmode"] < lo).to_numpy()
-        for sel, face in ((~triv & ~off, COLOR[mod]), (triv & ~off, "white")):
-            ax.scatter(gx[sel], gy[sel], s=42, marker="o", facecolors=face,
-                       edgecolors=COLOR[mod], linewidths=1.2, alpha=0.9, zorder=3)
-        ax.scatter(gx[off], gy[off], s=60, marker="<", color=COLOR[mod], zorder=3)
-        for (_, r), yy in zip(g[off].iterrows(), gy[off]):
-            val = f"{r['min_eff_freq_thz_softmode']:+.1f}".replace("-", "\u2212")
-            ax.annotate(f"{NAME[mod]}, {sys_label(r['system'])}, {int(r['temperature_K'])} K:\n"
-                        f"screen {val} THz (off scale)",
-                        xy=(lo + 0.06, yy), xytext=(lo + 0.25, yy - 0.35), fontsize=7,
-                        color=COLOR[mod], arrowprops=dict(arrowstyle="-", color=COLOR[mod], lw=0.6))
-    ax.set_xlim(lo, hi)
+    y = m["min_eff_freq_thz_sscha"]
+    mods = [c for c in MODELS if c in set(m["model"])]
+    ylo, yhi = min(-0.4, float(y.min()) - 0.3), max(2.5, float(y.max()) + 0.3)
+    fig, ax = plt.subplots(figsize=(6.0, 5.0))
+    ax.axhline(0, color="grey", lw=0.8, ls=":")
+    ax.axhline(DEFAULT_IMAG_TOL_THZ, color="grey", lw=0.8, ls="--")   # -0.1 THz
+    for i, mod in enumerate(mods):
+        g = m[m["model"] == mod].reset_index(drop=True)
+        for col, stable in ((0, False), (1, True)):
+            gg = g[g["pred_stable_scr"].astype(bool) == stable]
+            if gg.empty:
+                continue
+            # one sub-column per model, points spread across it in (system, T) order
+            base = col + (i - (len(mods) - 1) / 2) * 0.15
+            xs = base + np.linspace(-0.045, 0.045, len(gg)) if len(gg) > 1 else np.array([base])
+            triv = np.array([(s, mod) in trivial for s in gg["system"]])
+            for sel, face in ((~triv, COLOR[mod]), (triv, "white")):
+                ax.scatter(xs[sel], gg["min_eff_freq_thz_sscha"].to_numpy()[sel], s=36, marker="o",
+                           facecolors=face, edgecolors=COLOR[mod], linewidths=1.1, alpha=0.9,
+                           zorder=3)
+    ax.set_xlim(-0.55, 1.55)
     ax.set_ylim(ylo, yhi)
-    ax.text(0.98, 0.03,
-            f"stability-call agreement {S.fmt_rate(call)}\n"
-            f"Spearman \u03c1 = {summ.get('spearman_freq', float('nan')):.2f} (descriptive)",
+    ax.set_xticks([0, 1])
+    ax.set_xticklabels(["screen calls unstable", "screen calls stable"])
+    ax.text(0.98, 0.03, f"stability-call agreement {S.fmt_rate(call)}",
             transform=ax.transAxes, ha="right", va="bottom", fontsize=7.5,
             bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="0.7"))
-    ax.set_xlabel("screen: symmetric-point curvature frequency (THz)")
+    ax.set_xlabel("soft-mode screen: stability call (free-energy comparison)")
     ax.set_ylabel("SSCHA (production recipe, 2×2×2):\nlowest free-energy Hessian frequency (THz)")
     ax.set_title("bcc Ti, Zr, Hf at " + ", ".join(str(int(t)) for t in temps)
-                 + f" K: screen vs SSCHA (n = {len(m)})")
-    handles = [Line2D([], [], ls="", marker="o", ms=6, color=COLOR[c], label=NAME[c])
-               for c in MODELS if c in set(m["model"])]
+                 + f" K: screen call vs SSCHA (n = {len(m)})")
+    handles = [Line2D([], [], ls="", marker="o", ms=6, color=COLOR[c], label=NAME[c]) for c in mods]
     handles.append(Line2D([], [], ls="", marker="o", ms=6, mfc="white", mec="0.35",
                           label="open: no harmonic instability"))
-    ax.legend(handles=handles, fontsize=7.5, loc="upper right", bbox_to_anchor=(1.0, 0.93),
-              framealpha=0.9)
+    handles.append(Line2D([], [], color="grey", lw=0.8, ls="--", label="SSCHA tolerance (−0.1 THz)"))
+    ax.legend(handles=handles, fontsize=7.5, loc="upper left", framealpha=0.9)
     fig.tight_layout()
     _save(fig, "fig_method_agreement")
-    print(f"  bcc: sign {S.fmt_rate(sign)}, call {S.fmt_rate(call)}, summary {summ}")
+    print(f"  bcc: call {S.fmt_rate(call)}")
 
 
 def fig_displacive_recall():

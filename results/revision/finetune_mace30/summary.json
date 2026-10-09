@@ -3,60 +3,69 @@
  "provenance": {
   "script": "scripts/finetune_trial.py",
   "stage": "summary",
-  "git_head": "a9fa30a",
-  "git_dirty": false,
-  "host": "59c2897720ff",
-  "utc": "2026-10-09T03:25:06Z",
-  "python": "3.11.17",
-  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "git_head": "a0eac3b",
+  "git_dirty": true,
+  "host": "frank",
+  "utc": "2026-10-09T15:14:34Z",
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26200-SP0",
   "versions": {
-   "numpy": "2.2.2",
+   "numpy": "2.3.5",
    "scipy": "1.17.1",
-   "ase": "3.29.0",
-   "phonopy": "4.4.0",
+   "ase": "3.28.0",
+   "phonopy": "3.5.1",
    "spglib": "2.7.0",
-   "torch": "2.6.0+cu124",
-   "mace-torch": "0.3.16",
-   "chgnet": null,
-   "pandas": "3.0.5"
+   "torch": "2.11.0+cpu",
+   "mace-torch": "0.3.15",
+   "chgnet": "0.4.2",
+   "pandas": "2.3.3"
   },
   "settings": {}
  },
  "available": [
+  "c3a_chgnet_base",
   "c3a_mace_mp0_base",
   "c3a_mace_mp0_seed0",
   "c3a_mace_mp0_seed1",
   "c3a_mace_mp0_seed2",
+  "c3b_chgnet_base",
+  "c3b_mace_mp0_base",
   "c3b_mace_mp0_seed0",
   "c3b_mace_mp0_seed1",
   "c3b_mace_mp0_seed2",
+  "p2_chgnet_base",
+  "p2_mace_mp0_base",
   "p2_mace_mp0_seed0",
   "p2_mace_mp0_seed1",
   "p2_mace_mp0_seed2",
+  "s2_chgnet_base",
+  "s2_mace_mp0_base",
   "s2_mace_mp0_seed0",
   "s2_mace_mp0_seed1",
   "s2_mace_mp0_seed2"
  ],
  "missing": [
-  "c3a_chgnet_base.json",
   "c3a_chgnet_seed0.json",
   "c3a_chgnet_seed1.json",
   "c3a_chgnet_seed2.json",
-  "c3b_mace_mp0_base.json",
-  "c3b_chgnet_base.json",
   "c3b_chgnet_seed0.json",
   "c3b_chgnet_seed1.json",
   "c3b_chgnet_seed2.json",
-  "p2_mace_mp0_base.json",
-  "p2_chgnet_base.json",
   "p2_chgnet_seed0.json",
   "p2_chgnet_seed1.json",
   "p2_chgnet_seed2.json",
-  "s2_mace_mp0_base.json",
-  "s2_chgnet_base.json",
   "s2_chgnet_seed0.json",
   "s2_chgnet_seed1.json",
   "s2_chgnet_seed2.json"
+ ],
+ "base_loaded_from": [
+  "results/revision/finetune/eval/c3a_chgnet_base.json",
+  "results/revision/finetune/eval/c3b_mace_mp0_base.json",
+  "results/revision/finetune/eval/c3b_chgnet_base.json",
+  "results/revision/finetune/eval/p2_mace_mp0_base.json",
+  "results/revision/finetune/eval/p2_chgnet_base.json",
+  "results/revision/finetune/eval/s2_mace_mp0_base.json",
+  "results/revision/finetune/eval/s2_chgnet_base.json"
  ],
  "rules": "summary.json: the evaluation files mapped onto the pre-registered outcomes P1, P2, P3, S1, S2.\n\nAll replicates are listed.  Verdict rules (pre-registration, 'Outcomes' and 'Analysis'):\n\n  * a screen call counts as CHANGED only if all three replicates differ from the base call, and as\n    UNCHANGED only if all three equal it; otherwise it is UNRESOLVED;\n  * P2 predictions: BaTiO3 and KNbO3 at 300 K corrected (supported iff changed, refuted iff\n    unchanged); CsSnBr3 at 300 and 600 K and KNbO3 at 600 K persist (supported iff unchanged,\n    refuted iff changed).  A prediction about a mis-call that the base model did not make is\n    reported as 'n/a (base call already correct)'.\n  * P1: per base model, the median over (deciding paths of BaTiO3 and KNbO3) x (replicates) of the\n    ratio of fine-tuned to PBE well depth.  Supported iff that median AND each replicate's median\n    over paths lie in [0.8, 1.2]; refuted iff all lie outside; otherwise unresolved.\n  * P3: supported iff the converged SSCHA (fine-tuned MACE-MP-0, seed 0) calls BaTiO3 100 K STABLE\n    (the label is unstable); refuted iff it calls it unstable; unresolved if the run did not finish.\n  * S2: harmonic calls of the six controls are 'unchanged' iff all replicates equal the base call.\nNothing is dropped: a missing evaluation file is listed under \"missing\", never silently skipped.\n",
  "P1": {
@@ -856,7 +865,7 @@
    }
   },
   "chgnet": {
-   "status": "pending (base evaluation missing)"
+   "status": "not part of this run; see results/revision/finetune/summary.json"
   }
  },
  "P2": {
@@ -868,8 +877,11 @@
      "T": 100.0,
      "label_stable": false,
      "base_call_ledger": false,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 2.0309852717978996
+     },
+     "base_rerun_agrees_with_ledger": true,
      "base_correct": true,
      "replicates": {
       "seed0": {
@@ -897,8 +909,11 @@
      "T": 300.0,
      "label_stable": false,
      "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 3.17495182299959
+     },
+     "base_rerun_agrees_with_ledger": true,
      "base_correct": false,
      "replicates": {
       "seed0": {
@@ -926,8 +941,11 @@
      "T": 600.0,
      "label_stable": true,
      "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 4.139786712085454
+     },
+     "base_rerun_agrees_with_ledger": true,
      "base_correct": true,
      "replicates": {
       "seed0": {
@@ -955,8 +973,11 @@
      "T": 900.0,
      "label_stable": true,
      "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 4.7964131625621285
+     },
+     "base_rerun_agrees_with_ledger": true,
      "base_correct": true,
      "replicates": {
       "seed0": {
@@ -984,8 +1005,11 @@
      "T": 100.0,
      "label_stable": false,
      "base_call_ledger": false,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 1.7688221791676255
+     },
+     "base_rerun_agrees_with_ledger": true,
      "base_correct": true,
      "replicates": {
       "seed0": {
@@ -1013,8 +1037,11 @@
      "T": 300.0,
      "label_stable": false,
      "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 2.759567557359966
+     },
+     "base_rerun_agrees_with_ledger": true,
      "base_correct": false,
      "replicates": {
       "seed0": {
@@ -1042,8 +1069,11 @@
      "T": 600.0,
      "label_stable": false,
      "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 3.5869144258678025
+     },
+     "base_rerun_agrees_with_ledger": true,
      "base_correct": false,
      "replicates": {
       "seed0": {
@@ -1071,8 +1101,11 @@
      "T": 900.0,
      "label_stable": true,
      "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 4.149898444808057
+     },
+     "base_rerun_agrees_with_ledger": true,
      "base_correct": true,
      "replicates": {
       "seed0": {
@@ -1100,8 +1133,11 @@
      "T": 100.0,
      "label_stable": false,
      "base_call_ledger": false,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 0.14759908277448947
+     },
+     "base_rerun_agrees_with_ledger": true,
      "base_correct": true,
      "replicates": {
       "seed0": {
@@ -1129,8 +1165,11 @@
      "T": 300.0,
      "label_stable": true,
      "base_call_ledger": false,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 0.2447518965685119
+     },
+     "base_rerun_agrees_with_ledger": true,
      "base_correct": false,
      "replicates": {
       "seed0": {
@@ -1158,8 +1197,11 @@
      "T": 600.0,
      "label_stable": true,
      "base_call_ledger": false,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 0.32916063046350913
+     },
+     "base_rerun_agrees_with_ledger": true,
      "base_correct": false,
      "replicates": {
       "seed0": {
@@ -1187,8 +1229,11 @@
      "T": 900.0,
      "label_stable": true,
      "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 0.38747375222864777
+     },
+     "base_rerun_agrees_with_ledger": true,
      "base_correct": true,
      "replicates": {
       "seed0": {
@@ -1212,211 +1257,11 @@
      "n_replicates_correct": 0
     }
    },
+   "chgnet": {}
+  },
+  "models_not_in_this_run": {
    "chgnet": {
-    "batio3_cubic@100": {
-     "system": "batio3_cubic",
-     "T": 100.0,
-     "label_stable": null,
-     "base_call_ledger": false,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
-     "base_correct": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "prediction": null,
-     "status": "pending (replicates missing)",
-     "n_replicates_correct": 0
-    },
-    "batio3_cubic@300": {
-     "system": "batio3_cubic",
-     "T": 300.0,
-     "label_stable": null,
-     "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
-     "base_correct": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "prediction": "corrected",
-     "status": "pending (replicates missing)",
-     "n_replicates_correct": 0
-    },
-    "batio3_cubic@600": {
-     "system": "batio3_cubic",
-     "T": 600.0,
-     "label_stable": null,
-     "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
-     "base_correct": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "prediction": null,
-     "status": "pending (replicates missing)",
-     "n_replicates_correct": 0
-    },
-    "batio3_cubic@900": {
-     "system": "batio3_cubic",
-     "T": 900.0,
-     "label_stable": null,
-     "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
-     "base_correct": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "prediction": null,
-     "status": "pending (replicates missing)",
-     "n_replicates_correct": 0
-    },
-    "knbo3_cubic@100": {
-     "system": "knbo3_cubic",
-     "T": 100.0,
-     "label_stable": null,
-     "base_call_ledger": false,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
-     "base_correct": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "prediction": null,
-     "status": "pending (replicates missing)",
-     "n_replicates_correct": 0
-    },
-    "knbo3_cubic@300": {
-     "system": "knbo3_cubic",
-     "T": 300.0,
-     "label_stable": null,
-     "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
-     "base_correct": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "prediction": "corrected",
-     "status": "pending (replicates missing)",
-     "n_replicates_correct": 0
-    },
-    "knbo3_cubic@600": {
-     "system": "knbo3_cubic",
-     "T": 600.0,
-     "label_stable": null,
-     "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
-     "base_correct": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "prediction": "persist",
-     "status": "pending (replicates missing)",
-     "n_replicates_correct": 0
-    },
-    "knbo3_cubic@900": {
-     "system": "knbo3_cubic",
-     "T": 900.0,
-     "label_stable": null,
-     "base_call_ledger": true,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
-     "base_correct": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "prediction": null,
-     "status": "pending (replicates missing)",
-     "n_replicates_correct": 0
-    },
-    "cssnbr3_cubic@100": {
-     "system": "cssnbr3_cubic",
-     "T": 100.0,
-     "label_stable": null,
-     "base_call_ledger": false,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
-     "base_correct": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "prediction": null,
-     "status": "pending (replicates missing)",
-     "n_replicates_correct": 0
-    },
-    "cssnbr3_cubic@300": {
-     "system": "cssnbr3_cubic",
-     "T": 300.0,
-     "label_stable": null,
-     "base_call_ledger": false,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
-     "base_correct": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "prediction": "persist",
-     "status": "pending (replicates missing)",
-     "n_replicates_correct": 0
-    },
-    "cssnbr3_cubic@600": {
-     "system": "cssnbr3_cubic",
-     "T": 600.0,
-     "label_stable": null,
-     "base_call_ledger": false,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
-     "base_correct": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "prediction": "persist",
-     "status": "pending (replicates missing)",
-     "n_replicates_correct": 0
-    },
-    "cssnbr3_cubic@900": {
-     "system": "cssnbr3_cubic",
-     "T": 900.0,
-     "label_stable": null,
-     "base_call_ledger": false,
-     "base_rerun": null,
-     "base_rerun_agrees_with_ledger": null,
-     "base_correct": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "prediction": null,
-     "status": "pending (replicates missing)",
-     "n_replicates_correct": 0
-    }
+    "status": "not part of this run; see results/revision/finetune/summary.json"
    }
   }
  },
@@ -1441,13 +1286,13 @@
       "n_points_window": 155,
       "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
       "energy_rmse_meV_per_cell": 2364.9746641547927,
-      "energy_rmse_meV_per_atom": 142.23729415238478,
-      "force_rmse_eV_A": 2.3900209913367263,
-      "force_rel_rmse": 0.3651296455504092,
+      "energy_rmse_meV_per_atom": 142.2372941523848,
+      "force_rmse_eV_A": 2.390020991336726,
+      "force_rel_rmse": 0.36512964555040917,
       "window_energy_rmse_meV_per_cell": 22.86469726053403,
-      "window_energy_rmse_meV_per_atom": 2.7544119560078264,
-      "window_force_rmse_eV_A": 0.03449157018325338,
-      "window_force_rel_rmse": 0.18174327463972026
+      "window_energy_rmse_meV_per_atom": 2.754411956007826,
+      "window_force_rmse_eV_A": 0.034491570183253384,
+      "window_force_rel_rmse": 0.1817432746397203
      },
      "knbo3_cubic": {
       "n_paths": 21,
@@ -1460,8 +1305,8 @@
       "force_rel_rmse": 0.6079643840981308,
       "window_energy_rmse_meV_per_cell": 45.8258816958263,
       "window_energy_rmse_meV_per_atom": 4.833741008080988,
-      "window_force_rmse_eV_A": 0.09631792062038413,
-      "window_force_rel_rmse": 0.4969685695566268
+      "window_force_rmse_eV_A": 0.09631792062038412,
+      "window_force_rel_rmse": 0.49696856955662677
      },
      "cssnbr3_cubic": {
       "n_paths": 19,
@@ -1470,12 +1315,12 @@
       "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
       "energy_rmse_meV_per_cell": 18.620338196966305,
       "energy_rmse_meV_per_atom": 2.8687321128871317,
-      "force_rmse_eV_A": 0.01049283320719035,
+      "force_rmse_eV_A": 0.010492833207190352,
       "force_rel_rmse": 0.2289430017381293,
       "window_energy_rmse_meV_per_cell": 4.935543976338331,
       "window_energy_rmse_meV_per_atom": 0.4780705279550633,
-      "window_force_rmse_eV_A": 0.002860924971241504,
-      "window_force_rel_rmse": 0.239333605775561
+      "window_force_rmse_eV_A": 0.0028609249712415043,
+      "window_force_rel_rmse": 0.23933360577556104
      }
     },
     "seed0": {
@@ -1484,26 +1329,26 @@
       "n_points": 250,
       "n_points_window": 155,
       "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
-      "energy_rmse_meV_per_cell": 1052.2706627146933,
-      "energy_rmse_meV_per_atom": 59.38769735228519,
+      "energy_rmse_meV_per_cell": 1052.2706627146936,
+      "energy_rmse_meV_per_atom": 59.387697352285194,
       "force_rmse_eV_A": 1.1544559799505199,
       "force_rel_rmse": 0.17636920524581934,
       "window_energy_rmse_meV_per_cell": 1.7179525872820225,
       "window_energy_rmse_meV_per_atom": 0.26283573824980405,
       "window_force_rmse_eV_A": 0.004523246023403053,
-      "window_force_rel_rmse": 0.023833926374668246
+      "window_force_rel_rmse": 0.02383392637466825
      },
      "knbo3_cubic": {
       "n_paths": 21,
       "n_points": 210,
       "n_points_window": 137,
       "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
-      "energy_rmse_meV_per_cell": 1957.2186976242754,
+      "energy_rmse_meV_per_cell": 1957.2186976242758,
       "energy_rmse_meV_per_atom": 142.17673827215484,
       "force_rmse_eV_A": 2.4301301864719487,
-      "force_rel_rmse": 0.4344266458236629,
+      "force_rel_rmse": 0.43442664582366286,
       "window_energy_rmse_meV_per_cell": 2.807834088513243,
-      "window_energy_rmse_meV_per_atom": 0.3021966409781145,
+      "window_energy_rmse_meV_per_atom": 0.30219664097811455,
       "window_force_rmse_eV_A": 0.00770942143831927,
       "window_force_rel_rmse": 0.03977806123339294
      },
@@ -1513,13 +1358,13 @@
       "n_points_window": 171,
       "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
       "energy_rmse_meV_per_cell": 15.426157883621498,
-      "energy_rmse_meV_per_atom": 0.734761360109738,
+      "energy_rmse_meV_per_atom": 0.7347613601097379,
       "force_rmse_eV_A": 0.0032027546843815683,
       "force_rel_rmse": 0.06988086599629766,
       "window_energy_rmse_meV_per_cell": 15.670340256563085,
       "window_energy_rmse_meV_per_atom": 0.5104093982311996,
       "window_force_rmse_eV_A": 0.002922224361779891,
-      "window_force_rel_rmse": 0.24446166901275593
+      "window_force_rel_rmse": 0.24446166901275596
      }
     },
     "seed1": {
@@ -1528,12 +1373,12 @@
       "n_points": 250,
       "n_points_window": 155,
       "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
-      "energy_rmse_meV_per_cell": 979.12712574167,
+      "energy_rmse_meV_per_cell": 979.1271257416699,
       "energy_rmse_meV_per_atom": 55.242448394698286,
       "force_rmse_eV_A": 1.0944675876534395,
-      "force_rel_rmse": 0.16720462447604073,
+      "force_rel_rmse": 0.1672046244760407,
       "window_energy_rmse_meV_per_cell": 2.626135868927897,
-      "window_energy_rmse_meV_per_atom": 0.21438110236561864,
+      "window_energy_rmse_meV_per_atom": 0.21438110236561866,
       "window_force_rmse_eV_A": 0.004555315421331051,
       "window_force_rel_rmse": 0.024002906718682517
      },
@@ -1542,13 +1387,13 @@
       "n_points": 210,
       "n_points_window": 137,
       "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
-      "energy_rmse_meV_per_cell": 1746.2638856060637,
+      "energy_rmse_meV_per_cell": 1746.2638856060635,
       "energy_rmse_meV_per_atom": 126.91481498625025,
       "force_rmse_eV_A": 2.2551621557859036,
       "force_rel_rmse": 0.4031481673617076,
       "window_energy_rmse_meV_per_cell": 4.752630436110233,
-      "window_energy_rmse_meV_per_atom": 0.5623461596591942,
-      "window_force_rmse_eV_A": 0.010890646020715324,
+      "window_energy_rmse_meV_per_atom": 0.5623461596591941,
+      "window_force_rmse_eV_A": 0.010890646020715322,
       "window_force_rel_rmse": 0.05619212644543986
      },
      "cssnbr3_cubic": {
@@ -1556,13 +1401,13 @@
       "n_points": 190,
       "n_points_window": 171,
       "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
-      "energy_rmse_meV_per_cell": 15.875829091476053,
-      "energy_rmse_meV_per_atom": 0.7335258109793613,
+      "energy_rmse_meV_per_cell": 15.875829091476051,
+      "energy_rmse_meV_per_atom": 0.7335258109793612,
       "force_rmse_eV_A": 0.003330489527386815,
-      "force_rel_rmse": 0.07266791100184775,
+      "force_rel_rmse": 0.07266791100184773,
       "window_energy_rmse_meV_per_cell": 16.165329574639202,
       "window_energy_rmse_meV_per_atom": 0.516791961877427,
-      "window_force_rmse_eV_A": 0.0029993113382944378,
+      "window_force_rmse_eV_A": 0.0029993113382944373,
       "window_force_rel_rmse": 0.2509104589086882
      }
     },
@@ -1576,8 +1421,8 @@
       "energy_rmse_meV_per_atom": 52.224294182534074,
       "force_rmse_eV_A": 1.0383660394451473,
       "force_rel_rmse": 0.15863384686095952,
-      "window_energy_rmse_meV_per_cell": 2.0855714227945215,
-      "window_energy_rmse_meV_per_atom": 0.34379763844666333,
+      "window_energy_rmse_meV_per_cell": 2.085571422794522,
+      "window_energy_rmse_meV_per_atom": 0.3437976384466632,
       "window_force_rmse_eV_A": 0.0053780627606364135,
       "window_force_rel_rmse": 0.02833813398876702
      },
@@ -1600,23 +1445,45 @@
       "n_points": 190,
       "n_points_window": 171,
       "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
-      "energy_rmse_meV_per_cell": 11.580516900297186,
-      "energy_rmse_meV_per_atom": 0.6507260990899285,
+      "energy_rmse_meV_per_cell": 11.580516900297184,
+      "energy_rmse_meV_per_atom": 0.6507260990899284,
       "force_rmse_eV_A": 0.0027535374981806863,
-      "force_rel_rmse": 0.06007940160527789,
+      "force_rel_rmse": 0.06007940160527788,
       "window_energy_rmse_meV_per_cell": 11.490037721541741,
-      "window_energy_rmse_meV_per_atom": 0.4080753978939235,
+      "window_energy_rmse_meV_per_atom": 0.40807539789392355,
       "window_force_rmse_eV_A": 0.0023315827672974587,
       "window_force_rel_rmse": 0.19505094208021298
      }
     }
    },
    "c3b": {
+    "base": {
+     "sscha": {
+      "n_configs": 12,
+      "force_rmse_eV_A": 0.05169314511519646,
+      "force_rel_rmse": 0.10425869178057383,
+      "energy_err_rms_meV_atom": 0.5358976569464182,
+      "energy_err_mean_meV_atom": 0.305224447526579,
+      "systems": [
+       "batio3_cubic"
+      ]
+     },
+     "baseline": {
+      "n_configs": 4,
+      "force_rmse_eV_A": 0.027136437466098184,
+      "force_rel_rmse": 0.10022640983284493,
+      "energy_err_rms_meV_atom": 0.21103283176561413,
+      "energy_err_mean_meV_atom": -0.18829371598094724,
+      "systems": [
+       "batio3_cubic"
+      ]
+     }
+    },
     "seed0": {
      "sscha": {
       "n_configs": 12,
-      "force_rmse_eV_A": 0.01004520822570573,
-      "force_rel_rmse": 0.020259944832949604,
+      "force_rmse_eV_A": 0.010045208225705728,
+      "force_rel_rmse": 0.0202599448329496,
       "energy_err_rms_meV_atom": 0.14183640468840958,
       "energy_err_mean_meV_atom": -0.12287463209735468,
       "systems": [
@@ -1660,7 +1527,7 @@
      "sscha": {
       "n_configs": 12,
       "force_rmse_eV_A": 0.009546687917590052,
-      "force_rel_rmse": 0.019254490917650694,
+      "force_rel_rmse": 0.01925449091765069,
       "energy_err_rms_meV_atom": 0.10912472231988905,
       "energy_err_mean_meV_atom": 0.08835864252982144,
       "systems": [
@@ -1670,7 +1537,7 @@
      "baseline": {
       "n_configs": 4,
       "force_rmse_eV_A": 0.003600494619542151,
-      "force_rel_rmse": 0.013298158602801731,
+      "force_rel_rmse": 0.01329815860280173,
       "energy_err_rms_meV_atom": 0.012423632935850425,
       "energy_err_mean_meV_atom": 0.007322937495146675,
       "systems": [
@@ -1681,16 +1548,18 @@
    }
   },
   "chgnet": {
-   "c3a": {},
-   "c3b": {}
+   "status": "not part of this run; see results/revision/finetune/summary.json"
   }
  },
  "S2": {
   "mace_mp0": {
    "controls": {
     "si_diamond": {
-     "label_stable": null,
-     "base": null,
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -1.3332791145173269e-07,
+      "pred_stable": true
+     },
      "replicates": {
       "seed0": {
        "min_freq_thz": -1.4137123229396866e-07,
@@ -1705,11 +1574,14 @@
        "pred_stable": true
       }
      },
-     "status": "pending"
+     "status": "unchanged"
     },
     "mgo_rocksalt": {
-     "label_stable": null,
-     "base": null,
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -2.498320781959863e-08,
+      "pred_stable": true
+     },
      "replicates": {
       "seed0": {
        "min_freq_thz": -1.7569922869848737e-07,
@@ -1724,11 +1596,14 @@
        "pred_stable": true
       }
      },
-     "status": "pending"
+     "status": "unchanged"
     },
     "nacl_rocksalt": {
-     "label_stable": null,
-     "base": null,
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -2.927738753785968e-08,
+      "pred_stable": true
+     },
      "replicates": {
       "seed0": {
        "min_freq_thz": -1.3213516020627982e-08,
@@ -1743,11 +1618,14 @@
        "pred_stable": true
       }
      },
-     "status": "pending"
+     "status": "unchanged"
     },
     "cu_fcc": {
-     "label_stable": null,
-     "base": null,
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -7.171706364455598e-08,
+      "pred_stable": true
+     },
      "replicates": {
       "seed0": {
        "min_freq_thz": -4.751211804947932e-08,
@@ -1762,11 +1640,14 @@
        "pred_stable": true
       }
      },
-     "status": "pending"
+     "status": "unchanged"
     },
     "c_diamond": {
-     "label_stable": null,
-     "base": null,
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": 2.0492244258983084e-07,
+      "pred_stable": true
+     },
      "replicates": {
       "seed0": {
        "min_freq_thz": -2.3611719916867648e-07,
@@ -1781,11 +1662,14 @@
        "pred_stable": true
       }
      },
-     "status": "pending"
+     "status": "unchanged"
     },
     "ceo2_cubic": {
-     "label_stable": null,
-     "base": null,
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -1.6007421106211958e-07,
+      "pred_stable": true
+     },
      "replicates": {
       "seed0": {
        "min_freq_thz": 8.524002257365322e-08,
@@ -1800,87 +1684,26 @@
        "pred_stable": true
       }
      },
-     "status": "pending"
+     "status": "unchanged"
     }
    },
-   "n_unchanged": 0,
+   "n_unchanged": 6,
    "n_changed": 0,
    "n_unresolved": 0,
    "prediction": "all six unchanged"
   },
   "chgnet": {
-   "controls": {
-    "si_diamond": {
-     "label_stable": null,
-     "base": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "status": "pending"
-    },
-    "mgo_rocksalt": {
-     "label_stable": null,
-     "base": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "status": "pending"
-    },
-    "nacl_rocksalt": {
-     "label_stable": null,
-     "base": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "status": "pending"
-    },
-    "cu_fcc": {
-     "label_stable": null,
-     "base": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "status": "pending"
-    },
-    "c_diamond": {
-     "label_stable": null,
-     "base": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "status": "pending"
-    },
-    "ceo2_cubic": {
-     "label_stable": null,
-     "base": null,
-     "replicates": {
-      "seed0": null,
-      "seed1": null,
-      "seed2": null
-     },
-     "status": "pending"
-    }
-   },
-   "n_unchanged": 0,
-   "n_changed": 0,
-   "n_unresolved": 0,
-   "prediction": "all six unchanged"
+   "status": "not part of this run; see results/revision/finetune/summary.json"
   }
  },
  "base_reproduction_vs_c3a_paths_csv": {
   "mace_mp0": {
    "n_compared": 65,
    "max_abs_depth_diff_meV": 7.105427357601002e-11
+  },
+  "chgnet": {
+   "n_compared": 23,
+   "max_abs_depth_diff_meV": 0.0152587890625
   }
  },
  "dataset": {
@@ -2033,5 +1856,8 @@
   },
   "chgnet": null
  },
- "configs_manifest": "results/revision/finetune_mace30/manifest.json"
+ "configs_manifest": "results/revision/finetune_mace30/manifest.json",
+ "models_not_in_this_run": [
+  "chgnet"
+ ]
 }

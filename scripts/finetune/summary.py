@@ -33,17 +33,26 @@ EXPECT_PERSIST = (("cssnbr3_cubic", 300.0), ("cssnbr3_cubic", 600.0), ("knbo3_cu
 TAGS = ("seed0", "seed1", "seed2")
 
 
-def _load(out: Path):
-    ev, missing = {}, []
+def _load(out: Path, base_from: Path | None = None):
+    """Evaluation files under <out>/eval.  The base (un-fine-tuned) model does not depend on the
+    training run, so a re-run that trains new replicates (the 30-epoch MACE-MP-0 re-run,
+    deviation D4) need not re-evaluate it: with base_from, a base evaluation missing under <out>
+    is read from <base_from>/eval instead and recorded in base_loaded_from."""
+    ev, missing, base_loaded = {}, [], []
     for part in ("c3a", "c3b", "p2", "s2"):
         for model in C.BASE_MODELS:
             for tag in ("base", *TAGS):
                 p = out / "eval" / f"{part}_{model}_{tag}.json"
+                if not p.exists() and tag == "base" and base_from is not None:
+                    q = base_from / "eval" / p.name
+                    if q.exists():
+                        p = q
+                        base_loaded.append(C.rel(q))
                 if p.exists():
                     ev[(part, model, tag)] = C.jload(p)
                 else:
                     missing.append(p.name)
-    return ev, missing
+    return ev, missing, base_loaded
 
 
 def _verdict_band(vals_all, vals_by_rep, lo, hi):
@@ -318,12 +327,13 @@ def base_reproduction(ev, dft_root: Path):
     return out
 
 
-def build(out: Path, dft_root: Path) -> int:
-    ev, missing = _load(out)
+def build(out: Path, dft_root: Path, base_from: Path | None = None) -> int:
+    ev, missing, base_loaded = _load(out, base_from)
     summary = {
         "preregistration": "tasks/preregistration-finetune-2026-10-03.md (commit 033b3d8)",
         "provenance": C.provenance("summary"),
         "available": sorted(f"{p}_{m}_{t}" for (p, m, t) in ev), "missing": missing,
+        "base_loaded_from": base_loaded,
         "rules": __doc__,
         "P1": p1(ev), "P2": p2(ev), "P3": p3(out), "S1": s1(ev), "S2": s2(ev),
         "base_reproduction_vs_c3a_paths_csv": base_reproduction(ev, dft_root),
@@ -331,6 +341,20 @@ def build(out: Path, dft_root: Path) -> int:
                     for m in C.BASE_MODELS},
         "configs_manifest": C.rel(out / "manifest.json") if (out / "manifest.json").exists() else None,
     }
+    # A model with no fine-tuned replicate under <out> was not trained in this run (the 30-epoch
+    # re-run trains MACE-MP-0 only): say so instead of reporting its outcomes as "pending".
+    not_run = [m for m in C.BASE_MODELS
+               if not any((p, m, t) in ev for p in ("c3a", "c3b", "p2", "s2") for t in TAGS)]
+    if not_run:
+        note = {"status": "not part of this run" + (f"; see {C.rel(base_from / 'summary.json')}"
+                                                    if base_from is not None else "")}
+        summary["models_not_in_this_run"] = not_run
+        for m in not_run:
+            summary["P1"][m] = dict(note)
+            summary["P2"]["models"][m] = {}
+            summary["P2"].setdefault("models_not_in_this_run", {})[m] = dict(note)
+            summary["S1"][m] = dict(note)
+            summary["S2"][m] = dict(note)
     C.jdump(out / "summary.json", summary)
     print(f"[summary] wrote {C.rel(out / 'summary.json')}; {len(ev)} evaluation files, {len(missing)} missing")
     for model in C.BASE_MODELS:

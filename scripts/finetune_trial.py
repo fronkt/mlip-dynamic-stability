@@ -121,6 +121,9 @@ def build_parser():
     p.add_argument("--device", default="cuda")
     p.add_argument("--workers", type=int, default=4)
     p.add_argument("--dft-root", type=Path, default=C.DFT_ROOT)
+    p.add_argument("--base-eval-from", type=Path, default=None,
+                   help="summary only: read base-model evaluations missing under <out>/eval from "
+                        "<this>/eval (the 30-epoch re-run reuses results/revision/finetune)")
     p.add_argument("--ckpt", type=Path, default=None,
                    help="explicit checkpoint file (default: the trained one under <out>/models)")
     p.add_argument("--max-paths", type=int, default=None, help="smoke: limit C3a paths")

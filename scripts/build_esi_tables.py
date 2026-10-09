@@ -17,7 +17,8 @@ the bcc-Zr cell-size re-measurement) from the unit JSONs that scripts/sscha_seed
 under results/revision/sscha_seeds/, and S22 (the converged-recipe SSCHA grid beside the production
 claims, Referee 1.4) from results/revision/grid_compare.json, which ``scripts/grid_compare.py``
 writes from the grid's summary.csv; S22 is left out, with a note on stderr, until that file exists.
-Tables S1-S3 and S12 are hand-written in their own sections.
+Tables S1-S3 are hand-written in their own sections; S12 is generated from
+results/scha_vs_exact.json and printed between S11 and S13.
 
 It rewrites the block between the sentinels
 
@@ -579,6 +580,32 @@ def table_s11_sscha_diag(df: pd.DataFrame) -> str:
         "these for every unit it ran (Table S22).\n\n"
         + md(rows, ["Family", "Model", "n units", "Acoustic zeros resolved",
                     "Max zero residual (THz)", "Swamped", "Wall time (s)"])
+    )
+
+
+SCHA_EXACT = REPO / "results" / "scha_vs_exact.json"
+
+
+def table_s12_exact() -> str:
+    """Table S12 (§S1.4): the exact isolated-mode criterion against the variational one, from
+    results/scha_vs_exact.json (scripts/scha_vs_exact.py).  Generated here, and printed between
+    Tables S11 and S13, so the ESI tables appear in numerical order (audit 2026-10-09, m10); it
+    was hand-written inside §S1.4 before."""
+    if not SCHA_EXACT.exists():
+        raise SystemExit("results/scha_vs_exact.json missing - run scripts/scha_vs_exact.py first")
+    d = json.loads(SCHA_EXACT.read_text(encoding="utf-8"))
+    td = d["temperature_dependence"]
+    n_units = {v["n"] for v in td.values()}
+    if len(n_units) != 1 or d["n_modes_tested"] != sum(v["n"] for v in td.values()):
+        raise SystemExit("scha_vs_exact.json: unexpected unit counts")
+    rows = [[T, f"{v['exact_bimodal_frac']:.4f}", f"{v['scha_condensed_frac']:.4f}"]
+            for T, v in sorted(td.items(), key=lambda kv: float(kv[0]))]
+    return (
+        f"**Table S12** The exact isolated-mode criterion against the variational one (§S1.4), over "
+        f"the same {d['n_modes_tested']} mode-temperature evaluations: {n_units.pop()} (system, "
+        "model) units, involving 75 distinct fitted potentials. `scripts/scha_vs_exact.py` → "
+        "`results/scha_vs_exact.json`.\n\n"
+        + md(rows, ["T (K)", "exact: fraction bimodal", "SCHA screen: fraction condensed"])
     )
 
 
@@ -2277,7 +2304,7 @@ def table_s24_e3_replicates() -> str:
     unres_txt = _and(f"{SYSNAME.get(r.system, r.system)}/{PRETTY[r.model]} at {r.T_K:.0f} K"
                      for r in e3[e3["verdict"] == "unresolved"].sort_values(["system", "model", "T_K"]).itertuples())
     return (
-        "**Table S24** Pre-registered replicates of the converged SSCHA grid (Referee 1.4; "
+        "**Table S24** Pre-registered replicates of the converged SSCHA grid ("
         "registration `tasks/preregistration-repeats-2026-10-03.md`, selection and runner fixed "
         "before any replicate ran; `scripts/box/as_run/e3_summarize.py` → "
         "`results/revision/e3_replicates/`). Selected: every grid unit with status ok whose "
@@ -2361,7 +2388,7 @@ def table_s25_finetune_calls() -> str:
     nchb = sum(bool(s6["chgnet"][f"{s}@{T}"]["base_rerun"]["pred_stable"]) == bool(s6["chgnet"][f"{s}@{T}"]["label_stable"])
                for s in FT_SYS for T in (100, 300, 600, 900))
     return (
-        "**Table S25** Pre-registered fine-tuning trial (Referee 2.1; §S6): the production screen "
+        "**Table S25** Pre-registered fine-tuning trial (§S6): the production screen "
         "(relaxation, harmonic force constants, every imaginary commensurate mode, soft-mode solve; "
         "2×2×2) re-run with each fine-tuned replicate (seeds 0, 1, 2) on the three test systems, "
         "against the labels. S stable, U unstable, an asterisk marking disagreement with the label. "
@@ -2436,11 +2463,11 @@ def table_s26_finetune_surface() -> str:
                               f"{'S' if r['base_lattice']['pred_stable'] else 'U'}, {r['base_lattice']['well_depth_meV']:.1f}"])
     return (
         "**Table S26** Pre-registered fine-tuning trial (§S6), the surface and the controls. P1, the "
-        "median over the BaTiO₃ and KNbO₃ deciding paths of each model's own C3a set (at the base "
+        "median over the BaTiO₃ and KNbO₃ deciding paths of each model's own §S5.1 path set (at the base "
         "model's relaxed lattice; Table S19) of the fine-tuned to PBE well-depth ratio, base and "
         "per replicate (seeds 0 / 1 / 2); registered band 0.8–1.2, supported only if the pooled "
         "median and each replicate's median lie in it. S1, force RMSE against PBE on the held-out "
-        "C3a points in the well window the screen fits (the 30-epoch evaluation includes the "
+        "§S5.1 path points in the well window the screen fits (the 30-epoch evaluation includes the "
         "extra-mode points, deviation D5; the CHGNet one does not). S2, harmonic calls of Si, MgO, "
         "NaCl, Cu, C and CeO₂. P3, converged SSCHA (grid recipe, start A). Lower part, **not "
         "pre-registered** (`scripts/finetune_lattice_diag.py`, CPU, archived weights checked "
@@ -2481,6 +2508,7 @@ def build() -> str:
         table_s9_orb(df, st, sens),
         table_s10_paired(st),
         table_s11_sscha_diag(df),
+        table_s12_exact(),
         table_s13_disp_sweep(raw),
         table_s14_screen_sensitivity(sens),
         table_s15_h2_clustered(st),
