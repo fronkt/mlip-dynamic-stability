@@ -52,7 +52,15 @@ Editor agreed to **9 Oct** (RSC, 09-28). The 14 Oct request is still an UNSENT G
       tasks/fold-E3E5PL-2026-10-09.md, verify_claims 206/206. Headlines moved: SSCHA false-stables 34/84 -> 27/77
       (7 unresolved), FE recall 15/26 v 4/26 -> 14/22 v 4/22, paired 13 v 2 -> 12 v 2 (p 0.5), bcc 33/41 -> 33/40;
       PBE at its own lattice makes the BaTiO3/KNbO3 300 K error (8-of-17 claim weakened); fine-tune estimate withdrawn.
-- [ ] Final adversarial audit of the 10-09 fold; docx + marked-changes rebuild; P4/P5 packaging.
+- [x] Final adversarial audit (4 blockers / 9 major / 17 minor, 0 wrong numbers) -> all fixed or justified,
+      tasks/audit-fixes-2026-10-09.md, 463a5ca; Section-sign pass done; verify_claims 215/215; abstract 247 words.
+- [x] Draft builds OK (0041c22): clean manuscript 53 pp + ESI 78 pp; marked changes 538 + 112 revisions vs 76d3a84.
+- [ ] **Release sequence, blocked on Frank's AI-use wording (DRAFT-FOR-FRANK):** remove marker -> merge
+      rsc-figure-fixes to main -> tag -> Zenodo new version under concept 10.5281/zenodo.20805799 -> fill PENDING-P5
+      -> final build_docx --pdf + build_marked_changes --pdf (no --allow-pending) -> drop PENDING-B1 in letter.
+- [ ] Portal at upload (Frank): ORCID link + transparent-review choice (PENDING-P4).
+- [ ] Optional cheap PBE runs if wanted: X-mode profile (audit M1), PBE forces on converged BaTiO3/KNbO3 100 K
+      ensembles (M6). Currently answered by qualified wording.
 - [ ] (superseded) GPU box at 05:20 UTC: E3 68/130 ended, 20 start-B failures (18 complex-dyn assertion, mostly
       BaTiO3/KNbO3/PbTiO3 MACE+SevenNet; 1.0 THz retries also failing). Pre-registered path (retry once, report
       as-is) -> no intervention. Seed-10 leg running clean. E5 P3 done; P1/P2 CHGNet pending.
