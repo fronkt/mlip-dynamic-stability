@@ -3,16 +3,17 @@
 *Supplementary information for* "Neither harmonic benchmarks nor a default SSCHA cross-check
 certifies a foundation machine-learning interatomic potential for finite-temperature dynamic
 stability", F. Cai, *RSC Advances*. Section numbers without an S (§2.4, §3.3 and so on) and
-numbered references refer to the main article. Tables S4-S11 and S13-S23 are generated from the
+numbered references refer to the main article. Tables S4-S11 and S13-S26 are generated from the
 deposited ledger (`results/ledger.parquet`) and the deposited analysis outputs
 (`results/stats_hardening.json`, `results/screen_sensitivity.json`,
 `results/curvature_identity_check.json`, `results/revision/force_spread/summary.json`,
 `results/revision/dft/`, `results/revision/dft_checks/`, `results/revision/sscha_seeds/`,
-`results/revision/sscha_converged_grid/`, `results/revision/grid_compare.json`) by
+`results/revision/sscha_converged_grid/`, `results/revision/grid_compare.json`,
+`results/revision/e3_replicates/`, `results/revision/finetune/`, `results/revision/finetune_mace30/`) by
 `scripts/build_esi_tables.py`; figures by `scripts/make_figures.py`.
 
-*Citation convention: **sections** of this document are cited as §S1-§S5 and **tables** as
-Table S1-Table S23. The two sequences are independent; a cross-reference to "Table S1" means the
+*Citation convention: **sections** of this document are cited as §S1-§S6 and **tables** as
+Table S1-Table S26. The two sequences are independent; a cross-reference to "Table S1" means the
 table, not the section.*
 
 ## S1. Finite-T method development and discarded routes
@@ -500,10 +501,11 @@ the curvature of the SSCHA free energy at the high-symmetry reference, so it ans
 question: is the symmetric phase a local minimum of the free energy? For a deep double well the
 free energy can keep a local minimum at the symmetric point while a displaced minimum lies lower
 (the first-order-like case of §2.4), and a curvature at the reference then reports stable at any
-order of the expansion. On the same MLIP energies the screen finds that situation on half of the
-34 non-bcc units converged SSCHA false-stabilises: its free-energy comparison finds a displaced
-minimum below the symmetric point on 17 of them (Tables S16 and S22), including this one (57 and
-46 with the production recipe). The screen's own
+order of the expansion. On the same MLIP energies the screen finds that situation on about half of
+the 27 non-bcc units converged SSCHA false-stabilises in every finished replicate: its free-energy
+comparison finds a displaced minimum below the symmetric point on 15 of them (Tables S16, S22 and
+S24), including this one (17 of 34 from the first start alone; 57 and 46 with the production
+recipe). The screen's own
 symmetric-point curvature cannot add to that, because for a single mode it is positive by
 construction (§S1.3), and neither shows that SSCHA's positive Hessian has this origin rather than
 a relaxation that stopped near its start (§S2.1); the converged recipe settles that for this
@@ -594,7 +596,26 @@ print to the run log rather than to a ledger).
   measured on six units from two starts: all six keep their call, and SrTiO₃/MACE-MP-0 at 100 K
   (+1.13 against +1.02 THz) is flagged start-dependent because the difference exceeds its
   bootstrap error.
-  <!-- PENDING-E3: pre-registered replicates of the converged grid (start B and a second seed on 65 units) started 2026-10-08; add their call agreement and spread here and in §3.5, or state that they were not run. -->
+    The converged grid was then replicated under a protocol registered before any replicate ran
+  (`tasks/preregistration-repeats-2026-10-03.md`, with one dated deviation fixing the random
+  draw as without replacement; Table S24): every grid unit with status ok whose converged call
+  disagrees with its comparison (53) and 12 of the rest drawn at random, each re-run from a
+  second starting matrix (start B, imaginary modes at +0.3 THz, re-run once at 1.0 THz after the
+  complex-dynamical-matrix assertion) and from the first start with a second seed. The seed
+  replicate finished on all 65 units. Start B finished on 51: of the 19 units that hit the
+  assertion, 12 finished at 1.0 THz and 7 failed again; 5 stopped at a cellconstructor check that
+  the structure "must be of the same type" and 1 at a q-star mismatch, neither retried, as
+  registered; 1 wrote no result. On the 51 units with three values the call is the same in 43
+  (43/51 = 0.843 [0.720, 0.918]; 32/39 without ORB-v2), with a median range of 0.22 THz. The
+  other eight are unresolved and §3.3 counts them as such: seven PbTiO₃ and KNbO₃ units of CHGNet
+  and MatterSim at 300–600 K, where start B ended at its wall or population cap at −209 to
+  −6230 THz while start A and the second seed agree on a converged stable call, and bcc Ti with
+  ORB-v2 at 600 K (+2.53, −26.4 and −3.73 THz, the last two not converged). Not pre-registered:
+  the second seed reproduces the start-A call on 64 of 65 units and every call agrees on the 31
+  units that converged in all three. Leaving the eight out moves the §3.3 counts from 34/84 to
+  27/77 (false-stables), 15/26 against 4/26 to 14/22 against 4/22 (ferroelectric recall), 13
+  against 2 to 12 against 2 (paired contrast; p = 0.5 either way) and 33/41 to 33/40 (bcc
+  agreement); the lower part of Table S24 gives each with and without ORB-v2.
 - **Finite size, bcc.** For bcc Zr the 2×2×2 and 3×3×3 cells are not nested: the N point is
   commensurate only with even cells and the ω point, q = ⅔⟨111⟩, only with multiples of three, so
   a comparison between them changes the set of q-points as well as the size, and it is reported
@@ -675,7 +696,11 @@ rest are collected here in numerical order:
 - Table S22, the converged-recipe SSCHA grid beside the production numbers on the same units
   (§S2.1, §3.3).
 - Table S23, checks on the errors that persist on PBE: k-point and cutoff convergence, PBEsol on
-  the same structures, and the PBE lattice (§S5.3).
+  the same structures, and PBE at its own lattice (§S5.3).
+- Table S24, the pre-registered replicates of the converged grid (second start, second seed) and
+  the §3.3 counts with their unresolved units left out (§S2.4).
+- Tables S25 and S26, the pre-registered fine-tuning trial: screen calls of every replicate, and
+  the surface, the controls, converged SSCHA and the post hoc lattice check (§S6).
 
 <!-- BEGIN GENERATED TABLES -->
 
@@ -1302,7 +1327,7 @@ Lower part: bcc-Zr cell size. The 3×3×3 cell was run once (seed 0) with the sa
 | MatterSim | 100 | +1.846 | +1.320 | 0.022 | −0.526 | +1.489 | −1.949 | 8 × 256 (1) | 27 (19) / 20 | no | max_ka (cumulative) ×8 | 0.35 → 0.31 | 7.1 × 10³ |
 | MatterSim | 300 | +1.953 | −2.106 | 0.15 | −4.059 | +1.488 | −1.949 | 8 × 256 (1) | 27 (19) / 20 | no | max_ka (cumulative) ×8 | 0.62 → 0.61 | 1.4 × 10⁴ |
 
-**Table S22** SSCHA with the converged recipe on the units behind the §3.3 claims, beside the production numbers on the same units (`scripts/sscha_seed_study.py --preset grid`, compared with the production ledger by `scripts/grid_compare.py`). **Recipe:** 1000 configurations per population, at most 30 populations and at most 400 minimiser steps per population (a cap per population, where the production `max_ka` is cumulative over populations, Table S21), `meaningful_factor` = 0.2 applied to the real stochastic error of the gradient (the library's serial estimate, in place of the constant placeholder of Table S21; it is set to zero wherever KL/N < 0.7, so convergence cannot be declared at a statistically invalid point), Kong-Liu ratio 0.5, then a Hessian ensemble of 2000 configurations with 10 bootstrap resamples, and a 7200 s wall cap on each relaxation. Production: 256 configurations per population, at most 8 populations, `max_ka` = 20 cumulative, `meaningful_factor` = 0.0001 against the placeholder error, a Hessian ensemble of 512. **Start A only** (the production ForcePositiveDefinite start): start dependence is the six-unit start-A against start-B study (§3.5), not repeated across the grid. A call is the sign rule used throughout: stable iff the lowest free-energy-Hessian frequency is at or above −0.1 THz. **Run status:** 178 planned units, 171 finished, 159 of them (93% of those finished) met the library's stopping test (stop reasons: converged 159, max pop 11, wall cap 1); 1 ended at the wall cap, 7 failed, 0 are not finished, 4 returned a blow-up (|f| > 50 THz); production returned no value for 7 of the 178 units. Only runs that met the stopping test enter the claim table; the others are listed under *Planned, not evaluated* in the coverage table. **Coverage.** Of the 57 units where SSCHA calls a phase stable against an unstable label in Table S16, 57 are in the grid; of the 57 in the grid, 21 are still called stable by the converged recipe (the screen calls 11/21 of them unstable) and 32 are called unstable, and 4 have no converged value (finished without meeting the stopping test 4). The grid covers the non-bcc systems at 100, 300, 600 and 900 K in the 2×2×2 cell and the bcc metals at 100, 300 and 600 K in the 3×3×3 cell. **Fresh-ensemble check.** At the final matrix of each converged unit the gradient was recomputed on an independent ensemble of 2000 configurations; it is consistent with a minimum on 152 of the 159 converged units and not on 7 (bcc-Ti/MACE-MP-0 300 K, HfO₂/MACE-MP-0 100 K, HfO₂/CHGNet 300 K, bcc-Hf/MatterSim 300 K, bcc-Ti/MatterSim 600 K, bcc-Zr/MatterSim 600 K and ZrO₂/MatterSim 900 K), so *converged* means the library's stopping test, not an independent verification. None of the 34 converged false-stables is among them; among the false-stables, BaTiO₃/CHGNet at 100 K (+1.65 ± 1.50 THz) lies within two bootstrap standard deviations of zero. **The bcc cell is 3×3×3 in the grid and 2×2×2 in production**, so on bcc a change of call mixes the cell change with the convergence (Table S21, lower part, measures the cell change at the production recipe), and the bcc agreement below compares the screen with a different cell's SSCHA. **How the columns are made.** Each production claim is recomputed with the function that produced it (`stats_hardening.criterion_blindness` for claim (i), `analysis.displacive_recall` for (ii), `stats_hardening.bcc_agreement` for (iii), `stats_hardening.sscha_high_t` for (iv); Tables S16 and S17 and §3.3), so the unit sets, the ORB-v2 split and the blow-up rules are the production ones: SSCHA blow-ups leave the denominator in (ii), where they are counted beside, and stay in (i), (iii) and (iv). The first column is the production number on its full set, recomputed from the ledger and checked against `results/stats_hardening.json`; the second is the production number on exactly the units the grid evaluated; the third is the converged value on those same units; the fourth is the converged value on every unit evaluated, which includes units that production never returned (7 in the plan). A count of 0/0 means no unit of that kind was evaluated. `results/revision/grid_compare.json`.
+**Table S22** SSCHA with the converged recipe on the units behind the §3.3 claims, beside the production numbers on the same units (`scripts/sscha_seed_study.py --preset grid`, compared with the production ledger by `scripts/grid_compare.py`). Every unit here is the start-A run; Table S24 gives the pre-registered replicates of 65 of them and the §3.3 counts with their unresolved units left out. **Recipe:** 1000 configurations per population, at most 30 populations and at most 400 minimiser steps per population (a cap per population, where the production `max_ka` is cumulative over populations, Table S21), `meaningful_factor` = 0.2 applied to the real stochastic error of the gradient (the library's serial estimate, in place of the constant placeholder of Table S21; it is set to zero wherever KL/N < 0.7, so convergence cannot be declared at a statistically invalid point), Kong-Liu ratio 0.5, then a Hessian ensemble of 2000 configurations with 10 bootstrap resamples, and a 7200 s wall cap on each relaxation. Production: 256 configurations per population, at most 8 populations, `max_ka` = 20 cumulative, `meaningful_factor` = 0.0001 against the placeholder error, a Hessian ensemble of 512. **Start A only** (the production ForcePositiveDefinite start): start dependence is the six-unit start-A against start-B study (§3.5), not repeated across the grid. A call is the sign rule used throughout: stable iff the lowest free-energy-Hessian frequency is at or above −0.1 THz. **Run status:** 178 planned units, 171 finished, 159 of them (93% of those finished) met the library's stopping test (stop reasons: converged 159, max pop 11, wall cap 1); 1 ended at the wall cap, 7 failed, 0 are not finished, 4 returned a blow-up (|f| > 50 THz); production returned no value for 7 of the 178 units. Only runs that met the stopping test enter the claim table; the others are listed under *Planned, not evaluated* in the coverage table. **Coverage.** Of the 57 units where SSCHA calls a phase stable against an unstable label in Table S16, 57 are in the grid; of the 57 in the grid, 21 are still called stable by the converged recipe (the screen calls 11/21 of them unstable) and 32 are called unstable, and 4 have no converged value (finished without meeting the stopping test 4). The grid covers the non-bcc systems at 100, 300, 600 and 900 K in the 2×2×2 cell and the bcc metals at 100, 300 and 600 K in the 3×3×3 cell. **Fresh-ensemble check.** At the final matrix of each converged unit the gradient was recomputed on an independent ensemble of 2000 configurations; it is consistent with a minimum on 152 of the 159 converged units and not on 7 (bcc-Ti/MACE-MP-0 300 K, HfO₂/MACE-MP-0 100 K, HfO₂/CHGNet 300 K, bcc-Hf/MatterSim 300 K, bcc-Ti/MatterSim 600 K, bcc-Zr/MatterSim 600 K and ZrO₂/MatterSim 900 K), so *converged* means the library's stopping test, not an independent verification. None of the 34 converged false-stables is among them; among the false-stables, BaTiO₃/CHGNet at 100 K (+1.65 ± 1.50 THz) lies within two bootstrap standard deviations of zero. **The bcc cell is 3×3×3 in the grid and 2×2×2 in production**, so on bcc a change of call mixes the cell change with the convergence (Table S21, lower part, measures the cell change at the production recipe), and the bcc agreement below compares the screen with a different cell's SSCHA. **How the columns are made.** Each production claim is recomputed with the function that produced it (`stats_hardening.criterion_blindness` for claim (i), `analysis.displacive_recall` for (ii), `stats_hardening.bcc_agreement` for (iii), `stats_hardening.sscha_high_t` for (iv); Tables S16 and S17 and §3.3), so the unit sets, the ORB-v2 split and the blow-up rules are the production ones: SSCHA blow-ups leave the denominator in (ii), where they are counted beside, and stay in (i), (iii) and (iv). The first column is the production number on its full set, recomputed from the ledger and checked against `results/stats_hardening.json`; the second is the production number on exactly the units the grid evaluated; the third is the converged value on those same units; the fourth is the converged value on every unit evaluated, which includes units that production never returned (7 in the plan). A count of 0/0 means no unit of that kind was evaluated. `results/revision/grid_compare.json`.
 
 | Claim | Quantity | Models | Production, full set | Production, same units as the grid | Converged, same units | Converged, all units evaluated |
 |---|---|---|---|---|---|---|
@@ -1450,7 +1475,7 @@ Calls that differ from production, with the old and new Hessian minimum: 82 of t
 | zro2_cubic | CHGNet | 900 | 2×2×2 | +1.23 | −3.26 | stable → unstable | unstable | unstable | yes |  |
 | zro2_cubic | MatterSim | 900 | 2×2×2 | +2.32 | −3.43 | stable → unstable | unstable | unstable | yes |  |
 
-**Table S23** Checks on the errors that persist on PBE (`scripts/dft_checks.py analyze-checks` → `results/revision/dft_checks/`; 323 calculations). Upper part: k-point and cutoff convergence of the MACE-MP-0 deciding path of each system, as the relative change of the well depth (−min E(Q) over the ten sampled amplitudes, per modulated cell) from the production settings (k-spacing 0.25 Å⁻¹ with 2π included, SSSP cutoffs) to a k-spacing of 0.15 Å⁻¹ (*k*), cutoffs ×1.3 with the density cutoff kept at eight times the wavefunction cutoff (*ecut*), and both. The criterion, fixed before any variant ran, is depth within 5% and screen call identical at every T in [50.0, 100.0, 300.0, 600.0, 900.0], for each variant, on every path; the verdict is **NOT converged**. It fails on CsSnBr₃ only, by the depth, and no call changes anywhere; *Calls changed* is over 5 temperatures × 3 variants. Middle part: the screen re-solved with PBEsol on the same structures, over the ladder units of each system (5 models × 100, 300, 600, 900 K), along the 23 deciding paths; **PBEsol here is input_dft = 'pbesol' on the SSSP 1.3 PBE pseudopotentials at each MLIP's lattice, not the SSSP PBEsol set and not PBEsol's own lattice**. PBEsol corrects 9 of the 15 PBE errors and introduces 0; the 6 left wrong are BaTiO₃/ORB-v2 at 300 K, CsSnBr₃/ORB-v2 at 300 K, KNbO₃/CHGNet at 600 K, KNbO₃/MACE-MP-0 at 600 K, KNbO₃/MatterSim at 600 K and KNbO₃/ORB-v2 at 600 K. Lower part: the cubic lattice relaxed in PBE (vc-relax, production settings, final pressure within 0.02 kbar) against the MLIP lattices the curves of Table S19 use. The PBE force constants and E(Q) profiles at the PBE lattice (phases B and C of the check) were not computed, so whether the lattice or the eigenvector moves a call is not tested. Counts are descriptive (three systems).
+**Table S23** Checks on the errors that persist on PBE (`scripts/dft_checks.py analyze-checks` → `results/revision/dft_checks/`; 382 calculations). Upper part: k-point and cutoff convergence of the MACE-MP-0 deciding path of each system, as the relative change of the well depth (−min E(Q) over the ten sampled amplitudes, per modulated cell) from the production settings (k-spacing 0.25 Å⁻¹ with 2π included, SSSP cutoffs) to a k-spacing of 0.15 Å⁻¹ (*k*), cutoffs ×1.3 with the density cutoff kept at eight times the wavefunction cutoff (*ecut*), and both. The criterion, fixed before any variant ran, is depth within 5% and screen call identical at every T in [50.0, 100.0, 300.0, 600.0, 900.0], for each variant, on every path; the verdict is **NOT converged**. It fails on CsSnBr₃ only, by the depth, and no call changes anywhere; *Calls changed* is over 5 temperatures × 3 variants. Middle part: the screen re-solved with PBEsol on the same structures, over the ladder units of each system (5 models × 100, 300, 600, 900 K), along the 23 deciding paths; **PBEsol here is input_dft = 'pbesol' on the SSSP 1.3 PBE pseudopotentials at each MLIP's lattice, not the SSSP PBEsol set and not PBEsol's own lattice**. PBEsol corrects 9 of the 15 PBE errors and introduces 0; the 6 left wrong are BaTiO₃/ORB-v2 at 300 K, CsSnBr₃/ORB-v2 at 300 K, KNbO₃/CHGNet at 600 K, KNbO₃/MACE-MP-0 at 600 K, KNbO₃/MatterSim at 600 K and KNbO₃/ORB-v2 at 600 K. Lower part: the cubic lattice relaxed in PBE (vc-relax, production settings, final pressure within 0.02 kbar) against the MLIP lattices the curves of Table S19 use. Bottom part: PBE at its own lattice (phases B and C of the check). PBE force constants by finite differences in the 2×2×2 cell at the PBE lattice give the imaginary modes listed; the screen is then re-solved on PBE E(Q) along the softest PBE band at the q-point that decides MACE-MP-0's call (*deciding*) and, for BaTiO₃ and KNbO₃, along the softest PBE mode of the whole mesh (*softest*), and compared with PBE along MACE-MP-0's own eigenvector at MACE-MP-0's lattice (the Table S19 curve). Depths are per modulated cell. Calls at 100, 300, 600 and 900 K, S stable, U unstable, an asterisk marking disagreement with the label; a single-mode stable call holds only if no other mode condenses, and only the listed modes were profiled. The two columns change the lattice and the eigenvector together, so they do not separate the two. Counts are descriptive (three systems).
 
 | System | Path (MACE-MP-0, deciding) | Production depth (meV) | *k* | *ecut* | *k* + *ecut* | Calls changed (of 15) | PBE minimum at scan edge | Criterion |
 |---|---|---|---|---|---|---|---|---|
@@ -1471,6 +1496,137 @@ Calls that differ from production, with the old and new Hessian minimum: 82 of t
 | KNbO₃ | 4.0269 | 4.0567–4.0590 | +0.74 to +0.80 (largest MatterSim) |
 | CsSnBr₃ | 5.8871 | 5.8941–5.9205 | +0.12 to +0.57 (largest CHGNet) |
 
+| System | PBE imaginary modes at the PBE lattice, q (THz) | Deciding q (MACE-MP-0) | Depth at PBE lattice, deciding / softest (meV) | Depth at MACE-MP-0 lattice, its eigenvector (meV) | Calls at PBE lattice, deciding / softest | Calls at MACE-MP-0 lattice | Label |
+|---|---|---|---|---|---|---|---|
+| BaTiO₃ | (0, 0, 0) −7.44; (½, 0, 0) −6.63; (½, 0, ½) −5.95 | (½, 0, ½) | 48.7 / 21.8 | 73.5 | U S* S S / S* S* S S | U U S S | U U S S |
+| KNbO₃ | (0, 0, 0) −6.97; (½, 0, 0) −5.47; (½, 0, ½) −4.17 | (0, ½, ½) | 30.0 / 32.2 | 87.8 | U S* S* S / U S* S* S | U U S* S | U U U S |
+| CsSnBr₃ | (½, ½, ½) −0.70; (0, ½, ½) −0.69 | (½, ½, ½) | 131.2 | 127.2 | U U* U* S | U U* U* S | U S S S |
+
+**Table S24** Pre-registered replicates of the converged SSCHA grid (Referee 1.4; registration `tasks/preregistration-repeats-2026-10-03.md`, selection and runner fixed before any replicate ran; `scripts/box/as_run/e3_summarize.py` → `results/revision/e3_replicates/`). Selected: every grid unit with status ok whose converged call disagrees with its comparison (the label for non-bcc units, the screen's call for bcc), and 12 of the rest drawn at random, 65 units. *A*, the grid's own start-A run (Table S22); *B*, a second starting matrix with imaginary modes set to +0.3 THz, re-run once from 1.0 THz after the cellconstructor assertion that the dynamical matrix is complex at q = −q + G; *seed 10*, start A with a second random stream. Lowest free-energy-Hessian frequency in THz; (nc), the relaxation did not meet its stopping test; a call is stable at or above −0.1 THz. The seed-10 replicate finished on 65 of 65 units and start B on 51: 19 hit the complex-matrix assertion at 0.3 THz, of which 12 finished at 1.0 THz and 7 failed again, 6 stopped at other cellconstructor symmetry errors (not retried, as registered) and 1 wrote no result. On the 51 units with three values the call is the same in 43/51 = 0.843 [0.720, 0.918] (without ORB-v2 32/39 = 0.821 [0.673, 0.910]); the median range is 0.22 THz. Unresolved, and counted as such in §3.3 rather than by majority: KNbO₃/CHGNet at 300 K, KNbO₃/CHGNet at 600 K, KNbO₃/MatterSim at 300 K, KNbO₃/MatterSim at 600 K, PbTiO₃/CHGNet at 300 K, PbTiO₃/CHGNet at 600 K, PbTiO₃/MatterSim at 300 K and bcc-Ti/ORB-v2 at 600 K. Not pre-registered: the seed-10 call equals the start-A call on 64 of 65 units, and on the 31 units converged in all three the call is the same in 31. Lower part: the §3.3 counts from start A alone and with the unresolved units left out of numerator and denominator.
+
+| System | Model | T (K) | Selected as | A | B | Seed 10 | Range (THz) | Verdict |
+|---|---|---|---|---|---|---|---|---|
+| BaTiO₃ | CHGNet | 100 | disagreeing | 1.65 | failed (symmetry, structure type) | 1.56 | — | incomplete |
+| BaTiO₃ | MACE-MP-0 | 100 | disagreeing | 1.98 | 2.06 (1.0 THz) | 2.05 | 0.075 | same call |
+| BaTiO₃ | MACE-MP-0 | 300 | disagreeing | 2.95 | 2.95 (1.0 THz) | 2.96 | 0.011 | same call |
+| BaTiO₃ | MACE-MP-0 | 900 | random | 3.02 | failed (complex q = −q + G at 0.3 and 1.0 THz) | 3.04 | — | incomplete |
+| BaTiO₃ | MatterSim | 100 | disagreeing | 1.71 | 1.43 (nc) | 1.56 | 0.27 | same call |
+| BaTiO₃ | MatterSim | 300 | disagreeing | 3.15 | 3.15 (1.0 THz) | 3.14 | 0.010 | same call |
+| BaTiO₃ | ORB-v2 | 100 | disagreeing | 1.30 | failed (symmetry, structure type) | 1.19 | — | incomplete |
+| BaTiO₃ | SevenNet-0 | 100 | disagreeing | 1.45 | 1.19 (1.0 THz) | 1.38 | 0.26 | same call |
+| BaTiO₃ | SevenNet-0 | 300 | disagreeing | 2.95 | failed (complex q = −q + G at 0.3 and 1.0 THz) | 2.95 | — | incomplete |
+| CsSnI₃ | CHGNet | 600 | disagreeing | −0.794 | −0.989 | −1.08 | 0.28 | same call |
+| CsSnI₃ | CHGNet | 900 | disagreeing | −1.09 | −0.978 | −1.07 | 0.11 | same call |
+| CsSnI₃ | MACE-MP-0 | 600 | disagreeing | −0.322 | −0.306 | −0.292 | 0.031 | same call |
+| CsSnI₃ | MACE-MP-0 | 900 | disagreeing | −0.351 | −0.380 | −0.255 | 0.12 | same call |
+| CsSnI₃ | MatterSim | 600 | disagreeing | −0.501 | no result written | −0.398 | — | incomplete |
+| CsSnI₃ | MatterSim | 900 | disagreeing | −0.667 | −0.729 | −0.583 | 0.15 | same call |
+| bcc-Hf | ORB-v2 | 100 | random | 1.27 (nc) | 0.244 (nc) | 0.765 (nc) | 1.0 | same call |
+| bcc-Hf | ORB-v2 | 300 | disagreeing | −2.49 (nc) | −4.02 (nc) | −4.18 (nc) | 1.7 | same call |
+| bcc-Hf | ORB-v2 | 600 | disagreeing | −1.41 (nc) | −2.94 (nc) | −4.91 (nc) | 3.5 | same call |
+| HfO₂ | CHGNet | 900 | random | −3.89 | −3.2 × 10² (nc) | −3.72 | 3.2 × 10² | same call |
+| HfO₂ | MACE-MP-0 | 100 | random | −10.1 | −13.2 | −3.75 | 9.5 | same call |
+| HfO₂ | ORB-v2 | 900 | random | −4.12 | −2.4 × 10⁵ (nc) | −3.68 | 2.4 × 10⁵ | same call |
+| KNbO₃ | CHGNet | 100 | disagreeing | 1.62 | 1.19 (nc) | 1.53 | 0.43 | same call |
+| KNbO₃ | CHGNet | 300 | disagreeing | 2.20 | −2.1 × 10² (nc) | 2.15 | 2.1 × 10² | **unresolved** |
+| KNbO₃ | CHGNet | 600 | disagreeing | 2.52 | −4.6 × 10² (nc) | 2.58 | 4.6 × 10² | **unresolved** |
+| KNbO₃ | MACE-MP-0 | 100 | disagreeing | 1.57 | 1.42 (1.0 THz) | 1.46 | 0.15 | same call |
+| KNbO₃ | MACE-MP-0 | 300 | disagreeing | 2.07 | 2.09 (1.0 THz) | 2.09 | 0.021 | same call |
+| KNbO₃ | MACE-MP-0 | 600 | disagreeing | 2.50 | failed (complex q = −q + G at 0.3 and 1.0 THz) | 2.50 | — | incomplete |
+| KNbO₃ | MatterSim | 100 | disagreeing | 1.60 | 1.39 (nc) | 1.59 | 0.21 | same call |
+| KNbO₃ | MatterSim | 300 | disagreeing | 2.24 | −4.4 × 10³ (nc) | 2.29 | 4.4 × 10³ | **unresolved** |
+| KNbO₃ | MatterSim | 600 | disagreeing | 2.68 | −3.7 × 10³ (nc) | 2.60 | 3.7 × 10³ | **unresolved** |
+| KNbO₃ | ORB-v2 | 100 | disagreeing | 1.31 | failed (symmetry, structure type) | 1.42 | — | incomplete |
+| KNbO₃ | ORB-v2 | 300 | disagreeing | 1.93 | failed (symmetry, structure type) | 1.80 | — | incomplete |
+| KNbO₃ | ORB-v2 | 600 | disagreeing | 2.40 | failed (symmetry, structure type) | 2.40 | — | incomplete |
+| KNbO₃ | SevenNet-0 | 100 | disagreeing | 1.36 | 1.38 (1.0 THz) | 1.37 | 0.025 | same call |
+| KNbO₃ | SevenNet-0 | 300 | disagreeing | 2.08 | 1.97 (1.0 THz) | 2.08 | 0.12 | same call |
+| KNbO₃ | SevenNet-0 | 600 | disagreeing | 2.38 | failed (complex q = −q + G at 0.3 and 1.0 THz) | 2.47 | — | incomplete |
+| PbTiO₃ | CHGNet | 300 | disagreeing | 0.568 | −5.6 × 10² (nc) | 0.180 | 5.6 × 10² | **unresolved** |
+| PbTiO₃ | CHGNet | 600 | disagreeing | 1.31 | −4.2 × 10³ (nc) | 1.28 | 4.2 × 10³ | **unresolved** |
+| PbTiO₃ | MACE-MP-0 | 100 | random | −0.370 | −0.395 (1.0 THz) | −0.539 | 0.17 | same call |
+| PbTiO₃ | MACE-MP-0 | 300 | disagreeing | 0.794 | failed (complex q = −q + G at 0.3 and 1.0 THz) | 0.793 | — | incomplete |
+| PbTiO₃ | MACE-MP-0 | 600 | disagreeing | 1.49 | failed (complex q = −q + G at 0.3 and 1.0 THz) | 1.48 | — | incomplete |
+| PbTiO₃ | MatterSim | 300 | disagreeing | 1.01 | −6.2 × 10³ (nc) | 1.19 | 6.2 × 10³ | **unresolved** |
+| PbTiO₃ | SevenNet-0 | 300 | disagreeing | 1.12 | 1.00 (1.0 THz) | 1.10 | 0.11 | same call |
+| PbTiO₃ | SevenNet-0 | 600 | disagreeing | 1.55 | failed (complex q = −q + G at 0.3 and 1.0 THz) | 1.54 | — | incomplete |
+| SrTiO₃ | CHGNet | 100 | disagreeing | 1.06 | 0.990 | 1.03 | 0.070 | same call |
+| SrTiO₃ | MACE-MP-0 | 100 | disagreeing | 1.12 | 1.04 | 1.16 | 0.12 | same call |
+| SrTiO₃ | MACE-MP-0 | 300 | random | 1.83 | 1.67 (1.0 THz) | 1.90 | 0.23 | same call |
+| SrTiO₃ | MatterSim | 100 | disagreeing | 1.20 | 1.00 | 1.15 | 0.20 | same call |
+| SrTiO₃ | ORB-v2 | 100 | random | −49.0 (nc) | −56 (nc) | −1.5 × 10³ (nc) | 1.5 × 10³ | same call |
+| SrTiO₃ | ORB-v2 | 300 | disagreeing | −97 (nc) | −9.9 × 10⁵ (nc) | −3.0 × 10⁴ (nc) | 9.9 × 10⁵ | same call |
+| SrTiO₃ | ORB-v2 | 600 | disagreeing | −3.4 × 10⁴ (nc) | −3.1 × 10⁴ (nc) | −1.6 × 10² (nc) | 3.3 × 10⁴ | same call |
+| SrTiO₃ | ORB-v2 | 900 | disagreeing | −1.0 × 10⁴ (nc) | −7.1 × 10⁵ (nc) | −8.0 × 10⁴ (nc) | 7.0 × 10⁵ | same call |
+| SrTiO₃ | SevenNet-0 | 100 | disagreeing | 1.09 | 0.969 | 1.10 | 0.13 | same call |
+| bcc-Ti | CHGNet | 100 | disagreeing | 0.415 | 0.401 | 0.409 | 0.014 | same call |
+| bcc-Ti | CHGNet | 300 | disagreeing | 0.678 | 0.670 | 0.722 | 0.052 | same call |
+| bcc-Ti | MatterSim | 600 | disagreeing | 0.585 | 0.499 | 0.415 | 0.17 | same call |
+| bcc-Ti | ORB-v2 | 100 | disagreeing | 2.67 | 2.68 | 2.68 | 0.0064 | same call |
+| bcc-Ti | ORB-v2 | 600 | disagreeing | 2.53 | −26.4 (nc) | −3.73 (nc) | 29 | **unresolved** |
+| bcc-Zr | MatterSim | 600 | disagreeing | 0.533 | 0.517 | 0.551 | 0.034 | same call |
+| bcc-Zr | ORB-v2 | 100 | disagreeing | −3.10 | −2.89 | −2.81 | 0.30 | same call |
+| bcc-Zr | ORB-v2 | 300 | disagreeing | −1.25 | −1.27 | −1.41 | 0.16 | same call |
+| bcc-Zr | SevenNet-0 | 100 | random | 0.784 | 0.784 | 0.790 | 0.0060 | same call |
+| ZrO₂ | MACE-MP-0 | 300 | random | −2.87 | −2.65 (1.0 THz) | −2.80 | 0.22 | same call |
+| ZrO₂ | SevenNet-0 | 100 | random | −22.9 | −28.4 | −21.4 | 6.9 | same call |
+| ZrO₂ | SevenNet-0 | 600 | random | −3.27 | failed (symmetry, q star) | −3.24 | — | incomplete |
+
+| Quantity (converged units) | Start A, all five | Replicates, all five | Start A, without ORB-v2 | Replicates, without ORB-v2 |
+|---|---|---|---|---|
+| non-bcc units called stable against an unstable label (of those labelled unstable) | 34/84 | 27/77 | 30/74 | 23/67 |
+| of those, the screen's free-energy comparison calls unstable | 17/34 | 15/27 | 14/30 | 12/23 |
+| FE perovskites, T ≤ 300 K: unstable recalled by the screen | 15/26 | 14/22 | 12/23 | 11/19 |
+| FE perovskites, T ≤ 300 K: unstable recalled by SSCHA | 4/26 | 4/22 | 4/23 | 4/19 |
+| bcc, 100–600 K (3×3×3): screen call = SSCHA call | 33/41 | 33/40 | 32/36 | 32/36 |
+| displacive set, T ≤ 300 K: screen right & SSCHA wrong v the reverse (units) | 13 v 2 (44) | 12 v 2 (40) | 10 v 2 (39) | 9 v 2 (35) |
+
+**Table S25** Pre-registered fine-tuning trial (Referee 2.1; §S6): the production screen (relaxation, harmonic force constants, every imaginary commensurate mode, soft-mode solve; 2×2×2) re-run with each fine-tuned replicate (seeds 0, 1, 2) on the three test systems, against the labels. S stable, U unstable, an asterisk marking disagreement with the label. A call counts as changed only if all three replicates differ from the base call and unchanged only if all three equal it; otherwise unresolved. Where a call was predicted (P2), the prediction and its verdict follow. MACE-MP-0, 30 epochs: the registered run (`results/revision/finetune_mace30/`, deviation D4; base call from the ledger). CHGNet, 30 epochs, and MACE-MP-0, 6 epochs (the first run, which did not apply the registered 30-epoch budget, kept as the record of deviation D4): `results/revision/finetune/` (base re-run reproduces the ledger call in every cell). Correct calls of 12: MACE-MP-0 base 7, 30-epoch replicates 6/6/6; CHGNet base 6, replicates 6/7/7.
+
+| System | T (K) | Label | MACE-MP-0 base | MACE-MP-0 30 ep, s0 s1 s2 | MACE-MP-0 30 ep, outcome | CHGNet base | CHGNet, s0 s1 s2 | CHGNet, outcome | MACE-MP-0 base (re-run) | MACE-MP-0 6 ep, s0 s1 s2 | MACE-MP-0 6 ep, outcome |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| BaTiO₃ | 100 | U | U | U U U | unchanged | U | U U U | unchanged | U | U U U | unchanged |
+| BaTiO₃ | 300 | U | S* | S* S* S* | unchanged; corrected: **refuted** | S* | S* S* S* | unchanged; corrected: **refuted** | S* | S* S* S* | unchanged; corrected: **refuted** |
+| BaTiO₃ | 600 | S | S | S S S | unchanged | S | S S S | unchanged | S | S S S | unchanged |
+| BaTiO₃ | 900 | S | S | S S S | unchanged | S | S S S | unchanged | S | S S S | unchanged |
+| KNbO₃ | 100 | U | U | U U U | unchanged | U | U S* U | unresolved | U | U U U | unchanged |
+| KNbO₃ | 300 | U | S* | S* S* S* | unchanged; corrected: **refuted** | S* | S* S* S* | unchanged; corrected: **refuted** | S* | S* S* S* | unchanged; corrected: **refuted** |
+| KNbO₃ | 600 | U | S* | S* S* S* | unchanged; persist: **supported** | S* | S* S* S* | unchanged; persist: **supported** | S* | S* S* S* | unchanged; persist: **supported** |
+| KNbO₃ | 900 | S | S | S S S | unchanged | S | S S S | unchanged | S | S S S | unchanged |
+| CsSnBr₃ | 100 | U | U | U U U | unchanged | U | U U U | unchanged | U | U U U | unchanged |
+| CsSnBr₃ | 300 | S | U* | U* U* U* | unchanged; persist: **supported** | U* | U* U* U* | unchanged; persist: **supported** | U* | U* U* U* | unchanged; persist: **supported** |
+| CsSnBr₃ | 600 | S | U* | U* U* U* | unchanged; persist: **supported** | U* | U* S U* | unresolved; persist: **unresolved** | U* | U* U* U* | unchanged; persist: **supported** |
+| CsSnBr₃ | 900 | S | S | U* U* U* | changed | U* | U* S S | unresolved | S | U* U* U* | changed |
+
+**Table S26** Pre-registered fine-tuning trial (§S6), the surface and the controls. P1, the median over the BaTiO₃ and KNbO₃ deciding paths of each model's own C3a set (at the base model's relaxed lattice; Table S19) of the fine-tuned to PBE well-depth ratio, base and per replicate (seeds 0 / 1 / 2); registered band 0.8–1.2, supported only if the pooled median and each replicate's median lie in it. S1, force RMSE against PBE on the held-out C3a points in the well window the screen fits (the 30-epoch evaluation includes the extra-mode points, deviation D5; the CHGNet one does not). S2, harmonic calls of Si, MgO, NaCl, Cu, C and CeO₂. P3, converged SSCHA (grid recipe, start A). Lower part, **not pre-registered** (`scripts/finetune_lattice_diag.py`, CPU, archived weights checked against their sha256): the cubic cell relaxed by each 30-epoch MACE-MP-0 replicate, its offset from the PBE vc-relax lattice, the pressure each model reports at the base model's lattice, and the 300 K screen call and deciding well depth (meV, per modulated cell) at the model's own lattice and at the base model's lattice. At its own lattice each replicate reproduces its deposited 300 K call.
+
+| Model | Quantity | Base | Replicates | Outcome |
+|---|---|---|---|---|
+| MACE-MP-0, 30 ep | P1: median well-depth ratio, fine-tuned / PBE, BaTiO₃ + KNbO₃ deciding paths (2) | 0.45 | 1.01 / 1.00 / 0.99 | pooled 0.99: **supported** |
+| CHGNet | P1: median well-depth ratio, fine-tuned / PBE, BaTiO₃ + KNbO₃ deciding paths (3) | 0.53 | 1.33 / 1.06 / 0.99 | pooled 1.04: **unresolved** |
+| MACE-MP-0, 6 ep | P1: median well-depth ratio, fine-tuned / PBE, BaTiO₃ + KNbO₃ deciding paths (2) | 0.45 | 1.07 / 1.00 / 1.03 | pooled 1.00: **supported** |
+| MACE-MP-0, 30 ep | same, CsSnBr₃ deciding paths (2; control) | 0.92 | 1.51 / 1.53 / 1.37 | pooled 1.48 |
+| MACE-MP-0, 30 ep | S1: held-out force RMSE in the well window, BaTiO₃ (eV Å⁻¹; 25 paths) | 0.0345 | 0.0045 / 0.0046 / 0.0054 |  |
+| MACE-MP-0, 30 ep | S1: held-out force RMSE in the well window, KNbO₃ (eV Å⁻¹; 21 paths) | 0.0963 | 0.0077 / 0.0109 / 0.0065 |  |
+| MACE-MP-0, 30 ep | S1: held-out force RMSE in the well window, CsSnBr₃ (eV Å⁻¹; 19 paths) | 0.0029 | 0.0029 / 0.0030 / 0.0023 |  |
+| CHGNet | S1: held-out force RMSE in the well window, BaTiO₃ (eV Å⁻¹; 8 paths) | 0.0326 | 0.0253 / 0.0179 / 0.0217 |  |
+| CHGNet | S1: held-out force RMSE in the well window, KNbO₃ (eV Å⁻¹; 7 paths) | 0.1032 | 0.0210 / 0.0244 / 0.0161 |  |
+| CHGNet | S1: held-out force RMSE in the well window, CsSnBr₃ (eV Å⁻¹; 8 paths) | 0.0074 | 0.0104 / 0.0047 / 0.0048 |  |
+| MACE-MP-0, 30 ep | S2: harmonic calls of the six stable controls unchanged | 6 stable |  | 6/6 unchanged |
+| CHGNet | S2: same |  |  | 2 unchanged, 4 unresolved |
+| MACE-MP-0, 30 ep, seed 0 | P3: converged SSCHA, BaTiO₃ 100 K (THz; label unstable) |  | +1.73 | called stable: **supported** |
+
+| System | Model | a relaxed (Å) | vs PBE (%) | P at base lattice (GPa) | 300 K at own lattice: call, depth | 300 K at base lattice: call, depth |
+|---|---|---|---|---|---|---|
+| BaTiO₃ | base | 4.0340 | +0.26 | +0.01 | S, 42.6 | S, 42.6 |
+| BaTiO₃ | seed0 | 4.0129 | −0.27 | −2.79 | S, 31.2 | U, 63.7 |
+| BaTiO₃ | seed1 | 4.0145 | −0.23 | −2.62 | S, 27.9 | U, 57.4 |
+| BaTiO₃ | seed2 | 4.0152 | −0.21 | −2.56 | S, 32.9 | U, 62.2 |
+| KNbO₃ | base | 4.0567 | +0.74 | +0.01 | S, 27.9 | S, 27.9 |
+| KNbO₃ | seed0 | 4.0360 | +0.23 | −2.64 | S, 32.2 | U, 57.4 |
+| KNbO₃ | seed1 | 4.0359 | +0.22 | −2.73 | S, 33.5 | U, 48.9 |
+| KNbO₃ | seed2 | 4.0366 | +0.24 | −2.65 | S, 32.3 | U, 53.1 |
+
 <!-- END GENERATED TABLES -->
 
 ## S4. Threats to validity (pre-registered, with outcomes)
@@ -1487,16 +1643,18 @@ Calls that differ from production, with the old and new Hessian minimum: 82 of t
   surface, so their agreement is a consistency check. On bcc the stability calls agree in 31/45
   with production SSCHA in 2×2×2 (0.69 [0.54, 0.80]; 25/36 without ORB-v2); 12 of the agreeing
   units have no harmonic instability, and MatterSim agrees on the call in 0/9 (Table S16). With
-  converged SSCHA in 3×3×3 they agree in 33/41 (0.80 [0.66, 0.90]; 32/36 without ORB-v2), MatterSim
-  in 7/9, a change that mixes cell and convergence (Table S22). The frequency magnitudes
+  converged SSCHA in 3×3×3 they agree in 33/40 with a resolved call (0.82 [0.68, 0.91]; 32/36
+  without ORB-v2; 33/41 from the first start alone), MatterSim in 7/9, a change that mixes cell and
+  convergence (Tables S22 and S24). The frequency magnitudes
   give Spearman ρ = 0.11 (−0.003 without ORB-v2), reported descriptively with no test. On the
   displacive systems the two diverge because they answer different questions: the default SSCHA
   criterion is the curvature of the free energy at the symmetric reference, a local test, and
   it cannot see condensation into a deeper displaced minimum, which the screen's free-energy
   comparison does see. On the same MLIP energies that comparison finds a displaced minimum below
-  the symmetric point on 17/34 of the units converged SSCHA false-stabilises (Tables S16 and S22;
-  §3.3; 46/57 with the production recipe). Outcome of the converged runs: the false-stables
-  survive on BaTiO₃ and KNbO₃ (from both starts on BaTiO₃/MACE-MP-0), where the screen finds the
+  the symmetric point on 15/27 of the units converged SSCHA false-stabilises in every finished
+  replicate (Tables S16, S22 and S24; §3.3; 17/34 from the first start alone, 46/57 with the
+  production recipe). Outcome of the converged runs: the false-stables survive on BaTiO₃ and KNbO₃
+  (with a second seed on all ten 100 K units and a second start on seven), where the screen finds the
   displaced minimum on every 100 K unit, so early stopping is excluded there; they do not survive
   on the fluorites, where early stopping was the cause (Table S22).*
   *PBE forces on the sampled configurations (§S5, Table S20) show no extrapolation error behind
@@ -1542,7 +1700,7 @@ pw.x outputs (`results/revision/dft/`), and every number below is pinned in
 `scripts/verify_claims.py`. All 981 calculations finished: 380 on the deciding and reference
 paths, 533 on the other screened modes and 68 on SSCHA samples, 930 core-hours (three
 BaTiO₃/CHGNet points were rerun with symmetry off after a symmetry error on the slightly
-non-cubic CHGNet cell; `NOSYM_NOTE.txt`). The checks of §S5.3 add 323 (`scripts/dft_checks.py`,
+non-cubic CHGNet cell; `NOSYM_NOTE.txt`). The checks of §S5.3 add 382 (`scripts/dft_checks.py`,
 `results/revision/dft_checks/`). The 246 fine-tuning single points in the same directory are not
 counted here.
 
@@ -1601,8 +1759,8 @@ not converge (§2.5), and twelve configurations per unit support a description, 
 
 **S5.3 Checks on the errors that persist on PBE (Referee 1.1).** BaTiO₃, KNbO₃ and CsSnBr₃ hold
 13 of the 16 persistent errors and 15 of the 19 PBE errors. Three checks were run on them, with
-the acceptance criterion fixed in `scripts/dft_checks.py` before any variant ran (Table S23; 323
-calculations).
+the acceptance criterion fixed in `scripts/dft_checks.py` before any variant ran (Table S23; 382
+calculations, 62 of them for the PBE-lattice check).
 
 Convergence. On the MACE-MP-0 deciding path of each system the production settings were compared
 with a k-spacing of 0.15 Å⁻¹, cutoffs 1.3 times higher, and both. The criterion, a depth within
@@ -1627,10 +1785,24 @@ CsSnBr₃/ORB-v2 at 300 K.
 
 Lattice. The cubic cells relaxed in PBE are 4.024 Å (BaTiO₃), 4.027 Å (KNbO₃) and 5.887 Å
 (CsSnBr₃). The MLIP lattices the curves of §S5.1 use are larger by 0.26–0.31 %, 0.74–0.80 % and
-0.12–0.57 %. The PBE force constants at that lattice and the E(Q) profile along the PBE
-eigenvector were not computed, so whether the lattice or the eigenvector moves a call is not
-tested.
-<!-- PENDING-PL: pbe-lattice phases B and C (PBE force constants and E(Q) along the PBE eigenvector at the PBE lattice) not run; replace this paragraph and Table S23's lower-part note if they land. -->
+0.12–0.57 %. At the PBE lattice the PBE force constants (finite differences in the 2×2×2 cell,
+three displacements, acoustic sum at Γ within 2 × 10⁻⁷ THz) give three imaginary branches for
+BaTiO₃ (Γ −7.44, X −6.63, M −5.95 THz) and KNbO₃ (Γ −6.97, X −5.47, M −4.17 THz) and two for
+CsSnBr₃ (R −0.70, M −0.69 THz). The screen was re-solved on PBE E(Q) at that lattice along the
+softest PBE band at the q-point that decides MACE-MP-0's call, and for BaTiO₃ and KNbO₃ also along
+the softest mode of the mesh (Γ), and compared with PBE along MACE-MP-0's eigenvector at
+MACE-MP-0's lattice (Table S23, bottom part). The deciding wells are 48.7 meV (BaTiO₃), 30.0 meV
+(KNbO₃) and 131.2 meV (CsSnBr₃) per modulated cell, against 73.5, 87.8 and 127.2 meV at
+MACE-MP-0's lattice; the Γ wells are 21.8 and 32.2 meV. At its own lattice PBE calls BaTiO₃ and
+KNbO₃ stable at 300 K, against their labels and as the MLIPs do, where at MACE-MP-0's lattice it
+calls both unstable; at 100 K the deciding mode still condenses in both, while the Γ mode of
+BaTiO₃ alone would not. KNbO₃ at 600 K and CsSnBr₃ at 300 and 600 K are mis-called at both
+lattices, so those errors do not depend on the lattice. The two curves differ in lattice and
+eigenvector together, so the check does not say which of the two moves the call, and a stable
+single-mode call holds only for the modes profiled (the X modes were not). What it does say is
+that the BaTiO₃ and KNbO₃ 300 K calls of §3.2 sit on a knife edge: a lattice 0.26 % (BaTiO₃) or
+0.74 % (KNbO₃) larger, with MACE-MP-0's eigenvector, is enough to flip PBE's own call, and
+MACE-MP-0's wells at its own lattice (42.6 and 27.9 meV) are close to PBE's at its own.
 
 Reading. KNbO₃ at 600 K is converged and persists under both functionals for four of the five
 models, so among the errors tested it is the one left for the single-mode screen or the label.
@@ -1640,3 +1812,60 @@ and PBEsol for none. The CsSnBr₃ errors therefore cannot be assigned to the sc
 functional describes CsSnBr₃ better is not settled here; three of the five models reproduce the
 PBE wells within 20 % at the sampled amplitudes, which puts their wells at 2.4–3.1 times the
 PBEsol depth.
+
+## S6. Pre-registered fine-tuning trial (Referee 2.1)
+
+**Protocol.** The trial was registered before any training data existed
+(`tasks/preregistration-finetune-2026-10-03.md`, commit 033b3d8), with three deviations recorded
+before data (D1, thermal draws whose closest atom pair falls below 0.6 of its equilibrium distance
+are redrawn, lowest acceptance 14 of 136 draws, CsSnBr₃/CHGNet at 600 K, as corrected in D6; D2, a
+fixed 30-epoch budget for both tools; D3, no stress training, one energy offset per system from
+the training configurations, training cells at each base model's relaxed lattice, undisplaced
+cells excluded) and three recorded after the first results and before the re-run (D4, the
+MACE-MP-0 fine-tunes of the first run trained 6 epochs, not 30, because their run script was
+generated before D2 and not regenerated, so MACE-MP-0 was re-run at 30 epochs on the same data and
+seeds; D5, the first evaluation missed the 403 extra-mode PBE points of the three test systems,
+which the 30-epoch evaluation includes; D6, the D1 acceptance figure). MACE-MP-0 (medium) and
+CHGNet (0.3.0 weights) were each fine-tuned three times (seeds 0, 1, 2) on PBE energies and forces
+of 120 phonon-rattled 2×2×2 cells (40 per system: BaTiO₃, KNbO₃, CsSnBr₃; 13, 13 and 14 drawn at
+100, 300 and 600 K from the base model's harmonic force constants; §2.6 settings, 246 PBE single
+points, none unconverged), split 108/12 for training and validation, with the naive fine-tuning
+command of the MACE documentation and the fine-tuning notebook of CHGNet (embeddings and all but
+the last atom-convolution layer frozen); checkpoints were selected on the validation split only
+(MACE-MP-0 30-epoch runs: epochs 12, 11 and 13). No training configuration lies within 0.05 Å RMS
+of a held-out geometry (closest 0.080 Å). The held-out set is every PBE C3a path point and C3b
+configuration of the three systems (§S5). A call counts as changed only if all three replicates
+differ from the base call. The registered MACE-MP-0 result is the 30-epoch run; the 6-epoch run
+is reported beside it (Table S25) as the record of D4, and the CHGNet runs are those of the first
+run, which applied the 30-epoch budget.
+
+**Outcomes** (Tables S25 and S26). P1, the well depth along the held-out deciding paths: supported
+for MACE-MP-0 (median fine-tuned/PBE ratio 0.99, base 0.45, each replicate 0.99–1.01) and
+unresolved for CHGNet (pooled 1.04, but seed 0 at 1.33). P2, the screen's calls: the BaTiO₃ and
+KNbO₃ 300 K mis-calls are not corrected in any replicate of either model (refuted in all four
+cells); the KNbO₃ 600 K and CsSnBr₃ 300 K mis-calls persist (supported), CsSnBr₃ 600 K persists
+for MACE-MP-0 (supported) and is unresolved for CHGNet; MACE-MP-0 loses its correct CsSnBr₃ 900 K
+call in all three replicates, which no prediction covered, and CHGNet's KNbO₃ 100 K and CsSnBr₃
+900 K calls are unresolved (its seed 1 has no imaginary mode in cubic KNbO₃ at its relaxed
+lattice). Correct calls of 12: MACE-MP-0 base 7, replicates 6 each; CHGNet base 6, replicates 6, 7
+and 7. P3, converged SSCHA on BaTiO₃ at 100 K with the seed-0 fine-tuned MACE-MP-0: +1.73 THz,
+stable against the unstable label (supported). S1, the held-out force error in the well window
+falls 6- to 15-fold on BaTiO₃ and KNbO₃ for MACE-MP-0 and 1.3- to 6.4-fold for CHGNet, and does
+not consistently fall on CsSnBr₃, where the MACE-MP-0 well depth overshoots PBE (median ratio 1.48 against
+0.92 at base). S2, the six controls: MACE-MP-0 keeps all six calls; CHGNet leaves four unresolved,
+two of them (NaCl, CeO₂) controls its base model already mis-calls. The 6-epoch MACE-MP-0 run gives
+the same verdict on every prediction.
+
+**Post hoc lattice check (not pre-registered).** The held-out PBE data sit at the base model's
+lattice; the screen relaxes the cell with the model under test. Trained without stresses, the
+30-epoch MACE-MP-0 replicates relax BaTiO₃ to 4.013–4.015 Å and KNbO₃ to 4.036–4.037 Å, 0.5 %
+below the base model and within 0.3 % of the PBE lattice (Table S26, lower part), and report
+−2.6 to −2.8 GPa at the base model's lattice. At their own lattice every replicate calls both
+systems stable at 300 K, reproducing its deposited call, with deciding wells of 28–34 meV; at the
+base model's lattice every replicate calls both unstable, with wells of 49–64 meV. PBE behaves the
+same way (§S5.3): at its own lattice it calls BaTiO₃ and KNbO₃ stable at 300 K, with deciding
+wells of 48.7 and 30.0 meV. A fine-tune faithful to PBE therefore inherits PBE's 300 K errors at
+the PBE lattice, which is what P2 records. The trial does not show that fine-tuning cannot fix
+these calls: it covers two models and three systems, training data at a single lattice without
+stresses, and, for CsSnBr₃, a reference functional that is itself wrong (§S5.3). A fine-tune with
+stress or multi-lattice data, or one on broad phonon data, could behave differently.
