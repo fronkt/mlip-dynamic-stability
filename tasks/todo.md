@@ -39,7 +39,17 @@ Editor agreed to **9 Oct** (RSC, 09-28). The 14 Oct request is still an UNSENT G
       59/59 merged, analyze-checks, commit b2c3f60 pushed, box DESTROYED. Read-out: PBE at the PBE lattice calls
       BaTiO3 300 K and KNbO3 300 K stable (wrong); PBE at MACE's lattice (+0.26-0.31 %) gets both right (KNbO3 600 K and CsSnBr3 300/600 K stay wrong at both lattices) -> the
       lattice, not only the PES, drives these false-stables (fits the E5 lattice confound). Fold into PENDING-PL.
-- [ ] GPU box at 05:20 UTC: E3 68/130 ended, 20 start-B failures (18 complex-dyn assertion, mostly
+- [x] **GPU box DONE 10:34 UTC 10-09**; self-stopped unpulled 11:34, GPU re-rented (un-startable) -> relay
+      55031405 (Quebec; first relay 55017451 had a broken rsync daemon "setgroups failed"; relay needs
+      `mkdir -p /workspace` before `vastai copy`). Archive md5 ec428a54..., merged, commit 847ab04 pushed, GPU box
+      + relay DESTROYED, credit $7.67. Read-out: E3 51/65 with all 3 ok, same call 43/51, 8 unresolved, 14
+      incomplete (13 B failed + 1 missing). Every unresolved unit is a start-B value of -26 to -6230 THz
+      (blow-up) except ti_bcc_orb_v2_600K (seed10 -3.73 vs A +2.53); seed10 agrees with A everywhere else.
+      E5 MACE 30 ep: P1 supported (median 0.994), P2 3 supported / 2 refuted (BaTiO3 300, KNbO3 300 stay wrong
+      0/3), CsSnBr3 900 K newly wrong 0/3, P3 supported. Ties to PL: PBE itself at the PBE lattice calls
+      BaTiO3/KNbO3 300 K stable, so a PBE-faithful fine-tune inherits those errors.
+- [ ] Fold E3 + E5(MACE30) + PL into manuscript / ESI / letter (resolve PENDING-E3/E5/PL), then final audit.
+- [ ] (superseded) GPU box at 05:20 UTC: E3 68/130 ended, 20 start-B failures (18 complex-dyn assertion, mostly
       BaTiO3/KNbO3/PbTiO3 MACE+SevenNet; 1.0 THz retries also failing). Pre-registered path (retry once, report
       as-is) -> no intervention. Seed-10 leg running clean. E5 P3 done; P1/P2 CHGNet pending.
 - [ ] Adversarial audit of the fold running -> tasks/audit-2026-10-08-fold.md.
