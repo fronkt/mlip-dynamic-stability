@@ -86,3 +86,32 @@ Recorded 2026-10-03, after the tooling was built and BEFORE any training or test
   training cells are each base model's own relaxed lattice, as the held-out cells are; the
   undisplaced cells are excluded from training (they coincide with held-out Q = 0 frames); S1 on
   C3b covers BaTiO₃/MACE-sampled configurations only, the only C3b set of a test system.
+
+Recorded 2026-10-08, after the 10-04 results were read (fold note `tasks/fold-E5-2026-10-08.md`)
+and BEFORE any data of the re-run below exists (no box rented, no 30-epoch model trained). The
+IDs continue D1-D3; nothing above is edited.
+
+- **D4 MACE ran 6 epochs, not the registered 30 (D2 not executed for MACE).** The committed
+  runbook `results/revision/finetune/train/box_sequence.sh` was emitted by `finetune_trial.py
+  train --emit` before D2 raised `max_num_epochs` to 30 in `scripts/finetune/mace_medium_finetune.json`,
+  was never regenerated, and the box ran it verbatim: all three MACE-MP-0 fine-tunes trained 6
+  epochs (324 optimiser steps). CHGNet ran the registered 30. **MACE-MP-0 is re-run at 30 epochs**:
+  the training commands are regenerated from the json by `finetune_trial.py train --emit --out
+  results/revision/finetune_mace30` (checked to carry `--max_num_epochs=30` before they run), on
+  the same training/validation files (byte-identical copies of `results/revision/finetune/dataset/mace_mp0/`),
+  same seeds 0/1/2, same evaluation code (base + 3 replicates, parts c3a/c3b/p2/s2), P3 and
+  summary, all written under `results/revision/finetune_mace30/`. **The 6-epoch results in
+  `results/revision/finetune/` are kept, not overwritten, and reported** beside the 30-epoch
+  ones; the 30-epoch run is the registered one for MACE-MP-0. Runner:
+  `scripts/box/as_run/gpu_e3_e5_2026-10-08.sh`.
+- **D5 Held-out set incomplete in the 10-04 evaluation.** The registered test set is every PBE
+  C3a path point (448 + 533 extra-mode `ax_` points) and every C3b configuration. The `ax_` jobs
+  finished on box 2 and were merged on 10-05 (25d0527), after the 10-04 evaluation ran, so its
+  P1/S1 rest on 23 paths / 230 points and the 16 C3b configurations: **the 403 extra-mode points
+  of the three test systems were not evaluated** (`P1.own_all_modes` equals the primary block).
+  The leakage guard did include the `ax_` geometries. The 30-epoch MACE evaluation (D4) reads the
+  `ax_` outputs now in the tree, so it covers them, base included; the 6-epoch MACE and the CHGNet
+  evaluations stay as run and are reported with this gap stated.
+- **D6 Correction to D1.** The lowest acceptance fraction of the 0.6 contact redraw in
+  manifest.json is **14 of 136 draws = 10.3 %** (CsSnBr₃/CHGNet 600 K), not the 8.5 % D1 states.
+  The rule and the data are unchanged; only the quoted number was wrong.
