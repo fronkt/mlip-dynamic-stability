@@ -46,6 +46,8 @@ Every difference below is a consequence of the August 2026 audit and re-measurem
 
 ### The consequence that matters
 
-In the reviewed version the harmonic leaders (MatterSim, SevenNet-0, both 1.000) were *not* the finite-temperature leaders (CHGNet and MACE-MP-0, both 0.933). That clean inversion is the result Referee 3's summary describes. **It does not survive the re-measurement.** SevenNet-0 now leads both layers at 0.900, and the paper says so explicitly in §3.2.
+In the reviewed version the harmonic leaders (MatterSim, SevenNet-0, both 1.000) were *not* the finite-temperature leaders (CHGNet and MACE-MP-0, both 0.933). That clean inversion is the result Referee 3's summary describes. **It does not survive the re-measurement.** The five finite-temperature accuracies (24/30 to 27/30) are not separated by this design, and the paper makes no ranking claim at finite temperature (§3.2).
 
 Note the direction of travel: the screen's headline recall fell from 0.77 to 0.53 and the contrast with SSCHA narrowed. The correction cost the paper its cleanest claim.
+
+The SSCHA rows above are the production recipe, which did not converge. The revision re-ran SSCHA to convergence (ESI Table S22): on the ferroelectric perovskites at T ≤ 300 K converged SSCHA recalls 4/26 against 15/26 for the screen on the same units, and the fluorite false-stables and high-temperature false-unstables of the production recipe do not survive. Those numbers postdate the reports and are not in the table.

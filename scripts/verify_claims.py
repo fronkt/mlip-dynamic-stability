@@ -887,6 +887,16 @@ def main() -> int:
           and r2(float(gsum[gsum.unit_tag == "srtio3_cubic_mace_mp0_600K_sc222"]
                        .hessian_min_thz.iloc[0])) == 2.41,
           "[3.3/3.5] SrTiO3/MACE 600 K converged: +2.44 (converged-mode run) / +2.41 (grid)")
+    st9 = ab("srtio3_cubic_mace_mp0_900K_sc222")
+    check(r2(st9["A"]["hessian_min_thz"]) == 2.71
+          and r2(float(gsum[gsum.unit_tag == "srtio3_cubic_mace_mp0_900K_sc222"]
+                       .hessian_min_thz.iloc[0])) == 2.76,
+          "[R1.2 letter] SrTiO3/MACE 900 K converged: +2.71 (converged-mode run) / +2.76 (grid)")
+    chc = gcj["changed_calls"]
+    check((chc["n_compared_converged"], chc["converged_no_blowup_changed"]["n"],
+           chc["nonbcc_corrected_vs_label"], chc["nonbcc_worsened_vs_label"]) == (159, 72, 51, 12),
+          "[R1.4 letter] converged recipe changes 72 of 159 calls; non-bcc 51 wrong->right, "
+          "12 right->wrong")
     check((r2(z50["A"]["hessian_min_thz"]), r2(z50["B"]["hessian_min_thz"])) == (0.41, 0.41)
           and (r2(z2["A"]["hessian_min_thz"]), r2(z2["B"]["hessian_min_thz"])) == (0.92, 0.93)
           and (r2(z3["A"]["hessian_min_thz"]), r2(z3["B"]["hessian_min_thz"])) == (-0.92, -0.95)

@@ -1,3 +1,4 @@
+<!-- STALE (2026-10-08): this is the Digital Discovery cover letter of July 2026 and does not match the revision; do not upload it. The revision's note to the editor is paper/response/cover_note_revision.md. -->
 # Cover letter
 
 Frank Cai
