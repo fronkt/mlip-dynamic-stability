@@ -157,7 +157,7 @@ def table_s5(df: pd.DataFrame) -> str:
         "rates, at the T ≤ 300 K restriction used for the headline table and over the full "
         "100/300/600/900 K ladder, each with and without the bcc metals. bcc is excluded from "
         "the headline because its thermodynamic-T_c label is the wrong reference for dynamic "
-        "stability (§3.3). `analysis.low_t_false_stable(df, t_max=..., exclude_bcc=...)`.\n\n"
+        "stability (Section 3.3). `analysis.low_t_false_stable(df, t_max=..., exclude_bcc=...)`.\n\n"
         + md(rows, ["Temperature set", "bcc", "Model", "False-stable rate [95% CI]",
                     "Accuracy [95% CI]"])
     )
@@ -214,7 +214,7 @@ def table_s6(df: pd.DataFrame) -> str:
         "which the high-symmetry phase is called stable) against the experimental transition "
         "temperature, per system and model. T* is a **diagnostic, not a prediction**: a "
         "single-mode treatment is not expected to reproduce an absolute T_c, and the screen "
-        "fails to order PbTiO₃ against the other perovskite anchors (§3.2). "
+        "fails to order PbTiO₃ against the other perovskite anchors (Section 3.2). "
         + bcc_txt
         + "A T* of 100 K means only that the phase is called stable at the lowest ladder "
         "temperature. `analysis.predicted_tstar(df)`.\n\n"
@@ -250,10 +250,10 @@ def table_s8_composition(st: dict) -> str:
     g = st["h3_guardrail"]["composition"]
     h = st["h2_matched_set"]["100"]
     rows = [
-        ["n = 60 (H3 guardrail, §3.4)", g["n_units"], g["n_systems"],
+        ["n = 60 (H3 guardrail, Section 3.4)", g["n_units"], g["n_systems"],
          "4 (100/300/600/900 K)", "collapsed into each unit",
          "yes" if g["balanced"] else "no"],
-        ["n = 75 (H2 matched set, §3.2)", h["n_pairs"], h["n_systems"],
+        ["n = 75 (H2 matched set, Section 3.2)", h["n_pairs"], h["n_systems"],
          "1 per analysis (each T analysed separately)", f"{h['n_models']} (an explicit axis)",
          "yes"],
     ]
@@ -265,7 +265,7 @@ def table_s8_composition(st: dict) -> str:
         "pairs are 15 systems × 5 models. In the guardrail set the five model votes are already "
         "collapsed into each unit, so the models are not an independent axis there and the "
         "clustering unit is the system. Systems whose identifier contains `bcc` are dropped, "
-        "which also removes the superionic `agi_bcc` (§3.2), so each set has 15 systems "
+        "which also removes the superionic `agi_bcc` (Section 3.2), so each set has 15 systems "
         "rather than 16.\n\n"
         + md(rows, ["Analysis set", "n units", "n systems", "Temperature axis", "Model axis",
                     "Balanced"])
@@ -370,7 +370,7 @@ def table_s9_orb(df: pd.DataFrame, st: dict, sens: dict) -> str:
         f"(Ti, {pr['orb_softmode_bcc_min_eff_freq_thz']['min_on_sscha_paired_T']['T']:.0f} K) and "
         f"{signed(bccmin['min_full_ladder']['min_eff_freq_thz'], 1)} THz "
         f"(Ti, {bccmin['min_full_ladder']['T']:.0f} K), both on fitted polynomials whose quadratic "
-        "term is positive (fit artefacts of the kind described in §S1.4), with Hf at "
+        "term is positive (fit artefacts of the kind described in Section S1.4), with Hf at "
         f"{signed(bccmin['hf_bcc_min'])} THz, the softest commensurate harmonic value of a model "
         "with no screened imaginary mode there; "
         f"and it accounts for {pr['sscha_blowups']['orb_v2']} of the {pr['sscha_blowups']['all_models']} "
@@ -396,7 +396,7 @@ def table_s9_orb(df: pd.DataFrame, st: dict, sens: dict) -> str:
         "ladder without ORB-v2 is in Table S15, the paired screen-versus-SSCHA "
         "tests in Table S10, the bcc agreement by model in Table S16, and the SSCHA "
         "high-temperature false-unstables, blow-ups and failures by model in Table S17. "
-        "The SSCHA rows here are the production recipe, which did not converge (§S2.1); the "
+        "The SSCHA rows here are the production recipe, which did not converge (Section S2.1); the "
         "converged-recipe values, with and without ORB-v2, are in Table S22. "
         "`scripts/stats_hardening.py` (`orb_split_s3`, `bcc_agreement`); pooled finite-T "
         "accuracy from `scripts/screen_sensitivity.py`.\n\n"
@@ -457,9 +457,9 @@ def table_s10_paired(st: dict) -> str:
         f"{comb['n_clusters']} systems favour the screen, with per-system net discordances "
         f"{nets}, in the order BaTiO₃, KNbO₃, PbTiO₃, ZrO₂, HfO₂ where all five are present) "
         "rather than a significance claim. The *production* rows use the production-recipe SSCHA, "
-        "which did not converge (§S2.1)." + conv_txt + " Why SSCHA loses these units is "
+        "which did not converge (Section S2.1)." + conv_txt + " Why SSCHA loses these units is "
         "examined separately, on the same MLIP energies, in Table S16 (lower part), Table S22 and "
-        "§3.3. `scripts/stats_hardening.py`, `scripts/grid_compare.py`.\n\n"
+        "Section 3.3. `scripts/stats_hardening.py`, `scripts/grid_compare.py`.\n\n"
         + md(rows, ["SSCHA recipe", "System set", "Model set", "n paired", "Discordant (screen/SSCHA)",
                     "Unit-level p (do not quote)", "Systems favouring screen",
                     "Clustered p", "Floor"])
@@ -548,7 +548,7 @@ def table_s11_sscha_diag(df: pd.DataFrame) -> str:
         "the root2 representation with `min_step_dyn = 0.5`; the convergence threshold is "
         "`meaningful_factor = 1e-4`. The minimiser's steps are capped at `max_ka = 20`, a cap "
         "that python-sscha 1.6.1 applies to the step count accumulated over all populations, "
-        "not to each population (§S2.1); populations hold 256 configurations and at most 8 are "
+        "not to each population (Section S2.1); populations hold 256 configurations and at most 8 are "
         "drawn (2048 configurations). "
         "The free-energy Hessian is then evaluated at bubble level (`include_v4 = False`) on a "
         "dedicated 512-configuration ensemble at the final auxiliary matrix. The harness did "
@@ -561,7 +561,7 @@ def table_s11_sscha_diag(df: pd.DataFrame) -> str:
         f"(|ω| < {TINY:g} THz) appear within that window, and the residual column gives the "
         "largest of their magnitudes over those units. This is a check that the Hessian was "
         "symmetrised correctly; it is not a bound on the stochastic noise of the soft mode "
-        "(§S2.4 gives the only seed spread measured). *Swamped* counts the opposite case: units "
+        "(Section S2.4 gives the only seed spread measured). *Swamped* counts the opposite case: units "
         "with **no** "
         "recorded mode near zero, meaning at least six modes lie below the acoustic branches. "
         "Swamping is not itself an error: a deeply unstable phase genuinely has many imaginary "
@@ -571,7 +571,7 @@ def table_s11_sscha_diag(df: pd.DataFrame) -> str:
         + swamp_txt + "\n\n"
         "**What the production harness did not retain:** the per-iteration free-energy gradient "
         "history, and a per-unit uncertainty on the Hessian eigenvalues. The only uncertainty "
-        "probe in the production data is the independent-seed study of §S2.4 on "
+        "probe in the production data is the independent-seed study of Section S2.4 on "
         "bcc-Zr/MACE-MP-0 at 100 K, where the harmonic layer finds no bcc instability. The "
         "revision re-ran four units that do carry an instability, four seeds each, with both "
         "recorded (Table S21): no seed converged, the seed spread of the lowest Hessian "
@@ -587,10 +587,10 @@ SCHA_EXACT = REPO / "results" / "scha_vs_exact.json"
 
 
 def table_s12_exact() -> str:
-    """Table S12 (§S1.4): the exact isolated-mode criterion against the variational one, from
+    """Table S12 (Section S1.4): the exact isolated-mode criterion against the variational one, from
     results/scha_vs_exact.json (scripts/scha_vs_exact.py).  Generated here, and printed between
     Tables S11 and S13, so the ESI tables appear in numerical order (audit 2026-10-09, m10); it
-    was hand-written inside §S1.4 before."""
+    was hand-written inside Section S1.4 before."""
     if not SCHA_EXACT.exists():
         raise SystemExit("results/scha_vs_exact.json missing - run scripts/scha_vs_exact.py first")
     d = json.loads(SCHA_EXACT.read_text(encoding="utf-8"))
@@ -601,7 +601,7 @@ def table_s12_exact() -> str:
     rows = [[T, f"{v['exact_bimodal_frac']:.4f}", f"{v['scha_condensed_frac']:.4f}"]
             for T, v in sorted(td.items(), key=lambda kv: float(kv[0]))]
     return (
-        f"**Table S12** The exact isolated-mode criterion against the variational one (§S1.4), over "
+        f"**Table S12** The exact isolated-mode criterion against the variational one (Section S1.4), over "
         f"the same {d['n_modes_tested']} mode-temperature evaluations: {n_units.pop()} (system, "
         "model) units, involving 75 distinct fitted potentials. `scripts/scha_vs_exact.py` → "
         "`results/scha_vs_exact.json`.\n\n"
@@ -670,7 +670,7 @@ def table_s13_disp_sweep(raw: pd.DataFrame) -> str:
     text = (
         "**Table S13** Sensitivity of the harmonic layer to the finite-displacement amplitude "
         "(0.005, 0.02 and 0.03 Å against the production 0.01 Å), all five models: an axis "
-        "that ESI §S1.2's v1/v2 replicate cannot probe. Deviations are against the same model's "
+        "that ESI Section S1.2's v1/v2 replicate cannot probe. Deviations are against the same model's "
         "production 0.01 Å row.\n\n"
         + md(rows, ["Model", "Amplitude (Å)", "n", r"Median \|Δ\| (THz)", r"Max \|Δ\| (THz)",
                     "Call flips", "Harmonic accuracy [95% CI]"])
@@ -680,7 +680,7 @@ def table_s13_disp_sweep(raw: pd.DataFrame) -> str:
     for x in ctrl_only:
         text += (f"{PRETTY.get(x, x)} changes calls only on harmonically stable controls "
                  f"({flip_lines(x)}), so its harmonic accuracy runs from {acc_range(x)} across "
-                 "amplitudes; with its tolerance dependence (§3.1), it is not a robust number "
+                 "amplitudes; with its tolerance dependence (Section 3.1), it is not a robust number "
                  "under either knob. ")
     for x in other:
         text += (f"{PRETTY.get(x, x)} changes calls on test systems as well as controls "
@@ -826,7 +826,7 @@ def table_s14_screen_sensitivity(sens: dict) -> str:
         f"{prod['accuracy_all_T']['fmt'].split(' =')[0]}). Which temperatures are scored decides "
         "the ranking, so these data do not identify the physically right normalisation. The "
         "production convention is the minimal cell in which the mode is a single commensurate "
-        "distortion (§S1.3), and the screen's T* and FE recall are conditional on it."
+        "distortion (Section S1.3), and the screen's T* and FE recall are conditional on it."
     )
     return (
         "**Table S14** Sensitivity of the single-mode soft-mode screen to its fit window, "
@@ -905,7 +905,7 @@ def table_s15_h2_clustered(st: dict) -> str:
         "columns show where the asymmetry sits, in systems the screen mis-calls for nearly "
         "every model. They do not show that it is absent elsewhere, and they do not say whether "
         "an error shared by four or five models comes from the single-mode approximation or "
-        "from a feature of the surface the models share (§S1.3). "
+        "from a feature of the surface the models share (Section S1.3). "
         "`scripts/stats_hardening.py` (`h2_clustered`).\n\n"
         + md(rows, ["T (K)", "Model set", "b v c", "Unit-level McNemar p (companion only)",
                     "System-clustered exact p", "Systems b > c / c > b / tied",
@@ -957,7 +957,7 @@ def table_s16_bcc_agreement(st: dict) -> str:
                 "finite-difference stencil",
             "root found at every stencil point (see a, b, c)":
                 "the fitted polynomial has a positive quadratic term and a well only between "
-                "sample points, a fit artefact of the kind described in §S1.4",
+                "sample points, a fit artefact of the kind described in Section S1.4",
             "no screened imaginary mode: ledger shows the softest commensurate harmonic value":
                 "the model has no screened imaginary mode and the value recorded is the softest "
                 "commensurate harmonic frequency, not a curvature",
@@ -967,7 +967,7 @@ def table_s16_bcc_agreement(st: dict) -> str:
         neg_txt = (
             "The screen's symmetric-point curvature is not scored against SSCHA. For a single "
             "mode with an even potential it equals the self-consistent trial stiffness at "
-            "Q₀ = 0 (§S1.3), so it is positive wherever the width equation has a root and cannot "
+            "Q₀ = 0 (Section S1.3), so it is positive wherever the width equation has a root and cannot "
             "register condensation; over all "
             f"{cc['n_mode_T_evaluations']} mode-temperature evaluations the positive values agree "
             f"with the trial frequency to a median relative difference of {_sci(pr['median'])} "
@@ -984,7 +984,7 @@ def table_s16_bcc_agreement(st: dict) -> str:
         ["screen's free-energy comparison calls the phase unstable",
          ca["screen_call_unstable"]["fmt"], cx["screen_call_unstable"]["fmt"]],
         ["screen's symmetric-point curvature positive (by construction where the width "
-         "equation is solved; §S1.3)", ca["screen_curvature_positive"]["fmt"],
+         "equation is solved; Section S1.3)", ca["screen_curvature_positive"]["fmt"],
          cx["screen_curvature_positive"]["fmt"]],
     ]
     for s in sorted(ca["by_system"]):
@@ -1001,10 +1001,10 @@ def table_s16_bcc_agreement(st: dict) -> str:
     return (
         "**Table S16** Screen-versus-SSCHA agreement on the bcc metals, scored on the stability "
         "call, and the same-energy comparison behind the SSCHA false-stables on the displacive "
-        "systems, with the production-recipe SSCHA (2×2×2, not converged, §S2.1; the same "
+        "systems, with the production-recipe SSCHA (2×2×2, not converged, Section S2.1; the same "
         "comparisons with the converged recipe are in Table S22). For SSCHA the call is the sign "
         "of the lowest free-energy-Hessian frequency; for the screen it is the variational argmin "
-        "of §2.4. Both methods run on the same MLIP "
+        "of Section 2.4. Both methods run on the same MLIP "
         "potential-energy surface, so agreement between them is a consistency check and says "
         "nothing about agreement with first principles. *Trivial* pairs are (system, model) "
         "combinations whose harmonic layer has no instability, so both methods agree without "
@@ -1022,7 +1022,7 @@ def table_s16_bcc_agreement(st: dict) -> str:
         "criterion read at the symmetric reference would report stable. That shows the local "
         "and the global question have different answers on these energies. It does not show "
         "that SSCHA's positive Hessian has the same origin; the converged recipe of Table S22 "
-        "keeps the false-stables on BaTiO₃ and KNbO₃ and removes those on the fluorites (§3.3).\n\n"
+        "keeps the false-stables on BaTiO₃ and KNbO₃ and removes those on the fluorites (Section 3.3).\n\n"
         + md(crows, ["Quantity", "All five models", "Excluding ORB-v2"])
     )
 
@@ -1086,7 +1086,7 @@ def table_s17_sscha_high_t(st: dict) -> str:
         prow.append([f"*{label}*", t["n_grid"], t["n_returned"], t["n_failed"], "", t["n_blowup"], ""])
 
     return (
-        "**Table S17** Where SSCHA, with the production recipe (not converged, §S2.1), calls a "
+        "**Table S17** Where SSCHA, with the production recipe (not converged, Section S2.1), calls a "
         "phase unstable that its label calls stable, and where it fails numerically. Upper part: non-bcc SSCHA false-unstables by temperature, over "
         "the units whose label is stable at that temperature; numerical blow-ups "
         "(|f| > 50 THz) are included in the counts and also tallied separately. The count grows "
@@ -1326,7 +1326,7 @@ def table_s19_c3a_pbe() -> str:
     npb = u["n_paths_pbe"]
     return (
         f"**Table S19** PBE along the screen's own soft-mode coordinates. Each of the {tot[1]} ladder units (6 systems × 5 models × 100, 300, 600 and 900 K) "
-        "is called twice by the screen's rule (unstable if any computed path condenses, §2.4), on "
+        "is called twice by the screen's rule (unstable if any computed path condenses, Section 2.4), on "
         "the same structures: from the model's own energies (*MLIP, same paths*) and from "
         "Quantum ESPRESSO PBE single-point energies (*PBE-backed*). Both are scored against the "
         "finite-temperature label used throughout (stable iff T is at or above the experimental "
@@ -1811,7 +1811,7 @@ def _grid_compare():
 
 def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Path = GRID_SUMMARY,
                              allow_dry_run: bool = False) -> str:
-    """Referee 1.4: SSCHA with the converged recipe on the units behind the §3.3
+    """Referee 1.4: SSCHA with the converged recipe on the units behind the Section 3.3
     claims, beside the production numbers on the same units.
 
     Every number is read from results/revision/grid_compare.json, which ``scripts/grid_compare.py``
@@ -1945,11 +1945,11 @@ def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Pa
                     f"`meaningful_factor` = {P['meaningful_factor']:g} against the placeholder error, "
                     f"a Hessian ensemble of {P['n_hessian']}.")
     caption = (
-        "**Table S22** SSCHA with the converged recipe on the units behind the §3.3 claims, beside "
+        "**Table S22** SSCHA with the converged recipe on the units behind the Section 3.3 claims, beside "
         "the production numbers on the same units ("
         "`scripts/sscha_seed_study.py --preset grid`, compared with the production ledger by "
         "`scripts/grid_compare.py`). Every unit here is the start-A run; Table S24 gives the "
-        "pre-registered replicates of 65 of them and the §3.3 counts with their unresolved units "
+        "pre-registered replicates of 65 of them and the Section 3.3 counts with their unresolved units "
         "left out. "
         f"**Recipe:** {R['n_configs']} configurations per population, at most {R['max_pop']} "
         f"populations and at most {R['max_steps_per_pop']} minimiser steps per population (a cap per "
@@ -1962,7 +1962,7 @@ def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Pa
         f"{' or '.join(str(x) for x in m['n_boot'])} bootstrap resamples, and a "
         f"{m['unit_timeout_s']:g} s wall cap on each relaxation." + prod_txt + " "
         "**Start A only** (the production ForcePositiveDefinite start): start dependence is the "
-        "six-unit start-A against start-B study (§3.5), not repeated across the grid. A call is the "
+        "six-unit start-A against start-B study (Section 3.5), not repeated across the grid. A call is the "
         f"sign rule used throughout: stable iff the lowest free-energy-Hessian frequency is at or "
         f"above {signed(m['imag_tol_thz'], 1)} THz. "
         f"**Run status:** {n} planned units, {ok} finished, {conv} of them "
@@ -1990,7 +1990,7 @@ def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Pa
         "**How the columns are made.** Each production claim is recomputed with the function that "
         "produced it (`stats_hardening.criterion_blindness` for claim (i), `analysis.displacive_recall` "
         "for (ii), `stats_hardening.bcc_agreement` for (iii), `stats_hardening.sscha_high_t` for (iv); "
-        "Tables S16 and S17 and §3.3), so the unit sets, the ORB-v2 split and the blow-up rules are "
+        "Tables S16 and S17 and Section 3.3), so the unit sets, the ORB-v2 split and the blow-up rules are "
         "the production ones: SSCHA blow-ups leave the denominator in (ii), where they are counted "
         "beside, and stay in (i), (iii) and (iv). The first column is the production number on its "
         "full set, recomputed from the ledger and checked against `results/stats_hardening.json`; "
@@ -2012,7 +2012,7 @@ def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Pa
         f"{nb} bcc unit{'s' if nb != 1 else ''} where the cell changes as well), and on the non-bcc "
         f"units {ch['nonbcc_corrected_vs_label']} of those change from wrong to right against the "
         f"label and {ch['nonbcc_worsened_vs_label']} from right to wrong. *n/s*: the bcc label is the "
-        "thermodynamic one and is not scored against a dynamical call (§3.3).")
+        "thermodynamic one and is not scored against a dynamical call (Section 3.3).")
     return (
         caption + "\n\n"
         + md(claim, h_claim)
@@ -2201,7 +2201,7 @@ E3_DIR = REPO / "results" / "revision" / "e3_replicates"
 
 
 def e3_resolved_counts() -> dict:
-    """The §3.3 counts with the pre-registered replicate rule applied: a unit whose call differs
+    """The Section 3.3 counts with the pre-registered replicate rule applied: a unit whose call differs
     between its replicates (results/revision/e3_replicates/summary.csv, verdict 'unresolved') is
     counted as unresolved, i.e. left out of numerator and denominator, not resolved by majority.
     Returns start-A and resolved values, with and without ORB-v2."""
@@ -2322,10 +2322,10 @@ def table_s24_e3_replicates() -> str:
         f"result. On the {al['n_complete']} units with three values the call is the same in "
         f"{ci(al['n_same_call_all_three'], al['n_complete'])} (without ORB-v2 "
         f"{ci(same_x, len(xc))}); the median range is "
-        f"{al['median_range_thz']:.2f} THz. Unresolved, and counted as such in §3.3 rather than "
+        f"{al['median_range_thz']:.2f} THz. Unresolved, and counted as such in Section 3.3 rather than "
         f"by majority: {unres_txt}. Not pre-registered: the seed-10 call equals the start-A call on "
         f"{a_vs_s} of {len(both)} units, and on the {cia['n_units']} units converged in all three "
-        f"the call is the same in {cia['n_same_call_all_three']}. Lower part: the §3.3 counts from "
+        f"the call is the same in {cia['n_same_call_all_three']}. Lower part: the Section 3.3 counts from "
         "start A alone and with the unresolved units left out of numerator and denominator.\n\n"
         + md(rows, ["System", "Model", "T (K)", "Selected as", "A", "B", "Seed 10", "Range (THz)",
                     "Verdict"])
@@ -2388,7 +2388,7 @@ def table_s25_finetune_calls() -> str:
     nchb = sum(bool(s6["chgnet"][f"{s}@{T}"]["base_rerun"]["pred_stable"]) == bool(s6["chgnet"][f"{s}@{T}"]["label_stable"])
                for s in FT_SYS for T in (100, 300, 600, 900))
     return (
-        "**Table S25** Pre-registered fine-tuning trial (§S6): the production screen "
+        "**Table S25** Pre-registered fine-tuning trial (Section S6): the production screen "
         "(relaxation, harmonic force constants, every imaginary commensurate mode, soft-mode solve; "
         "2×2×2) re-run with each fine-tuned replicate (seeds 0, 1, 2) on the three test systems, "
         "against the labels. S stable, U unstable, an asterisk marking disagreement with the label. "
@@ -2462,12 +2462,12 @@ def table_s26_finetune_surface() -> str:
                               f"{'S' if r['own_lattice']['pred_stable'] else 'U'}, {r['own_lattice']['well_depth_meV']:.1f}",
                               f"{'S' if r['base_lattice']['pred_stable'] else 'U'}, {r['base_lattice']['well_depth_meV']:.1f}"])
     return (
-        "**Table S26** Pre-registered fine-tuning trial (§S6), the surface and the controls. P1, the "
-        "median over the BaTiO₃ and KNbO₃ deciding paths of each model's own §S5.1 path set (at the base "
+        "**Table S26** Pre-registered fine-tuning trial (Section S6), the surface and the controls. P1, the "
+        "median over the BaTiO₃ and KNbO₃ deciding paths of each model's own Section S5.1 path set (at the base "
         "model's relaxed lattice; Table S19) of the fine-tuned to PBE well-depth ratio, base and "
         "per replicate (seeds 0 / 1 / 2); registered band 0.8–1.2, supported only if the pooled "
         "median and each replicate's median lie in it. S1, force RMSE against PBE on the held-out "
-        "§S5.1 path points in the well window the screen fits (the 30-epoch evaluation includes the "
+        "Section S5.1 path points in the well window the screen fits (the 30-epoch evaluation includes the "
         "extra-mode points, deviation D5; the CHGNet one does not). S2, harmonic calls of Si, MgO, "
         "NaCl, Cu, C and CeO₂. P3, converged SSCHA (grid recipe, start A). Lower part, **not "
         "pre-registered** (`scripts/finetune_lattice_diag.py`, CPU, archived weights checked "

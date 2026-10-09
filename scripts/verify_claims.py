@@ -151,7 +151,7 @@ def text_vs_data(ms_txt: str) -> None:
     # (i) converged false-stables among label-unstable non-bcc units, and the screen on them
     luA = cA[~cA.lab]
     fsA = luA[luA.stable]
-    has(s33, "3.3 FS start A", f"alone {len(fsA)}/{len(luA)}, of which the replicates of §3.5 leave "
+    has(s33, "3.3 FS start A", f"alone {len(fsA)}/{len(luA)}, of which the replicates of Section 3.5 leave "
         f"{int(fsA.unres.sum())} unresolved")
     lu = c[~c.lab]
     fs = lu[lu.stable]
@@ -171,7 +171,7 @@ def text_vs_data(ms_txt: str) -> None:
     bysys = fs.groupby("system").size().to_dict()
     has(s33, "3.3 FS by system", f"BaTiO₃ ({bysys['batio3_cubic']}), KNbO₃ ({bysys['knbo3_cubic']}), "
         f"PbTiO₃ at 300 and 600 K ({bysys['pbtio3_cubic']}) and SrTiO₃ at 100 K ({bysys['srtio3_cubic']})")
-    # audit 2026-10-09 M5: the count without the SrTiO3 100 K units (2x2x2, no size test, §3.5)
+    # audit 2026-10-09 M5: the count without the SrTiO3 100 K units (2x2x2, no size test, Section 3.5)
     no_sto = ~((lu.system == "srtio3_cubic") & (lu["T"] == 100.0))
     k_ns, n_ns = int((no_sto & lu.stable).sum()), int(no_sto.sum())
     check(k - k_ns == 4 and set(fs[~fs.index.isin(lu[no_sto].index)].system) == {"srtio3_cubic"}
@@ -751,7 +751,7 @@ def main() -> int:
     check(int(xpe.sum()) == 9 and int((xpe & ~xso).sum()) == 8 and int((xpe & x600).sum()) == 4
           and int((xpe & x600 & xso).sum()) == 0
           and int((xpe & (xu["T"] == 300)).sum()) == 5 and int((xpe & (xu["T"] == 300) & ~xso).sum()) == 4,
-          "[§4/R1.6] E2: CsSnBr3 PBE errors 9; PBEsol corrects 8, every one at 600 K (4) and 4 of "
+          "[Section 4/R1.6] E2: CsSnBr3 PBE errors 9; PBEsol corrects 8, every one at 600 K (4) and 4 of "
           "the 5 at 300 K")
     xcp = pd.read_csv("results/revision/dft_checks/xc_paths.csv")
     xcs, xcf = xcp[xcp.system == "cssnbr3_cubic"], xcp[xcp.system != "cssnbr3_cubic"]
@@ -772,7 +772,7 @@ def main() -> int:
           and abs(max(max(v_.values()) for v_ in off.values()) - 0.797) < 1e-3
           and (round(min(off["batio3_cubic"].values()), 2), round(max(off["batio3_cubic"].values()), 2)) == (0.26, 0.31)
           and (round(min(off["knbo3_cubic"].values()), 2), round(max(off["knbo3_cubic"].values()), 2)) == (0.74, 0.80),
-          "[§3.2/§4/S5.3] E2 pbe-lattice phases A, B, C done; MLIP lattices "
+          "[Section 3.2/Section 4/S5.3] E2 pbe-lattice phases A, B, C done; MLIP lattices "
           + ", ".join(f"{s_.split('_')[0]} +{min(v_.values()):.2f} to +{max(v_.values()):.2f} %"
                       for s_, v_ in off.items()) + " above PBE")
     # PL (phases B/C): PBE at its own lattice along its own band at MACE-MP-0's deciding q
@@ -996,7 +996,7 @@ def main() -> int:
           "(8 populations, 19 kept steps) like the C1 units")
 
 
-    # ==== converged-recipe SSCHA (Table S22, §2.5, §3.3, §3.5): results/revision/grid_compare.json
+    # ==== converged-recipe SSCHA (Table S22, Sections 2.5, 3.3, 3.5): results/revision/grid_compare.json
     # (scripts/grid_compare.py) and the grid's summary.csv / unit JSONs, recomputed where possible.
     import hashlib
     gcj = json.load(open("results/revision/grid_compare.json", encoding="utf-8"))
@@ -1046,7 +1046,7 @@ def main() -> int:
     b100 = gnb[gnb.system.isin(["batio3_cubic", "knbo3_cubic"]) & (gnb.T_K == 100)]
     check(len(b100) == 10 and bool(b100.stable_call.astype(bool).all())
           and not bool(b100.screen_stable_call.astype(bool).any()),
-          "[3.3/§4] all ten BaTiO3/KNbO3 100 K units: converged SSCHA stable, screen unstable")
+          "[3.3/Section 4] all ten BaTiO3/KNbO3 100 K units: converged SSCHA stable, screen unstable")
     cii = cvg["converged_matched"]["ii"]
     check(cii["all_models"]["sscha"]["recall"]["short"] == "4/26"
           and cii["all_models"]["softmode"]["recall"]["short"] == "15/26"
@@ -1112,7 +1112,7 @@ def main() -> int:
           and pc["clustered_by_system"]["p_exact_clustered"] == 0.5
           and pcx["clustered_by_system"]["p_exact_clustered"] == 0.5
           and pc["clustered_by_system"]["per_cluster_net"] == [5, 6, 0, 0, 0],
-          "[3.3/§4/§5/S10] converged paired contrast T<=300 K: 13 v 2 on 44 units (10 v 2 on 39), "
+          "[3.3/Section 4/Section 5/S10] converged paired contrast T<=300 K: 13 v 2 on 44 units (10 v 2 on 39), "
           "system-clustered p = 0.5; nets +5 BaTiO3, +6 KNbO3, 0 PbTiO3, 0, 0")
     pp = gcj["production_full"]["v"]["all_models"]["displacive_combined"]
     check((pp["n_paired_units"], pp["screen_right_sscha_wrong"], pp["sscha_right_screen_wrong"],
@@ -1122,7 +1122,7 @@ def main() -> int:
         f"results/revision/sscha_converged_grid/{t_}_startA.json", encoding="utf-8"))
         ["run"]["fresh_gradient_check"]["consistent_with_minimum"]]
     check(len(fresh_bad) == 7 and not set(fresh_bad) & set(cfs2.unit_tag),
-          "[2.5/§4/S22] 7 of 159 converged units fail the fresh-ensemble check; no false-stable "
+          "[2.5/Section 4/S22] 7 of 159 converged units fail the fresh-ensemble check; no false-stable "
           "among them")
 
     def ab(tag, d_="sscha_converged"):
@@ -1179,7 +1179,7 @@ def main() -> int:
     with open("paper/manuscript.md", encoding="utf-8") as fh:
         ms_txt = fh.read()
     text_vs_data(ms_txt)
-    # ==== E3: pre-registered replicates of the converged grid (Table S24, §3.5, §S2.4, R1.4)
+    # ==== E3: pre-registered replicates of the converged grid (Table S24, Sections 3.5, S2.4, R1.4)
     e3 = pd.read_csv("results/revision/e3_replicates/summary.csv")
     e3j = json.load(open("results/revision/e3_replicates/summary.json", encoding="utf-8"))
     sel = pd.read_csv("scripts/box/as_run/e3_units_2026-10-08.tsv", sep="\t")
@@ -1189,7 +1189,7 @@ def main() -> int:
           "[E3] 65 units replicated = the registered selection (53 disagreeing + 12 random)")
     check((e3.A_status == "ok").all() and (e3.A10_status == "ok").all()
           and e3.B_status.value_counts().to_dict() == {"ok": 51, "failed": 13, "missing": 1},
-          "[E3/§3.5] seed 10 finished 65/65; start B 51 ok, 13 failed, 1 wrote no result")
+          "[E3/Section 3.5] seed 10 finished 65/65; start B 51 ok, 13 failed, 1 wrote no result")
 
     def _berr(t_, d_):
         p_ = f"results/revision/{d_}/{t_}_startB.json"
@@ -1203,7 +1203,7 @@ def main() -> int:
     check(len(ret) == 19 and all("dynamical matrix is complex" in first[t_] for t_ in ret.unit_tag)
           and sum(v_ == "ok" for v_ in second.values()) == 12
           and sum("dynamical matrix is complex" in (v_ or "") for v_ in second.values()) == 7,
-          "[E3/§3.5] 19 start-B units hit the complex-dynamical-matrix assertion at 0.3 THz; at 1.0 THz 12 "
+          "[E3/Section 3.5] 19 start-B units hit the complex-dynamical-matrix assertion at 0.3 THz; at 1.0 THz 12 "
           "finished and 7 failed again")
     oth = [first[t_] for t_ in e3.unit_tag if t_ not in second and first[t_] not in (None, "ok")]
     check(len(oth) == 6 and sum("same type" in x_ for x_ in oth) == 5 and sum("q star" in x_ for x_ in oth) == 1,
@@ -1211,10 +1211,10 @@ def main() -> int:
     al = e3j["all"]
     check((al["n_complete"], al["n_same_call_all_three"], len(al["unresolved"]), len(al["incomplete"]))
           == (51, 43, 8, 14) and abs(al["median_range_thz"] - 0.22) < 0.005,
-          "[E3/§3.5] 51 complete, 43 same call, 8 unresolved, 14 incomplete; median range 0.22 THz")
+          "[E3/Section 3.5] 51 complete, 43 same call, 8 unresolved, 14 incomplete; median range 0.22 THz")
     xe = e3[(e3.model != "orb_v2") & (e3.n_ok == 3)]
     check(len(xe) == 39 and int((xe.verdict == "agree").sum()) == 32,
-          "[E3/§3.5] without ORB-v2: same call 32/39")
+          "[E3/Section 3.5] without ORB-v2: same call 32/39")
     ur = e3[e3.verdict == "unresolved"]
     ur7 = ur[ur.unit_tag != "ti_bcc_orb_v2_600K_sc333"]
     check(len(ur7) == 7 and set(ur7.model) == {"chgnet", "mattersim"}
@@ -1223,28 +1223,28 @@ def main() -> int:
           and round(ur7.B_hessian_min_thz.max()) == -210 and round(ur7.B_hessian_min_thz.min()) == -6230
           and ur7.A_call_stable.all() and ur7.A10_call_stable.all()
           and (ur7.A_converged.astype(str) == "True").all() and (ur7.A10_converged.astype(str) == "True").all(),
-          "[E3/§3.5] 7 unresolved PbTiO3/KNbO3 CHGNet/MatterSim units: start B a non-converged blow-up "
+          "[E3/Section 3.5] 7 unresolved PbTiO3/KNbO3 CHGNet/MatterSim units: start B a non-converged blow-up "
           "(-209 to -6230 THz, wall/population cap); start A and seed 10 converged and stable")
     ti = e3.set_index("unit_tag").loc["ti_bcc_orb_v2_600K_sc333"]
     check(round(ti.A_hessian_min_thz, 2) == 2.53 and round(ti.B_hessian_min_thz, 1) == -26.4
           and round(ti.A10_hessian_min_thz, 2) == -3.73 and str(ti.B_converged) == "False"
           and str(ti.A10_converged) == "False",
-          "[E3/§3.5] Ti/ORB-v2 600 K: +2.53 / -26.4 / -3.73 THz, the last two not converged")
+          "[E3/Section 3.5] Ti/ORB-v2 600 K: +2.53 / -26.4 / -3.73 THz, the last two not converged")
     both = e3[(e3.A_status == "ok") & (e3.A10_status == "ok")]
     check(int((both.A_call_stable == both.A10_call_stable).sum()) == 64
           and e3j["converged_in_all_three"]["n_units"] == 31
           and e3j["converged_in_all_three"]["n_same_call_all_three"] == 31,
-          "[E3/§3.5, not pre-registered] seed 10 = start A call on 64/65; 31/31 agree where all three converged")
+          "[E3/Section 3.5, not pre-registered] seed 10 = start A call on 64/65; 31/31 agree where all three converged")
     b10 = e3[e3.system.isin(["batio3_cubic", "knbo3_cubic"]) & (e3.T_K == 100)]
     bok = b10[b10.B_status == "ok"]
     bch = b10[(b10.model == "chgnet") & (b10.system == "batio3_cubic")]
     check(len(b10) == 10 and b10.A10_call_stable.all() and (b10.A10_converged.astype(str) == "True").all()
           and len(bok) == 7 and bok.B_call_stable.all() and int((bok.B_converged.astype(str) == "True").sum()) == 4
           and round(float(bch.A10_hessian_min_thz.iloc[0]), 2) == 1.56,
-          "[§3.3] BaTiO3/KNbO3 100 K: seed 10 stable+converged on 10/10; start B stable on 7 (4 converged); "
+          "[Section 3.3] BaTiO3/KNbO3 100 K: seed 10 stable+converged on 10/10; start B stable on 7 (4 converged); "
           "BaTiO3/CHGNet seed 10 +1.56 THz")
 
-    # ==== E5: pre-registered fine-tuning trial (§4, §S6, Tables S25-S26, R2.1)
+    # ==== E5: pre-registered fine-tuning trial (Sections 4, S6, Tables S25-S26, R2.1)
     f30 = json.load(open("results/revision/finetune_mace30/summary.json", encoding="utf-8"))
     f6 = json.load(open("results/revision/finetune/summary.json", encoding="utf-8"))
     reps = ("seed0", "seed1", "seed2")
@@ -1285,11 +1285,11 @@ def main() -> int:
           and all(0.99 <= round(x, 2) <= 1.01 for x in p1["replicate_median_ratio"].values())
           and p1c["verdict"] == "unresolved" and round(p1c["median_over_paths_and_replicates"], 2) == 1.04
           and round(p1c["replicate_median_ratio"]["seed0"], 2) == 1.33,
-          "[E5/§4] P1: MACE-MP-0 30 ep 0.45 -> 0.99 (supported); CHGNet pooled 1.04, seed 0 1.33 (unresolved)")
+          "[E5/Section 4] P1: MACE-MP-0 30 ep 0.45 -> 0.99 (supported); CHGNet pooled 1.04, seed 0 1.33 (unresolved)")
     p3 = f30["P3"]
     check(p3["status"] == "supported" and p3["called_stable"] and p3["relax_converged"]
           and round(p3["min_nonac_thz"], 2) == 1.73 and not p3["label_stable"],
-          "[E5/§4/§5] P3: converged SSCHA on fine-tuned MACE-MP-0 calls BaTiO3 100 K stable, +1.73 THz")
+          "[E5/Section 4/Section 5] P3: converged SSCHA on fine-tuned MACE-MP-0 calls BaTiO3 100 K stable, +1.73 THz")
     s2b = f6["S2"]["mace_mp0"]["controls"]
     s2r = f30["S2"]["mace_mp0"]["controls"]
     check(all(s2b[k_]["base"]["pred_stable"] and all(s2r[k_]["replicates"][s_]["pred_stable"] for s_ in reps)
@@ -1320,7 +1320,7 @@ def main() -> int:
     rb6 = open("results/revision/finetune/train/box_sequence.sh", encoding="utf-8").read()
     rb30 = open("results/revision/finetune_mace30/train/box_sequence.sh", encoding="utf-8").read()
     check(rb6.count("--max_num_epochs=6") == 3 and rb30.count("--max_num_epochs=30") == 3,
-          "[§4/S6/D4] first MACE-MP-0 run 6 epochs (disclosed); re-run 30 epochs")
+          "[Section 4/S6/D4] first MACE-MP-0 run 6 epochs (disclosed); re-run 30 epochs")
     # post hoc lattice check (scripts/finetune_lattice_diag.py)
     ld = json.load(open("results/revision/finetune_mace30/lattice_diag.json", encoding="utf-8"))
     apbe = {"batio3_cubic": 4.02374737, "knbo3_cubic": 4.026883539}
@@ -1335,7 +1335,7 @@ def main() -> int:
           and round(min(v_["base_lattice"]["well_depth_meV"] for _, _, v_ in rows_)) == 49
           and round(max(v_["base_lattice"]["well_depth_meV"] for _, _, v_ in rows_)) == 64
           and all(-2.8 <= round(v_["pressure_at_base_lattice_GPa"], 1) <= -2.6 for _, _, v_ in rows_),
-          "[§4/S6 post hoc] 30-ep MACE-MP-0 relaxes ~0.5 % below base, within 0.3 % of PBE; 300 K stable "
+          "[Section 4/S6 post hoc] 30-ep MACE-MP-0 relaxes ~0.5 % below base, within 0.3 % of PBE; 300 K stable "
           "at own lattice (6/6, reproduces P2), unstable at base lattice (6/6); wells 28-34 v 49-64 meV")
     wsha = {}
     for l_ in open("results/revision/finetune_mace30/models/WEIGHTS.sha256", encoding="utf-8").read().splitlines():
@@ -1347,7 +1347,7 @@ def main() -> int:
     for frag in ("rose from 0.45 to 0.99 for MACE-MP-0", "pooled median is 1.04 but one replicate's is 1.33",
                  "about 0.5 % smaller than the base model, to within 0.3 % of the PBE lattice",
                  "(+1.73 THz)", "trained 6 epochs instead of the registered 30"):
-        check(frag in s4n, f"[text §4 E5] '{frag}'")
+        check(frag in s4n, f"[text Section 4 E5] '{frag}'")
     # audit 2026-10-09: the new numbers in the text, each pinned to data above (M1, M3, M8)
     s32n = " ".join(ms_txt.split("### 3.2", 1)[1].split("### 3.3", 1)[0].split())
     s33n = " ".join(ms_txt.split("### 3.3", 1)[1].split("### 3.4", 1)[0].split())
@@ -1356,11 +1356,11 @@ def main() -> int:
     for frag in (f"at X ({xs_['batio3_cubic']:.2f} THz in BaTiO₃, {xs_['knbo3_cubic']:.2f} THz in KNbO₃".replace("-", "−"),
                  f"({md_['batio3_cubic']:.1f} against {dep('batio3_cubic', 'pbe_lattice_deciding'):.1f} meV and "
                  f"{md_['knbo3_cubic']:.1f} against {dep('knbo3_cubic', 'pbe_lattice_deciding'):.1f} meV)"):
-        check(frag in s32n, f"[text §3.2 audit] '{frag}'")
+        check(frag in s32n, f"[text Section 3.2 audit] '{frag}'")
     frag = (f"B = {cb_['B']} resamples of the Hessian ensemble, has a mean of "
             f"{cb_['mean_thz']:.2f} THz, and {round(cb_['frac_unstable'] * cb_['B'])} of the {cb_['B']} "
             "resamples are unstable").replace("-0.", "−0.")
-    check(frag in s33n, f"[text §3.3 audit M8] '{frag}'")
+    check(frag in s33n, f"[text Section 3.3 audit M8] '{frag}'")
     abs_txt = ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0]
     n_words = len(abs_txt.split())
     check(n_words <= 250, f"[abstract] {n_words} words (RSC Advances limit 250)")

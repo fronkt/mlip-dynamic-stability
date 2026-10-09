@@ -80,8 +80,8 @@ batteries, solar cells, catalysts and macromolecular systems.^15^ A recent revie
 frameworks with uncertainty quantification beside the equivariant graph networks and foundation
 models tested here, and lists foundation-model fine-tuning among the emerging directions.^16^ This
 literature supplies the natural alternative reliability criterion to ours, namely committee or
-ensemble uncertainty propagated into the simulation.^17^ §3.4 tests a cross-architecture version of
-that criterion, and §4 discusses how it differs from a single model's committee, why the models
+ensemble uncertainty propagated into the simulation.^17^ Section 3.4 tests a cross-architecture version of
+that criterion, and Section 4 discusses how it differs from a single model's committee, why the models
 are tested here without fine-tuning, and what a pre-registered fine-tuning trial changed.
 
 The screening context is the other half of the motivation. High-throughput stability searches
@@ -109,14 +109,14 @@ before any calculation was run (`docs/research_brief.md`, commit 9c2599f, 20 Jun
 - H2 (the finite-temperature gap). Harmonic accuracy does not certify a model for
   finite-temperature screening, and the harmonic ranking need not carry over. (The pre-registered
   form was "harmonic accuracy is uncorrelated with finite-temperature accuracy". The matched-set
-  outcome in §3.2 is narrower. Harmonically correct units that the screen mis-calls at finite
+  outcome in Section 3.2 is narrower. Harmonically correct units that the screen mis-calls at finite
   temperature outnumber the reverse in unit counts, 17 to 4 at 300 K under the screen's production
 convention, but the asymmetry is not
   significant once units are clustered by system, most of it sits in three systems the screen
   mis-calls for at least four of the five models, and the direction of any association is not
   resolved at this sample size. The pre-registered form is therefore left open.)
 - H3 (practical guardrail). Inter-model (ensemble) disagreement flags unreliable calls better than
-  any single model's self-reported energetics. (§3.4 tests the ensemble signal only; the
+  any single model's self-reported energetics. (Section 3.4 tests the ensemble signal only; the
   single-model comparator was not run. The vote split is suggestive, AUC 0.76 [0.59, 0.93], but
   falls to 0.63 [0.44, 0.84] without ORB-v2.)
 
@@ -159,7 +159,7 @@ wrong; the six control labels come from the DFPT phonon database^2^ rather than 
 KTaO₃ is flagged borderline (incipient ferroelectric, DFT mode ≈0; three of five MLIPs call it
 imaginary) and excluded from headline rates, which leaves 19 scored systems. CeO₂ and NaCl are
 retained as scored stable controls, since they are genuinely stable and only CHGNet marginally
-trips them (§3.1). The soft-mode screen and the harmonic baseline cover all 20 systems; the SSCHA
+trips them (Section 3.1). The soft-mode screen and the harmonic baseline cover all 20 systems; the SSCHA
 grid covers the four oxide perovskites, one halide perovskite (CsSnI₃), the two fluorites and the
 three bcc metals. α-AgI is the one system where the soft-mode screen is on shaky physical ground,
 because a superionic with a diffusive Ag sublattice has no single frozen order parameter; its
@@ -171,7 +171,7 @@ symmetry-breaking/MD probe.
 MACE-MP-0,^29^ CHGNet,^30^ ORB-v2,^31^ SevenNet-0,^32^ and MatterSim^33^ run through a
 backend-agnostic ASE-calculator harness, with one virtual environment per model. All five are
 the released checkpoints used as shipped, without fine-tuning, except in the pre-registered
-fine-tuning trial of §4 (§4 discusses that scope). Testing
+fine-tuning trial of Section 4 (Section 4 discusses that scope). Testing
 MatterSim directly probes PhononBench's own oracle. ORB-v2 is the only one of the five whose forces
 are predicted directly rather than as gradients of the energy (non-conservative forces). Precision
 does not single it out: as run, MACE-MP-0 evaluates in float64 and the other four models,
@@ -205,9 +205,9 @@ mode lies below the acoustic zeros, so masking the lowest three would delete the
 being sought. Modes are deduplicated over degenerate branches and symmetry-equivalent **q**, so a
 triply degenerate T1u triplet and the three arms of a ⟨100⟩ star each cost one E(Q) map rather than
 three (a triplet whose components a model returns at slightly different frequencies, as CHGNet does
-for BaTiO₃, is screened as separate modes; ESI §S1.3). Within a degenerate eigenspace the screened
+for BaTiO₃, is screened as separate modes; ESI Section S1.3). Within a degenerate eigenspace the screened
 direction is the one the eigensolver returns, which is arbitrary, and the well along another
-direction of the same span can differ (ESI §S1.3). Each surviving mode is frozen into its minimal commensurate cell via phonopy modulation; we
+direction of the same span can differ (ESI Section S1.3). Each surviving mode is frozen into its minimal commensurate cell via phonopy modulation; we
 map the static double well E(Q) with quadratic Q sampling, fit the well-plus-barrier window, and
 minimise a single-mode quantum SCHA free energy over the order-parameter centroid (self-consistent
 Gaussian width via bracketed root finding).
@@ -235,7 +235,7 @@ of 𝓕 with respect to Ω at fixed Q₀ gives the self-consistency condition
 $$M\Omega^2 = \langle V''\rangle_{Q_0,\sigma} = 2a + 12b\,\langle Q^2\rangle + 30c\,\langle Q^4\rangle,$$
 
 which we solve by bracketed root finding on σ² (avoiding the runaway large-σ fixed point a damped
-iteration can reach), and 𝓕 is then minimised over the centroid on a Q₀ grid. ESI §S1.3 derives
+iteration can reach), and 𝓕 is then minimised over the centroid on a Q₀ grid. ESI Section S1.3 derives
 each of these steps in full and states what the single-mode restriction neglects.
 
 Definitions and numerical settings. The pattern **u** is phonopy's modulation rescaled so that its
@@ -270,7 +270,7 @@ free-energy Hessian^38^ (𝓕 is even in Q₀ under the parity assumption above,
 evaluated by a symmetric finite difference). For a single mode that observable cannot signal an
 instability: at the symmetric point the parity of V removes every term but ⟨V″⟩, so
 𝓕″(0) = MΩ², the self-consistent trial stiffness, which is positive whenever a bound Gaussian
-exists there (ESI §S1.3). The negative values it reports (95 of 1512 mode-temperature
+exists there (ESI Section S1.3). The negative values it reports (95 of 1512 mode-temperature
 evaluations) come from the width solver's grid fallback at a point of the finite-difference
 stencil and from two fit-artefact modes, not from the physics. The call and the curvature
 therefore disagree wherever a mode condenses: for a deep double well the variational transition
@@ -291,7 +291,7 @@ condensing modes, so it cannot affect any call (a cap can only ever create a fal
 would require all 24 screened modes to be non-condensing). Three earlier finite-temperature routes
 (hand-rolled TDEP,^39^ one-shot hiPhive, and rattled-MD) were implemented and discarded after they
 failed the SrTiO₃ gate; see the ESI. The variational criterion is not interchangeable with a
-direct thermal-density criterion, and ESI §S1.4 makes the distinction concrete by solving the
+direct thermal-density criterion, and ESI Section S1.4 makes the distinction concrete by solving the
 same fitted potentials exactly: an isolated mode's thermal density stays bimodal at every
 temperature, because it tends to exp(−V/k_BT), so the temperature dependence the screen needs
 comes from the self-consistency rather than from the shape of the well. That comparison also
@@ -305,13 +305,13 @@ bias, and where the consequence is visible in our own data.
 
 | # | Approximation | What it excludes | Expected bias | Where it shows |
 |---|---|---|---|---|
-| A1 | One mode at a time | Mode–mode coupling and cooperative condensation | Either sign; absolute T* unreliable | PbTiO₃ T* ordering failure; mis-calls shared by four or five models (§3.2) |
-| A2 | Commensurate **q** only | Instabilities at incommensurate or finer-grid **q** | False-stable if the true soft mode is missed | R point needs even cells (§3.5); bcc ω needs 6×6×6 FCs |
+| A1 | One mode at a time | Mode–mode coupling and cooperative condensation | Either sign; absolute T* unreliable | PbTiO₃ T* ordering failure; mis-calls shared by four or five models (Section 3.2) |
+| A2 | Commensurate **q** only | Instabilities at incommensurate or finer-grid **q** | False-stable if the true soft mode is missed | R point needs even cells (Section 3.5); bcc ω needs 6×6×6 FCs |
 | A3 | Sextic fit on a well+barrier window, sampled to Q = 0.45 Å | Steep-wall anharmonicity beyond Q⁶; wells beyond the sampled range | Barrier-shape error at large Q | No unit flip over the fit windows, ≤ 1 at T ≤ 300 K over sampling ranges (ESI Table S14) |
-| A4 | Gaussian (SCHA) trial state | Tunnelling, non-Gaussian density; renders deep-well transitions first-order-like | Curvature misses condensation | `n_curv_blind` rows; §3.3 mechanism |
-| A5 | Static E(Q) in a clamped cell | Thermal expansion and strain coupling | Under-stabilises martensitic systems | bcc excluded from scoring (§3.2) and compared with SSCHA only (§3.3) |
-| A6 | Mode cap (24) | Modes beyond the 24 most imaginary | Could only create false-stables | Binds on 20/400 units, all already unstable (§2.4) |
-| A7 | Energy and mass summed over the minimal commensurate cell | Any other frozen-cell normalisation | Larger cells condense more readily | Recall and T* depend on it (§2.4; ESI Table S14) |
+| A4 | Gaussian (SCHA) trial state | Tunnelling, non-Gaussian density; renders deep-well transitions first-order-like | Curvature misses condensation | `n_curv_blind` rows; Section 3.3 mechanism |
+| A5 | Static E(Q) in a clamped cell | Thermal expansion and strain coupling | Under-stabilises martensitic systems | bcc excluded from scoring (Section 3.2) and compared with SSCHA only (Section 3.3) |
+| A6 | Mode cap (24) | Modes beyond the 24 most imaginary | Could only create false-stables | Binds on 20/400 units, all already unstable (Section 2.4) |
+| A7 | Energy and mass summed over the minimal commensurate cell | Any other frozen-cell normalisation | Larger cells condense more readily | Recall and T* depend on it (Section 2.4; ESI Table S14) |
 
 SrTiO₃ gate. For MACE-MP-0, cubic SrTiO₃ resolves three distinct imaginary commensurate modes, and
 the screen reports which of them condenses. At 100 K the Γ ferroelectric mode does **not** condense (Q₀ = 0),
@@ -321,7 +321,7 @@ stable at 300 K, bracketing the experimental transition at 105 K. The gate also 
 criterion/observable distinction above: at 100 K the condensing tilt still has a *positive*
 symmetric-point curvature (+0.92 THz, hardening to +1.43 THz at 300 K), so this is a
 first-order-like condensation that the free energy's argmin detects and its curvature does not,
-the situation that any criterion read at the symmetric reference misses (§3.3). The gate is
+the situation that any criterion read at the symmetric reference misses (Section 3.3). The gate is
 coarse: on a 100/300 K ladder it passes for any transition between 100 and 300 K, so it brackets
 the 105 K transition without locating it. Three of the five models (MACE-MP-0, MatterSim, SevenNet-0) reproduce the R-tilt
 condensation; CHGNet never condenses the tilt and ORB-v2 does not select the R point at all.
@@ -344,13 +344,13 @@ with the larger cells paying in false-unstables, most of them at 600–900 K (36
 and an eight-fold cell, which condenses most readily, matches the doubled cell at T ≤ 300 K but
 falls below the minimal cell over the full ladder (234/300). What accuracy rewards therefore
 depends on the balance of stable and unstable labels in the scored set, and those labels mark
-thermodynamic transitions rather than the dynamic-stability boundary itself (§2.1). We use the
+thermodynamic transitions rather than the dynamic-stability boundary itself (Section 2.1). We use the
 minimal cell because it is the smallest cell in which the mode is one commensurate distortion, so
 M and V refer to a single repeat of the order parameter rather than to an arbitrary multiple of
 it. That is an argument for the choice, not evidence that it is right, and every screen result in
 this paper, the recall and T* especially, is reported under it and depends on it. That includes the
-H2 count of §3.2: at 300 K it is 17 against 4 in the minimal cell and runs from 7 against 4 to 24
-against 4 across the other conventions (ESI §S1.3).
+H2 count of Section 3.2: at 300 K it is 17 against 4 in the minimal cell and runs from 7 against 4 to 24
+against 4 across the other conventions (ESI Section S1.3).
 
 The other axes of Table S14 matter far less. Fit windows of 3×, 5× and 8× the well depth with
 floors of 30, 60 and 120 meV flip no unit call, although for 69% of modes the kept points are
@@ -372,7 +372,7 @@ symmetrised. The auxiliary dynamical matrix is then relaxed stochastically at T 
 representation, with `min_step_dyn` = 0.5 and `meaningful_factor` = 10⁻⁴, the convergence
 threshold. The minimiser's steps are capped at `max_ka` = 20, a cap that python-sscha 1.6.1
 compares with the step count accumulated over all populations rather than resetting for each one
-(ESI §S2.1), and the relaxation runs for up to 8 populations of 256 configurations (2,048 at
+(ESI Section S2.1), and the relaxation runs for up to 8 populations of 256 configurations (2,048 at
 most; ESI Table S11 states every setting). A dedicated 512-configuration ensemble at the final auxiliary matrix (2,560 configurations
 per unit at most in all) then gives the free-energy
 (physical) Hessian at the bubble level (`include_v4 = False`, the python-sscha default). Its minimum
@@ -388,9 +388,9 @@ matrix, and the final gradient sat 7 × 10² to 10⁴ times above the threshold.
 Hessian was therefore evaluated close to the positive-definite start: within 0.24 THz of it for
 BaTiO₃, ZrO₂ and bcc Zr, with a seed spread of 0.007–0.075 THz. SrTiO₃ at 600 K is the exception,
 at −15.8 to −20.3 THz across seeds (standard deviation 2.0 THz) from a start of +0.90 THz. The
-gradient error python-sscha records is a constant placeholder (ESI §S2.1), so the convergence test
+gradient error python-sscha records is a constant placeholder (ESI Section S2.1), so the convergence test
 it feeds is not a stochastic one.
-We therefore re-ran SSCHA with a recipe that converges, on every unit a claim in §3.3 rests on:
+We therefore re-ran SSCHA with a recipe that converges, on every unit a claim in Section 3.3 rests on:
 178 units, the non-bcc systems at 100–900 K in the 2×2×2 cell and Ti, Zr and Hf at 100, 300 and
 600 K in a 3×3×3 cell. The minimiser is capped at 400 steps within each population instead of
 cumulatively, the gradient error is the library's stochastic estimate in place of the placeholder
@@ -400,12 +400,12 @@ cumulatively, the gradient error is the library's stochastic estimate in place o
 population cap are ORB-v2, one CHGNet unit reached the wall-time cap, and the seven units that
 failed in production failed again. An independent check of the final gradient on a fresh
 2,000-configuration ensemble is consistent with a minimum on 152 of the 159. These converged
-values are the SSCHA results of §3.3 (ESI Table S22); the production values are kept beside them
+values are the SSCHA results of Section 3.3 (ESI Table S22); the production values are kept beside them
 as the record of what the unconverged recipe returned. A pre-registered replicate of 65 of the
-units, from a second starting matrix and with a second seed (§3.5; ESI Table S24), decides which
-of their calls §3.3 counts as unresolved.
+units, from a second starting matrix and with a second seed (Section 3.5; ESI Table S24), decides which
+of their calls Section 3.3 counts as unresolved.
 Because this Hessian is evaluated at the fixed high-symmetry reference, its sign answers a local
-question: whether the symmetric phase is a local minimum of the free energy. §3.3 shows why that
+question: whether the symmetric phase is a local minimum of the free energy. Section 3.3 shows why that
 matters for deep double wells. Unlike the free-energy screen, which treats each imaginary mode
 independently, SSCHA captures the coupled multi-mode phonon entropy, which matters most for the
 entropy-stabilised martensitic transitions of the bcc metals.
@@ -424,7 +424,7 @@ cell has at most 12 atoms (93 of the 139 screened paths; of the other 46, 8 are 
 a computed path and 38 lie in cells of 18 to 216 atoms), were regenerated from its own force constants,
 checked against the cached E(Q) map, and evaluated with PBE at ten amplitudes up to 0.45 Å, at that
 model's relaxed lattice and along its eigenvector, not at the PBE lattice or along the PBE
-eigenvector; the five MLIPs were re-evaluated on the identical geometries, and the screen of §2.4
+eigenvector; the five MLIPs were re-evaluated on the identical geometries, and the screen of Section 2.4
 was re-solved on the PBE-fitted E(Q) with every other setting unchanged. Where a model's screen
 finds no instability in a system that another model does (bcc Zr for CHGNet, MACE-MP-0,
 SevenNet-0 and ORB-v2; SrTiO₃ for ORB-v2), the path is MatterSim's deciding coordinate. (ii) On
@@ -432,7 +432,7 @@ SSCHA-sampled configurations: twelve configurations from each of four seed-study
 (BaTiO₃, ZrO₂ and SrTiO₃ with MACE-MP-0 at 100, 100 and 600 K; bcc Zr with MatterSim at 50 K),
 scored for all five models against PBE forces and energies, with four rattled cells (0.03 Å
 root-mean-square displacement) of the same supercell as the near-equilibrium baseline. These
-ensembles come from production-recipe runs that did not converge (§2.5), so at low temperature
+ensembles come from production-recipe runs that did not converge (Section 2.5), so at low temperature
 they may sample only the neighbourhood of its positive-definite start rather than the double
 well. Energies are compared only as differences within one code. (iii) Checks on the errors that
 persist on PBE, for BaTiO₃, KNbO₃ and CsSnBr₃, against criteria fixed before the runs: the
@@ -473,7 +473,7 @@ which both models read at −0.000 THz, so neither sees a Zr or Hf instability a
 PES-softening bias of the literature, localised to specific instabilities. ORB-v2 carries one
 false-stable (1/13): it correctly flags bcc-Zr (−0.47 THz) and bcc-Hf (−0.19 THz) unstable but
 reads SrTiO₃ at +0.00 THz. Besides that false-stable it falsely calls MgO unstable (−1.07 THz), so
-ORB-v2, the one model with directly predicted forces (§2.2), errs in both directions; ESI Tables S9
+ORB-v2, the one model with directly predicted forces (Section 2.2), errs in both directions; ESI Tables S9
 and S15–S18 report the rates it could plausibly drive with and without it. CHGNet carries the only
 non-ORB false-unstables (2/6), CeO₂ (−0.27 THz) and NaCl (−0.24 THz), both genuinely stable
 controls tripped just past the −0.1 THz tolerance. Both read stable at a tolerance of 0.3 THz and
@@ -489,7 +489,7 @@ zero, rather than any single rate, is the physics here. This reproduces the publ
 is a check on the harness rather than a finding.
 
 ![**Fig. 1** Harmonic false-stable and false-unstable call counts versus the
-imaginary-frequency tolerance (§3.1). The default −0.1 THz sits in the stable basin between the
+imaginary-frequency tolerance (Section 3.1). The default −0.1 THz sits in the stable basin between the
 false-unstable flood at strict tolerance and the false-stable inflation at loose tolerance.](../results/figures/fig_tolerance_sweep.png)
 
 Fig. 2 shows the minimum harmonic frequency behind each call at the default tolerance, so the
@@ -499,7 +499,7 @@ acoustic branch at Γ that the correctly called controls read: on those potentia
 the mesh lies below that zero, so these misses are not near-threshold calls. The three false-unstable
 cells are CHGNet's CeO₂ (−0.27 THz) and NaCl (−0.24 THz) and ORB-v2's MgO (−1.07 THz).
 
-![**Fig. 2** Harmonic layer (§2.3, §3.1): the minimum phonon frequency of each system on each
+![**Fig. 2** Harmonic layer (Sections 2.3, 3.1): the minimum phonon frequency of each system on each
 model's potential, over the Γ-centred 12×12×12 mesh interpolated from 2×2×2 finite-displacement
 force constants, with negative values imaginary. Boxed cells are the units called unstable at the
 production tolerance (minimum below −0.1 THz); FS and FU mark calls that disagree with the
@@ -516,8 +516,8 @@ mark.](../results/figures/fig_harmonic_heat.png)
 On the ferroelectric perovskites at T ≤ 300 K, below every transition temperature, the label is
 the distorted phase, and the multi-mode screen calls the cubic phase unstable in 16 of 30 model
 units (recall 16/30 = 0.533 [0.361, 0.698]). That recall is quoted under the production
-frozen-cell normalisation; across the conventions of §2.4 it runs from 5/30 to 28/30, so it is a
-property of the screen as defined rather than a convention-free number. As §3.3 shows, the default
+frozen-cell normalisation; across the conventions of Section 2.4 it runs from 5/30 to 28/30, so it is a
+property of the screen as defined rather than a convention-free number. As Section 3.3 shows, the default
 SSCHA cross-check, converged, recovers fewer of the same instabilities (4/22 on the units where it
 converged with a call its replicates do not leave unresolved, against 14/22 for the screen on
 those units).
@@ -534,13 +534,13 @@ so the three harmonic false-unstables (ORB-v2 on MgO at −1.07 THz, CHGNet on C
 in part a consequence of approximation A2, and we report it as a consistency check rather than
 as proof that the screen cannot manufacture an instability.
 
-Only the screen's call is scored; its curvature observable cannot signal an instability (§2.4).
+Only the screen's call is scored; its curvature observable cannot signal an instability (Section 2.4).
 For a single mode the symmetric-point curvature equals the self-consistent trial stiffness and is
 positive by construction, so it is positive on the units the screen calls unstable as well, where
 a displaced minimum has dropped below a symmetric point that remains a local minimum. The
-negative values that observable reports are numerical, not physical (ESI §S1.3).
+negative values that observable reports are numerical, not physical (ESI Section S1.3).
 
-Multi-anchor comparison against experiment. Beyond the SrTiO₃ gate (§2.4) we compare the screen's
+Multi-anchor comparison against experiment. Beyond the SrTiO₃ gate (Section 2.4) we compare the screen's
 predicted stabilisation temperature T* (the lowest ladder T at which the cubic phase is called
 stable) with the experimental transition temperatures. The comparison is only partly successful and
 we report it as such. SrTiO₃ (T_c ≈ 105 K) has T* = 300 K for the three models that pass the
@@ -552,14 +552,14 @@ PbTiO₃ (763 K), which has the highest transition temperature of the four, does
 600 K for SevenNet-0 and 900 K for CHGNet. A single-mode treatment is not expected to reproduce an
 absolute T_c, but the PbTiO₃ failure is a genuine ordering failure rather than a scale error, and it
 is the clearest limitation of the screen in this work. T* also moves with the frozen-cell
-normalisation (§2.4). It is therefore reported as a diagnostic (Table S6 of the ESI); the SrTiO₃
+normalisation (Section 2.4). It is therefore reported as a diagnostic (Table S6 of the ESI); the SrTiO₃
 gate and the control performance, not the T* ordering, are what support using the screen's calls
-in the comparison of §3.3.
+in the comparison of Section 3.3.
 
 Table 3 gives the per-model false-stable rates on the displacive/anharmonic set (Table S5 gives
 the same rates over the full temperature ladder and with the bcc metals included; non-bcc,
 non-borderline, T ≤ 300 K; bcc excluded because its label marks a thermodynamic, strain-coupled
-transition rather than dynamic stability, §2.1 and §3.3).
+transition rather than dynamic stability, Sections 2.1 and 3.3).
 
 **Table 3** The soft-mode screen per model at T ≤ 300 K on the fifteen non-bcc, non-borderline
 systems: finite-temperature false-stable rate and accuracy, beside the harmonic accuracy on the
@@ -576,7 +576,7 @@ same fifteen systems and, for reference only, on all nineteen scored systems; co
 
 The fourth column is the harmonic accuracy **on the same fifteen systems** the
 finite-temperature column scores, and it is the only harmonic column that may legitimately be
-compared with it. The fifth reproduces the §3.1 figure over all nineteen scored systems and is
+compared with it. The fifth reproduces the Section 3.1 figure over all nineteen scored systems and is
 shown only so the two are not confused: it includes the bcc metals, which the finite-temperature
 layer excludes, and MACE-MP-0's and CHGNet's harmonic errors are concentrated exactly there.
 
@@ -585,7 +585,7 @@ On the matched set MACE-MP-0 is harmonically perfect (15/15), not 17/19, and CHG
 CHGNet's nineteen-system harmonic accuracy beside its fifteen-system finite-temperature accuracy
 would suggest that the model lowest at the harmonic level is second best at finite temperature;
 that reading comes from mismatched denominators, and we do not draw it. On matched systems
-CHGNet's two harmonic errors are CeO₂ and NaCl, the marginal controls of §3.1.
+CHGNet's two harmonic errors are CeO₂ and NaCl, the marginal controls of Section 3.1.
 
 The matched columns show the three harmonically perfect models at 25/30 to 27/30 at finite
 temperature, and CHGNet and ORB-v2, both 13/15 harmonically, at 26/30 and 24/30. **These five
@@ -624,8 +624,8 @@ p = 0.066), and by 900 K most labels have flipped to stable and the comparison l
 Without ORB-v2 (60 pairs) the counts are 3 v 2, 14 v 2, 20 v 2 and 10 v 2, with system-clustered
 p = 1.0, 0.156, 0.055 and 0.25 (ESI Table S15), so removing the one model with directly predicted
 forces changes neither the direction nor the conclusion. The frozen-cell convention changes the
-size: at 300 K the count runs from 7 v 4 to 24 v 4 across the conventions of §2.4, and at 100 K
-three of them give b ≤ c (ESI §S1.3).
+size: at 300 K the count runs from 7 v 4 to 24 v 4 across the conventions of Section 2.4, and at 100 K
+three of them give b ≤ c (ESI Section S1.3).
 
 Where the discordances sit matters as much as how many there are. We give the breakdown
 descriptively, because it was selected after seeing the outcome and is not a test. At 300 K, 13 of
@@ -641,7 +641,7 @@ and the fourth is ORB-v2 on SrTiO₃, which sees no instability at any temperatu
 systems hold 22 of the 23. An error that four or five architectures share on the same system can
 come from the single-mode screen itself (approximation A1 of Table 1) or from a surface error common
 to the models, for instance one inherited from similar training data. Running the screen on PBE
-energies along the same coordinates separates the two (§2.6; ESI §S5, Table S19): a mis-call that
+energies along the same coordinates separates the two (Section 2.6; ESI Section S5, Table S19): a mis-call that
 persists there belongs to the screen, the functional or the label, and one that disappears belongs
 to the MLIPs. (A mis-call that persists can also follow the functional, which the checks below
 test.) For BaTiO₃ and KNbO₃ the shared 300 K mis-calls disappear. All eight b units of
@@ -655,7 +655,7 @@ BaTiO₃ and 30.0 meV on KNbO₃, against 73.5 and 87.8 meV at MACE-MP-0's latti
 eigenvector; at each method's own equilibrium lattice the MACE-MP-0 and PBE wells are within
 15 % of each other (42.6 against 48.7 meV and 27.9 against 30.0 meV). On the two modes profiled
 there, that band and PBE's softest (Γ) mode, PBE calls both systems stable at 300 K, the same error
-as the MLIPs (ESI §S5.3, Table S23). PBE at its own lattice has a third imaginary mode in each
+as the MLIPs (ESI Section S5.3, Table S23). PBE at its own lattice has a third imaginary mode in each
 system, at X (−6.63 THz in BaTiO₃, −5.47 THz in KNbO₃, between the two profiled modes in
 frequency), which was not profiled; since the phase is called stable only if no mode condenses,
 PBE's own 300 K call is stable on the modes tested, not established. A change of lattice and
@@ -668,7 +668,7 @@ within 20 % for three of the five models), every PBE curve along a deciding coor
 minimum at that edge, and at 300 K the label sits 8 K above the transition. They do not survive a
 change of functional. With PBEsol on the same structures the tilt wells are 0.32–0.42 of the PBE
 depth, the minimum moves inside the scan, and seven of the eight persistent CsSnBr₃ errors (units
-where the MLIP and PBE calls are both wrong; 8 of all 9 CsSnBr₃ PBE errors) are called correctly, including every one at 600 K, 308 K above the transition (ESI §S5.3, Table
+where the MLIP and PBE calls are both wrong; 8 of all 9 CsSnBr₃ PBE errors) are called correctly, including every one at 600 K, 308 K above the transition (ESI Section S5.3, Table
 S23). Denser k-points and higher cutoffs change no call, although the denser k-mesh lowers the
 CsSnBr₃ well depth by 6.8 %, more than the 5 % we fixed in advance. The CsSnBr₃ errors therefore
 follow the functional and are not shown to be the screen's; since PBEsol is applied at each
@@ -701,7 +701,7 @@ denominator is therefore fifteen systems, not sixteen.)
 
 Because b and c rest on harmonic calls, we bound the harmonic estimator's own
 reproducibility noise directly rather than assuming it is small. The v1 and v2 harmonic generations
-(§2.3) are the same algorithm at the same settings — 0.01 Å displacements, 2×2×2 supercells,
+(Section 2.3) are the same algorithm at the same settings — 0.01 Å displacements, 2×2×2 supercells,
 12×12×12 meshes — re-measured in independently pinned environments, giving 100 paired (system,
 model) re-measurements. The spread is strongly model-dependent and must not be pooled: CHGNet's
 largest deviation is 0.0076 THz and MatterSim's is 0.00057 THz, with zero stability-call flips
@@ -745,9 +745,9 @@ b-units (BaTiO₃ and KNbO₃) PBE at its own lattice makes the same 300 K call 
 (above). SevenNet-0 is
 top-equal in *both* layers, tied with MatterSim and MACE-MP-0 harmonically on the matched set, so
 the relationship is not an inversion and we do not claim one. ORB-v2 is the only model that does
-not select the R-point instability of SrTiO₃ (§2.4); its finite-temperature accuracy, 24/30, is one
+not select the R-point instability of SrTiO₃ (Section 2.4); its finite-temperature accuracy, 24/30, is one
 unit below MACE-MP-0 and MatterSim and not separated from any of the others. What this layer shows
-is the per-family recall above and, in §3.3, the comparison with SSCHA, not a ranking of models.
+is the per-family recall above and, in Section 3.3, the comparison with SSCHA, not a ranking of models.
 
 CHGNet's harmonic accuracy is tolerance-dependent: 15/19 across the plateau tol ∈ [0.05, 0.20]
 used throughout, rising to 17/19 at tol = 0.30, where two marginal false-unstables (CeO₂ at
@@ -761,12 +761,12 @@ the false-unstable count, and the comparison is degenerate.
 ### 3.3 SSCHA: agreement on bcc, and a local stability criterion on deep displacive wells
 
 We ran multi-mode SSCHA on the three bcc metals, the four oxide perovskites, CsSnI₃ and the two
-fluorites as the default cross-check of §2.5: a `ForcePositiveDefinite` start, automatic
+fluorites as the default cross-check of Section 2.5: a `ForcePositiveDefinite` start, automatic
 stochastic relaxation, and the bubble-level free-energy Hessian (`include_v4 = False`) evaluated
 at the fixed high-symmetry reference. That is the recipe a practitioner escalating from a cheap
 screen would run. We ran it twice: with the production settings, whose grid did not record
-convergence and which converged on none of the 16 seeds of four units re-run to record it (§2.5),
-and with the converged recipe of §2.5. The SSCHA results below are the converged ones (2×2×2 for the
+convergence and which converged on none of the 16 seeds of four units re-run to record it (Section 2.5),
+and with the converged recipe of Section 2.5. The SSCHA results below are the converged ones (2×2×2 for the
 non-bcc systems at 100–900 K, 3×3×3 for the bcc metals at 100, 300 and 600 K; ESI Table S22)
 unless they are labelled production values, which are given beside them as the record of what the
 default recipe returned (ESI Tables S3, S10, S16 and S17). SSCHA here runs on the same MLIP energies as the screen, so agreement
@@ -782,19 +782,19 @@ converged 3×3×3 values are in ESI Table S22). With the production recipe in th
 five models are already positive at 50 K, the lowest temperature on the SSCHA ladder, so in that
 cell and recipe any dynamic-stabilisation temperature is left-censored at 50 K; the converged
 3×3×3 grid (below) does not support this for MatterSim and ORB-v2. The bcc metals are excluded
-from scoring (§3.2) because bcc to hcp/ω is a martensitic, strain-coupled, first-order transition, whose
+from scoring (Section 3.2) because bcc to hcp/ω is a martensitic, strain-coupled, first-order transition, whose
 thermodynamic transition temperature is not a dynamic-stability label. Three things limit what the
 production numbers show. First,
-MACE-MP-0 and CHGNet have no harmonic instability in bcc Zr or Hf (§3.1), so a positive SSCHA
+MACE-MP-0 and CHGNet have no harmonic instability in bcc Zr or Hf (Section 3.1), so a positive SSCHA
 frequency on those four (metal, model) pairs tests no thermal stabilisation. Second, several curves
 soften rather than harden with temperature, the opposite of entropy stabilisation: Ti with
 MACE-MP-0 falls from 1.73 to 1.38 THz between 50 and 600 K, Ti with SevenNet-0 from 1.27 to
 1.18 THz and Hf with SevenNet-0 from 0.33 to 0.30 THz. Third, the production grid recorded no
-convergence diagnostics (§2.5), so it cannot show how far each value moved from the
+convergence diagnostics (Section 2.5), so it cannot show how far each value moved from the
 positive-definite starting matrix. Within those limits, ORB-v2 lies closest to the stability boundary (0.06–0.28 THz
 on Ti and Hf), SevenNet-0 near 0.3 THz on Hf, and MatterSim, whose harmonic bcc instabilities are
 the deepest of the five models (−1.96 to −2.21 THz), at 1.6–2.1 THz. The seed-reproducibility and
-cell-size tests of §3.5 were run on Zr with MACE-MP-0, one of the four pairs with nothing to
+cell-size tests of Section 3.5 were run on Zr with MACE-MP-0, one of the four pairs with nothing to
 stabilise, so they bound SSCHA's noise on that surface and not on a unit near a sign change.
 With the production recipe the bcc-Zr/MatterSim 50 K value is not converged on any of four seeds
 (+1.64 to +1.79 THz, seed standard deviation 0.075 THz, within 0.24 THz of the +1.88 THz
@@ -805,7 +805,7 @@ harmonic bcc instabilities: MatterSim is unstable at 100 and 300 K on all three 
 on Zr, and both harden with temperature, reaching stability by 600 K on Ti and Zr (Hf with
 MatterSim is still −0.57 THz at 600 K; Fig. 3; ESI Table S22), where the 2×2×2 production values
 were positive throughout. Because 2×2×2 and 3×3×3 contain different
-zone-boundary **q**-points (§3.5), this is a change of cell and of convergence together; the
+zone-boundary **q**-points (Section 3.5), this is a change of cell and of convergence together; the
 converged Zr/MatterSim pair at 300 K isolates the cell (+0.92 THz in 2×2×2, −0.92 THz in 3×3×3,
 both converged from two starts, although in the 2×2×2 cell the fresh-ensemble check does not
 confirm a minimum for the positive-definite start). Ti with MACE-MP-0, which softens in the production grid, hardens
@@ -814,13 +814,13 @@ in the converged one (+1.57 to +1.71 THz from 100 to 600 K).
 Over the 45 units where both methods ran (Ti, Zr and Hf at 100, 300 and 600 K), the two stability
 calls agree in 31/45 = 0.69 [0.54, 0.80] with production SSCHA (Fig. 4; 25/36 = 0.69 without ORB-v2) and
 in 33/40 = 0.82 [0.68, 0.91] with converged 3×3×3 SSCHA (32/36 = 0.89 [0.75, 0.96] without
-ORB-v2; Ti with ORB-v2 at 600 K, unresolved by the replicates of §3.5, is left out, and from the
+ORB-v2; Ti with ORB-v2 at 600 K, unresolved by the replicates of Section 3.5, is left out, and from the
 first start alone the count is 33/41), MatterSim going from 0/9 to 7/9. Twelve of the agreeing
 units are MACE-MP-0 and CHGNet on Zr and Hf, where agreement is trivial; on the other 33 the
 production calls agree in 19. MatterSim agrees with production SSCHA on the call on none of its 9
 units: its screen calls all
 three metals unstable at 100, 300 and 600 K. The screen's symmetric-point curvature is not compared
-with SSCHA by sign, because for a single mode it is positive by construction (§2.4); the ten bcc
+with SSCHA by sign, because for a single mode it is positive by construction (Section 2.4); the ten bcc
 units on which it is negative are numerical (six width-solver fallbacks for MatterSim, one fit
 artefact for ORB-v2 on Ti, and three Hf units in which ORB-v2 has no screened imaginary mode; ESI
 Table S16). The frequency magnitudes show little rank correlation (Spearman ρ = 0.11, −0.003
@@ -830,10 +830,10 @@ SSCHA frequency against the screen's call, not against that curvature.
 
 ![**Fig. 3** Multi-mode SSCHA on bcc Ti, Zr and Hf, one panel each: the lowest free-energy-Hessian
 frequency, the default criterion evaluated at the bcc reference, against temperature for the five
-models (§3.3). Lines are the production recipe in the 2×2×2 cell, whose convergence was not recorded (§2.5);
+models (Section 3.3). Lines are the production recipe in the 2×2×2 cell, whose convergence was not recorded (Section 2.5);
 open squares are the converged recipe in the 3×3×3 cell at 100, 300 and 600 K (converged units
 only; ESI Table S22), and the cross marks Ti with ORB-v2 at 600 K, converged from the first start
-but left unresolved by its pre-registered replicates (§3.5; ESI Table S24). SSCHA runs on each model's own energies. Dashed lines with open markers are MACE-MP-0
+but left unresolved by its pre-registered replicates (Section 3.5; ESI Table S24). SSCHA runs on each model's own energies. Dashed lines with open markers are MACE-MP-0
 and CHGNet on Zr and Hf, which have no harmonic instability on their own surfaces, so a positive
 frequency there tests no thermal stabilisation. Every production unit is positive from 50 K, the
 lowest temperature computed; the converged MatterSim and ORB-v2 values are negative at 100 and
@@ -844,8 +844,8 @@ temperature, for example Ti with MACE-MP-0, from 1.73 to 1.38 THz between 50 and
 converged 3×3×3 values for that pair harden.](../results/figures/fig_sscha_bcc.png)
 
 ![**Fig. 4** Screen against production SSCHA on bcc Ti, Zr and Hf at 100, 300 and 600 K (45 paired
-units; §3.3): the SSCHA lowest free-energy-Hessian frequency (2×2×2, convergence not recorded)
-for each unit, sorted by the soft-mode screen's stability call, its free-energy comparison (§2.4).
+units; Section 3.3): the SSCHA lowest free-energy-Hessian frequency (2×2×2, convergence not recorded)
+for each unit, sorted by the soft-mode screen's stability call, its free-energy comparison (Section 2.4).
 The screen's symmetric-point curvature is not plotted, because for a single mode it is positive
 by construction and its negative values are numerical (ESI Table S16). Both methods run on the
 same MLIP energies, so agreement is a consistency check, not a first-principles test. Points in
@@ -857,8 +857,8 @@ model's surface, where agreement is trivial.](../results/figures/fig_method_agre
 
 Displacive systems: SSCHA's default criterion calls the ferroelectric wells stable. On the
 ferroelectric oxide perovskites at T ≤ 300 K, below every transition temperature, the screen
-recovers 16/30 instabilities (§3.2). Converged SSCHA recovers 4 of the 22 units where it
-converged and its replicates (§3.5) leave the call resolved (4/22 = 0.18 [0.07, 0.39]; 4/19 =
+recovers 16/30 instabilities (Section 3.2). Converged SSCHA recovers 4 of the 22 units where it
+converged and its replicates (Section 3.5) leave the call resolved (4/22 = 0.18 [0.07, 0.39]; 4/19 =
 0.21 [0.09, 0.43] without ORB-v2), against 14/22 = 0.64 [0.43, 0.80] for the screen on the same
 units (11/19 = 0.58 [0.36, 0.77] without ORB-v2); from the positive-definite start alone the
 counts were 4/26 and 15/26. All four are PbTiO₃ at 100 K, within 0.4 THz of the boundary; of the
@@ -887,7 +887,7 @@ is 2/2⁵ = 0.0625, so no arrangement of these data could reach conventional sig
 system level. With the production recipe the count was 33 against 3 on 47 units, four of the five
 systems favouring the screen (p = 0.125); the fluorite part of that contrast was the unconverged
 relaxation. The contrast also depends on the screen's frozen-cell convention, since the screen's
-ferroelectric recall runs from 5/30 to 28/30 across the conventions of §2.4. ESI Table S10 gives
+ferroelectric recall runs from 5/30 to 28/30 across the conventions of Section 2.4. ESI Table S10 gives
 each system set with and without ORB-v2, ESI Table S22 the converged counts and ESI Table S24
 the replicates.
 
@@ -896,8 +896,8 @@ KNbO₃, PbTiO₃) at T ≤ 300 K, below every transition temperature: the soft-
 production frozen-cell convention and converged SSCHA's default criterion, on the 22 units where
 SSCHA converged with a call its pre-registered replicates leave resolved (14/22 against 4/22;
 15/26 against 4/26 from the positive-definite start alone), with production SSCHA (5/27, hatched)
-for reference, all with Wilson 95% intervals (§3.3). Of the 30 units, converged SSCHA failed on
-two, did not converge on two and is unresolved on four (§3.5); the production denominator
+for reference, all with Wilson 95% intervals (Section 3.3). Of the 30 units, converged SSCHA failed on
+two, did not converge on two and is unresolved on four (Section 3.5); the production denominator
 excludes one numerical blow-up and two failed runs. Both methods see the same units, so the comparison is paired; its system-clustered
 test (p = 0.5 on the combined displacive set and on these three systems alone) is in the text and
 ESI Tables S10 and S22, and two marginal intervals are not that test.](../results/figures/fig_displacive_recall.png)
@@ -907,25 +907,25 @@ the equilibrium phase at T, which is a global question about the free energy. Th
 criterion is the curvature of the free energy at the symmetric reference, which asks a local one:
 is that phase a local minimum? For a shallow double well the two answers coincide. For a deep one
 they need not, because within a Gaussian (SCHA) trial state the transition becomes
-first-order-like (§2.4): the free energy keeps a local minimum at the symmetric point while a
+first-order-like (Section 2.4): the free energy keeps a local minimum at the symmetric point while a
 displaced minimum lies lower, and a criterion read at the fixed reference then reports stable.
 On the same MLIP energies the screen finds that situation on about half of the units in question.
 Of the 27 non-bcc units, over the whole temperature ladder, where converged SSCHA calls the phase
 stable against an unstable label in every finished replicate (27/77 = 0.35 [0.25, 0.46] of the
 label-unstable units with a resolved call; 23/67 without ORB-v2; from the positive-definite start
-alone 34/84, of which the replicates of §3.5 leave 7 unresolved), the screen's free-energy
+alone 34/84, of which the replicates of Section 3.5 leave 7 unresolved), the screen's free-energy
 comparison finds a lower displaced minimum and calls the phase unstable on 15 (15/27 = 0.56
 [0.37, 0.72]; 12/23 = 0.52 [0.33, 0.71] without ORB-v2; ESI Tables S16, S22 and S24; 17/34 from
 start A alone, 46/57 with the production recipe), while its symmetric point remains a local
 minimum. All 27 are ferroelectric or antiferrodistortive perovskites: BaTiO₃ (8), KNbO₃ (11),
 PbTiO₃ at 300 and 600 K (4) and SrTiO₃ at 100 K (4), which is 27 of the 31 resolved
 label-unstable oxide-perovskite units (23 of 27 on the three ferroelectrics). The four SrTiO₃
-units rest on a 2×2×2 cell with no size test, and their call may be a finite-size effect (§3.5);
+units rest on a 2×2×2 cell with no size test, and their call may be a finite-size effect (Section 3.5);
 without them the count is 23/73 = 0.32 [0.22, 0.43], all on the three ferroelectrics. Eighteen of the 27
 were already false-stable with the production recipe; the other 9 (PbTiO₃ 4, SrTiO₃ 4, KNbO₃ 1)
 are new under convergence. That the symmetric point stays a local minimum is not
 itself evidence: for a single mode the screen's symmetric-point curvature equals its
-self-consistent trial stiffness and is positive by construction (§2.4). Cubic BaTiO₃ with
+self-consistent trial stiffness and is positive by construction (Section 2.4). Cubic BaTiO₃ with
 MACE-MP-0 at 100 K is a typical case: screen call unstable, converged SSCHA +2.03 THz (production
 +2.87 THz). Where the screen gets
 these units right, it does so because it minimises over the centroid instead of reading a
@@ -933,12 +933,12 @@ curvature; a fixed-reference Hessian has no such step, and relaxing the SSCHA ce
 displaced start would ask the global question directly, which we did not do.
 The converged recipe separates this account from early stopping unit by unit. A Hessian evaluated
 after a relaxation that stopped near its positive-definite starting matrix is not evaluated at
-the SCHA minimum and can read stable for that reason alone (§2.5; ESI §S2.1), and that is what
+the SCHA minimum and can read stable for that reason alone (Section 2.5; ESI Section S2.1), and that is what
 the production recipe did. On BaTiO₃ and KNbO₃ at 100 K the false-stable survives a converged
 relaxation in every model on the full-ensemble Hessian (for BaTiO₃ with CHGNet the bootstrap
 leaves it marginal, below), and on all ten of those units the screen finds the lower displaced
 minimum, so there the local-criterion account stands and early stopping does not explain the
-call. All ten were replicated under the pre-registered protocol of §3.5: a second seed returns a
+call. All ten were replicated under the pre-registered protocol of Section 3.5: a second seed returns a
 converged stable call on all ten, and the second start a stable call on the seven where it
 finished (converged on four; on BaTiO₃ with CHGNet and ORB-v2 and KNbO₃ with ORB-v2 it stopped at a
 cellconstructor symmetry error). BaTiO₃ with CHGNet (+1.65 ± 1.50 THz, bootstrap standard
@@ -951,7 +951,7 @@ MACE-MP-0 at 100 K unstable from both starts (−22.4 and −26.0 THz), and ever
 unstable, so the fluorite false-stables of the production recipe were early stopping, not the
 criterion. Converged SSCHA also calls PbTiO₃ stable at 300 and 600 K and SrTiO₃ at 100 K, where
 production did not; on BaTiO₃ and KNbO₃ at 300 K both methods call the phase stable, on MLIP
-wells about half the PBE depth (§3.2). An MLIP error on the sampled configurations is a further
+wells about half the PBE depth (Section 3.2). An MLIP error on the sampled configurations is a further
 possibility (below).
 
 This account is consistent with, and more specific than, the published analysis of the SSCHA
@@ -979,7 +979,7 @@ ensemble: on this unit the fourth-order term does not change the curvature, and 
 stable. That ensemble sits at an unconverged auxiliary matrix; the fourth-order term was not
 evaluated at the converged one (+2.03 THz at bubble level). Whether an MLIP error on the thermally sampled configurations
 also contributes to the false-stables is a separate question, which our PBE forces address only
-in part (ESI §S5, Table S20). They were computed on configurations from the four unconverged
+in part (ESI Section S5, Table S20). They were computed on configurations from the four unconverged
 production ensembles, not on the converged ensembles: the false-stables that survive convergence,
 BaTiO₃ and KNbO₃ at 100 K, have no first-principles check on the configurations their converged
 Hessians were evaluated on. On the production configurations there is no sign of such an error:
@@ -1008,7 +1008,7 @@ and 3/16 without ORB-v2). Every remaining false-unstable is CsSnI₃ (−0.32 to
 converged SrTiO₃ unit above 105 K is stable (0/11 false-unstable; +1.71 to +2.76 THz), and none of
 the 14 non-bcc units converged SSCHA calls stable at 100 K turns negative at higher temperature.
 PBE forces on twelve configurations from the SrTiO₃ 600 K ensemble of the production recipe (ESI
-§S5, Table S20), at 0.34 Å root-mean-square displacement, do show the MLIPs extrapolating there:
+Section S5, Table S20), at 0.34 Å root-mean-square displacement, do show the MLIPs extrapolating there:
 MACE-MP-0's relative force error rises from 0.11 near equilibrium to 0.19, energy errors reach
 44 meV per atom, and all five models fall in the same range (0.12–0.20). But those configurations
 come from a relaxation that ran away; the converged relaxation of the same unit is stable
@@ -1026,7 +1026,7 @@ at 900 K) (ESI Table S17). They fall on the deepest wells and on the high-temper
 and together they involve every model except MACE-MP-0. In the superseded v1 grid retained in the
 ledger, the seven failed units had returned values of −0.3 to −3653 THz instead of stopping; the
 most extreme v1 value, about −2 × 10⁶ THz, belongs to SrTiO₃ with ORB-v2 at 600 K, which returns
-−544.5 THz in the production grid (ESI §S2.3). The converged grid fails on the same seven units.
+−544.5 THz in the production grid (ESI Section S2.3). The converged grid fails on the same seven units.
 Its four blow-ups are all ORB-v2 units that did not converge (ZrO₂ at 100 K and SrTiO₃ at 300,
 600 and 900 K, down to −33,506 THz), and no converged unit is a blow-up (ESI Table S22).
 
@@ -1035,7 +1035,7 @@ Its four blow-ups are all ORB-v2 units that did not converge (ZrO₂ at 100 K an
 Because no single model is reliable across the set, we test whether cross-model disagreement flags
 the units where the majority-vote consensus finite-temperature call is wrong. On the non-bcc,
 non-borderline soft-mode units (n = 60; bcc excluded because its thermodynamic-T_c label is the
-wrong reference for dynamic stability, §3.3), the majority-vote consensus is wrong on 12/60 =
+wrong reference for dynamic stability, Section 3.3), the majority-vote consensus is wrong on 12/60 =
 0.200 [0.118, 0.318] of units. That set is fifteen systems × four temperatures, the fifteen
 systems of the matched set above (ESI Table S7), and each unit already collapses the five model
 votes, so the units are clustered by system and are not independent. Every test below resamples
@@ -1097,7 +1097,7 @@ rest largely on units in which the spread measures that extrapolation; the restr
 pre-registered for the primary only and was not applied to the secondary scores. With fifteen
 systems these data do not exclude a useful force-level signal, and they do not show one.
 
-![**Fig. 6** Ensemble-disagreement guardrail (§3.4), with all five models and without ORB-v2: the
+![**Fig. 6** Ensemble-disagreement guardrail (Section 3.4), with all five models and without ORB-v2: the
 majority-vote consensus finite-temperature error rate on units where the models split on the
 stable/unstable call and on units where they are unanimous (k/n with Wilson 95% intervals), and
 the AUC of the vote split and of the cross-model frequency spread as predictors of consensus error,
@@ -1117,10 +1117,10 @@ Stochastic reproducibility. Repeating the bcc-Zr / MACE-MP-0 / 100 K SSCHA with 
 random seeds gives a lowest free-energy-Hessian frequency of +1.798 ± 0.001 THz (range +1.797 to
 +1.800 THz), and the same unit re-measured in the pinned environment, with the SSCHA initialiser
 built from phonopy force constants, returns +1.79 to +1.80 THz at every temperature on the ladder. The test
-is narrower than it looks. MACE-MP-0 finds no harmonic instability in bcc Zr (§3.1), so this unit
+is narrower than it looks. MACE-MP-0 finds no harmonic instability in bcc Zr (Section 3.1), so this unit
 measures SSCHA's stochastic noise on a surface with nothing to stabilise. It says nothing about the
 noise on a unit near a sign change, and it does not by itself show that the cross-model bcc margins
-of §3.3 are signal rather than noise. A four-seed study that records the convergence diagnostics
+of Section 3.3 are signal rather than noise. A four-seed study that records the convergence diagnostics
 (populations used, convergence flag, gradient history, and the spread of the lowest Hessian
 frequency across seeds) extends the test to units that do carry an instability: bcc Zr with
 MatterSim at 50 K, BaTiO₃ and ZrO₂ with MACE-MP-0 at 100 K, and SrTiO₃ with MACE-MP-0 at 600 K
@@ -1142,7 +1142,7 @@ units, by 0.18 THz on BaTiO₃ (+2.03 against +1.85 THz, the second start at 1.0
 bootstrap error.
 
 Replicates of the converged grid. Under a protocol registered before any replicate ran (ESI
-§S2.4), 65 grid units were re-run from a second starting matrix (imaginary modes set to +0.3 THz
+Section S2.4), 65 grid units were re-run from a second starting matrix (imaginary modes set to +0.3 THz
 instead of |ω|) and, separately, with a second random seed: the 53 whose converged call disagrees
 with its comparison (the label, or for bcc the screen's call) and 12 drawn at random from the rest
 (ESI Table S24). The second seed finished on all 65. The second start finished on 51: 19 units
@@ -1151,7 +1151,7 @@ of those re-run once from 1.0 THz, as the protocol prescribes, 12 finished and 7
 six stopped at other cellconstructor symmetry errors, and one wrote no result. On the 51 units
 with three values the call is the same in 43 (43/51 = 0.84 [0.72, 0.92]; 32/39 without ORB-v2),
 with a median range of 0.22 THz in the lowest Hessian frequency. The other eight are unresolved,
-and §3.3 counts them as such rather than by majority: in seven, PbTiO₃ and KNbO₃ with CHGNet and
+and Section 3.3 counts them as such rather than by majority: in seven, PbTiO₃ and KNbO₃ with CHGNet and
 MatterSim at 300 and 600 K (PbTiO₃ with MatterSim at 600 K failed under both recipes), the second start ended at its wall or population cap at −209 to
 −6230 THz, numerical blow-ups, while the first start and the second seed agree on a converged
 stable call; the eighth is Ti with ORB-v2 at 600 K (+2.53 THz from the first start, −26.4 THz
@@ -1169,7 +1169,7 @@ has one, it does not: converged from two starts, Zr at 300 K is +0.92 THz in 2×
 in 3×3×3 (in 2×2×2 the fresh-ensemble check does not confirm a minimum for the positive-definite
 start), consistent with the ω mode entering the larger cell; the production recipe gives the
 same sign change (+1.95 to −2.11 THz) without converging. The bcc SSCHA calls are therefore
-cell-dependent for MatterSim, and the converged grid's 3×3×3 bcc values (§3.3) are not a
+cell-dependent for MatterSim, and the converged grid's 3×3×3 bcc values (Section 3.3) are not a
 converged version of the 2×2×2 ones. A nested 4×4×4 and 6×6×6 test was not run.
 
 Zone-boundary systems. The SrTiO₃ antiferrodistortive instability lives at the zone-boundary
@@ -1189,7 +1189,7 @@ explanation for one system and is not a convergence test.
 
 ## 4. Discussion
 
-The harmonic layer (§3.1) reproduces the published picture and is consistent with H1: PES
+The harmonic layer (Section 3.1) reproduces the published picture and is consistent with H1: PES
 softening appears as false-stable calls localised to specific instabilities rather than as a
 uniform rate. MACE-MP-0 and CHGNet read bcc Zr and Hf at −0.000 THz (2/13 false-stable each),
 while MatterSim and SevenNet-0 reproduce every documented soft mode.
@@ -1197,13 +1197,13 @@ while MatterSim and SevenNet-0 reproduce every documented soft mode.
 For H2 the data support an existence statement about transfer and no more. Harmonically correct
 units that the screen mis-calls at finite temperature exist and outnumber the reverse, 17 to 4 at
 300 K on the matched set under the screen's production frozen-cell convention (7 to 24 against 4
-under the others, §2.4). The asymmetry is large and one-directional in unit counts but not
+under the others, Section 2.4). The asymmetry is large and one-directional in unit counts but not
 significant once units are clustered by system (p = 0.152 at 300 K, 0.066 at 600 K), and 13 of the
 17 sit in BaTiO₃, KNbO₃ and CsSnBr₃, three systems the screen mis-calls for at least four of the
 five models. Sharing does not make them the screen's. On PBE energies along the same coordinates
 the eight BaTiO₃ and KNbO₃ units are called correctly, with the MLIP wells, at the MLIPs'
 lattices, about half the PBE depth, while the five CsSnBr₃ units stay mis-called; with PBEsol on
-the same structures four of those five are called correctly (§3.2). But PBE at its own lattice,
+the same structures four of those five are called correctly (Section 3.2). But PBE at its own lattice,
 0.3–0.8 % smaller, calls BaTiO₃ and KNbO₃ stable at 300 K as the MLIPs do, on the two modes
 profiled there (its X-point mode, also imaginary, was not profiled). So the eight are a softening
 that four architectures share relative to PBE at their own lattices, not an error that PBE at its
@@ -1211,7 +1211,7 @@ equilibrium is shown to avoid; four more follow the functional, and one (ORB-v2 
 above the transition) persists under both functionals. Either way the screen's 300 K calls on
 these two systems sit on a lattice and well-depth knife edge. Of the 17 units, then, eight are
 called the same way by PBE at its own lattice on the modes profiled, five follow the functional
-and three are PbTiO₃, the screen's ordering failure (§3.2), so the count is mostly not a
+and three are PbTiO₃, the screen's ordering failure (Section 3.2), so the count is mostly not a
 difference between the MLIPs and their reference functional.
 What survives is the point the title makes, read as a statement about the calls a screen makes
 with a model rather than about the model's surface alone, and it does not depend on which layer
@@ -1236,14 +1236,14 @@ the local question only, and the global question has to be asked separately, for
 displaced structures, which the screen does one mode at a time. On the displacive systems at
 T ≤ 300 K the screen's free-energy comparison is right where converged SSCHA is wrong on 12 units
 against 2, all of the difference on BaTiO₃ and KNbO₃ (system-clustered p = 0.5), and on the
-ferroelectric oxides its size depends on the screen's frozen-cell convention (§2.4). The
+ferroelectric oxides its size depends on the screen's frozen-cell convention (Section 2.4). The
 relaxation also matters: the production recipe stopped near its starting matrix, and its
 settings, chiefly the cumulative step cap, produced the fluorite false-stables and the high-temperature false-unstables reported for it,
 neither of which survives convergence; seed agreement did not reveal it, because every seed
-stopped in the same place (§3.5). On the bcc metals, whose labels are not dynamic-stability
+stopped in the same place (Section 3.5). On the bcc metals, whose labels are not dynamic-stability
 labels, the two methods agree on the call in 31/45 production units, twelve of those agreements
 trivial, and in 33/40 converged 3×3×3 units with a resolved call, a figure that depends on the
-cell for MatterSim (§3.5).
+cell for MatterSim (Section 3.5).
 
 Scope: foundation models as shipped. Every result here is for the released checkpoints used
 without adaptation. That is the regime of generative-CSP screening: a practitioner filtering
@@ -1267,14 +1267,14 @@ checkpoints tested here (MACE-MP-0, SevenNet-0, a large MatterSim checkpoint and
 system-specific first-principles data cut their force errors 5–15-fold and brought the
 architectures to comparable accuracy, on diffusion, structure and energy pathways rather than
 phonons.^48^ These results bear on our
-findings unevenly. Fine-tuning could change the per-model inputs: the harmonic calls of §3.1 (the
+findings unevenly. Fine-tuning could change the per-model inputs: the harmonic calls of Section 3.1 (the
 flattened Zr and Hf instabilities are the kind of softening these studies address), the well
 depths and shapes the screen reads, and so the per-model screen accuracies and the H2 counts built
 from them. Whether it would remove the mis-calls shared across models, which carry most of the H2
-count, we tested in a trial registered before any data were computed (ESI §S6, Tables S25 and S26). MACE-MP-0 and
+count, we tested in a trial registered before any data were computed (ESI Section S6, Tables S25 and S26). MACE-MP-0 and
 CHGNet were each fine-tuned three times (seeds 0, 1 and 2), with each tool's documented small-data
 recipe and 30 epochs, on PBE energies and forces of 120 thermally rattled 2×2×2 cells of BaTiO₃,
-KNbO₃ and CsSnBr₃, and tested on the held-out PBE data of §2.6; a call counts as changed only if
+KNbO₃ and CsSnBr₃, and tested on the held-out PBE data of Section 2.6; a call counts as changed only if
 all three replicates agree. Along those coordinates fine-tuning recovered the PBE surface: on the
 BaTiO₃ and KNbO₃ deciding paths the median ratio of fine-tuned to PBE well depth rose from 0.45
 to 0.99 for MACE-MP-0, inside the registered band of 0.8–1.2 (for CHGNet the pooled median is
@@ -1290,17 +1290,17 @@ re-run is the registered result. A check made after the results, and not registe
 with the gap lying in the lattice, though it does not separate the lattice from the eigenvector. Trained without stresses, the 30-epoch MACE-MP-0 replicates relax BaTiO₃ and
 KNbO₃ about 0.5 % smaller than the base model, to within 0.3 % of the PBE lattice, and call both
 stable at 300 K there; at the base model's lattice, where the held-out PBE data were computed,
-all six replicate and system pairs call 300 K unstable. That is what PBE does itself (§3.2): at
+all six replicate and system pairs call 300 K unstable. That is what PBE does itself (Section 3.2): at
 its own lattice it calls both stable at 300 K. A fine-tune faithful to PBE therefore inherits
 PBE's own 300 K errors at the PBE lattice, and the trial does not show that fine-tuning cannot
 fix these calls, only that fine-tuning toward PBE on one lattice without stresses does not.
-Fine-tuning could change which units fall in the deep-well regime of §3.3, since that depends on
+Fine-tuning could change which units fall in the deep-well regime of Section 3.3, since that depends on
 the well depth, but not the locality of the criterion: a curvature read at the symmetric reference
 reports stable on any surface whose double well is deep enough, fine-tuned or not, and converged
 SSCHA on a fine-tuned MACE-MP-0 still calls BaTiO₃ stable at 100 K (+1.73 THz), as the trial
 predicted, although at that model's own, contracted lattice. Nor could it
 change the screen's
-dependence on its frozen-cell convention (§2.4). And fine-tuning moves a model toward its reference
+dependence on its frozen-cell convention (Section 2.4). And fine-tuning moves a model toward its reference
 functional, not toward experiment, so whatever that functional gets wrong about a transition
 remains. How much of the finite-temperature gap fine-tuning closes for each family, and with how
 much data, is beyond what a benchmark of released checkpoints can say.
@@ -1311,14 +1311,14 @@ well founded: committee spreads propagated into molecular dynamics give more res
 trajectories,^17^ a potential's own predictive uncertainty is a sound trigger for acquiring new
 reference data,^13,14^ and uncertainty-driven active learning avoids unphysical MLIP dynamics in
 strongly anharmonic materials.^9^ The released checkpoints come as single models rather than
-trained committees, so §3.4 tests the cross-architecture version, with the five models as the
+trained committees, so Section 3.4 tests the cross-architecture version, with the five models as the
 ensemble. The discrete vote split flags consensus errors with all five models (AUC 0.762,
 system-clustered p = 0.0035) but not robustly: without ORB-v2 it falls to 0.628, with an interval
 that spans chance. For the one continuous metric tested, the cross-model spread of the screen's
 frequency, no signal could be resolved (AUC 0.361, 95% interval [0.046, 0.625]), which does not
 exclude a moderately useful predictor. That metric is a PES-level proxy rather than the force-level
 disagreement the proposal names, and the pre-registered comparison with a single model's own signal
-was not run. The force-level test of §3.4, with within-architecture committees for MACE-MP-0 and
+was not run. The force-level test of Section 3.4, with within-architecture committees for MACE-MP-0 and
 MatterSim, is the direct measurement, and by its pre-registered rule it does not show that the
 force spread flags untrustworthy calls (AUC 0.681 [0.416, 0.908]; 0.684 without ORB-v2). Some
 secondary scores, among them the MACE-MP-0 committee against MACE-MP-0's own calls (0.722 [0.564,
@@ -1330,23 +1330,23 @@ architectures to comparable accuracy^48^ would remove much of the disagreement i
 Limitations. Reference transition temperatures are approximate and scoring is qualitative. The
 labels mark thermodynamic, often first-order, transitions, whereas the screen and SSCHA probe
 dynamic stability; the two coincide for a continuous soft-mode transition and can differ for a deep
-double well, which is where the local SSCHA criterion and the labels part company (§3.3). The
+double well, which is where the local SSCHA criterion and the labels part company (Section 3.3). The
 screen's T* and its ferroelectric recall depend on the frozen-cell convention (recall 5/30 to 28/30
-across the conventions of §2.4), and accuracy on these labels cannot choose among the conventions.
+across the conventions of Section 2.4), and accuracy on these labels cannot choose among the conventions.
 The screen treats each mode on its own, and we have no quantitative bound on mode–mode coupling;
 together with the clamped cell, which leaves out the large strain coupling of PbTiO₃
 (approximations A1 and A5 of Table 1), it is a likely reason the predicted stabilisation
-temperature fails to order PbTiO₃ (§3.2), and a likely source of the mis-calls shared across
+temperature fails to order PbTiO₃ (Section 3.2), and a likely source of the mis-calls shared across
 models. Both methods run on the same MLIP
 potential-energy surface, so their agreement is a consistency check and SSCHA is not an independent
 reference. What does not depend on the surface is the experimental labels, including the SrTiO₃
 transition the gate is scored against (three of the five models pass it), and the argument of
-§3.3, which concerns the criterion rather than the surface. None of these checks the fitted double
+Section 3.3, which concerns the criterion rather than the surface. None of these checks the fitted double
 wells themselves, or the MLIP on the large-amplitude configurations SSCHA samples at high
 temperature. First-principles energies along
 the deciding soft-mode coordinates, and first-principles forces and energies on SSCHA-sampled
 configurations, separate those errors from the approximations of the two methods. We computed
-both for six systems (§2.6; ESI §S5). Along the deciding coordinates the MLIP wells are shallower
+both for six systems (Section 2.6; ESI Section S5). Along the deciding coordinates the MLIP wells are shallower
 than PBE's for BaTiO₃, KNbO₃ and ZrO₂ (about half the depth for the four conservative models, at
 each MLIP's lattice),
 comparable to PBE's for CsSnBr₃ in three of the five models (0.92–1.17 of the PBE depth; CHGNet
@@ -1367,13 +1367,13 @@ imaginary PBE mode, at X, was not profiled, so that call holds on the modes test
 screened modes in cells of up to 12 atoms, and do not cover the remaining fourteen systems. A denser k-mesh lowers the
 CsSnBr₃ PBE well depth by 6.8 %, against the 5 % we fixed in advance, though no call changes.
 SSCHA cells are 2×2×2 for the non-bcc systems; the bcc cell-size comparison (2×2×2 against
-3×3×3) changes the **q**-set and the MatterSim call with it (§3.5), and we make no convergence
+3×3×3) changes the **q**-set and the MatterSim call with it (Section 3.5), and we make no convergence
 claim for the zone-boundary systems. The production SSCHA grid did not record convergence, and
 its recipe converged on none of the 16 seeds re-run to record it (its step cap counted steps over
-the whole relaxation and its gradient error was a placeholder; §2.5); the
+the whole relaxation and its gradient error was a placeholder; Section 2.5); the
 converged recipe met its stopping test on 159 of 178 units, 65 units were replicated from a
 second start and with a second seed (the second start failed on 14 and eight calls are
-unresolved; §3.5), and seven converged units do not pass an independent fresh-ensemble gradient
+unresolved; Section 3.5), and seven converged units do not pass an independent fresh-ensemble gradient
 check (ESI Tables S22 and S24).
 ORB-v2 is the only model with directly predicted,
 non-conservative forces. It shows in both layers, and the headline rates are given with and
@@ -1463,9 +1463,9 @@ analysis of the screen (ESI Table S14) re-solves the cached E(Q) maps with
 `scripts/screen_sensitivity.py` into `results/screen_sensitivity.json`, and the
 displacement-amplitude sweep (ESI Table S13) is run by `scripts/run_disp_sweep.py`, with its rows
 in the ledger. The stage-by-stage SSCHA diagnostic of ESI Table S2 is `scripts/sscha_v4_diag.py`.
-The bcc-Zr seed study of §3.5 is `scripts/sscha_repro.py`; its per-seed frequencies were printed to
+The bcc-Zr seed study of Section 3.5 is `scripts/sscha_repro.py`; its per-seed frequencies were printed to
 the run log and are not deposited. The finite-size rows are in `results/convergence_study.parquet`,
-whose SSCHA rows are the superseded v1 generation (§3.5). The SSCHA seed study with convergence
+whose SSCHA rows are the superseded v1 generation (Section 3.5). The SSCHA seed study with convergence
 diagnostics, the 3×3×3 bcc-Zr re-measurement and the converged-recipe grid
 (`scripts/sscha_seed_study.py`; the grid is compared with the production values by
 `scripts/grid_compare.py` into `results/revision/grid_compare.json`), the force-level ensemble test
@@ -1479,7 +1479,7 @@ value of that observable, are checked by `scripts/curvature_identity_check.py` (
 maps and need no GPU.
 
 The ledger is append-only and keeps each superseded generation beside the current one, so every
-correction is auditable. The screen results reported here are the multi-mode grid of §2.4
+correction is auditable. The screen results reported here are the multi-mode grid of Section 2.4
 (5 models × 20 systems × 4 temperatures = 400 units, method version 4). The first screen
 generation in the ledger, a single-mode one, had two defects. Its Γ-point acoustic mask removed
 the three lowest branches rather than the three nearest zero, which for an unstable phase deletes
@@ -1493,7 +1493,7 @@ frequencies rather than those smallest in magnitude, which discards the soft mod
 phase, and was computed in an unrecorded software environment. It is retained together with the
 in-place derived correction (`scripts/fix_sscha_acoustic.py`, `*_v1` columns) and the uncorrected
 snapshot (`results/ledger.parquet.pre-d1-fix`). The harmonic layer was likewise re-measured in the
-pinned environments, and its first generation is kept as the replicate of ESI §S1.2. Each model was
+pinned environments, and its first generation is kept as the replicate of ESI Section S1.2. Each model was
 run in its own pinned environment, with `pip freeze` manifests deposited as
 `envs/lock-<model>-2026-08-16.txt`. The cached E(Q) maps of the current screen generation
 (`results/cache/softmode_v3m24_*.json`, one per system and model) are included, so the
