@@ -23,8 +23,13 @@ Editor agreed to **9 Oct** (RSC, 09-28). The 14 Oct request is still an UNSENT G
       grid fold note (all PENDING-C1/C1b/C1c/C5/GRID markers), verbatim-report coverage matrix.
 - [ ] Phase 2: apply edits to manuscript/ESI/letter (one writer), new verify_claims assertions, Table S22.
 - [ ] Phase 3: adversarial re-audit against the verbatim reports; rebuild docx + marked changes.
-- [ ] Frank decides: E3 replicate runs (prereg d816906, needs a GPU box + $) and pbe-lattice B/C (QE box),
-      or report them as not run.
+- [x] Phase 1 done (notes committed 67d9bdd). Grid: converged SSCHA keeps false-stables only on FE perovskites
+      (34/84; 21 of the old 57 survive, fluorite + high-T runaway were the unconverged recipe). E5: P2 refuted,
+      MACE ran 6 epochs not 30, fine-tuned models fix mis-calls only at their own (PBE-like) lattice.
+- [x] **Frank 10-08:** run ALL THREE (E3 replicates 65 units + MACE 30-epoch re-run on a GPU box; pbe-lattice
+      B/C on a QE box); ask the editor for **16 Oct** (draft rewritten in thread 1a0dc7cfb8312bb1, old draft
+      deleted; UNSENT, Frank sends); KEEP the title. Vast credit $12.63 at 10-08.
+- [ ] Runners being built (agent); paper fold (E1/E2 + grid) being applied by the single writer agent.
 
 ## ▶ 2026-10-04 — credit ran out ~19:20 UTC; both boxes were halted mid-queue (supersedes the box notes below)
 
