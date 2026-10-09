@@ -70,9 +70,9 @@ DPI = 600
 N_RESAMPLE, SEED = 10000, 0                    # as scripts/stats_hardening.py
 
 # Upload numbering: order of first citation in the manuscript (checked by _check_numbering).
-FIG_NUMBER = {"fig_tolerance_sweep": 1, "fig_harmonic_heat": 2, "fig_sscha_bcc": 3,
-              "fig_method_agreement": 4, "fig_displacive_recall": 5,
-              "fig_ensemble_guardrail": 6}
+FIG_NUMBER = {"fig_tolerance_sweep": 1, "fig_harmonic_heat": 2, "fig_lattice_flip": 3,
+              "fig_sscha_bcc": 4, "fig_method_agreement": 5, "fig_displacive_recall": 6,
+              "fig_sscha_map": 7, "fig_ensemble_guardrail": 8}
 
 _SPECS = {s.id: s for s in load_specs()}
 _SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
@@ -142,7 +142,7 @@ def _save(fig, name: str) -> None:
 
 
 def fig_sscha_bcc():
-    """Fig. 3. SSCHA on the three bcc metals, one panel each: the lowest free-energy-Hessian
+    """Fig. 4. SSCHA on the three bcc metals, one panel each: the lowest free-energy-Hessian
     frequency (the default criterion, a bubble-level Hessian evaluated at the bcc reference)
     against temperature. SSCHA here runs on each MLIP's own energies, so it inherits that PES.
     Dashed lines with open markers are the (metal, model) pairs whose harmonic layer has no
@@ -363,7 +363,7 @@ def fig_softmode_heat():
 
 
 def fig_method_agreement():
-    """Fig. 4. Screen vs SSCHA on the bcc metals at the temperatures both ran: the production
+    """Fig. 5. Screen vs SSCHA on the bcc metals at the temperatures both ran: the production
     SSCHA lowest free-energy-Hessian frequency (2x2x2) against the screen's stability CALL, both on
     the same MLIP energies. The x-axis is the call, not the screen's symmetric-point curvature:
     for a single even mode that curvature is positive by construction and its negative values are
@@ -425,7 +425,7 @@ def fig_method_agreement():
 
 
 def fig_displacive_recall():
-    """Fig. 5. Recall of the unstable cubic phase on the ferroelectric oxide perovskites
+    """Fig. 6. Recall of the unstable cubic phase on the ferroelectric oxide perovskites
     (BaTiO3, KNbO3, PbTiO3) at T <= 300 K, below every transition temperature: the fraction of
     (system, model, T) units each method calls unstable, as k/n with a Wilson 95% interval.
     SSCHA units that blew up numerically (|f| > 50 THz) or returned no result are left out of its
@@ -555,7 +555,7 @@ def _guardrail_stats(d: pd.DataFrame) -> dict:
 
 
 def fig_ensemble_guardrail():
-    """Fig. 6. The ensemble guardrail (H3) with and without ORB-v2: the majority-vote consensus
+    """Fig. 8. The ensemble guardrail (H3) with and without ORB-v2: the majority-vote consensus
     finite-T error rate on units where the models split on the stable/unstable call against
     units where they are unanimous (k/n with Wilson 95% intervals), and the AUC of the vote split
     and of the cross-model frequency spread as predictors of consensus error, each with a
@@ -611,7 +611,7 @@ FT_LATTICE = "results/revision/finetune_mace30/lattice_diag.json"
 
 
 def fig_sscha_map():
-    """Converged-recipe SSCHA (ESI Table S22) on every unit of the grid, one cell per (system,
+    """Fig. 7. Converged-recipe SSCHA (ESI Table S22) on every unit of the grid, one cell per (system,
     model, temperature), start A. Non-bcc units are scored against the label; bcc units have no
     label and are compared with the screen's call, as in the text. Units whose pre-registered
     replicates disagree on the call (ESI Table S24) are hatched and left out of the counts, not
@@ -732,7 +732,7 @@ def fig_sscha_map():
 
 
 def fig_lattice_flip():
-    """The lattice knife edge on BaTiO3 and KNbO3 (ESI Section S5.3, Table S23; Section 4).
+    """Fig. 3. The lattice knife edge on BaTiO3 and KNbO3 (ESI Section S5.3, Table S23; Section 4).
     (a) The screen's call at 100/300/600 K on PBE at the PBE lattice (on the two modes profiled
     there; the X-point mode was not profiled), on PBE at MACE-MP-0's lattice along MACE-MP-0's
     eigenvector, on MACE-MP-0 itself, and on the three 30-epoch MACE-MP-0 fine-tunes at their own
@@ -835,8 +835,9 @@ def fig_lattice_flip():
             sp.set_visible(False)
         ax.text(-0.02, 1.07, "(a)", transform=ax.transAxes, ha="right", fontsize=9, fontweight="bold")
 
-        # (b, c): well depth against the lattice offset at 300 K.
-        CP, CM, CF = "#000000", COLOR["mace_mp0"], "#009E73"
+        # (b, c): well depth against the lattice offset at 300 K. MACE-MP-0 is drawn in grey, not
+        # its usual blue, because blue here means a false-unstable call (panel a, shared legend).
+        CP, CM, CF = "#000000", "#7F7F7F", "#009E73"
         axb = None
         for k, s in enumerate([x for x in systems if x in ft["systems"]][:2]):
             a2 = fig.add_subplot(gs[1, k], sharey=axb)
@@ -905,7 +906,6 @@ if __name__ == "__main__":
     fig_method_agreement()
     fig_displacive_recall()
     fig_ensemble_guardrail()
-    # Revision figures, not yet numbered (add them to FIG_NUMBER when the manuscript links them).
     fig_sscha_map()
     fig_lattice_flip()
     print("FIGURES_DONE")
