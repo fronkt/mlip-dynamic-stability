@@ -1363,7 +1363,7 @@ def main() -> int:
     check(frag in s33n, f"[text Section 3.3 audit M8] '{frag}'")
     abs_txt = ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0]
     n_words = len(abs_txt.split())
-    check(n_words <= 250, f"[abstract] {n_words} words (RSC Advances limit 250)")
+    check(n_words <= 200, f"[abstract] {n_words} words (200: the stricter of the third-party RSC Advances figure and RSC's ~250)")
 
     print()
     if _fails:
