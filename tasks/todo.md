@@ -29,7 +29,13 @@ Editor agreed to **9 Oct** (RSC, 09-28). The 14 Oct request is still an UNSENT G
 - [x] **Frank 10-08:** run ALL THREE (E3 replicates 65 units + MACE 30-epoch re-run on a GPU box; pbe-lattice
       B/C on a QE box); ask the editor for **16 Oct** (draft rewritten in thread 1a0dc7cfb8312bb1, old draft
       deleted; UNSENT, Frank sends); KEEP the title. Vast credit $12.63 at 10-08.
-- [ ] Runners being built (agent); paper fold (E1/E2 + grid) being applied by the single writer agent.
+- [x] Runners built (6348ee2 deviations E3 replace=False + E5 D4-D6, 976eede runners); fold applied (..65ddd08,
+      verify_claims 119/119). Remaining paper markers: PENDING-E3/E5/PL (+P4/P5 at packaging).
+- [ ] **Boxes LAUNCHED ~01:00 UTC 10-09** (both self-stop + watchdog): GPU **vast 54941182** (RTX 3090, EPYC 7742,
+      41 vCPU quota, $0.378/h, `ssh -p 29004 root@ssh4.vast.ai`, tmux gpu+watchdog, 20 h cap) = E3 130 jobs +
+      MACE 30 epochs; QE **vast 54941222** (EPYC 7D12, 61.4 vCPU quota, $0.228/h, `ssh -p 39884 root@ssh4.vast.ai`,
+      tmux qe+watchdog, 6 h cap) = pbe-lattice B/C. Pull + merge commands: scripts/box/as_run/README.md. Destroy after pull.
+- [ ] Adversarial audit of the fold running -> tasks/audit-2026-10-08-fold.md.
 
 ## ▶ 2026-10-04 — credit ran out ~19:20 UTC; both boxes were halted mid-queue (supersedes the box notes below)
 
