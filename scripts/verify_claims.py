@@ -178,7 +178,7 @@ def main() -> int:
     check(len(fq) == 10 and (fq.pred_stable.astype(bool)).all()
           and abs(fq.min_eff_freq_thz.min() - 1.903) < 0.01
           and abs(fq.min_eff_freq_thz.max() - 3.331) < 0.01,
-          f"[3.5] SSCHA calls all 10 fluorite units stable in the SAME cell "
+          f"[3.5] production recipe: SSCHA calls all 10 fluorite units stable in the SAME cell "
           f"(+{fq.min_eff_freq_thz.min():.1f} to +{fq.min_eff_freq_thz.max():.1f} THz)")
 
     ma2 = A.method_agreement_summary(d[d.system.isin(BCC) & (d.model != "orb_v2")])
@@ -187,7 +187,7 @@ def main() -> int:
     fl = ss[ss.system.isin(FLUORITE)]
     fl100 = fl[fl.temperature_K == 100]
     check(bool((fl100.min_eff_freq_thz > 0).all()) and len(fl100) == 10,
-          "[3.3] fluorites: all 10 units false-stable at 100 K")
+          "[3.3] production recipe: fluorites, all 10 units false-stable at 100 K")
     check(int((fl.min_eff_freq_thz.abs() > 50).sum()) == 0,
           "[3.3] fluorites: zero numerical blow-ups")
 
@@ -354,14 +354,14 @@ def main() -> int:
                 for t in (100.0, 300.0, 600.0, 900.0)]
 
     check(fu_by_t(nb) == [0, 5, 10, 15] and fu_by_t(nbx) == [0, 4, 8, 12],
-          f"[3.3] SSCHA non-bcc false-unstables by T {fu_by_t(nb)} (ex-ORB {fu_by_t(nbx)})")
+          f"[3.3] production recipe: SSCHA non-bcc false-unstables by T {fu_by_t(nb)} (ex-ORB {fu_by_t(nbx)})")
     st = nb[(nb.system == "srtio3_cubic") & nb.gt_stable.astype(bool)]
     stx = st[st.model != "orb_v2"]
     check(len(st) == 14 and not st.pred_stable.astype(bool).any()
           and abs(st.min_eff_freq_thz.min() + 913.736) < 5e-3
           and abs(st.min_eff_freq_thz.max() + 3.392) < 5e-3
           and len(stx) == 11 and not stx.pred_stable.astype(bool).any(),
-          f"[3.3] SrTiO3 above Tc: SSCHA false-unstable in all {len(st)} units "
+          f"[3.3] production recipe: SrTiO3 above Tc, SSCHA false-unstable in all {len(st)} units "
           f"({st.min_eff_freq_thz.max():.1f} to {st.min_eff_freq_thz.min():.0f} THz); ex-ORB 11/11")
 
     def reversals(x):
@@ -371,7 +371,7 @@ def main() -> int:
         return len(s100), int(((s100[600.0] < 0) | (s100[900.0] < 0)).sum())
 
     check(reversals(nb) == (23, 14) and reversals(nbx) == (19, 10),
-          f"[3.3] SSCHA: {reversals(nb)[1]} of {reversals(nb)[0]} non-bcc units stable at 100 K "
+          f"[3.3] production recipe: SSCHA {reversals(nb)[1]} of {reversals(nb)[0]} non-bcc units stable at 100 K "
           f"turn negative by 600-900 K (ex-ORB {reversals(nbx)[1]} of {reversals(nbx)[0]})")
 
     # [3.3] On the non-bcc units SSCHA calls stable against an unstable label, the screen's
@@ -389,7 +389,7 @@ def main() -> int:
     cblind = int(((cfs.min_eff_freq_thz_scr > 0) & ~cfs.pred_stable_scr.astype(bool)).sum())
     ccall = int((~cfs.pred_stable_scr.astype(bool)).sum())
     check(len(cfs) == 57 and ccall == 46 and cpos == 52 and cblind == 41,
-          f"[3.3] SSCHA false-stables: screen call finds a displaced minimum on {ccall}/{len(cfs)} "
+          f"[3.3] production recipe: SSCHA false-stables, screen call finds a displaced minimum on {ccall}/{len(cfs)} "
           f"(curvature positive by construction on {cpos}; {cblind} both)")
 
     # ==== Revision C3a / C3b (R1.1, R1.2): PBE along the screen's coordinates and PBE errors on
@@ -440,20 +440,155 @@ def main() -> int:
     c3_own, c3_pbe_c = c3p[c3p.curve == c3p.path_model], c3p[c3p.curve == "pbe"]
     c3_dm = c3_own.merge(c3_pbe_c, on="stem", suffixes=("_own", "_pbe"))
     c3_dm["ratio"] = c3_dm.depth_meV_own / c3_dm.depth_meV_pbe
-    c3_r = c3_dm[c3_dm.system_own.isin(["batio3_cubic", "knbo3_cubic"])
-                 & (c3_dm.role_own == "decide") & (c3_dm.path_model_own != "orb_v2")].ratio
-    c3_models = sorted(set(c3_dm[c3_dm.index.isin(c3_r.index)].path_model_own))
-    check(len(c3_dm) == 38 and len(c3_r) == 12
+    c3_dr = c3_dm[c3_dm.role_own.isin(["decide", "ref"])]          # the 38 deciding/reference paths
+    c3_fe = c3_dm[c3_dm.system_own.isin(["batio3_cubic", "knbo3_cubic"])
+                  & (c3_dm.path_model_own != "orb_v2")]
+    c3_r = c3_fe[c3_fe.role_own == "decide"].ratio
+    c3_models = sorted(set(c3_fe[c3_fe.role_own == "decide"].path_model_own))
+    check(len(c3_dm) == 93 and len(c3_dr) == 38 and len(c3_r) == 12
           and c3_models == ["chgnet", "mace_mp0", "mattersim", "sevennet0"]
           and abs(c3_r.min() - 0.315) < 5e-4 and abs(c3_r.max() - 0.763) < 5e-4
           and abs(c3_r.median() - 0.525) < 1e-3,
           f"[R1.1] C3a: BaTiO3+KNbO3 own-path well depth is {c3_r.min():.3f}-{c3_r.max():.3f} of "
-          f"PBE (median {c3_r.median():.3f}) over {len(c3_r)} paths, 4 models")
+          f"PBE (median {c3_r.median():.3f}) over {len(c3_r)} deciding paths, 4 models")
+    check(len(c3_fe) == 26 and abs(c3_fe.ratio.min() - 0.315) < 5e-4
+          and abs(c3_fe.ratio.max() - 0.828) < 5e-4 and abs(c3_fe.ratio.median() - 0.525) < 1e-3,
+          f"[3.2/S5.1] C3a E1: over all {len(c3_fe)} PBE-covered BaTiO3+KNbO3 paths of the 4 models "
+          f"(12 deciding + 14 other modes) own depth is {c3_fe.ratio.min():.3f}-"
+          f"{c3_fe.ratio.max():.3f} of PBE (median {c3_fe.ratio.median():.3f})")
     c3_edge = c3_pbe_c[c3_pbe_c.Q_min_A >= 0.449]
+    c3_cs = c3_pbe_c[c3_pbe_c.system == "cssnbr3_cubic"]
+    c3_cs_dr = c3_cs[c3_cs.role.isin(["decide", "ref"])]
+    c3_cs_x = c3_cs[c3_cs.role == "mode"]
     check(len(c3_edge) == 8 and set(c3_edge.system) == {"cssnbr3_cubic"}
-          and int((c3_pbe_c.system == "cssnbr3_cubic").sum()) == 8,
-          f"[R1.1] C3a: {len(c3_edge)} PBE minima at the 0.45 A scan edge, all CsSnBr3 "
-          f"(= every CsSnBr3 path)")
+          and set(c3_edge.role) == {"decide"} and len(c3_cs_dr) == 8
+          and len(c3_cs_x) == 11 and bool((c3_cs_x.depth_meV <= 1e-6).all()),
+          f"[R1.1] C3a: {len(c3_edge)} PBE minima at the 0.45 A scan edge, all CsSnBr3 deciding "
+          f"paths (= every CsSnBr3 deciding path); the {len(c3_cs_x)} other CsSnBr3 modes with PBE "
+          f"have no PBE well")
+    c3_cs_ml = c3_dm[(c3_dm.system_own == "cssnbr3_cubic") & (c3_dm.role_own == "mode")]
+    check(len(c3_cs_ml) == 11 and bool((c3_cs_ml.depth_meV_own > 1.0).all())
+          and sorted(set(c3_cs_ml.path_model_own)) == ["chgnet", "mattersim"]
+          and abs(c3_cs_ml.depth_meV_own.min() - 1.4) < 0.05
+          and abs(c3_cs_ml.depth_meV_own.max() - 13.8) < 0.05,
+          f"[S5.1] C3a E1: CHGNet/MatterSim CsSnBr3 wells absent in PBE on {len(c3_cs_ml)} "
+          f"non-deciding modes ({c3_cs_ml.depth_meV_own.min():.1f}-"
+          f"{c3_cs_ml.depth_meV_own.max():.1f} meV); no unit call changes")
+    # E1 coverage: c3a_paths.csv lists only paths with curves; the pending ones are in summary.json
+    c3_ps = pd.DataFrame([{k: e.get(k) for k in ("stem", "system", "path_model", "role",
+                                                 "n_atoms", "status", "cache_check_pass")}
+                          for e in json.load(open(dft + "summary.json"))["c3a"]["paths"]])
+    c3_sel = json.load(open(dft + "qe/c3a_selection.json"))
+    c3_skip = {d_["stem"]: d_["why"] for d_ in c3_sel["skipped"]}
+    c3_pend = c3_ps[c3_ps.status == "pending"]
+    c3_copy = [s_ for s_ in c3_pend.stem if "symmetry copy" in c3_skip.get(s_, "")]
+    c3_big = c3_pend[c3_pend.stem.map(lambda s_: "atoms > cap 12" in c3_skip.get(s_, ""))]
+    c3_src_ok = all(c3_ps.set_index("stem").loc[c3_skip[s_].split("copy of ")[1], "status"]
+                    == "complete" for s_ in c3_copy)
+    c3_ndone = int((c3_ps.status == "complete").sum())
+    check(len(c3_ps) == 139 and c3_ndone == 93 and len(c3_pend) == 46 and len(c3_copy) == 8
+          and c3_src_ok and len(c3_big) == 38 and int(c3_big.n_atoms.min()) == 18
+          and int(c3_big.n_atoms.max()) == 216,
+          f"[2.6/S5.1] C3a E1: PBE on {c3_ndone}/{len(c3_ps)} screened paths; of the {len(c3_pend)} "
+          f"without, {len(c3_copy)} are symmetry copies of a path with PBE and {len(c3_big)} have a "
+          f"modulated cell above the 12-atom cap (18-216 atoms)")
+    c3_off = int((~c3u.all_paths_match_cache.astype(bool)).sum())
+    check(int(c3u.n_paths_pbe.min()) == 1 and int(c3u.n_paths_pbe.max()) == 11
+          and int(c3u.deciding_mode_has_pbe.sum()) == 100 and c3_off == 40,
+          f"[S5.1] C3a E1: 1-{int(c3u.n_paths_pbe.max())} PBE paths per unit; deciding mode has "
+          f"PBE in {int(c3u.deciding_mode_has_pbe.sum())}/120; {c3_off} units with an off-cache path")
+    c3_dr_off = (c3_ps[c3_ps.role.isin(["decide", "ref"]) & (c3_ps.cache_check_pass == False)]  # noqa: E712
+                 [["system", "path_model"]].drop_duplicates())
+    c3_dr_units = int(sum((r_.system, r_.model) in set(map(tuple, c3_dr_off.values))
+                          for r_ in c3u.itertuples()))
+    check(c3_dr_units == 28,
+          f"[S5.1] C3a: {c3_dr_units} ladder units have an off-cache deciding/reference path")
+    c3_unc = c3_big.groupby(["system", "path_model"]).size()
+    c3_ps_st = c3u[c3u.pbe_backed_stable.astype(bool).values
+                   & c3u.set_index(["system", "model"]).index.isin(c3_unc.index)]
+    check(len(c3_ps_st) == 19 and int((~c3_ps_st.p_ok).sum()) == 3,
+          f"[S5.1] C3a E1: {len(c3_ps_st)} PBE-stable ladder units have a mode above the cap "
+          f"without PBE ({int((~c3_ps_st.p_ok).sum())} of them PBE-wrong)")
+    qj = pd.read_csv(dft + "qe_jobs.csv") if os.path.exists(dft + "qe_jobs.csv") else None
+    if qj is not None:
+        jc = qj.iloc[:, 0].astype(str)
+        n_c3 = int(jc.str.match(r"(a|ax|b)_").sum())
+        check(n_c3 == 981 and int(jc.str.match(r"a_").sum()) == 380
+              and int(jc.str.match(r"ax_").sum()) == 533 and int(jc.str.match(r"b_").sum()) == 68,
+              f"[2.6/S5] C3a/C3b: {n_c3} PBE calculations (380 deciding/reference, 533 other "
+              "modes, 68 SSCHA samples)")
+
+    # ==== E2: checks on the persistent PBE errors (scripts/dft_checks.py analyze-checks; Table S23)
+    chk = json.load(open("results/revision/dft_checks/summary.json"))
+    cvd = {p_["system"]: p_ for p_ in chk["conv"]["paths"]}
+    cv_rel = {s_: {v_: cvd[s_]["variants"][v_]["depth_rel_change"] for v_ in ("k", "e", "ke")}
+              for s_ in cvd}
+    check(chk["conv"]["verdict"] == "NOT converged"
+          and [s_ for s_ in cvd if not cvd[s_]["converged"]] == ["cssnbr3_cubic"]
+          and cvd["cssnbr3_cubic"]["failed_variants"] == ["k", "ke"]
+          and abs(cv_rel["cssnbr3_cubic"]["k"] + 0.068) < 1e-3
+          and all(cvd[s_]["variants"][v_]["calls_identical"] for s_ in cvd for v_ in ("k", "e", "ke"))
+          and max(abs(x) for s_ in ("batio3_cubic", "knbo3_cubic") for x in cv_rel[s_].values()) < 0.02
+          and cvd["cssnbr3_cubic"]["min_at_edge"],
+          "[3.2/S5.3] E2 conv: NOT converged by the pre-set criterion, on one path only (CsSnBr3/MACE "
+          f"R path, k 0.15: depth {cv_rel['cssnbr3_cubic']['k']:+.1%}, minimum at the scan edge); "
+          "BaTiO3/KNbO3 within 2 %; every call identical at every T for all 9 variants")
+    xc = chk["xc"]
+    check((xc["pbe_errors"], xc["pbe_errors_fixed_by_pbesol"], xc["new_errors_from_pbesol"],
+           xc["pbe_errors_also_wrong_in_pbesol"], xc["n_unit_rows_ladder_complete"])
+          == (15, 9, 0, 6, 60)
+          and xc["by_system"] == {"batio3_cubic": {"pbe_errors": 1, "pbesol_errors": 1},
+                                  "cssnbr3_cubic": {"pbe_errors": 9, "pbesol_errors": 1},
+                                  "knbo3_cubic": {"pbe_errors": 5, "pbesol_errors": 4}},
+          "[3.2/S5.3] E2 xc: PBEsol (PBE pseudopotentials, MLIP geometry) fixes 9 of 15 PBE errors "
+          "over 60 units (8 CsSnBr3, KNbO3/SevenNet-0 600 K), 0 new; left: BaTiO3/ORB-v2 300 K, "
+          "KNbO3 600 K x4, CsSnBr3/ORB-v2 300 K")
+    xu = pd.read_csv("results/revision/dft_checks/xc_unit_calls.csv")
+    xu = xu[xu.in_ladder.astype(bool) & xu.unit_complete.astype(bool)
+            & (xu.system == "cssnbr3_cubic")]
+    xgt = xu.gt_stable.astype(bool)
+    xpe, xso = xu.pbe_backed_stable.astype(bool) != xgt, xu.pbesol_backed_stable.astype(bool) != xgt
+    x600 = xu["T"] == 600
+    check(int(xpe.sum()) == 9 and int((xpe & ~xso).sum()) == 8 and int((xpe & x600).sum()) == 4
+          and int((xpe & x600 & xso).sum()) == 0
+          and int((xpe & (xu["T"] == 300)).sum()) == 5 and int((xpe & (xu["T"] == 300) & ~xso).sum()) == 4,
+          "[§4/R1.6] E2: CsSnBr3 PBE errors 9; PBEsol corrects 8, every one at 600 K (4) and 4 of "
+          "the 5 at 300 K")
+    xcp = pd.read_csv("results/revision/dft_checks/xc_paths.csv")
+    xcs, xcf = xcp[xcp.system == "cssnbr3_cubic"], xcp[xcp.system != "cssnbr3_cubic"]
+    check(len(xcp) == 23 and abs(xcs.depth_ratio_pbesol_over_pbe.min() - 0.317) < 5e-4
+          and abs(xcs.depth_ratio_pbesol_over_pbe.max() - 0.422) < 5e-4
+          and bool(xcs.pbe_min_at_edge.all()) and not bool(xcs.pbesol_min_at_edge.any())
+          and abs(xcf.depth_ratio_pbesol_over_pbe.min() - 1.027) < 5e-4
+          and abs(xcf.depth_ratio_pbesol_over_pbe.max() - 1.304) < 5e-4,
+          f"[3.2/S5.3] E2 xc: PBEsol/PBE depth {xcs.depth_ratio_pbesol_over_pbe.min():.2f}-"
+          f"{xcs.depth_ratio_pbesol_over_pbe.max():.2f} on the 8 CsSnBr3 paths (minimum moves "
+          f"inside the scan), {xcf.depth_ratio_pbesol_over_pbe.min():.2f}-"
+          f"{xcf.depth_ratio_pbesol_over_pbe.max():.2f} on the 15 BaTiO3/KNbO3 paths")
+    pl = chk["pbe_lattice"]["systems"]
+    off = {s_: pl[s_]["lattice"]["mlip_minus_pbe_pct"] for s_ in pl}
+    check(all(pl[s_]["phase_A"] == "done" and pl[s_]["phase_B"] == "pending"
+              and pl[s_]["phase_C"] == "pending" for s_ in pl)
+          and abs(min(min(v_.values()) for v_ in off.values()) - 0.119) < 1e-3
+          and abs(max(max(v_.values()) for v_ in off.values()) - 0.797) < 1e-3,
+          "[§4/S5.3] E2 pbe-lattice: phase A only; MLIP lattices "
+          + ", ".join(f"{s_.split('_')[0]} +{min(v_.values()):.2f} to +{max(v_.values()):.2f} %"
+                      for s_, v_ in off.items()) + " above PBE; phases B/C not run")
+    qc = pd.read_csv("results/revision/dft_checks/qe_jobs.csv")
+    n_chk = int((qc.job.str.match(r"(cv|xs|pl)_") & (qc.status == "ok")).sum())
+    check(n_chk == 323, f"[2.6/S5.3] E2: {n_chk} check calculations (cv_, xs_, pl_), all ok")
+    gl = {}
+    for m_ in ("chgnet", "mace_mp0", "mattersim", "orb_v2", "sevennet0"):
+        for s_ in ("batio3_cubic", "knbo3_cubic", "srtio3_cubic", "cssnbr3_cubic"):
+            fp = f"{dft}geom/checks/{s_}_{m_}.json"
+            if os.path.exists(fp):
+                cell = np.array(json.load(open(fp))["relaxed_prim_cell"], dtype=float)
+                gl.setdefault(s_, []).append(abs(np.linalg.det(cell)) ** (1 / 3))
+    spread = {s_: 100 * (max(v_) - min(v_)) / min(v_) for s_, v_ in gl.items() if len(v_) == 5}
+    check(len(spread) == 4 and max(spread[s_] for s_ in spread if s_ != "cssnbr3_cubic") < 0.065
+          and abs(spread["cssnbr3_cubic"] - 0.45) < 0.01,
+          "[S5.1] MLIP lattice spread across models: oxide perovskites "
+          + ", ".join(f"{s_.split('_')[0]} {v_:.3f} %" for s_, v_ in spread.items()) + " (CsSnBr3 0.45 %)")
 
     c3b = pd.read_csv(dft + "c3b_units.csv")
     c3_own3 = c3b[c3b.is_owner & (c3b["set"] == "sscha")].set_index("system")
@@ -597,6 +732,183 @@ def main() -> int:
           "[R1.4] C5: the two MACE-MP-0 3x3x3 runs satisfy the library's test in one population "
           "(harmonic matrix already positive); the two MatterSim 3x3x3 runs end at the cumulative cap "
           "(8 populations, 19 kept steps) like the C1 units")
+
+
+    # ==== converged-recipe SSCHA (Table S22, §2.5, §3.3, §3.5): results/revision/grid_compare.json
+    # (scripts/grid_compare.py) and the grid's summary.csv / unit JSONs, recomputed where possible.
+    import hashlib
+    gcj = json.load(open("results/revision/grid_compare.json", encoding="utf-8"))
+    gsum = pd.read_csv("results/revision/sscha_converged_grid/summary.csv")
+    gsum = gsum[gsum.start == "A"]
+    check(hashlib.sha256(open("results/revision/sscha_converged_grid/summary.csv", "rb").read())
+          .hexdigest() == gcj["meta"]["summary_csv"]["sha256"]
+          and gcj["meta"]["grid_vs_ledger"]["all_ok"]
+          and gcj["meta"]["production_reproduces_stats_hardening"]["all_ok"],
+          "[S22] grid_compare.json was built from the summary.csv on disk; both self-checks pass")
+    rs = gcj["run_status"]
+    check((rs["n_planned_units"], rs["n_ok"], rs["n_converged"], len(rs["failed"]),
+           len(rs["blowups"]), len(rs["wall_cap_timeouts"])) == (178, 171, 159, 7, 4, 1)
+          and (gsum.status == "running").sum() == 0,
+          "[2.5/S22] grid: 178 planned, 171 ok, 159 converged, 7 failed, 4 blow-ups, 1 wall cap")
+    check(rs["by_model"]["orb_v2"]["converged"] == 18 and rs["by_model"]["orb_v2"]["blowups"] == 4
+          and not any(b_["converged"] for b_ in rs["blowups"]),
+          "[3.3/S22] ORB-v2: 18/33 converged; all 4 blow-ups are unconverged ORB-v2 units")
+    cvg = gcj["variants"]["converged_only"]
+    check(cvg["fs57_outcomes"]["outcomes"]
+          == {"still_false_stable": 21, "ok_not_converged": 4, "now_unstable": 32},
+          "[3.3] of the 57 production false-stables: 21 survive, 32 turn unstable, 4 unconverged")
+    fsu = cvg["fs57_units"]
+    flu = [u_ for u_ in fsu if u_["system"] in FLUORITE]
+    check(sorted({u_["system"] for u_ in fsu if u_["outcome"] == "still_false_stable"})
+          == ["batio3_cubic", "knbo3_cubic"]
+          and sum(u_["outcome"] == "now_unstable" for u_ in flu) == 29
+          and not any(u_["outcome"] == "still_false_stable" for u_ in flu),
+          "[3.3] surviving false-stables are BaTiO3/KNbO3 only; no fluorite false-stable survives")
+    fsx = [u_ for u_ in fsu if u_["model"] != "orb_v2"]
+    check(sum(u_["outcome"] == "still_false_stable" for u_ in fsx) == 18 and len(fsx) == 50,
+          "[3.3] without ORB-v2: 18 of 50 production false-stables survive")
+    ci = cvg["converged_matched"]["i"]
+    check(ci["all_models"]["sscha_false_stable_of_label_unstable"]["short"] == "34/84"
+          and ci["excl_orb_v2"]["sscha_false_stable_of_label_unstable"]["short"] == "30/74"
+          and ci["all_models"]["screen_call_unstable_on_those"]["short"] == "17/34"
+          and ci["excl_orb_v2"]["screen_call_unstable_on_those"]["short"] == "14/30",
+          "[abstract/3.3] converged false-stable 34/84 (30/74); screen unstable on 17/34 (14/30)")
+    gok = gsum[(gsum.status == "ok") & (gsum.converged == True)]  # noqa: E712
+    gnb = gok[gok.family != "bcc"]
+    cfs2 = gnb[(gnb.gt_stable == False) & (gnb.stable_call == True)]  # noqa: E712
+    check(cfs2.groupby("system").size().to_dict()
+          == {"batio3_cubic": 8, "knbo3_cubic": 15, "pbtio3_cubic": 7, "srtio3_cubic": 4}
+          and set(cfs2[cfs2.system == "pbtio3_cubic"].T_K) == {300.0, 600.0}
+          and set(cfs2[cfs2.system == "srtio3_cubic"].T_K) == {100.0},
+          "[3.3] converged false-stables: BaTiO3 8, KNbO3 15, PbTiO3 7 (300/600 K), SrTiO3 4 (100 K)")
+    b100 = gnb[gnb.system.isin(["batio3_cubic", "knbo3_cubic"]) & (gnb.T_K == 100)]
+    check(len(b100) == 10 and bool(b100.stable_call.astype(bool).all())
+          and not bool(b100.screen_stable_call.astype(bool).any()),
+          "[3.3/§4] all ten BaTiO3/KNbO3 100 K units: converged SSCHA stable, screen unstable")
+    cii = cvg["converged_matched"]["ii"]
+    check(cii["all_models"]["sscha"]["recall"]["short"] == "4/26"
+          and cii["all_models"]["softmode"]["recall"]["short"] == "15/26"
+          and cii["excl_orb_v2"]["sscha"]["recall"]["short"] == "4/23"
+          and cii["excl_orb_v2"]["softmode"]["recall"]["short"] == "12/23"
+          and cii["all_models"]["sscha"]["n_numerical_blowup"] == 0,
+          "[abstract/3.3/Fig5] FE recall T<=300 K, converged units: SSCHA 4/26, screen 15/26")
+    fe_hit = gnb[gnb.system.isin(FE_OXIDE) & (gnb.T_K <= 300) & (gnb.gt_stable == False)  # noqa: E712
+                 & (gnb.stable_call == False)]  # noqa: E712
+    check(set(fe_hit.system) == {"pbtio3_cubic"} and set(fe_hit.T_K) == {100.0} and len(fe_hit) == 4
+          and fe_hit.hessian_min_thz.min() > -0.4,
+          "[3.3] the 4 converged FE recalls are all PbTiO3 at 100 K, within 0.4 THz of zero")
+    civ = cvg["converged_matched"]["iv"]["all_models"]["false_unstable_by_T"]
+    civx = cvg["converged_matched"]["iv"]["excl_orb_v2"]["false_unstable_by_T"]
+    check([civ[t]["short"] for t in ("300", "600", "900")] == ["0/4", "3/12", "3/18"]
+          and [civx[t]["short"] for t in ("300", "600", "900")] == ["0/4", "3/11", "3/16"]
+          and set(civ["600"]["by_system"]) == set(civ["900"]["by_system"]) == {"cssni3_cubic"},
+          "[3.3/S17] converged high-T false-unstables 0/4, 3/12, 3/18 (ex-ORB 0/4, 3/11, 3/16), "
+          "all CsSnI3")
+    cs_fu = gnb[(gnb.system == "cssni3_cubic") & (gnb.gt_stable == True)]  # noqa: E712
+    check(len(cs_fu) == 6 and not cs_fu.stable_call.astype(bool).any()
+          and abs(cs_fu.hessian_min_thz.max() + 0.32) < 0.005
+          and abs(cs_fu.hessian_min_thz.min() + 1.09) < 0.005,
+          f"[3.3] converged CsSnI3 false-unstables {cs_fu.hessian_min_thz.max():.2f} to "
+          f"{cs_fu.hessian_min_thz.min():.2f} THz")
+    cs_lo = gnb[(gnb.system == "cssni3_cubic") & (gnb.T_K <= 300)]
+    check(len(cs_lo) == 8 and not cs_lo.stable_call.astype(bool).any(),
+          "[3.3] converged SSCHA calls CsSnI3 unstable in all 8 units at T <= 300 K")
+    sto = gnb[gnb.system == "srtio3_cubic"]
+    sto_hi = sto[sto.T_K > 105]
+    check(bool(sto.stable_call.astype(bool).all()) and len(sto) == 15
+          and set(sto[sto.T_K == 100].model) == {"chgnet", "mace_mp0", "mattersim", "sevennet0"}
+          and abs(sto[sto.T_K == 100].hessian_min_thz.min() - 1.06) < 0.005
+          and abs(sto[sto.T_K == 100].hessian_min_thz.max() - 1.20) < 0.005
+          and len(sto_hi) == 11 and abs(sto_hi.hessian_min_thz.min() - 1.71) < 0.005
+          and abs(sto_hi.hessian_min_thz.max() - 2.76) < 0.005,
+          "[3.3/3.5/R3.2] converged SSCHA calls SrTiO3 stable in all 15 converged units: 100 K "
+          "+1.06 to +1.20 THz, above 105 K +1.71 to +2.76 THz (0/11 false-unstable)")
+    s100 = gnb[(gnb.T_K == 100) & (gnb.stable_call == True)]  # noqa: E712
+    turn = [(r_.system, r_.model) for r_ in s100.itertuples()
+            if (~gnb[(gnb.system == r_.system) & (gnb.model == r_.model)
+                     & (gnb.T_K > 100)].stable_call.astype(bool)).any()]
+    check(len(s100) == 14 and not turn,
+          "[3.3] none of the 14 non-bcc units converged SSCHA calls stable at 100 K turns negative")
+    fl_c = gnb[gnb.system.isin(FLUORITE)]
+    fl_all = gsum[gsum.system.isin(FLUORITE) & (gsum.status == "ok")]
+    check(len(fl_c) == 38 and not fl_c.stable_call.astype(bool).any() and len(fl_all) == 40
+          and not fl_all.stable_call.astype(bool).any()
+          and len(fl_c[fl_c.T_K <= 300]) == 18,
+          "[3.3] converged SSCHA calls every fluorite unit unstable (38 converged, 2 unconverged too; "
+          "18 at T <= 300 K)")
+    ciii = cvg["converged_matched"]["iii"]
+    check(ciii["all_models"]["call_agreement"]["short"] == "33/41"
+          and ciii["excl_orb_v2"]["call_agreement"]["short"] == "32/36"
+          and ciii["all_models"]["per_model_call"]["mattersim"]["short"] == "7/9",
+          "[3.3] bcc call agreement, converged 3x3x3: 33/41 (32/36); MatterSim 7/9")
+    pv = cvg["converged_matched"]["v"]
+    pc, pcx = pv["all_models"]["displacive_combined"], pv["excl_orb_v2"]["displacive_combined"]
+    check((pc["n_paired_units"], pc["screen_right_sscha_wrong"], pc["sscha_right_screen_wrong"])
+          == (44, 13, 2)
+          and (pcx["n_paired_units"], pcx["screen_right_sscha_wrong"], pcx["sscha_right_screen_wrong"])
+          == (39, 10, 2)
+          and pc["clustered_by_system"]["p_exact_clustered"] == 0.5
+          and pcx["clustered_by_system"]["p_exact_clustered"] == 0.5
+          and pc["clustered_by_system"]["per_cluster_net"] == [5, 6, 0, 0, 0],
+          "[3.3/§4/§5/S10] converged paired contrast T<=300 K: 13 v 2 on 44 units (10 v 2 on 39), "
+          "system-clustered p = 0.5; nets +5 BaTiO3, +6 KNbO3, 0 PbTiO3, 0, 0")
+    pp = gcj["production_full"]["v"]["all_models"]["displacive_combined"]
+    check((pp["n_paired_units"], pp["screen_right_sscha_wrong"], pp["sscha_right_screen_wrong"],
+           pp["clustered_by_system"]["p_exact_clustered"]) == (47, 33, 3, 0.125),
+          "[3.3] production paired contrast reproduced: 33 v 3 on 47 units, p = 0.125")
+    fresh_bad = [t_ for t_ in gok.unit_tag if not json.load(open(
+        f"results/revision/sscha_converged_grid/{t_}_startA.json", encoding="utf-8"))
+        ["run"]["fresh_gradient_check"]["consistent_with_minimum"]]
+    check(len(fresh_bad) == 7 and not set(fresh_bad) & set(cfs2.unit_tag),
+          "[2.5/§4/S22] 7 of 159 converged units fail the fresh-ensemble check; no false-stable "
+          "among them")
+
+    def ab(tag, d_="sscha_converged"):
+        return json.load(open(f"results/revision/{d_}/{tag}_AB.json", encoding="utf-8"))
+    ba, ba1 = ab("batio3_cubic_mace_mp0_100K_sc222"), ab("batio3_cubic_mace_mp0_100K_sc222",
+                                                           "sscha_converged_b1")
+    zo, st1 = ab("zro2_cubic_mace_mp0_100K_sc222"), ab("srtio3_cubic_mace_mp0_100K_sc222")
+    z50, z2, z3 = (ab("zr_bcc_mattersim_50K_sc222"), ab("zr_bcc_mattersim_300K_sc222"),
+                   ab("zr_bcc_mattersim_300K_sc333"))
+    st6 = ab("srtio3_cubic_mace_mp0_600K_sc222")
+    r2 = lambda x: round(x, 2)  # noqa: E731
+    check(r2(ba["A"]["hessian_min_thz"]) == 2.03 and ba["B"]["status"] == "failed"
+          and ba1["B"]["converged"] and r2(ba1["B"]["hessian_min_thz"]) == 1.85
+          and abs(ba1["B"]["start_min_thz"] - 1.0) < 1e-6,
+          "[3.3/3.5] C1c BaTiO3/MACE 100 K: A +2.03, B(0.3) failed, B(1.0) +1.85, all converged")
+    check(zo["A"]["converged"] and zo["B"]["converged"]
+          and abs(zo["A"]["hessian_min_thz"] + 22.37) < 0.01
+          and abs(zo["B"]["hessian_min_thz"] + 25.97) < 0.01,
+          "[3.3] C1c ZrO2/MACE 100 K: A -22.4, B -26.0 (unstable, as labelled)")
+    check((r2(st1["A"]["hessian_min_thz"]), r2(st1["B"]["hessian_min_thz"])) == (1.13, 1.02)
+          and st1["verdict"] == "converged but START-DEPENDENT" and st1["same_stability_call"],
+          "[3.5/R3.2] C1c SrTiO3/MACE 100 K: +1.13 / +1.02, same call, flagged start-dependent")
+    check(r2(st6["A"]["hessian_min_thz"]) == 2.44
+          and r2(float(gsum[gsum.unit_tag == "srtio3_cubic_mace_mp0_600K_sc222"]
+                       .hessian_min_thz.iloc[0])) == 2.41,
+          "[3.3/3.5] SrTiO3/MACE 600 K converged: +2.44 (converged-mode run) / +2.41 (grid)")
+    check((r2(z50["A"]["hessian_min_thz"]), r2(z50["B"]["hessian_min_thz"])) == (0.41, 0.41)
+          and (r2(z2["A"]["hessian_min_thz"]), r2(z2["B"]["hessian_min_thz"])) == (0.92, 0.93)
+          and (r2(z3["A"]["hessian_min_thz"]), r2(z3["B"]["hessian_min_thz"])) == (-0.92, -0.95)
+          and z2["both_fresh_consistent"] is False,
+          "[3.5] C5 converged Zr/MatterSim: 50 K +0.41; 300 K 2x2x2 +0.92/+0.93 -> 3x3x3 -0.92/-0.95")
+    v4 = json.load(open("results/revision/sscha_seeds/batio3_cubic_mace_mp0_100K_sc222.json",
+                        encoding="utf-8"))["v4"]
+    check(v4["status"] == "finished" and abs(v4["v4_min_nonac_thz"] - 2.8784) < 5e-4
+          and abs(v4["v4_false_parent_thz"] - 2.8783) < 5e-4 and 9800 < v4["wall_s"] < 9900,
+          "[3.3/S2.2] C1b include_v4=True: +2.878 v +2.878 THz bubble, finished in under 9,900 s")
+    import glob as _glob
+    check(not [p_ for p_ in _glob.glob("results/**/*", recursive=True)
+               if "sc444" in p_ or "4x4x4" in p_],
+          "[3.5/R3.2] no 4x4x4 SSCHA result exists (narrowed claim)")
+    tim = gsum[(gsum.system == "ti_bcc") & (gsum.model == "mace_mp0") & (gsum.converged == True)]  # noqa: E712
+    check([r2(x) for x in tim.sort_values("T_K").hessian_min_thz] == [1.57, 1.66, 1.71],
+          "[3.3] Ti/MACE-MP-0 converged 3x3x3 hardens +1.57 -> +1.71 THz (100 -> 600 K)")
+    with open("paper/manuscript.md", encoding="utf-8") as fh:
+        ms_txt = fh.read()
+    abs_txt = ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0]
+    n_words = len(abs_txt.split())
+    check(n_words <= 250, f"[abstract] {n_words} words (RSC Advances limit 250)")
 
     print()
     if _fails:
