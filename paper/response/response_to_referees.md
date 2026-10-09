@@ -20,22 +20,24 @@ changed what the paper claims. The revision:
   screen's production convention), not significantly (p = 0.152), and mostly in three systems the
   screen mis-calls for nearly every model; no model ranking is claimed (R1.6, R3.1, R3.3);
 - relates the SSCHA false-stables found after a converged and replicated relaxation (27 of 77
-  label-unstable non-bcc units with a resolved call, all oxide perovskites; seven more unresolved
-  between replicates) to the local question its default criterion asks, and reports that the fluorite
+  label-unstable non-bcc units with a resolved call, all oxide perovskites; 23 of 73 without the
+  four SrTiO₃ units at 100 K, whose cell has no size test; seven more unresolved between
+  replicates) to the local question its default criterion asks, and reports that the fluorite
   false-stables and the high-temperature false-unstables of the first recipe were unconverged
   relaxations (R1.1, R1.2, R1.4);
 - adds PBE single points along the screen's soft-mode coordinates and on SSCHA-sampled
   configurations (R1.1, R1.2), and a four-seed SSCHA study with recorded convergence diagnostics
   (R1.4);
-  on PBE energies the shared BaTiO₃ and KNbO₃ mis-calls disappear (MLIP wells about half the PBE
-  depth) and the CsSnBr₃ ones persist, though mostly not with PBEsol, so they follow the
+  on PBE energies at the MLIPs' lattices the shared BaTiO₃ and KNbO₃ mis-calls disappear (MLIP
+  wells there about half the PBE depth) and the CsSnBr₃ ones persist, though mostly not with PBEsol, so they follow the
   functional; MLIP force error does not grow on the 100 K SSCHA samples and rises 1.7-fold at
   600 K in SrTiO₃; the production SSCHA recipe did not converge on any of the 16 seeds on which
   convergence was recorded (cumulative step cap, placeholder gradient error), and re-run to convergence on 178 units (159 converged) the BaTiO₃ and KNbO₃
   false-stables remain while the fluorite false-stables and the high-temperature runaway do not;
   a pre-registered replicate of 65 units (second start, second seed) gives the same call on 43 of
   the 51 with three values and leaves 8 unresolved, which the counts now report as such (R1.4);
-  at its own lattice PBE makes the BaTiO₃ and KNbO₃ 300 K errors itself (R1.1);
+  at its own lattice PBE makes the BaTiO₃ and KNbO₃ 300 K errors itself on the two modes
+  profiled (its X-point mode was not; R1.1);
 - adds the literature on active-learning potentials and ML-driven screening (R1.3);
 - completes the screen's derivation and reports its sensitivity, including the frozen-cell
   convention that decides its ferroelectric recall (R1.5);
@@ -115,15 +117,18 @@ clustering by system cannot overturn them: a top harmonic score does not certify
 finite-temperature calls (MatterSim, MACE-MP-0 and SevenNet-0 are harmonically perfect on the
 matched set, and the screen still mis-calls 5, 5 and 3 of their 30 units), and the default SSCHA
 cross-check, even converged, does not supply that certification for deep displacive wells (§3.3).
-The PBE check of R1.1 bears on the first clause in the opposite direction from the one this
-paragraph anticipated: most of the shared mis-calls behind it are not the screen's. Eight of the
-17 units (BaTiO₃ and KNbO₃ at 300 K) are called correctly on PBE energies along the same
-coordinates, so they are softened MLIP wells that four architectures share, and the clause stands
-as a statement about the models. The PBE-lattice check of R1.1 qualifies that reading: at its own,
-slightly smaller lattice PBE calls the same two systems stable at 300 K, so the MLIP wells are
-shallow relative to PBE at the MLIP geometry, not relative to PBE at its own equilibrium, and the
-pre-registered fine-tuning trial of R2.1 did not correct these calls either. Four of the five CsSnBr₃ units among the 17 are called correctly
-with PBEsol on the same structures, so they are not shown to be the screen's either. The converged
+The PBE checks of R1.1 change what the first clause is about, and I have kept the title but
+made the text say so. Eight of the 17 units behind it (BaTiO₃ and KNbO₃ at 300 K) are called
+correctly on PBE energies along the same coordinates at the MLIPs' lattices, but at its own,
+slightly smaller lattice PBE calls the same two systems stable at 300 K on the two modes profiled
+(the X-point mode was not), so the MLIP wells are shallow relative to PBE at the MLIP geometry,
+not relative to PBE at its own equilibrium, and the pre-registered fine-tuning trial of R2.1 did
+not correct these calls either. Four of the five CsSnBr₃ units among the 17 are called correctly
+with PBEsol on the same structures, so they follow the functional, and three more are PbTiO₃, the
+screen's ordering failure. The first clause is therefore a statement about the finite-temperature
+calls a screen makes with a model, the model and the screen together, and for eight of the 17
+units the reference functional at its own equilibrium gives the same call; §3.2, §4 and §5 now
+say this, and do not read the count as a difference between the MLIPs and their reference. The converged
 SSCHA re-run (R1.4) keeps the second clause for the ferroelectric perovskites and removes the
 fluorites from it: converged, SSCHA still calls BaTiO₃ and KNbO₃ stable against their labels at
 100 K in every model, and calls every fluorite unit unstable.
@@ -207,8 +212,9 @@ by PBE.
 (iii) Over the 120 ladder units of the six systems, swapping only the energy engine raises
 agreement with the labels from 81 to 101 (23 corrected, 3 newly wrong; no system worse); ten of
 the corrections are bcc Zr, and the 55 modes beyond the deciding ones change no call. (iv) On the
-errors that persist I ran three further checks for BaTiO₃, KNbO₃ and CsSnBr₃ (323 calculations;
-ESI §S5.3, Table S23; the PBE-lattice check below adds 59). Denser k-points and higher cutoffs change no call at any temperature; by
+errors that persist I ran three further checks for BaTiO₃, KNbO₃ and CsSnBr₃ (382 calculations
+in all, 323 for the convergence and functional checks and 59 for the PBE-lattice check below;
+ESI §S5.3, Table S23). Denser k-points and higher cutoffs change no call at any temperature; by
 the criterion I fixed in advance the production settings still fail, because the denser k-mesh
 lowers the CsSnBr₃ well depth, a value at the edge of the scan, by 6.8 %. PBEsol on the same
 structures corrects 8 of the 9 CsSnBr₃ PBE errors (7 of the 8 where the MLIP call is wrong too)
@@ -230,9 +236,12 @@ stable at 300 K, the MLIPs' own error; MACE-MP-0's wells at its own lattice (42.
 are close to PBE's at PBE's. The MLIP lattices are only 0.26–0.31 % (BaTiO₃) and 0.74–0.80 %
 (KNbO₃) larger than PBE's, so these 300 K calls sit on a knife edge, and the eight corrections
 hold at the MLIPs' lattices only. The check changes lattice and eigenvector together and does not
-say which of the two moves the call, and only the two profiled modes were tested. KNbO₃ at 600 K
+say which of the two moves the call, and only the two profiled modes were tested: PBE at its own
+lattice has a third imaginary mode, at X (−6.63 THz in BaTiO₃, −5.47 THz in KNbO₃, between the two
+profiled ones in frequency), which was not profiled, so PBE's own 300 K call is stable on the
+modes tested and not established. KNbO₃ at 600 K
 and CsSnBr₃ at 300 and 600 K are mis-called by PBE at both lattices. §3.2, §4, §5 and the Abstract
-now state the eight corrections with this qualifier.
+now state the eight corrections, and PBE's own-lattice call, with these qualifiers.
 
 *Global stability against local curvature.* This distinction is now the centre of §3.3. For the
 anharmonic systems the labels record which phase is the equilibrium phase at T, a global question
@@ -289,7 +298,11 @@ and Table S23.
 > itself. The authors should benchmark MLIP forces/energies against first-principles reference
 > calculations along the sampling paths.
 
-**Response.** I have run the benchmark the referee describes: PBE energies and forces on
+**Response.** I have run the benchmark the referee describes, with one limitation I state first:
+the configurations come from the SSCHA ensembles of the production recipe, which did not converge
+(R1.4), and I did not repeat the check on the converged ensembles, so the false-stables that
+survive convergence (BaTiO₃ and KNbO₃ at 100 K) have no first-principles check on their own
+sampled configurations. The benchmark is PBE energies and forces on
 configurations drawn from the SSCHA ensembles of four units, compared with the same MLIP-vs-PBE
 errors on near-equilibrium rattled configurations of the same cells. The configurations are
 subsamples of the final Hessian ensembles of the production recipe, re-run with four seeds in the
@@ -305,7 +318,7 @@ they may not reach the double well, and a small error on them does not clear the
 At 600 K in SrTiO₃ (0.34 Å) the relative error rises from 0.11 to 0.19, energy errors reach
 44 meV per atom, and all five models fall at 0.12–0.20: the MLIPs are extrapolating where the
 runaway happens; the converged relaxation of the same unit is stable (+2.44 THz) and never reaches
-those configurations (below). I did not repeat the PBE sampling check on the converged ensembles.
+those configurations (below).
 
 Two things in the MLIP-only data bear on the hypothesis, one for each direction of SSCHA error.
 
@@ -473,13 +486,14 @@ ORB-v2 units reached the population cap, one CHGNet unit the wall cap, and the s
 failed in production failed again). The converged values change 72 of the 154 calls that have a
 converged value and a production value that is not a blow-up (75 of the 159 if the production
 blow-ups count as unstable); on the non-bcc units 51 change from wrong to right against the label
-and 12 from right to wrong. The consequences, carried into R1.1, R1.2, §3.3 and the abstract: 21
-of the 57 production false-stables survive, all on BaTiO₃ and KNbO₃; convergence adds 13
-(PbTiO₃ at 300–600 K, SrTiO₃ at 100 K and two KNbO₃ units), 34 of the 84 label-unstable non-bcc
-units in all from one start, every one an oxide perovskite; the fluorite false-stables and the
-high-temperature false-unstables do not, and the ferroelectric recall is 4/26 for converged SSCHA
-against 15/26 for the screen on the same units (ESI Table S22). The replicates below move these
-counts to 27 of 77 (18 surviving from production, 9 new) and to 4/22 against 14/22.
+and 12 from right to wrong. The consequences, carried into R1.1, R1.2, §3.3 and the abstract, with the replicates below
+applied: converged SSCHA calls 27 of the 77 label-unstable non-bcc units with a resolved call
+stable, every one an oxide perovskite (18 surviving from production, all on BaTiO₃ and KNbO₃, and
+9 new under convergence: PbTiO₃ at 300–600 K, SrTiO₃ at 100 K and one KNbO₃ unit); the fluorite
+false-stables and the high-temperature false-unstables do not survive; and the ferroelectric
+recall is 4/22 for converged SSCHA against 14/22 for the screen on the same units (ESI Tables S22
+and S24). (From the first start alone, before the replicates, these were 34 of 84, 21 surviving
+and 13 new, and 4/26 against 15/26.)
 
 *What the production grid did not record.* It did not record how many populations each unit used,
 whether each unit met the convergence threshold before the population cap, the gradient history,
@@ -530,7 +544,7 @@ failed again at 1.0 THz, 6 stopped at other cellconstructor symmetry errors (not
 registered) and one wrote no result, so 51 units have three values. On those the call is the same
 in 43 (43/51 = 0.84 [0.72, 0.92]; 32/39 without ORB-v2), with a median range of 0.22 THz in the
 lowest Hessian frequency. Eight are unresolved. Seven are PbTiO₃ and KNbO₃ with CHGNet and
-MatterSim at 300–600 K, where the second start ended at its wall or population cap at −209 to
+MatterSim at 300–600 K (PbTiO₃ with MatterSim at 600 K failed under both recipes), where the second start ended at its wall or population cap at −209 to
 −6230 THz, unconverged blow-ups, while the first start and the second seed agree on a converged
 stable call; the eighth is Ti with ORB-v2 at 600 K (+2.53 THz from the first start, −26.4 and
 −3.73 THz, both unconverged, from the other two). As registered, §3.3 now counts these as
@@ -541,7 +555,10 @@ agreement 33/40. Two observations were not registered and are labelled as such i
 second seed alone reproduces the first start's call on 64 of the 65 units, and on the 31 units
 that converged in all three replicates every call agrees. On the ten BaTiO₃ and KNbO₃ units at
 100 K that carry the local-criterion account, the second seed gives a converged stable call on all
-ten and the second start a stable call on the seven where it finished.
+ten and the second start a stable call on the seven where it finished. One of the ten is
+marginal: BaTiO₃ with CHGNet reads +1.65 THz on the full Hessian ensemble, but its bootstrap
+(B = 10 resamples) has a mean of −0.33 THz and 6 of the 10 resamples are unstable; §3.3 now says
+so. No resample is unstable on the other nine.
 
 **Changes.** §2.5; §3.3; §3.5 ("Stochastic reproducibility"); §4 (Limitations); ESI §S2.1,
 §S2.2 (Table S2), §S2.4, Table S11.
@@ -652,18 +669,20 @@ reverse units are structural: three are control units that the harmonic layer re
 interpolated mesh as unstable and the commensurate screen cannot reproduce, and the fourth is
 ORB-v2 on SrTiO₃, which finds no instability at any temperature (§3.2). An error four or five
 architectures share could be the single-mode screen's own approximation or a surface error the
-models have in common, and the PBE-backed screen of R1.1 tests which. For most of them it is the
-models: on PBE energies along the same coordinates the eight BaTiO₃ and KNbO₃ units are called
-correctly, so at the MLIPs' lattices they are a softening four models share (at its own, slightly
-smaller lattice PBE makes the same 300 K error; R1.1), while the five CsSnBr₃ units stay
-mis-called on PBE; four of those five are called correctly with PBEsol on the same structures, so
-they follow the functional rather than the screen. The revised §3.2 and §4 say so.
+models have in common, and the PBE-backed screen of R1.1 tests which. On PBE energies along the
+same coordinates the eight BaTiO₃ and KNbO₃ units are called correctly, so at the MLIPs' lattices
+they are a softening four models share, but at its own, slightly smaller lattice PBE makes the
+same 300 K error on the two modes profiled (R1.1); the five CsSnBr₃ units stay mis-called on PBE,
+and four of those five are called correctly with PBEsol on the same structures, so they follow the
+functional rather than the screen. Most of the count is therefore not a difference between the
+MLIPs and their reference functional, and the H2 statement concerns the calls a screen makes with
+a model. The revised §3.2, §4 and §5 say so.
 
 The Abstract, the H2 statement in §1, §3.2, §4 and the Conclusions carry this wording, and none of
 them reads a failure to reject as a finding.
 
-**Changes.** Abstract; §1 (H2); §2.4 ("Frozen-cell normalisation"); §3.2 (the temperature-ladder
-table and the paragraphs after it); §4; §5; ESI §S1.3, Table S15.
+**Changes.** Abstract; §1 (H2); §2.4 ("Frozen-cell normalisation"); §3.2 (Table 4, the temperature-ladder
+table, and the paragraphs after it); §4; §5; ESI §S1.3, Table S15.
 
 ---
 
@@ -884,10 +903,11 @@ asymmetry is not significant at the system level (p = 0.152) and most of it sits
 with an error shared across models (R1.6); no association between the layers is resolved; and the
 pre-registered form of H2 is left open rather than rejected or confirmed. The title is discussed in
 (b) above.
-The PBE check (R1.1) now locates most of that shared error in the models rather than the screen:
-the BaTiO₃ and KNbO₃ mis-calls disappear on PBE energies along the same coordinates, the CsSnBr₃
-ones persist on PBE but four of the five turn correct with PBEsol, and the title's first clause
-stands as a statement about the models.
+The PBE checks (R1.1) locate that shared error: the BaTiO₃ and KNbO₃ mis-calls disappear on PBE
+energies along the same coordinates at the MLIPs' lattices but return with PBE at its own lattice
+on the modes profiled, and the CsSnBr₃ ones persist on PBE but four of the five turn correct with
+PBEsol. The title is kept, and the text reads its first clause as a statement about the
+finite-temperature calls a screen makes with a model, not about the model's surface alone.
 
 **Changes.** Title; Abstract; §1 (H2); §2.4; §3.2; §4; §5; ESI §S1.3.
 
@@ -918,7 +938,9 @@ because SSCHA never called it stable; that is no longer true. Converged SSCHA ca
 100 K, 5 K below its transition, for all four models where it converged (+1.06 to +1.20 THz). The
 R point is in the 2×2×2 cell, so this is not a missing **q**-point, but whether the R mode's
 finite-temperature renormalisation is converged in that cell is exactly the question the referee
-raises, and §3.5 now says that this call may be a finite-size effect. For BaTiO₃ the zone-centre
+raises, and §3.5 now says that this call may be a finite-size effect. Those four units are also in the
+headline count of converged SSCHA false-stables, so §3.3 and the Conclusions give that count
+without them as well: 23 of 73, all on the three ferroelectrics. For BaTiO₃ the zone-centre
 argument stands, restricted to BaTiO₃, as the referee says.
 
 On bcc Zr, the cell-size comparison has been re-measured in the pinned environment with MatterSim,
@@ -1032,7 +1054,7 @@ replicate in §S1.2, the SSCHA stage-by-stage diagnostic in §S2.2, and the SSCH
 family in §S2.3), and a note at the head of the ESI separates section numbers (§S1–§S4) from table
 numbers. The ESI also adds Table S7 (composition of the analysis sets), S9 (every pooled rate with
 and without ORB-v2), S10 (the paired screen-versus-SSCHA tests), S11 (SSCHA settings and numerical
-quality), S12 (the exact one-dimensional comparison, printed in §S1.4 before Table S2), S13
+quality), S12 (the exact one-dimensional comparison of §S1.4), S13
 (displacement-amplitude sensitivity of the harmonic layer), S14 (sensitivity of the screen), S15 (the
 H2 ladder clustered by system), S16 (screen–SSCHA agreement on bcc and the same-energy comparison
 behind the SSCHA false-stables), S17 (SSCHA high-temperature false-unstables, blow-ups and
@@ -1041,13 +1063,15 @@ It adds §S5 with Table S19 (the screen on PBE energies and the MLIP-versus-PBE 
 R1.1), Table S20 (MLIP errors on SSCHA-sampled configurations, R1.2) and Table S23 (convergence,
 functional and lattice checks on the errors that persist on PBE, R1.1). It adds Table S21 (the
 production-recipe SSCHA seed study and bcc-Zr cell size, R1.4) and Table S22 (the converged-recipe
-SSCHA grid beside the production values, R1.4).
+SSCHA grid beside the production values, R1.4), Table S24 (the pre-registered replicates of the
+converged grid, R1.4) and Tables S25 and S26 (the pre-registered fine-tuning trial, R2.1). Every
+table is printed in numerical order.
 Per-unit values not tabulated are in the deposited ledger, from which every table regenerates. In
 rendering Table S6 I also corrected its note: the screen does not systematically under-estimate T*
 for the bcc metals, since in 4 of the 15 bcc rows it never calls the phase stable on the ladder.
 
-**Changes.** ESI head note; §S3 (reading-order note, Tables S4–S11 and S13–S23); Tables S1–S3 in
-§S1.2, §S2.2 and §S2.3; Table S12 in §S1.4; §S5.
+**Changes.** ESI head note; §S3 (reading-order note, Tables S4–S26); Tables S1–S3 in
+§S1.2, §S2.2 and §S2.3; §S5; §S6.
 
 ## R3.5 Every rate with and without ORB-v2
 
@@ -1123,15 +1147,19 @@ minimum frequency of every system under every model, with the unstable calls box
 disagreements with the reference label marked; it also puts the per-system harmonic numbers behind
 Table S4 on the record (item 4). Fig. 3 no longer says that the SSCHA margins discriminate the
 models, marks the units with nothing to stabilise, and now adds the converged 3×3×3 values beside
-the production curves. Fig. 4 no longer describes SSCHA as a "gold standard" or says the screen
-tracks it, gives the call agreement, and no longer shades quadrants of curvature sign, since the
-screen's curvature is positive by construction. Fig. 5 no longer says SSCHA is less reliable than
+the production curves, with the one converged unit that the replicates leave unresolved (Ti with
+ORB-v2 at 600 K) marked separately. Fig. 4 no longer describes SSCHA as a "gold standard" or says
+the screen tracks it, and gives the call agreement; it now plots the SSCHA frequency against the
+screen's stability call instead of against the screen's curvature, since that curvature is
+positive by construction and its negative values are numerical. Fig. 5 no longer says SSCHA is less reliable than
 the screen, gives both recalls as counts with intervals, and now plots converged SSCHA (4/22)
 against the screen on the same 22 units (14/22), the units where the replicates of R1.4 leave the
 call resolved, with the production value (5/27) beside them. Fig. 6 adds the panel without
 ORB-v2 and says that no signal could be resolved for the frequency spread.
 
-**Changes.** Placement of Figs. 5 and 6; captions of Figs. 2–6; Figs. 3, 4 and 5 regenerated.
+**Changes.** Placement of Figs. 5 and 6; captions of Figs. 2–6; Fig. 2 new; Figs. 3, 4 and 5
+regenerated. The three main-text tables that had no number now have numbers and captions
+(Tables 2–4, in order of first citation).
 
 ---
 
@@ -1148,9 +1176,10 @@ those I judged relevant to the paper's argument (R1.3). The references added for
 The decision letter also asked for an Author contributions section in CRediT form, a linked ORCID
 for the submitting author, and a choice on transparent peer review. The manuscript now has an
 Author contributions section in CRediT roles, immediately above Conflicts of interest and
-Acknowledgements. My ORCID (0009-0003-0041-1459) is on the title page and linked to the submitting
-account. I have opted in to transparent peer review. The author name, affiliation and funding
-statement have been checked.
+Acknowledgements. My ORCID (0009-0003-0041-1459) is on the title page and is to be linked to the submitting
+account in the portal at upload. My choice on transparent peer review is the one made in the
+portal at upload. The author name, affiliation and funding statement in the manuscript were
+checked against the title page and back matter.
 <!-- PENDING-P4: before upload, link the ORCID to the submitting account in the portal and finish the affiliation, funding and AI-use checks (tasks/todo.md P4); if either is not done, rewrite the two sentences above to say what was done. -->
 
 # Other changes
@@ -1162,7 +1191,10 @@ statement have been checked.
 - The MACE-MP-0 reference (ref 29) now cites its published version (*J. Chem. Phys.*, 2025, **163**,
   184110).
 - The references are now numbered in order of first citation, as the journal's style requires;
-  the numbers in this letter follow the new list.
+  the numbers in this letter follow the new list. Ref 27 (α-AgI) cited the wrong work by the same
+  authors and now cites B. C. Wood and N. Marzari, *Phys. Rev. Lett.*, 2006, **97**, 166401.
+- The pre-registration of H1–H3 is now dated in §1: the research brief committed before any
+  calculation (commit 9c2599f, 20 June 2026).
 - A statement on the use of AI tools is added at the end of the Acknowledgements, in line with the
   journal's policy.
 <!-- DRAFT-FOR-FRANK: the AI-use statement in the manuscript is Option A of paper/response/ai_use_statement_DRAFT.md; confirm or replace its wording, and keep or drop this bullet accordingly. -->
@@ -1170,8 +1202,9 @@ statement have been checked.
   (§2.6 (iii), ESI §S5.3, Table S23), and the SSCHA results of §3.3 rest on a converged re-run of
   the SSCHA grid (§2.5, ESI Table S22).
 
-# Files uploaded
+# Files submitted with this response
 
+<!-- PENDING-B1: build the clean .docx files and the marked-changes manuscript and ESI (scripts/build_docx.py, scripts/build_marked_changes.py against 76d3a84) after the last text edit; drop any item below that is not uploaded. -->
 1. This point-by-point response.
 2. The revised manuscript with the changes marked (Word tracked changes against the version the
    referees read).

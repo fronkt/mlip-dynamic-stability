@@ -32,8 +32,8 @@ Every difference below is a consequence of the August 2026 audit and re-measurem
 | SSCHA FE-perovskite recall | 7 of 30 units (recall 0.23) | 5 of the 27 units that return a physical number | **changed** | denominator changed: deepest-well units now fail loudly instead of returning junk |
 | bcc softmode-vs-SSCHA rank correlation, all models | 0.78 | 0.11 | **changed** | **COLLAPSED.** This was the reviewed version's cross-validation statistic |
 | bcc softmode-vs-SSCHA rank correlation, excl ORB-v2 | 0.63 | *not found* | **changed** | not reported in the current version; ex-ORB rho is now ~= -0.003 (see Phase C) |
-| bcc sign agreement, all models | 0.64 | 0.78 | **changed** | the statistic that replaced rho as the cross-validation measure |
-| bcc sign agreement, excl ORB-v2 | 0.78 | 0.83 | **changed** |  |
+| bcc sign agreement, all models | 0.64 | 0.78 | **changed** | superseded: not used in the revision (the screen's curvature is positive by construction, so its sign is not compared; letter, (a)); the stability calls agree in 31/45 |
+| bcc sign agreement, excl ORB-v2 | 0.78 | 0.83 | **changed** | superseded, as above; the stability calls agree in 25/36 |
 | H2 association phi | 0.11 | −0.129 | **changed** | now temperature-resolved instead of a single pooled value |
 | H2 McNemar exact p | 0.34 | 0.007 | **changed** | R3 criticises the reviewed p = 0.34; the re-measurement moved it |
 | H2 discordant cells | Seven | 17 | **changed** |  |

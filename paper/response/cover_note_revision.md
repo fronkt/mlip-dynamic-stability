@@ -17,19 +17,26 @@ against the paper, and the response lists each change against the version the re
 The main changes are:
 
 - a new title that follows the formulation the re-measured data support, as Referee 3 asked;
-- first-principles (PBE) calculations along the soft-mode coordinates and on SSCHA-sampled
-  configurations (Referee 1), which locate most of the errors shared across models in the models'
-  potential-energy surfaces rather than in the screening method;
-- SSCHA convergence diagnostics over four seeds per unit, and converged-recipe re-runs of the
-  units the SSCHA comparison rests on (Referee 1);
-  <!-- PENDING-C1c/GRID: confirm "converged-recipe re-runs" against what the grid delivered, and name ESI Table S22. -->
+- first-principles (PBE) calculations along the soft-mode coordinates, on SSCHA-sampled
+  configurations and at PBE's own lattice (Referee 1): at the models' lattices PBE corrects the
+  shared BaTiO₃ and KNbO₃ mis-calls, but at its own lattice it makes the same 300 K calls on the
+  modes profiled, and the CsSnBr₃ mis-calls follow the functional;
+- SSCHA convergence diagnostics over four seeds per unit, and a re-run of the 178 units the SSCHA
+  comparison rests on with a recipe that converges (ESI Table S22), with pre-registered replicates
+  from a second start and a second seed (ESI Table S24); the fluorite false-stables and the
+  high-temperature false-unstables of the first recipe do not survive convergence, and the SSCHA
+  false-stables on the ferroelectric perovskites do (Referees 1 and 3);
 - statistics clustered by system throughout, with a significance claim withdrawn where that test
   does not support it (Referees 1 and 3);
-- a discussion of fine-tuning and a pre-registered test of force-level ensemble uncertainty
-  (Referee 2).
+- a pre-registered fine-tuning trial (Referee 2), whose central prediction, that fine-tuning
+  toward PBE would correct the shared BaTiO₃ and KNbO₃ mis-calls, was refuted and is reported as
+  such, and a pre-registered test of force-level ensemble uncertainty, which did not show a
+  signal (Referee 2).
 
 As the decision letter asked, the manuscript now has an Author contributions section in CRediT
-form, my ORCID is linked to the submitting account, and I have opted in to transparent peer review.
+form and my ORCID on the title page; the ORCID link to the submitting account and the choice on
+transparent peer review are made in the portal with this upload.
+<!-- PENDING-P4: once the ORCID is linked and the transparent-review choice is made in the portal, this sentence may say so directly. -->
 The corresponding address is now cai485@purdue.edu. All code and data are deposited, and every
 number in the manuscript and ESI regenerates from them.
 
