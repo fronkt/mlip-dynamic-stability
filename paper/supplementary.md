@@ -486,7 +486,7 @@ comparable with the canonical ledger values for this unit.
 What the table shows is limited, and it is worth saying exactly what. The auxiliary SCHA matrix is
 positive definite by construction (a normalisable Gaussian trial state requires it), so the
 +2.88 THz after `ForcePositiveDefinite` and the +2.89 THz at the end of the relaxation say
-nothing about stability: the auxiliary matrix cannot soften (refs 21, 22). The two differ by
+nothing about stability: the auxiliary matrix cannot soften (refs 38, 44). The two differ by
 0.01 THz, so the relaxation left the matrix close to its positive-definite start (§S2.1). The object that could detect the
 instability is the free-energy Hessian, and at bubble level it lands within 0.02 THz of the
 positive auxiliary curvature, so it reports the symmetric phase stable against a harmonic

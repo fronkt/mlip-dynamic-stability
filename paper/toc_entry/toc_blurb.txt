@@ -1,1 +1,1 @@
-Passing a harmonic phonon benchmark does not certify a foundation MLIP for finite-temperature dynamic stability, and neither does a default SSCHA check, whose Hessian at the symmetric phase reads deep displacive double wells as stable.
+A harmonic phonon benchmark does not certify a foundation MLIP for finite-temperature dynamic stability, and neither does a default SSCHA check, whose Hessian at the symmetric phase, even converged, reads deep ferroelectric double wells as stable.
