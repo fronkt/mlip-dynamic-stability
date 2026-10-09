@@ -54,3 +54,6 @@ results/revision/dft_checks/qe/*/pw.err
 results/revision/finetune/models/**/*.model
 results/revision/finetune/models/**/*.pt
 results/revision/finetune/models/**/*.pth.tar
+results/revision/finetune_mace30/models/**/*.model
+results/revision/finetune_mace30/models/**/*.pt
+results/revision/finetune_mace30/models/**/*.pth.tar
