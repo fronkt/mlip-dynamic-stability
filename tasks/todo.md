@@ -35,6 +35,13 @@ Editor agreed to **9 Oct** (RSC, 09-28). The 14 Oct request is still an UNSENT G
       41 vCPU quota, $0.378/h, `ssh -p 29004 root@ssh4.vast.ai`, tmux gpu+watchdog, 20 h cap) = E3 130 jobs +
       MACE 30 epochs; QE **vast 54941222** (EPYC 7D12, 61.4 vCPU quota, $0.228/h, `ssh -p 39884 root@ssh4.vast.ai`,
       tmux qe+watchdog, 6 h cap) = pbe-lattice B/C. Pull + merge commands: scripts/box/as_run/README.md. Destroy after pull.
+- [x] **QE box DONE 02:52 UTC 10-09** (B 9/9, C 50/50, 0 failed); self-stopped unpulled, restarted 05:20, pulled,
+      59/59 merged, analyze-checks, commit b2c3f60 pushed, box DESTROYED. Read-out: PBE at the PBE lattice calls
+      BaTiO3 300 K and KNbO3 300 K stable (wrong); PBE at MACE's lattice (+0.26-0.31 %) gets both right (KNbO3 600 K and CsSnBr3 300/600 K stay wrong at both lattices) -> the
+      lattice, not only the PES, drives these false-stables (fits the E5 lattice confound). Fold into PENDING-PL.
+- [ ] GPU box at 05:20 UTC: E3 68/130 ended, 20 start-B failures (18 complex-dyn assertion, mostly
+      BaTiO3/KNbO3/PbTiO3 MACE+SevenNet; 1.0 THz retries also failing). Pre-registered path (retry once, report
+      as-is) -> no intervention. Seed-10 leg running clean. E5 P3 done; P1/P2 CHGNet pending.
 - [ ] Adversarial audit of the fold running -> tasks/audit-2026-10-08-fold.md.
 
 ## ▶ 2026-10-04 — credit ran out ~19:20 UTC; both boxes were halted mid-queue (supersedes the box notes below)
