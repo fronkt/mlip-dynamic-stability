@@ -1921,7 +1921,9 @@ def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Pa
         "**Table S22** SSCHA with the converged recipe on the units behind the §3.3 claims, beside "
         "the production numbers on the same units ("
         "`scripts/sscha_seed_study.py --preset grid`, compared with the production ledger by "
-        "`scripts/grid_compare.py`). "
+        "`scripts/grid_compare.py`). Every unit here is the start-A run; Table S24 gives the "
+        "pre-registered replicates of 65 of them and the §3.3 counts with their unresolved units "
+        "left out. "
         f"**Recipe:** {R['n_configs']} configurations per population, at most {R['max_pop']} "
         f"populations and at most {R['max_steps_per_pop']} minimiser steps per population (a cap per "
         f"population, where the production `max_ka` is cumulative over populations, Table S21), "
@@ -2081,11 +2083,47 @@ def table_s23_dft_checks() -> str:
         big = max(d, key=d.get)
         lrow.append([names[sname], f"{L['a_pbe_A']:.4f}", f"{min(a):.4f}–{max(a):.4f}",
                      f"+{min(d.values()):.2f} to +{max(d.values()):.2f} (largest {PRETTY[big]})"])
-    phases = {(v["phase_B"], v["phase_C"]) for v in pl.values()}
-    bc_txt = ("The PBE force constants and E(Q) profiles at the PBE lattice (phases B and C of "
-              "the check) were not computed, so whether the lattice or the eigenvector moves a "
-              "call is not tested." if phases == {("pending", "pending")} else
-              "Phases B and C: see `results/revision/dft_checks/pl_phonons.csv`.")
+    # bottom part: PBE force constants and E(Q) at the PBE lattice (phases B and C)
+    pcalls = pd.read_csv(DFT_CHECKS / "pl_calls.csv")
+    pcalls = pcalls[pcalls["T"].isin([100.0, 300.0, 600.0, 900.0])]
+
+    def su(v) -> str:
+        return "" if pd.isna(v) else ("S" if bool(v) else "U")
+
+    def mark(call, gt) -> str:
+        return "" if call == "" else call + ("*" if (call == "S") != bool(gt) else "")
+
+    brow = []
+    for sname in order:
+        v = pl[sname]
+        if v["phase_B"] != "done":
+            brow.append([names[sname], "not computed", "", "", "", "", ""])
+            continue
+        imag = v["profiles"]["deciding"]["imaginary_modes"]
+        imag_txt = "; ".join("(" + ", ".join(_qf(x) for x in m["q"]) + ") " + signed(m["freq_thz"])
+                             for m in imag)
+        prof = v["profile"]
+        g = pcalls[pcalls["system"] == sname].sort_values("T")
+        seq = lambda col: " ".join(mark(su(c), gt) or "–" for c, gt in zip(g[col], g["gt_stable"]))  # noqa: E731
+        brow.append([names[sname], imag_txt,
+                     "(" + ", ".join(_qf(x) for x in v["mlip_path_q"]) + ")",
+                     f"{prof['pbe_lattice_deciding']['depth_meV']:.1f}"
+                     + (f" / {prof['pbe_lattice_softest']['depth_meV']:.1f}" if "pbe_lattice_softest" in prof else ""),
+                     f"{prof['pbe_mlip_lattice']['depth_meV']:.1f}",
+                     seq("pbe_lattice_deciding_stable")
+                     + (f" / {seq('pbe_lattice_softest_stable')}" if "pbe_lattice_softest_stable" in g and g["pbe_lattice_softest_stable"].notna().any() else ""),
+                     seq("pbe_mlip_lattice_stable"), " ".join("S" if x else "U" for x in g["gt_stable"])])
+    bc_txt = ("Bottom part: PBE at its own lattice (phases B and C of the check). PBE force "
+              "constants by finite differences in the 2×2×2 cell at the PBE lattice give the "
+              "imaginary modes listed; the screen is then re-solved on PBE E(Q) along the softest PBE "
+              "band at the q-point that decides MACE-MP-0's call (*deciding*) and, for BaTiO₃ and "
+              "KNbO₃, along the softest PBE mode of the whole mesh (*softest*), and compared with "
+              "PBE along MACE-MP-0's own eigenvector at MACE-MP-0's lattice (the Table S19 curve). "
+              "Depths are per modulated cell. Calls at 100, 300, 600 and 900 K, S stable, U "
+              "unstable, an asterisk marking disagreement with the label; a single-mode stable call "
+              "holds only if no other mode condenses, and only the listed modes were profiled. "
+              "The two columns change the lattice and the eigenvector together, so they do not "
+              "separate the two.")
     pmax = max(abs(v["lattice"]["final_scf_pressure_kbar"]) for v in pl.values())
     jobs = pd.read_csv(DFT_CHECKS / "qe_jobs.csv")
     jobs = jobs[jobs["job"].str.match(r"(cv|xs|pl)_") & (jobs["status"] == "ok")]
@@ -2119,7 +2157,310 @@ def table_s23_dft_checks() -> str:
                     "New errors", "Depth PBEsol/PBE", "PBEsol minimum at scan edge"])
         + "\n\n"
         + md(lrow, ["System", "PBE a (Å)", "MLIP a (Å), five models", "MLIP − PBE (%)"])
+        + "\n\n"
+        + md(brow, ["System", "PBE imaginary modes at the PBE lattice, q (THz)", "Deciding q (MACE-MP-0)",
+                    "Depth at PBE lattice, deciding / softest (meV)",
+                    "Depth at MACE-MP-0 lattice, its eigenvector (meV)",
+                    "Calls at PBE lattice, deciding / softest", "Calls at MACE-MP-0 lattice", "Label"])
     )
+
+
+def _qf(x: float) -> str:
+    """A reduced coordinate as the ESI writes it: 0, ½."""
+    return {0.0: "0", 0.5: "½"}.get(round(float(x), 6), f"{float(x):g}")
+
+
+E3_DIR = REPO / "results" / "revision" / "e3_replicates"
+
+
+def e3_resolved_counts() -> dict:
+    """The §3.3 counts with the pre-registered replicate rule applied: a unit whose call differs
+    between its replicates (results/revision/e3_replicates/summary.csv, verdict 'unresolved') is
+    counted as unresolved, i.e. left out of numerator and denominator, not resolved by majority.
+    Returns start-A and resolved values, with and without ORB-v2."""
+    g = pd.read_csv(GRID_SUMMARY)
+    g = g[g["start"] == "A"].copy()
+    e3 = pd.read_csv(E3_DIR / "summary.csv")
+    unres = set(e3.loc[e3["verdict"] == "unresolved", "unit_tag"])
+    g["conv"] = (g["status"] == "ok") & (g["converged"].astype(str) == "True")
+    g["stab"] = g["stable_call"].astype(str) == "True"
+    g["scr"] = g["screen_stable_call"].astype(bool)
+    g["lab"] = g["gt_stable"].astype(bool)
+    g["unres"] = g["unit_tag"].isin(unres)
+    out = {}
+    for variant, gg in (("start_A", g), ("resolved", g[~g["unres"]])):
+        for orb, x in (("all", gg), ("excl_orb_v2", gg[gg["model"] != "orb_v2"])):
+            c = x[x["conv"] & (x["family"] != "bcc")]
+            lu = c[~c["lab"]]
+            fs = lu[lu["stab"]]
+            fe = c[c["system"].isin(FE) & (c["T_K"] <= 300) & ~c["lab"]]
+            dp = c[c["system"].isin(FE + FLUORITE) & (c["T_K"] <= 300)]
+            sr, cr = dp["scr"] == dp["lab"], dp["stab"] == dp["lab"]
+            b = x[x["conv"] & (x["family"] == "bcc") & x["T_K"].isin([100.0, 300.0, 600.0])]
+            out[(variant, orb)] = {
+                "fs": (len(fs), len(lu)), "fs_screen_unstable": (int((~fs["scr"]).sum()), len(fs)),
+                "fe_recall_screen": (int((~fe["scr"]).sum()), len(fe)),
+                "fe_recall_sscha": (int((~fe["stab"]).sum()), len(fe)),
+                "paired": (int((sr & ~cr).sum()), int((~sr & cr).sum()), len(dp)),
+                "bcc_agree": (int((b["stab"] == b["scr"]).sum()), len(b)),
+                "fs_by_system": fs.groupby("system").size().to_dict(),
+            }
+    return out
+
+
+def table_s24_e3_replicates() -> str:
+    """Referee 1.4 (Hessian uncertainty on the units the claims rest on): the pre-registered
+    replicates of the converged grid (tasks/preregistration-repeats-2026-10-03.md), from
+    results/revision/e3_replicates/summary.csv (scripts/box/as_run/e3_summarize.py) and the unit
+    JSONs of the start-B, start-B 1.0 THz and seed-10 runs."""
+    sp = E3_DIR / "summary.json"
+    if not sp.exists():
+        print("Table S24 skipped: results/revision/e3_replicates/summary.json does not exist",
+              file=sys.stderr)
+        return ""
+    sj = json.loads(sp.read_text(encoding="utf-8"))
+    e3 = pd.read_csv(E3_DIR / "summary.csv")
+    al = sj["all"]
+    n_b_ok = int((e3["B_status"] == "ok").sum())
+    n_s_ok = int((e3["A10_status"] == "ok").sum())
+    retried = e3[e3["b_retry_1thz"].astype(bool)]
+    n_ret_ok = int((retried["B_status"] == "ok").sum())
+    sym = [t for t in e3.loc[~e3["b_retry_1thz"].astype(bool) & (e3["B_status"] == "failed"), "unit_tag"]]
+    n_missing = int((e3["B_status"] == "missing").sum())
+    x = e3[e3["model"] != "orb_v2"]
+    xc = x[x["n_ok"] == 3]
+    same_x = int((xc["verdict"] == "agree").sum())
+    both = e3[(e3["A_status"] == "ok") & (e3["A10_status"] == "ok")]
+    a_vs_s = int((both["A_call_stable"] == both["A10_call_stable"]).sum())
+    cia = sj["converged_in_all_three"]
+
+    def val(r, p):
+        s = r[f"{p}_status"]
+        if s != "ok":
+            return s
+        v = float(r[f"{p}_hessian_min_thz"])
+        txt = _sig(v, 3) if abs(v) < 50 else _sig(v, 2)
+        return txt + ("" if str(r[f"{p}_converged"]) == "True" else " (nc)")
+
+    rows = []
+    for r in e3.sort_values(["system", "model", "T_K"]).to_dict("records"):
+        b = val(r, "B")
+        if r["B_status"] == "failed":
+            b = ("failed (complex q = −q + G at 0.3 and 1.0 THz)" if r["b_retry_1thz"]
+                 else "failed (symmetry, " + ("q star" if "q star" in str(_b_error_msg(r["unit_tag"])) else "structure type") + ")")
+        elif r["B_status"] == "missing":
+            b = "no result written"
+        elif r["b_retry_1thz"]:
+            b += " (1.0 THz)"
+        rows.append([SYSNAME.get(r["system"], r["system"]), PRETTY[r["model"]], f"{r['T_K']:.0f}",
+                     "random" if r["why"] == "random" else "disagreeing", val(r, "A"), b, val(r, "A10"),
+                     "—" if r["n_ok"] < 3 else _sig(r["range_thz"], 2),
+                     {"agree": "same call", "unresolved": "**unresolved**", "incomplete": "incomplete"}[r["verdict"]]])
+    rc = e3_resolved_counts()
+
+    def kn(t):
+        return f"{t[0]}/{t[1]}"
+
+    srow = []
+    for label, key in (("non-bcc units called stable against an unstable label (of those labelled unstable)", "fs"),
+                       ("of those, the screen's free-energy comparison calls unstable", "fs_screen_unstable"),
+                       ("FE perovskites, T ≤ 300 K: unstable recalled by the screen", "fe_recall_screen"),
+                       ("FE perovskites, T ≤ 300 K: unstable recalled by SSCHA", "fe_recall_sscha"),
+                       ("bcc, 100–600 K (3×3×3): screen call = SSCHA call", "bcc_agree")):
+        srow.append([label, kn(rc[("start_A", "all")][key]), kn(rc[("resolved", "all")][key]),
+                     kn(rc[("start_A", "excl_orb_v2")][key]), kn(rc[("resolved", "excl_orb_v2")][key])])
+    pa, pr = rc[("start_A", "all")]["paired"], rc[("resolved", "all")]["paired"]
+    pax, prx = rc[("start_A", "excl_orb_v2")]["paired"], rc[("resolved", "excl_orb_v2")]["paired"]
+    srow.append(["displacive set, T ≤ 300 K: screen right & SSCHA wrong v the reverse (units)",
+                 f"{pa[0]} v {pa[1]} ({pa[2]})", f"{pr[0]} v {pr[1]} ({pr[2]})",
+                 f"{pax[0]} v {pax[1]} ({pax[2]})", f"{prx[0]} v {prx[1]} ({prx[2]})"])
+    unres_txt = _and(f"{SYSNAME.get(r.system, r.system)}/{PRETTY[r.model]} at {r.T_K:.0f} K"
+                     for r in e3[e3["verdict"] == "unresolved"].sort_values(["system", "model", "T_K"]).itertuples())
+    return (
+        "**Table S24** Pre-registered replicates of the converged SSCHA grid (Referee 1.4; "
+        "registration `tasks/preregistration-repeats-2026-10-03.md`, selection and runner fixed "
+        "before any replicate ran; `scripts/box/as_run/e3_summarize.py` → "
+        "`results/revision/e3_replicates/`). Selected: every grid unit with status ok whose "
+        "converged call disagrees with its comparison (the label for non-bcc units, the screen's "
+        f"call for bcc), and 12 of the rest drawn at random, {al['n_units']} units. *A*, the grid's "
+        "own start-A run (Table S22); *B*, a second starting matrix with imaginary modes set to "
+        "+0.3 THz, re-run once from 1.0 THz after the cellconstructor assertion that the dynamical "
+        "matrix is complex at q = −q + G; *seed 10*, start A with a second random stream. Lowest "
+        "free-energy-Hessian frequency in THz; (nc), the relaxation did not meet its stopping test; "
+        f"a call is stable at or above {signed(float(e3['imag_tol_thz'].iloc[0]), 1)} THz. The seed-10 "
+        f"replicate finished on {n_s_ok} of {al['n_units']} units and start B on {n_b_ok}: "
+        f"{len(retried)} hit the complex-matrix assertion at 0.3 THz, of which {n_ret_ok} finished "
+        f"at 1.0 THz and {len(retried) - n_ret_ok} failed again, {len(sym)} stopped at other "
+        f"cellconstructor symmetry errors (not retried, as registered) and {n_missing} wrote no "
+        f"result. On the {al['n_complete']} units with three values the call is the same in "
+        f"{ci(al['n_same_call_all_three'], al['n_complete'])} (without ORB-v2 "
+        f"{ci(same_x, len(xc))}); the median range is "
+        f"{al['median_range_thz']:.2f} THz. Unresolved, and counted as such in §3.3 rather than "
+        f"by majority: {unres_txt}. Not pre-registered: the seed-10 call equals the start-A call on "
+        f"{a_vs_s} of {len(both)} units, and on the {cia['n_units']} units converged in all three "
+        f"the call is the same in {cia['n_same_call_all_three']}. Lower part: the §3.3 counts from "
+        "start A alone and with the unresolved units left out of numerator and denominator.\n\n"
+        + md(rows, ["System", "Model", "T (K)", "Selected as", "A", "B", "Seed 10", "Range (THz)",
+                    "Verdict"])
+        + "\n\n"
+        + md(srow, ["Quantity (converged units)", "Start A, all five", "Replicates, all five",
+                    "Start A, without ORB-v2", "Replicates, without ORB-v2"])
+    )
+
+
+FT6 = REPO / "results" / "revision" / "finetune"
+FT30 = REPO / "results" / "revision" / "finetune_mace30"
+FT_SYS = ["batio3_cubic", "knbo3_cubic", "cssnbr3_cubic"]
+FT_REPS = ("seed0", "seed1", "seed2")
+
+
+def _ft_rule(base: bool, reps: list) -> str:
+    """The registered rule: changed / unchanged only if all three replicates agree."""
+    if all(r != base for r in reps):
+        return "changed"
+    if all(r == base for r in reps):
+        return "unchanged"
+    return "unresolved"
+
+
+def table_s25_finetune_calls() -> str:
+    """Referee 2.1: the pre-registered fine-tuning trial (tasks/preregistration-finetune-2026-10-03.md),
+    screen calls of every replicate (P2). MACE-MP-0 from the registered 30-epoch run
+    (results/revision/finetune_mace30/, deviation D4), CHGNet and the 6-epoch MACE-MP-0 record
+    from results/revision/finetune/."""
+    if not (FT30 / "summary.json").exists() or not (FT6 / "summary.json").exists():
+        print("Table S25 skipped: fine-tuning summaries missing", file=sys.stderr)
+        return ""
+    s30 = json.loads((FT30 / "summary.json").read_text(encoding="utf-8"))["P2"]["models"]["mace_mp0"]
+    s6 = json.loads((FT6 / "summary.json").read_text(encoding="utf-8"))["P2"]["models"]
+
+    def c(stable: bool, label: bool) -> str:
+        return ("S" if stable else "U") + ("" if stable == label else "*")
+
+    rows, verdicts = [], {}
+    for sname in FT_SYS:
+        for T in (100, 300, 600, 900):
+            key = f"{sname}@{T}"
+            m30, ch, m6 = s30[key], s6["chgnet"][key], s6["mace_mp0"][key]
+            lab = bool(m30["label_stable"])
+            row = [SYSNAME[sname], str(T), "S" if lab else "U"]
+            for blk, base in ((m30, bool(m30["base_call_ledger"])), (ch, bool(ch["base_rerun"]["pred_stable"])),
+                              (m6, bool(m6["base_rerun"]["pred_stable"]))):
+                reps = [bool(blk["replicates"][r]["pred_stable"]) for r in FT_REPS]
+                rule = _ft_rule(base, reps)
+                st = blk.get("status")
+                tag = rule if not blk.get("prediction") else f"{rule}; {blk['prediction']}: **{st}**"
+                row += [c(base, lab), " ".join(c(x, lab) for x in reps), tag]
+            rows.append(row)
+    n30 = [sum(bool(s30[f"{s}@{T}"]["replicates"][r]["pred_stable"]) == bool(s30[f"{s}@{T}"]["label_stable"])
+               for s in FT_SYS for T in (100, 300, 600, 900)) for r in FT_REPS]
+    nb = sum(bool(s30[f"{s}@{T}"]["base_call_ledger"]) == bool(s30[f"{s}@{T}"]["label_stable"])
+             for s in FT_SYS for T in (100, 300, 600, 900))
+    nch = [sum(bool(s6["chgnet"][f"{s}@{T}"]["replicates"][r]["pred_stable"]) == bool(s6["chgnet"][f"{s}@{T}"]["label_stable"])
+               for s in FT_SYS for T in (100, 300, 600, 900)) for r in FT_REPS]
+    nchb = sum(bool(s6["chgnet"][f"{s}@{T}"]["base_rerun"]["pred_stable"]) == bool(s6["chgnet"][f"{s}@{T}"]["label_stable"])
+               for s in FT_SYS for T in (100, 300, 600, 900))
+    return (
+        "**Table S25** Pre-registered fine-tuning trial (Referee 2.1; §S6): the production screen "
+        "(relaxation, harmonic force constants, every imaginary commensurate mode, soft-mode solve; "
+        "2×2×2) re-run with each fine-tuned replicate (seeds 0, 1, 2) on the three test systems, "
+        "against the labels. S stable, U unstable, an asterisk marking disagreement with the label. "
+        "A call counts as changed only if all three replicates differ from the base call and "
+        "unchanged only if all three equal it; otherwise unresolved. Where a call was predicted "
+        "(P2), the prediction and its verdict follow. MACE-MP-0, 30 epochs: the registered run "
+        "(`results/revision/finetune_mace30/`, deviation D4; base call from the ledger). CHGNet, 30 "
+        "epochs, and MACE-MP-0, 6 epochs (the first run, which did not apply the registered 30-epoch "
+        "budget, kept as the record of deviation D4): `results/revision/finetune/` (base re-run "
+        "reproduces the ledger call in every cell). Correct calls of 12: MACE-MP-0 base "
+        f"{nb}, 30-epoch replicates {'/'.join(map(str, n30))}; CHGNet base {nchb}, replicates "
+        f"{'/'.join(map(str, nch))}.\n\n"
+        + md(rows, ["System", "T (K)", "Label",
+                    "MACE-MP-0 base", "MACE-MP-0 30 ep, s0 s1 s2", "MACE-MP-0 30 ep, outcome",
+                    "CHGNet base", "CHGNet, s0 s1 s2", "CHGNet, outcome",
+                    "MACE-MP-0 base (re-run)", "MACE-MP-0 6 ep, s0 s1 s2", "MACE-MP-0 6 ep, outcome"])
+    )
+
+
+def table_s26_finetune_surface() -> str:
+    """Referee 2.1: P1 (well depth on the held-out deciding paths), S1 (held-out errors), S2
+    (controls), P3 (converged SSCHA) of the fine-tuning trial, and the post hoc lattice check
+    (scripts/finetune_lattice_diag.py -> results/revision/finetune_mace30/lattice_diag.json)."""
+    if not (FT30 / "summary.json").exists() or not (FT6 / "summary.json").exists():
+        return ""
+    a30 = json.loads((FT30 / "summary.json").read_text(encoding="utf-8"))
+    a6 = json.loads((FT6 / "summary.json").read_text(encoding="utf-8"))
+    rows = []
+
+    def p1row(label, blk):
+        rr = blk["replicate_median_ratio"]
+        rows.append([label, "P1: median well-depth ratio, fine-tuned / PBE, BaTiO₃ + KNbO₃ deciding paths "
+                     f"({blk['n_paths']})", f"{blk['base_median_ratio']:.2f}",
+                     " / ".join(f"{rr[r]:.2f}" for r in FT_REPS),
+                     f"pooled {blk['median_over_paths_and_replicates']:.2f}: **{blk['verdict']}**"])
+    p1row("MACE-MP-0, 30 ep", a30["P1"]["mace_mp0"]["primary_own_deciding"])
+    p1row("CHGNet", a6["P1"]["chgnet"]["primary_own_deciding"])
+    p1row("MACE-MP-0, 6 ep", a6["P1"]["mace_mp0"]["primary_own_deciding"])
+    nc = a30["P1"]["mace_mp0"]["negative_control_cssnbr3_own_deciding"]
+    rows.append(["MACE-MP-0, 30 ep", f"same, CsSnBr₃ deciding paths ({nc['n_paths']}; control)",
+                 f"{nc['base_median_ratio']:.2f}", " / ".join(f"{nc['replicate_median_ratio'][r]:.2f}" for r in FT_REPS),
+                 f"pooled {nc['median_over_paths_and_replicates']:.2f}"])
+    for label, s1 in (("MACE-MP-0, 30 ep", a30["S1"]["mace_mp0"]), ("CHGNet", a6["S1"]["chgnet"])):
+        for sname in FT_SYS:
+            b = s1["c3a"]["base"][sname]
+            rows.append([label, f"S1: held-out force RMSE in the well window, {SYSNAME[sname]} (eV Å⁻¹; "
+                         f"{b['n_paths']} paths)", f"{b['window_force_rmse_eV_A']:.4f}",
+                         " / ".join(f"{s1['c3a'][r][sname]['window_force_rmse_eV_A']:.4f}" for r in FT_REPS), ""])
+    s2b = a6["S2"]["mace_mp0"]["controls"]
+    s2r = a30["S2"]["mace_mp0"]["controls"]
+    n_unch = sum(all(bool(s2r[k]["replicates"][r]["pred_stable"]) == bool(s2b[k]["base"]["pred_stable"])
+                     for r in FT_REPS) for k in s2r)
+    rows.append(["MACE-MP-0, 30 ep", "S2: harmonic calls of the six stable controls unchanged",
+                 "6 stable", "", f"{n_unch}/6 unchanged"])
+    s2c = a6["S2"]["chgnet"]
+    rows.append(["CHGNet", "S2: same", "", "", f"{s2c['n_unchanged']} unchanged, {s2c['n_unresolved']} unresolved"])
+    p3 = a30["P3"]
+    rows.append(["MACE-MP-0, 30 ep, seed 0", "P3: converged SSCHA, BaTiO₃ 100 K (THz; label unstable)", "",
+                 signed(p3["min_nonac_thz"]), f"called {'stable' if p3['called_stable'] else 'unstable'}: **{p3['status']}**"])
+    ld = json.loads((FT30 / "lattice_diag.json").read_text(encoding="utf-8")) if (FT30 / "lattice_diag.json").exists() else None
+    lrows = []
+    if ld:
+        pbe = {r["system"]: r["a_A"] for r in pd.read_csv(DFT_CHECKS / "pl_lattice.csv").to_dict("records")
+               if r["source"].startswith("PBE vc-relax")}
+        for sname, v in ld["systems"].items():
+            for tag in ("base",) + FT_REPS:
+                r = v[tag]
+                lrows.append([SYSNAME[sname], tag, f"{r['a_relaxed_A']:.4f}",
+                              f"{100 * (r['a_relaxed_A'] / pbe[sname] - 1):+.2f}".replace("-", MINUS),
+                              f"{r['pressure_at_base_lattice_GPa']:+.2f}".replace("-", MINUS),
+                              f"{'S' if r['own_lattice']['pred_stable'] else 'U'}, {r['own_lattice']['well_depth_meV']:.1f}",
+                              f"{'S' if r['base_lattice']['pred_stable'] else 'U'}, {r['base_lattice']['well_depth_meV']:.1f}"])
+    return (
+        "**Table S26** Pre-registered fine-tuning trial (§S6), the surface and the controls. P1, the "
+        "median over the BaTiO₃ and KNbO₃ deciding paths of each model's own C3a set (at the base "
+        "model's relaxed lattice; Table S19) of the fine-tuned to PBE well-depth ratio, base and "
+        "per replicate (seeds 0 / 1 / 2); registered band 0.8–1.2, supported only if the pooled "
+        "median and each replicate's median lie in it. S1, force RMSE against PBE on the held-out "
+        "C3a points in the well window the screen fits (the 30-epoch evaluation includes the "
+        "extra-mode points, deviation D5; the CHGNet one does not). S2, harmonic calls of Si, MgO, "
+        "NaCl, Cu, C and CeO₂. P3, converged SSCHA (grid recipe, start A). Lower part, **not "
+        "pre-registered** (`scripts/finetune_lattice_diag.py`, CPU, archived weights checked "
+        "against their sha256): the cubic cell relaxed by each 30-epoch MACE-MP-0 replicate, its "
+        "offset from the PBE vc-relax lattice, the pressure each model reports at the base model's "
+        "lattice, and the 300 K screen call and deciding well depth (meV, per modulated cell) at "
+        "the model's own lattice and at the base model's lattice. At its own lattice each replicate "
+        "reproduces its deposited 300 K call.\n\n"
+        + md(rows, ["Model", "Quantity", "Base", "Replicates", "Outcome"])
+        + ("\n\n" + md(lrows, ["System", "Model", "a relaxed (Å)", "vs PBE (%)", "P at base lattice (GPa)",
+                              "300 K at own lattice: call, depth", "300 K at base lattice: call, depth"])
+           if lrows else "")
+    )
+
+
+def _b_error_msg(tag: str) -> str:
+    p = REPO / "results" / "revision" / "sscha_converged_grid_startB" / f"{tag}_startB.json"
+    if not p.exists():
+        return ""
+    return str((json.loads(p.read_text(encoding="utf-8")).get("run") or {}).get("error") or "")
 
 
 def build() -> str:
@@ -2151,6 +2492,9 @@ def build() -> str:
         table_s21_sscha_seeds(),
         table_s22_converged_grid(),
         table_s23_dft_checks(),
+        table_s24_e3_replicates(),
+        table_s25_finetune_calls(),
+        table_s26_finetune_surface(),
     ]
     blocks = [b for b in blocks if b]
     return "\n\n".join(blocks)

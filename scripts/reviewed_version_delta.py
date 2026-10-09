@@ -235,9 +235,27 @@ def main() -> None:
         "",
         "The SSCHA rows above are the production recipe, which did not converge. The revision "
         "re-ran SSCHA to convergence (ESI Table S22): on the ferroelectric perovskites at "
-        "T ≤ 300 K converged SSCHA recalls 4/26 against 15/26 for the screen on the same units, "
-        "and the fluorite false-stables and high-temperature false-unstables of the production "
-        "recipe do not survive. Those numbers postdate the reports and are not in the table.",
+        "T ≤ 300 K converged SSCHA recalls 4/22 against 14/22 for the screen on the same units "
+        "(4/26 against 15/26 from one start, before the pre-registered replicates of ESI Table S24 "
+        "left four of those units unresolved), and the fluorite false-stables and high-temperature "
+        "false-unstables of the production recipe do not survive. Those numbers postdate the "
+        "reports and are not in the table.",
+        "",
+        "### Headline numbers moved by the 2026-10-09 results (replicates, PBE lattice, fine-tuning)",
+        "",
+        "| Claim | Before (one start / MLIP lattice only) | Now | Source |",
+        "|---|---|---|---|",
+        "| Converged SSCHA false-stables, label-unstable non-bcc units | 34/84 (30/74 without ORB-v2) "
+        "| 27/77, 7 unresolved (23/67) | ESI Table S24 |",
+        "| Of those, screen finds a lower displaced minimum | 17/34 (14/30) | 15/27 (12/23) | ESI Table S24 |",
+        "| FE recall at T ≤ 300 K, screen v converged SSCHA | 15/26 v 4/26 | 14/22 v 4/22 | ESI Table S24, Fig. 5 |",
+        "| Paired contrast, displacive set at T ≤ 300 K | 13 v 2 on 44 units, p = 0.5 "
+        "| 12 v 2 on 40 units, p = 0.5 | ESI Table S24 |",
+        "| bcc call agreement, converged 3×3×3 | 33/41 | 33/40 (32/36 without ORB-v2 unchanged) | ESI Table S24 |",
+        "| BaTiO₃/KNbO₃ 300 K mis-calls on PBE | called correctly (at each MLIP's lattice) "
+        "| correct at the MLIP lattice only; PBE at its own lattice makes the same error | ESI Table S23 |",
+        "| A PBE fine-tune would remove about half the shared count (§4) | estimate | withdrawn: "
+        "pre-registered trial refutes the correction in 4/4 cells | ESI Tables S25-S26 |",
         "",
     ]
 

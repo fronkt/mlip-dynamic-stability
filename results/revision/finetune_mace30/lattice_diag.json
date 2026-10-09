@@ -1,0 +1,150 @@
+{
+ "note": "POST HOC, not pre-registered (scripts/finetune_lattice_diag.py)",
+ "run": "results/revision/finetune_mace30",
+ "T_K": 300.0,
+ "weights_sha256": {
+  "seed0": "eaa7953194d7d4fda1c93ba03f70d9429600054c4faaf6ea8eb62ba2a57061a1",
+  "seed1": "68dacaf09ccd915552895ed546f28c626d7378d3f2233b7ada98665037f76913",
+  "seed2": "91c00705860edd1a260ea684d72f12a24b6b615f2f38ef8c4e9e562ceae0a715"
+ },
+ "systems": {
+  "batio3_cubic": {
+   "base": {
+    "a_relaxed_A": 4.034047026810179,
+    "pressure_at_base_lattice_GPa": 0.005071996854540767,
+    "own_lattice": {
+     "pred_stable": true,
+     "min_eff_thz": 3.174951822999228,
+     "decide_q": "0.5000,0.5000,0.0000",
+     "well_depth_meV": 42.57210576182047
+    },
+    "base_lattice": {
+     "pred_stable": true,
+     "min_eff_thz": 3.174951822999228,
+     "decide_q": "0.5000,0.5000,0.0000",
+     "well_depth_meV": 42.57210576182047
+    }
+   },
+   "seed0": {
+    "a_relaxed_A": 4.012853196460005,
+    "pressure_at_base_lattice_GPa": -2.7896745091550086,
+    "own_lattice": {
+     "pred_stable": true,
+     "min_eff_thz": 3.3073084672735895,
+     "decide_q": "0.5000,0.0000,0.5000",
+     "well_depth_meV": 31.24792410454802
+    },
+    "base_lattice": {
+     "pred_stable": false,
+     "min_eff_thz": 3.0851888694742304,
+     "decide_q": "0.5000,0.5000,0.0000",
+     "well_depth_meV": 63.652863211189015
+    },
+    "own_lattice_reproduces_deposited_call": true
+   },
+   "seed1": {
+    "a_relaxed_A": 4.014481146905702,
+    "pressure_at_base_lattice_GPa": -2.621842417115182,
+    "own_lattice": {
+     "pred_stable": true,
+     "min_eff_thz": 3.3386590547451545,
+     "decide_q": "0.0000,0.5000,0.5000",
+     "well_depth_meV": 27.901667589276258
+    },
+    "base_lattice": {
+     "pred_stable": false,
+     "min_eff_thz": 3.118357584040099,
+     "decide_q": "0.0000,0.5000,0.5000",
+     "well_depth_meV": 57.40582246343706
+    },
+    "own_lattice_reproduces_deposited_call": true
+   },
+   "seed2": {
+    "a_relaxed_A": 4.0151869632931945,
+    "pressure_at_base_lattice_GPa": -2.5580678278750035,
+    "own_lattice": {
+     "pred_stable": true,
+     "min_eff_thz": 3.270825033057175,
+     "decide_q": "0.0000,0.5000,0.5000",
+     "well_depth_meV": 32.86439726826984
+    },
+    "base_lattice": {
+     "pred_stable": false,
+     "min_eff_thz": 3.0845213175993607,
+     "decide_q": "0.0000,0.5000,0.5000",
+     "well_depth_meV": 62.174972481244595
+    },
+    "own_lattice_reproduces_deposited_call": true
+   }
+  },
+  "knbo3_cubic": {
+   "base": {
+    "a_relaxed_A": 4.056679335279741,
+    "pressure_at_base_lattice_GPa": 0.011682104611768399,
+    "own_lattice": {
+     "pred_stable": true,
+     "min_eff_thz": 2.7595675573591087,
+     "decide_q": "0.0000,0.5000,0.5000",
+     "well_depth_meV": 27.87949034515691
+    },
+    "base_lattice": {
+     "pred_stable": true,
+     "min_eff_thz": 2.7595675573591087,
+     "decide_q": "0.0000,0.5000,0.5000",
+     "well_depth_meV": 27.87949034515691
+    }
+   },
+   "seed0": {
+    "a_relaxed_A": 4.035967652624329,
+    "pressure_at_base_lattice_GPa": -2.6434262194366354,
+    "own_lattice": {
+     "pred_stable": true,
+     "min_eff_thz": 2.720739791489499,
+     "decide_q": "0.0000,0.5000,0.5000",
+     "well_depth_meV": 32.199389952182855
+    },
+    "base_lattice": {
+     "pred_stable": false,
+     "min_eff_thz": 2.7980502282220368,
+     "decide_q": "0.5000,0.0000,0.0000",
+     "well_depth_meV": 57.36016317317194
+    },
+    "own_lattice_reproduces_deposited_call": true
+   },
+   "seed1": {
+    "a_relaxed_A": 4.0358575674869055,
+    "pressure_at_base_lattice_GPa": -2.725239919038013,
+    "own_lattice": {
+     "pred_stable": true,
+     "min_eff_thz": 2.6707127259717662,
+     "decide_q": "0.0000,0.5000,0.5000",
+     "well_depth_meV": 33.52495628246288
+    },
+    "base_lattice": {
+     "pred_stable": false,
+     "min_eff_thz": 2.740660134643143,
+     "decide_q": "0.0000,0.0000,0.0000",
+     "well_depth_meV": 48.90711576462081
+    },
+    "own_lattice_reproduces_deposited_call": true
+   },
+   "seed2": {
+    "a_relaxed_A": 4.036556379936616,
+    "pressure_at_base_lattice_GPa": -2.6486713586969253,
+    "own_lattice": {
+     "pred_stable": true,
+     "min_eff_thz": 2.6746222742977297,
+     "decide_q": "0.5000,0.0000,0.5000",
+     "well_depth_meV": 32.28141668753892
+    },
+    "base_lattice": {
+     "pred_stable": false,
+     "min_eff_thz": 2.7468092083679747,
+     "decide_q": "0.0000,0.0000,0.0000",
+     "well_depth_meV": 53.13736213626186
+    },
+    "own_lattice_reproduces_deposited_call": true
+   }
+  }
+ }
+}

@@ -43,6 +43,7 @@ SSCHA_GRID = "results/sscha_units_v1.csv"     # the attempted SSCHA grid (208 un
 # The converged-recipe SSCHA grid (ESI Table S22) and its comparison with the production claims.
 CONV_SUMMARY = "results/revision/sscha_converged_grid/summary.csv"
 GRID_COMPARE = "results/revision/grid_compare.json"
+E3_SUMMARY = "results/revision/e3_replicates/summary.csv"   # pre-registered replicates (Table S24)
 os.makedirs(OUT, exist_ok=True)
 from mlip_dynstab import DEFAULT_IMAG_TOL_THZ
 from mlip_dynstab import analysis as A
@@ -445,16 +446,32 @@ def fig_displacive_recall():
         import json
         gc = json.load(open(GRID_COMPARE, encoding="utf-8"))
         cii = gc["variants"]["converged_only"]["converged_matched"]["ii"]["all_models"]
-        bars.append(("soft-mode screen\n(same units)", cii["softmode"]["recall"]["k"],
-                     cii["softmode"]["recall"]["n"], C_A, None))
-        bars.append(("SSCHA, converged\n(default criterion)", cii["sscha"]["recall"]["k"],
-                     cii["sscha"]["recall"]["n"], C_B, None))
         cs = pd.read_csv(CONV_SUMMARY)
         cs = cs[(cs["start"] == "A") & cs["system"].isin(fe) & (cs["T_K"] <= 300.0)]
         n_cf = int((cs["status"] == "failed").sum())
         n_cu = int(((cs["status"] == "ok") & (cs["converged"].astype(str) != "True")).sum())
-        conv_note = (f"Converged SSCHA: {len(cs)} units, {n_cf} failed and {n_cu} did not "
-                     f"converge; the screen is scored on the same {cii['sscha']['recall']['n']}.")
+        # The pre-registered replicates (results/revision/e3_replicates/): a unit whose call
+        # differs between replicates is unresolved and is left out, not resolved by majority.
+        unres = set()
+        if os.path.exists(E3_SUMMARY):
+            e3 = pd.read_csv(E3_SUMMARY)
+            unres = set(e3.loc[e3["verdict"] == "unresolved", "unit_tag"])
+        u = cs[(cs["status"] == "ok") & (cs["converged"].astype(str) == "True")
+               & ~cs["gt_stable"].astype(bool) & ~cs["unit_tag"].isin(unres)]
+        n_ur = int(cs["unit_tag"].isin(unres).sum())
+        k_scr = int((~u["screen_stable_call"].astype(bool)).sum())
+        k_ss = int((u["stable_call"].astype(str) != "True").sum())
+        check_a = (int((~cs[(cs["status"] == "ok") & (cs["converged"].astype(str) == "True")]
+                        ["stable_call"].astype(str).eq("True")).sum()), cii["sscha"]["recall"]["k"])
+        assert check_a[0] == check_a[1], f"Fig. 5: start-A recall {check_a} disagrees with grid_compare"
+        bars.append(("soft-mode screen\n(same units)", k_scr, len(u), C_A, None))
+        bars.append(("SSCHA, converged\n(default criterion)", k_ss, len(u), C_B, None))
+        conv_note = (f"Converged SSCHA: {len(cs)} units, {n_cf} failed, {n_cu} did not converge and "
+                     f"{n_ur} are unresolved between\n"
+                     "pre-registered replicates; the screen is scored "
+                     f"on the same {len(u)} (start A alone: {cii['softmode']['recall']['k']}/"
+                     f"{cii['softmode']['recall']['n']} against {cii['sscha']['recall']['k']}/"
+                     f"{cii['sscha']['recall']['n']}).")
     ps = prod["sscha"]
     bars.append(("SSCHA, production\n(not converged)", int(ps["correct_unstable"]),
                  int(ps["n_valid"]), "0.75", "//"))
