@@ -67,7 +67,149 @@ def h2_test(d: pd.DataFrame, t: float, drop_systems=()):
     return b, c, p_unit, cl["p_exact_clustered"], cl
 
 
+def text_vs_data(ms_txt: str) -> None:
+    """Headline numbers as printed in the manuscript against a recomputation from raw data.
+
+    The checks above mostly pin pipeline outputs (grid_compare.json, summary.csv). This layer
+    re-derives the headline numbers from the per-unit SSCHA JSONs, the yaml labels (stable iff
+    T >= T_c), the ledger's softmode v4 calls and the DFT unit tables, without the project's
+    analysis code, renders each one as the manuscript prints it, and requires that exact string
+    in the section that states it. Text drift (a number edited in the prose but not in the data,
+    or the reverse) therefore fails here even when the pipeline products are unchanged.
+    """
+    import glob
+    import itertools
+    import math
+    import yaml
+
+    def norm(s):
+        return " ".join(s.split())
+
+    def sect(start, end):
+        return norm(ms_txt.split(start, 1)[1].split(end, 1)[0])
+
+    abst, s26 = sect("## Abstract", "## 1."), sect("### 2.6", "## 3.")
+    s32, s33 = sect("### 3.2", "### 3.3"), sect("### 3.3", "### 3.4")
+    s4 = sect("## 4.", "## 5.")
+
+    def wil(k, n, z=1.959963984540054):
+        p, den = k / n, 1 + z * z / n
+        c = (p + z * z / (2 * n)) / den
+        h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / den
+        return f"[{c - h:.2f}, {c + h:.2f}]"
+
+    def signflip_p(nets):
+        obs = abs(sum(nets))
+        hits = [abs(sum(s * x for s, x in zip(sg, nets))) >= obs - 1e-12
+                for sg in itertools.product((1, -1), repeat=len(nets))]
+        return sum(hits) / len(hits)
+
+    def has(where, name, s):
+        check(s in where, f"[text] {name}: '{s}'")
+
+    tc = {s_["id"]: s_["transition_T_K"]
+          for s_ in yaml.safe_load(open("configs/curated_systems.yaml", encoding="utf-8"))["systems"]}
+
+    def lab(system, T):
+        return tc[system] is not None and T >= tc[system]
+
+    led = pd.read_parquet("results/ledger.parquet")
+    sm = led[(led.method == "softmode") & (led.method_version == 4)]
+    scr = {(r_.system, r_.model, float(r_.temperature_K)): bool(r_.pred_stable) for r_ in sm.itertuples()}
+    rows = []
+    for f_ in sorted(glob.glob("results/revision/sscha_converged_grid/*_startA.json")):
+        g_ = json.load(open(f_, encoding="utf-8"))
+        u_, run = g_["unit"], g_.get("run") or {}
+        ok_ = run.get("status") == "ok"
+        conv = ok_ and bool((run.get("relax") or {}).get("converged"))
+        hz = run["hessian"]["min_nonac_thz"] if ok_ else None
+        T = float(u_["T"])
+        rows.append(dict(system=u_["system"], model=u_["model"], T=T, conv=conv,
+                         stable=(hz is not None and hz >= -0.1), lab=lab(u_["system"], T),
+                         scr=scr.get((u_["system"], u_["model"], T))))
+    g = pd.DataFrame(rows)
+    check(len(g) == 178, f"[text] grid: {len(g)} start-A unit JSONs read")
+    c = g[g.conv & ~g.system.str.endswith("_bcc")]
+    noorb = c.model != "orb_v2"
+
+    # (i) converged false-stables among label-unstable non-bcc units, and the screen on them
+    lu = c[~c.lab]
+    fs = lu[lu.stable]
+    k, n = len(fs), len(lu)
+    has(abst, "abstract FS", f"calls {k} of {n} label-unstable non-bcc units stable")
+    has(s33, "3.3 FS", f"{k}/{n} = {k / n:.2f} {wil(k, n)}")
+    kx, nx = int((fs.model != "orb_v2").sum()), int((lu.model != "orb_v2").sum())
+    has(s33, "3.3 FS ex-ORB", f"{kx}/{nx} without ORB-v2")
+    ox = ["srtio3_cubic", "batio3_cubic", "knbo3_cubic", "pbtio3_cubic"]
+    lu_ox, fs_ox = lu[lu.system.isin(ox)], fs[fs.system.isin(ox)]
+    check(len(fs_ox) == k, f"[text] every converged false-stable is an oxide perovskite ({len(fs_ox)}/{k})")
+    has(abst, "abstract oxide-perovskite denominator", f"all oxide perovskites ({len(fs_ox)} of {len(lu_ox)})")
+    has(s33, "3.3 oxide-perovskite denominator",
+        f"{len(fs_ox)} of the {len(lu_ox)} label-unstable oxide-perovskite units")
+    lu_fe, fs_fe = lu[lu.system.isin(FE_OXIDE)], fs[fs.system.isin(FE_OXIDE)]
+    has(s33, "3.3 ferroelectric part", f"{len(fs_fe)} of {len(lu_fe)} on the three ferroelectrics")
+    ks = int((fs.scr == False).sum())  # noqa: E712
+    has(abst, "abstract screen on FS", f"cannot exclude, in {ks} of them")
+    has(s33, "3.3 screen on FS", f"{ks}/{k} = {ks / k:.2f} {wil(ks, k)}")
+
+    # (ii) ferroelectric recall at T <= 300 K on the units where SSCHA converged
+    fe = c[c.system.isin(FE_OXIDE) & (c["T"] <= 300) & ~c.lab]
+    ks_, kc_, nf = int((fe.scr == False).sum()), int((~fe.stable).sum()), len(fe)  # noqa: E712
+    has(abst, "abstract screen recall", f"recovers {ks_}/{nf} {wil(ks_, nf)}")
+    has(abst, "abstract SSCHA recall", f"against {kc_}/{nf} {wil(kc_, nf)} for converged SSCHA")
+    has(s33, "3.3 screen recall", f"{ks_}/{nf} = {ks_ / nf:.2f} {wil(ks_, nf)}")
+    has(s33, "3.3 SSCHA recall", f"{kc_}/{nf} = {kc_ / nf:.2f} {wil(kc_, nf)}")
+
+    # (v) paired contrast, displacive set at T <= 300 K, exact sign flip over systems
+    dp = c[c.system.isin(FE_OXIDE + FLUORITE) & (c["T"] <= 300) & c.scr.notna()]
+    sr, cr = dp.scr.astype(bool) == dp.lab, dp.stable == dp.lab
+    b_, c_ = dp[sr & ~cr], dp[~sr & cr]
+    nets = {s_: int((b_.system == s_).sum()) - int((c_.system == s_).sum()) for s_ in FE_OXIDE + FLUORITE}
+    p_all, p_fe = signflip_p(list(nets.values())), signflip_p([nets[s_] for s_ in FE_OXIDE])
+    has(s33, "3.3 paired counts", f"wrong on {len(b_)} units and SSCHA is right where the screen is "
+        f"wrong on {len(c_)} ({int((b_.model != 'orb_v2').sum())} against "
+        f"{int((c_.model != 'orb_v2').sum())} on {int((dp.model != 'orb_v2').sum())} units without")
+    has(s33, "3.3 paired p", f"is exact at this size, gives p = {p_all:g}")
+    has(abst, "abstract paired p (ferroelectric units)", f"(paired, system-clustered p = {p_fe:g})")
+    check(len(dp) == 44 and int(noorb.sum()) > 0,
+          f"[text] paired displacive set: {len(dp)} units, nets {nets}")
+
+    # E1: screen on PBE against the MLIPs along the same coordinates (c3a_unit_calls.csv)
+    cu = pd.read_csv("results/revision/dft/c3a_unit_calls.csv")
+    cu = cu[cu["T"].isin([100.0, 300.0, 600.0, 900.0])]          # the ladder (the file adds 50 K)
+    cl = cu.apply(lambda r_: lab(r_.system, float(r_["T"])), axis=1)
+    n_pbe = int((cu.pbe_backed_stable.astype(bool) == cl).sum())
+    n_ml = int((cu.mlip_same_paths_stable.astype(bool) == cl).sum())
+    has(s32, "3.2 E1 agreement", f"agreement with the labels from {n_ml} to {n_pbe}")
+    has(s4, "4 E1 agreement", f"in {n_pbe} of {len(cu)} units against {n_ml} with the MLIPs along the same coordinates")
+    ps = json.load(open("results/revision/dft/summary.json", encoding="utf-8"))["c3a"]["paths"]
+    n_done = sum(e["status"] == "complete" for e in ps)
+    has(s26, "2.6 E1 coverage", f"({n_done} of the {len(ps)} screened paths")
+    cp = pd.read_csv("results/revision/dft/c3a_paths.csv")
+    dm = (cp[cp.curve == cp.path_model].merge(cp[cp.curve == "pbe"], on="stem", suffixes=("", "_p")))
+    dm = dm[dm.system.isin(["batio3_cubic", "knbo3_cubic"]) & (dm.path_model != "orb_v2")]
+    ratio = dm.depth_meV / dm.depth_meV_p
+    has(s32, "3.2 depth ratio, 12 deciding paths", f"(median {ratio[dm.role == 'decide'].median():.2f})."
+        " That is the PES softening")
+    has(s32, "3.2 depth ratio, all 26 paths", f"are {ratio.min():.2f}–{ratio.max():.2f} of PBE's "
+        f"(median {ratio.median():.2f})")
+
+    # E2: PBEsol on CsSnBr3 (xc_unit_calls.csv)
+    words = {7: "seven", 8: "eight", 9: "nine"}
+    xu = pd.read_csv("results/revision/dft_checks/xc_unit_calls.csv")
+    xu = xu[xu.in_ladder.astype(bool) & xu.unit_complete.astype(bool) & (xu.system == "cssnbr3_cubic")]
+    xl = xu.apply(lambda r_: lab(r_.system, float(r_["T"])), axis=1)
+    pe = xu.pbe_backed_stable.astype(bool) != xl
+    me = xu.mlip_pred_stable_ledger.astype(bool) != xl
+    fx = xu.pbesol_backed_stable.astype(bool) == xl
+    k1, n1 = int((pe & fx).sum()), int(pe.sum())
+    k2, n2 = int((pe & me & fx).sum()), int((pe & me).sum())
+    has(s32, "3.2 PBEsol, persistent", f"{words[k2]} of the {words[n2]} persistent CsSnBr₃ errors")
+    has(s32, "3.2 PBEsol, all PBE errors", f"{k1} of all {n1} CsSnBr₃ PBE errors")
+
+
 def main() -> int:
+    sys.stdout.reconfigure(errors="backslashreplace")  # manuscript strings carry subscripts
     d = A.canonical(pd.read_parquet("results/ledger.parquet"))
     v = d[d.method == "softmode"]
     ss = d[d.method == "sscha"]
@@ -834,8 +976,8 @@ def main() -> int:
     check(len(fl_c) == 38 and not fl_c.stable_call.astype(bool).any() and len(fl_all) == 40
           and not fl_all.stable_call.astype(bool).any()
           and len(fl_c[fl_c.T_K <= 300]) == 18,
-          "[3.3] converged SSCHA calls every fluorite unit unstable (38 converged, 2 unconverged too; "
-          "18 at T <= 300 K)")
+          "[3.3] converged SSCHA calls every converged fluorite unit unstable (38; the 2 unconverged "
+          "ORB-v2 100 K units are HfO2 -49.4 THz and a ZrO2 blow-up; 18 at T <= 300 K)")
     ciii = cvg["converged_matched"]["iii"]
     check(ciii["all_models"]["call_agreement"]["short"] == "33/41"
           and ciii["excl_orb_v2"]["call_agreement"]["short"] == "32/36"
@@ -895,8 +1037,8 @@ def main() -> int:
     chc = gcj["changed_calls"]
     check((chc["n_compared_converged"], chc["converged_no_blowup_changed"]["n"],
            chc["nonbcc_corrected_vs_label"], chc["nonbcc_worsened_vs_label"]) == (159, 72, 51, 12),
-          "[R1.4 letter] converged recipe changes 72 of 159 calls; non-bcc 51 wrong->right, "
-          "12 right->wrong")
+          "[R1.4 letter] converged recipe changes 72 of the 154 converged calls with a non-blow-up "
+          "production value; non-bcc 51 wrong->right, 12 right->wrong")
     check((r2(z50["A"]["hessian_min_thz"]), r2(z50["B"]["hessian_min_thz"])) == (0.41, 0.41)
           and (r2(z2["A"]["hessian_min_thz"]), r2(z2["B"]["hessian_min_thz"])) == (0.92, 0.93)
           and (r2(z3["A"]["hessian_min_thz"]), r2(z3["B"]["hessian_min_thz"])) == (-0.92, -0.95)
@@ -916,6 +1058,7 @@ def main() -> int:
           "[3.3] Ti/MACE-MP-0 converged 3x3x3 hardens +1.57 -> +1.71 THz (100 -> 600 K)")
     with open("paper/manuscript.md", encoding="utf-8") as fh:
         ms_txt = fh.read()
+    text_vs_data(ms_txt)
     abs_txt = ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0]
     n_words = len(abs_txt.split())
     check(n_words <= 250, f"[abstract] {n_words} words (RSC Advances limit 250)")

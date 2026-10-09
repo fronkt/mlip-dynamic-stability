@@ -19,8 +19,8 @@ changed what the paper claims. The revision:
   screen mis-calls at finite temperature outnumber the reverse (17 to 4 at 300 K under the
   screen's production convention), not significantly (p = 0.152), and mostly in three systems the
   screen mis-calls for nearly every model; no model ranking is claimed (R1.6, R3.1, R3.3);
-- relates the SSCHA false-stables that survive a converged relaxation (on the ferroelectric
-  perovskites) to the local question its default criterion asks, and reports that the fluorite
+- relates the SSCHA false-stables found after a converged relaxation (34 of 84 label-unstable
+  non-bcc units, all oxide perovskites) to the local question its default criterion asks, and reports that the fluorite
   false-stables and the high-temperature false-unstables of the first recipe were unconverged
   relaxations (R1.1, R1.2, R1.4);
 - adds PBE single points along the screen's soft-mode coordinates and on SSCHA-sampled
@@ -29,8 +29,8 @@ changed what the paper claims. The revision:
   on PBE energies the shared BaTiO₃ and KNbO₃ mis-calls disappear (MLIP wells about half the PBE
   depth) and the CsSnBr₃ ones persist, though mostly not with PBEsol, so they follow the
   functional; MLIP force error does not grow on the 100 K SSCHA samples and rises 1.7-fold at
-  600 K in SrTiO₃; the production SSCHA recipe never converged (cumulative step cap, placeholder
-  gradient error), and re-run to convergence on 178 units (159 converged) the BaTiO₃ and KNbO₃
+  600 K in SrTiO₃; the production SSCHA recipe did not converge on any of the 16 seeds on which
+  convergence was recorded (cumulative step cap, placeholder gradient error), and re-run to convergence on 178 units (159 converged) the BaTiO₃ and KNbO₃
   false-stables remain while the fluorite false-stables and the high-temperature runaway do not;
 - adds the literature on active-learning potentials and ML-driven screening (R1.3);
 - completes the screen's derivation and reports its sensitivity, including the frozen-cell
@@ -69,7 +69,7 @@ read and as they are now.
 | Harmonic accuracy, 19 systems (R3.3) | 1.000, 0.895, 0.789 | unchanged: 19/19, 17/19, 15/19; ORB-v2 0.842 → 17/19 |
 | Finite-T accuracy, T ≤ 300 K: CHGNet, MACE-MP-0, MatterSim (R3 summary) | 0.933, 0.933, 0.833 | 26/30, 25/30, 25/30 |
 | Screen recall, ferroelectric perovskites, T ≤ 300 K (R3 summary) | 23/30 | 16/30 [0.36, 0.70] |
-| SSCHA recall, same units (R3 summary) | 7/30 | production recipe 5/27 [0.08, 0.37] (one blow-up and two failed runs excluded); converged recipe 4/26 [0.06, 0.34], with the screen at 15/26 [0.39, 0.74] on those units (two failed and two unconverged runs excluded) |
+| SSCHA recall, same units (R3 summary) | 7/30 | production recipe 5/27 [0.08, 0.37] (one blow-up and two failed runs excluded); converged recipe 4/26 [0.06, 0.34], with the screen at 15/26 [0.39, 0.74] on those units (two failed and two unconverged runs excluded; paired, system-clustered p = 0.5) |
 | H2 association φ (R3.1) | +0.11, the 100 K value (the text did not give the temperature) | +0.149 at 100 K; −0.129 at 300 K (−0.114 on the reviewed data); not resolved at any temperature |
 | H2 McNemar exact p (R3.3) | 0.34, the 100 K value (7 v 3) | 0.727 at 100 K (5 v 3); at 300 K 0.007 unit level (17 v 4; 0.031 and 14 v 4 on the reviewed data), 0.152 clustered by system |
 | Per-model Spearman ρ, harmonic vs finite-T (R3.1, R3.3) | +0.15 to +0.65 | removed (R3.3) |
@@ -187,7 +187,7 @@ It does not re-derive the coordinate or the lattice in PBE.
 All 981 calculations finished, covering the deciding paths and every other screened mode in
 cells of up to 12 atoms (93 of 139 paths), and the outcome splits by system (new §2.6 and §3.2;
 ESI §S5, Table S19). (i) Along the coordinates that decide BaTiO₃, KNbO₃ and ZrO₂, the wells of CHGNet,
-MACE-MP-0, MatterSim and SevenNet-0 are shallower than PBE's (0.32–0.76 of the depth for the first
+MACE-MP-0, MatterSim and SevenNet-0 are shallower than PBE's (0.31–0.76 of the depth for the first
 two systems, 0.45–0.61 for ZrO₂) at the same minimum position; for SrTiO₃'s R tilt they are
 0.25–0.99 of it; for CsSnBr₃ three of the five match PBE within 20 %; and along MatterSim's
 deciding coordinate in bcc Zr, PBE has a 159–174 meV well where CHGNet, MACE-MP-0 and SevenNet-0
@@ -203,7 +203,8 @@ errors that persist I ran three further checks for BaTiO₃, KNbO₃ and CsSnBr�
 ESI §S5.3, Table S23). Denser k-points and higher cutoffs change no call at any temperature; by
 the criterion I fixed in advance the production settings still fail, because the denser k-mesh
 lowers the CsSnBr₃ well depth, a value at the edge of the scan, by 6.8 %. PBEsol on the same
-structures corrects 8 of the 9 CsSnBr₃ PBE errors and introduces none, so those errors follow the
+structures corrects 8 of the 9 CsSnBr₃ PBE errors (7 of the 8 where the MLIP call is wrong too)
+and introduces none, so those errors follow the
 functional and are not shown to be the screen's; this shows that the call is sensitive to the
 functional, not that PBEsol is right. KNbO₃ at 600 K persists under both functionals for four of
 the five models. The counts are descriptive (six systems, PBE at each model's lattice, which is
@@ -370,7 +371,7 @@ Rev. B*, 2021, **103**, 214102, ref 11), and its use to screen lithium diffusion
 of candidate solid electrolytes and to merge the per-crystal models into transferable Li–P–S and
 Li–Sb–S potentials (A. Hajibabaei and K. S. Kim, *J. Phys. Chem. Lett.*, 2021, **12**, 8115, ref
 12); the review of sparse Gaussian-process potentials and their library for batteries, solar
-cells, catalysts and macromolecular systems (S. Yoo Willow *et al.*, *Chem. Phys. Rev.*, 2024,
+cells, catalysts and macromolecular systems (S. Y. Willow *et al.*, *Chem. Phys. Rev.*, 2024,
 **5**, 041307, ref 15); the Account by M. Ha, S. Pourasad, C. W. Myung and K. S. Kim
 (*Acc. Chem. Res.*, 2026, **59**, 103, ref 14), which covers sample efficiency (practical accuracy
 from 100–1000 quantum calculations), uncertainty-triggered sampling and the robust Bayesian
@@ -393,7 +394,7 @@ I also considered the other works the comment points to, and the paper cites tho
 directly on its subject, the finite-temperature dynamic stability of the crystal families studied
 here, or on the uncertainty and screening questions it raises. Of the works the comment names, one
 is not cited: the 2025 *Chem. Phys. Rev.* paper on a sparse Bayesian committee machine potential
-for oxygen-containing organic compounds (S. Yoo Willow *et al.*, *Chem. Phys. Rev.*, 2025, **6**,
+for oxygen-containing organic compounds (S. Y. Willow *et al.*, *Chem. Phys. Rev.*, 2025, **6**,
 021401). Its systems are molecular, gas-phase to solid organic compounds, and do not include the
 inorganic crystal families or the phase transitions studied here; the committee-machine method it
 applies is cited through ref 14. Against the version the referees read, the reference list has
@@ -446,11 +447,13 @@ the library's stochastic gradient error in place of the placeholder, populations
 configurations up to 30, and a 2,000-configuration Hessian ensemble with bootstrap resampling, on
 every unit a claim of §3.3 rests on (178 units). 171 finished and 159 met the stopping test (11
 ORB-v2 units reached the population cap, one CHGNet unit the wall cap, and the seven units that
-failed in production failed again). The converged values change 72 of the 159 calls; on the
-non-bcc units 51 change from wrong to right against the label and 12 from right to wrong. The
-consequences, carried into R1.1, R1.2, §3.3 and the abstract: the false-stables survive on BaTiO₃
-and KNbO₃ (34/84 label-unstable units in all, with PbTiO₃ at 300–600 K and SrTiO₃ at 100 K), the
-fluorite false-stables and the high-temperature false-unstables do not, and the ferroelectric
+failed in production failed again). The converged values change 72 of the 154 calls that have a
+converged value and a production value that is not a blow-up (75 of the 159 if the production
+blow-ups count as unstable); on the non-bcc units 51 change from wrong to right against the label
+and 12 from right to wrong. The consequences, carried into R1.1, R1.2, §3.3 and the abstract: 21
+of the 57 production false-stables survive, all on BaTiO₃ and KNbO₃; convergence adds 13
+(PbTiO₃ at 300–600 K, SrTiO₃ at 100 K and two KNbO₃ units), 34 of the 84 label-unstable non-bcc
+units in all, every one an oxide perovskite; the fluorite false-stables and the high-temperature false-unstables do not, and the ferroelectric
 recall is 4/26 for converged SSCHA against 15/26 for the screen on the same units (ESI Table S22).
 
 *What the production grid did not record.* It did not record how many populations each unit used,

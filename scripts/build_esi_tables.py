@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -1297,7 +1298,7 @@ def table_s19_c3a_pbe() -> str:
     n_nowell = int((m["depth_meV_own"] <= 0).sum())
     npb = u["n_paths_pbe"]
     return (
-        "**Table S19** PBE along the screen's own soft-mode coordinates. Each of the {tot[1]} ladder units (6 systems × 5 models × 100, 300, 600 and 900 K) "
+        f"**Table S19** PBE along the screen's own soft-mode coordinates. Each of the {tot[1]} ladder units (6 systems × 5 models × 100, 300, 600 and 900 K) "
         "is called twice by the screen's rule (unstable if any computed path condenses, §2.4), on "
         "the same structures: from the model's own energies (*MLIP, same paths*) and from "
         "Quantum ESPRESSO PBE single-point energies (*PBE-backed*). Both are scored against the "
@@ -2155,6 +2156,10 @@ def build() -> str:
     return "\n\n".join(blocks)
 
 
+# a Python replacement field left in the output: {name}, {name[1]}, {name.attr}, {name:.2f}, {name!r}
+PLACEHOLDER = re.compile(r"\{[A-Za-z_]\w*(?:\[[^\]{}]*\]|\.[A-Za-z_]\w*)*(?:![rsa])?(?::[^{}]*)?\}")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true",
@@ -2162,6 +2167,13 @@ def main() -> None:
     args = ap.parse_args()
 
     body = build()
+    # Comparing the generated text with the file cannot catch a string that lost its f prefix
+    # (Table S19 caption, eeb10aa): the bug is regenerated identically. Fail on any unrendered
+    # Python format field in the generated tables instead.
+    leftover = sorted(set(PLACEHOLDER.findall(body)))
+    if leftover:
+        raise SystemExit("ESI generated tables contain unrendered format fields "
+                         f"(missing f prefix?): {', '.join(leftover)}")
     text = ESI.read_text(encoding="utf-8")
     i, j = text.index(BEGIN), text.index(END)
     new = text[:i] + BEGIN + "\n\n" + body + "\n\n" + text[j:]

@@ -193,3 +193,36 @@ scratchpad script does, and add text-match checks for the abstract numbers.
 - No plan codes in prose.
 - Abstract 248 words; TOC 247 characters.
 - "§" is used throughout. This predates the fold (a pre-existing convention, not a regression).
+
+## Resolution (2026-10-08)
+
+All 19 findings fixed. Checks after the fix: `verify_claims.py` 144 PASS, 0 FAIL (119 before plus
+25 new text-vs-data checks); `build_esi_tables.py --check` up to date; `renumber_refs.py --check
+--letter` all ok; abstract 250 words; PENDING-E3/E5/PL/P4/P5 markers unchanged.
+
+| Finding | Resolution |
+|---|---|
+| H1 | `build_esi_tables.py`: `f` prefix restored on the Table S19 caption; ESI rebuilt ("Each of the 120 ladder units"). The build (write and `--check`) now fails on any unrendered Python format field (`{name}`, `{name[i]}`, `{name.attr}`, `{name:fmt}`) in the generated tables; the old ESI text trips it. |
+| H2 | Abstract: "Under its production frozen-cell convention the screen recovers 15/26 [0.39, 0.74] ... against 4/26 [0.06, 0.34] for converged SSCHA (paired, system-clustered p = 0.5)". The p is the exact sign flip over the three ferroelectric systems (recomputed: 0.5; 0.5 on the combined displacive set too). Words found by shortening the 7–24 parenthesis and merging the curvature sentence. Letter summary table row also gives the p. |
+| H3 | "never converged" replaced by the measured scope (none of the 16 seeds of the four re-run units; the production grid did not record convergence) in the Intro, §3.3 opening, §4 Limitations, §5 and letter summary; Intro and §5 add the mechanism (cumulative cap ends the relaxation after about 19 steps wherever the start is far from the minimum). Fig. 3 and Fig. 4 captions say "convergence not recorded"; §2.6 says "production-recipe runs that did not converge" (the seed-study ensembles, which were measured). |
+| M1 | Abstract, Intro and §5 now say 34 of 84 label-unstable non-bcc units, all oxide perovskites (34 of 38); "still" dropped. §3.3 adds 34 of the 38 oxide-perovskite units (30 of 34 on the three ferroelectrics), and that 21 were production false-stables and 13 are new (PbTiO₃ 7, SrTiO₃ 4, KNbO₃ 2). §5 adds "21 of them already false-stable in the first recipe". |
+| M2 | Letter R1.4: "21 of the 57 production false-stables survive, all on BaTiO₃ and KNbO₃; convergence adds 13 (PbTiO₃ at 300–600 K, SrTiO₃ at 100 K and two KNbO₃ units), 34 of the 84 ... every one an oxide perovskite". Letter summary bullet no longer says "survive". |
+| M3 | §5: PBE forces scoped to the unconverged recipe's BaTiO₃ and ZrO₂ 100 K ensembles, with "ZrO₂ is no longer a false-stable once converged, and the check was not repeated on converged ensembles". |
+| M4 | §3.3: left-censoring prefixed "With the production recipe in the 2×2×2 cell ... in that cell and recipe", followed by "the converged 3×3×3 grid (below) does not support this for MatterSim and ORB-v2"; the causal "because" now explains only why bcc is excluded from scoring. |
+| M5 | New `text_vs_data()` in `verify_claims.py`: recomputes from the per-unit grid JSONs, yaml labels (stable iff T ≥ T_c), ledger softmode v4 calls, `c3a_unit_calls.csv`, `c3a_paths.csv`, DFT `summary.json` and `xc_unit_calls.csv` (no project analysis code), renders each number as printed, and requires the exact string in the abstract, §2.6, §3.2, §3.3 or §4: 34/84 (and 34 of 38, 30 of 34), 30/74, 17/34, 15/26 and 4/26 with Wilson intervals, 13 v 2 (10 v 2 on 39) and both p = 0.5, 101 and 81 of 120, 93 of 139, both depth-ratio medians (0.53, 0.52), PBEsol 8 of 9 and seven of eight. Tested: editing "15/26" or "81 to 101" in the text makes it fail. |
+| L1 | §3.2: 26-path median 0.53 → 0.52 (0.5247); ESI §S5 narrative likewise. |
+| L2 | §2.6: ORB-v2 added to the bcc-Zr reference-coordinate list (its harmonic screen has no Zr instability; `dft_reference.py` assigns role `ref`). |
+| L3 | §3.3: "every converged fluorite unit unstable (38 units; the 2 ORB-v2 units at 100 K that did not converge return −49.4 THz for HfO₂ and a blow-up, −50.0 THz, for ZrO₂)"; verify_claims message corrected. |
+| L4 | §3.3 and §3.5: the 300 K Zr/MatterSim pair now notes that in 2×2×2 the fresh-ensemble check does not confirm a minimum for the positive-definite start (AB verdict). |
+| L5 | §3.3: "early stopping is excluded" → "does not explain the call"; adds one start and one seed per unit (two starts only for BaTiO₃/MACE-MP-0) and BaTiO₃/CHGNet +1.65 ± 1.50 THz within two bootstrap SDs of the boundary. |
+| L6 | Letter: "72 of the 154 calls that have a converged value and a production value that is not a blow-up (75 of the 159 if the production blow-ups count as unstable)"; 154 = 159 − 5 production blow-ups (recomputed). verify_claims message updated. |
+| L7 | §3.2 names the denominator: "seven of the eight persistent CsSnBr₃ errors (units where the MLIP and PBE calls are both wrong; 8 of all 9 CsSnBr₃ PBE errors)"; letter: "8 of the 9 CsSnBr₃ PBE errors (7 of the 8 where the MLIP call is wrong too)". Both now text-checked. |
+| L8 | §4: "comparable to PBE's for CsSnBr₃ in three of the five models (0.92–1.17 of the PBE depth; CHGNet 2.17, ORB-v2 0.57–0.68)" (recomputed from `c3a_paths.csv`, deciding paths). |
+| L9 | Ref 15 → "S. Y. Willow"; the two letter mentions likewise. |
+| L10 | §4: "against 81 with the MLIPs along the same coordinates". |
+| L11 | Fig. 5 caption: "on the 26 units where SSCHA converged". |
+
+**Found while fixing (not in the audit).** The lower bound of the BaTiO₃/KNbO₃ depth ratio is
+0.3147, which rounds to 0.31, not 0.32. Corrected to 0.31–0.76 (12 deciding paths) and 0.31–0.83
+(26 paths) in §3.2 (two places), ESI (three places) and letter R1.1; the 26-path range is now
+text-checked.
