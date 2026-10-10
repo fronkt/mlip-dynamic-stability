@@ -9,6 +9,14 @@ each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ..
 **Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
 false.
 
+## ▶ 2026-10-10 — R1 SUBMITTED by Frank (awaiting editor)
+
+Revision of RA-ART-07-2026-006452 submitted in ScholarOne by Frank on 2026-10-10. Package: Main Article
+(Frank's docx with his AI-use wording), Figs 1-8 .tif, SI + SI marked changes, TOC graphic + blurb, DAS,
+Highlighted Manuscript (Word Compare, 507 revisions), Response to Referees (6,034 words; full text also in
+the Step 1 box), cover letter (also pasted into Comments to the Editor). Release v2.1.0 (0343264), Zenodo
+10.5281/zenodo.23286095. ORCID linked, transparent peer review chosen. Nothing open until the decision.
+
 ## ▶ 2026-10-09 (late) — two new figures + length trim (Frank: "both figures plus the trim, but the revisions must stay fully emphasized")
 
 Why: body ~20.6k words / 53 Word pp, 6 figures, ~25 tables; the revision's three new results (PBE-lattice,
