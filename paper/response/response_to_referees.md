@@ -524,9 +524,8 @@ with intervals, converged SSCHA values).
 I checked each suggested work against its published record and included those relevant to the
 argument (R1.3); the fine-tuning references (R2.1) were checked the same way. The manuscript now has
 an Author contributions section in CRediT roles above Conflicts of interest and Acknowledgements,
-and my ORCID (0009-0003-0041-1459) on the title page, to be linked in the portal at upload, where I
-also make my choice on transparent peer review.
-<!-- PENDING-P4: before upload, link the ORCID to the submitting account in the portal and finish the affiliation, funding and AI-use checks (tasks/todo.md P4); if either is not done, rewrite the two sentences above to say what was done. -->
+and my ORCID (0009-0003-0041-1459) on the title page; it is linked to the submitting account, and I
+have opted in to transparent peer review.
 
 # Other changes
 
@@ -534,7 +533,6 @@ also make my choice on transparent peer review.
   and the MACE-MP-0 reference cites its published version.
 - The pre-registration of H1–H3 is dated in Section 1 (commit 9c2599f, 20 June 2026).
 - A statement on the use of AI tools is added at the end of the Acknowledgements.
-<!-- DRAFT-FOR-FRANK: the AI-use statement in the manuscript is Option A of paper/response/ai_use_statement_DRAFT.md; confirm or replace its wording, and keep or drop this bullet accordingly. -->
 - To keep the paper readable the main text is about 2,900 words shorter: methods detail that
   predates the revision moved verbatim to the ESI with pointers, and repeated results are stated
   once. Nothing added in answer to the referees left the main text.

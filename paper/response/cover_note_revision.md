@@ -34,9 +34,8 @@ The main changes are:
   signal (Referee 2).
 
 As the decision letter asked, the manuscript now has an Author contributions section in CRediT
-form and my ORCID on the title page; the ORCID link to the submitting account and the choice on
-transparent peer review are made in the portal with this upload.
-<!-- PENDING-P4: once the ORCID is linked and the transparent-review choice is made in the portal, this sentence may say so directly. -->
+form and my ORCID on the title page; the ORCID is linked to the submitting account, and I have
+opted in to transparent peer review.
 The corresponding address is now cai485@purdue.edu. All code and data are deposited, and every
 number in the manuscript and ESI regenerates from them.
 
