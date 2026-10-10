@@ -1231,10 +1231,9 @@ leaderboard.
 
 The code supporting this article, together with the per-unit results ledger, is openly available
 in the repository at https://github.com/fronkt/mlip-dynamic-stability. The version that produced
-the numbers in this article will be pinned to a tagged release on the repository's default branch
-and archived as a new version under the Zenodo concept DOI https://doi.org/10.5281/zenodo.20805799,
-which resolves to the latest version.
-<!-- PENDING-P5: release tag, commit hash and the version DOI of the new Zenodo version; name them here once minted (after the main merge and after the PENDING compute lands). -->
+the numbers in this article is release v2.1.0 (commit 0343264) on the repository's default branch,
+archived at Zenodo as https://doi.org/10.5281/zenodo.23286095, a version under the concept DOI
+https://doi.org/10.5281/zenodo.20805799, which resolves to the latest version.
 
 All production results regenerate from `results/ledger.parquet` (per-unit hashed, append-only,
 resumable) through `mlip_dynstab.analysis.canonical`, which selects the current generation of each
@@ -1261,7 +1260,9 @@ the screen's symmetric-point curvature and its trial stiffness, and the origin o
 value of that observable, are checked by `scripts/curvature_identity_check.py` (into
 `results/curvature_identity_check.json`), and the H2 count under each frozen-cell convention by
 `scripts/h2_by_convention.py` (into `results/h2_by_convention.json`); both re-solve the cached
-maps and need no GPU.
+maps and need no GPU. The pre-registered fine-tuning trial (`scripts/finetune_trial.py`), the replicates
+of the converged grid and the 4×4×4 attempt (runners in `scripts/box/as_run/`) also write under
+`results/revision/`, and their pre-registrations are in `tasks/`.
 
 The ledger is append-only and keeps each superseded generation beside the current one, so every
 correction is auditable. The screen results reported here are the multi-mode grid of Section 2.4

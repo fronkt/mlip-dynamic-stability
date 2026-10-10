@@ -37,8 +37,9 @@ already computed omitted the algorithm version, so units from a superseded **q**
 kept, and the acoustic-mode masks removed the three lowest branches instead of the three nearest
 zero, which for an unstable phase removes the soft mode under test. I re-measured every layer in
 pinned per-model environments; the Data availability section describes both defects, and the
-version the referees read (commit 76d3a84) is kept in the repository beside the revision.
-<!-- PENDING-P5: name the release tag, commit and Zenodo version DOI that contain paper/submissions/rsc-advances-2026-07/, once the branch is merged and the version is minted. -->
+version the referees read (commit 76d3a84) is kept in the repository beside the revision, in
+`paper/submissions/rsc-advances-2026-07/` of release v2.1.0 (commit 0343264), archived at Zenodo as
+https://doi.org/10.5281/zenodo.23286095.
 
 | Quantity (where quoted) | As reviewed | Now |
 |---|---|---|
@@ -540,13 +541,13 @@ also make my choice on transparent peer review.
 
 # Files submitted with this response
 
-<!-- PENDING-B1: build the clean .docx files and the marked-changes manuscript and ESI (scripts/build_docx.py, scripts/build_marked_changes.py against 76d3a84) after the last text edit; drop any item below that is not uploaded. -->
 1. This point-by-point response.
 2. The revised manuscript with the changes marked.
 3. The revised manuscript as a clean .docx with the figures embedded.
 4. The revised ESI, clean and with the changes marked.
 5. Figs. 1–8 as separate numbered TIFF files at 600 dpi.
 6. The table of contents entry.
+7. The data availability statement.
 
 Yours sincerely,
 
