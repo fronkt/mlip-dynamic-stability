@@ -1303,7 +1303,7 @@ Materials Project. Computational resources were provided by commercial cloud GPU
 research received no specific grant from any funding agency in the public, commercial, or
 not-for-profit sectors.
 
-<!-- DRAFT-FOR-FRANK: AI-use statement (RSC policy: declare AI use in the Acknowledgements or Methods). Option A of paper/response/ai_use_statement_DRAFT.md inserted as placed; the author confirms or replaces the wording (Option B there is the concise alternative) and checks "The author designed the study" before submission. -->
+<!-- AI-use statement: the submitted .docx carries the author's own AI-use wording (2026-10-10), which supersedes the Option A text below in this markdown. -->
 *Use of AI tools.* The author used a large language model (Claude, Anthropic), through the Claude
 Code agentic coding tool, throughout this work: to write and run analysis and simulation code under
 the author's direction, to carry out and cross-check the statistical analyses and internal audits
