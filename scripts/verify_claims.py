@@ -1169,10 +1169,23 @@ def main() -> int:
     check(v4["status"] == "finished" and abs(v4["v4_min_nonac_thz"] - 2.8784) < 5e-4
           and abs(v4["v4_false_parent_thz"] - 2.8783) < 5e-4 and 9800 < v4["wall_s"] < 9900,
           "[3.3/S2.2] C1b include_v4=True: +2.878 v +2.878 THz bubble, finished in under 9,900 s")
-    import glob as _glob
-    check(not [p_ for p_ in _glob.glob("results/**/*", recursive=True)
-               if "sc444" in p_ or "4x4x4" in p_],
-          "[3.5/R3.2] no 4x4x4 SSCHA result exists (narrowed claim)")
+    s444 = {}
+    for t_ in ("hfo2_cubic_mace_mp0_600K", "srtio3_cubic_chgnet_100K", "srtio3_cubic_mace_mp0_100K",
+               "srtio3_cubic_mattersim_100K", "srtio3_cubic_sevennet0_100K"):
+        with open(f"results/revision/sscha_converged_sc444/{t_}_sc444_startA.json",
+                  encoding="utf-8") as fh:
+            s444[t_] = json.load(fh)["run"]
+    h444 = s444["hfo2_cubic_mace_mp0_600K"]
+    check(h444["relax"]["converged"] is True and h444["relax"]["n_populations"] == 7
+          and r2(h444["hessian"]["min_nonac_thz"]) == -3.22
+          and h444["fresh_gradient_check"]["consistent_with_minimum"] is True
+          and "bootstrap" not in h444["hessian"],
+          "[3.5/S2.4/R3.2] 4x4x4 HfO2/MACE-MP-0 600 K: relaxation converged (7 pops), Hessian -3.22 THz, no bootstrap")
+    sto = {k: v for k, v in s444.items() if k.startswith("srtio3")}
+    check(all(not (v.get("hessian") or {}).get("min_nonac_thz") for v in sto.values())
+          and [sto[k]["relax"]["converged"] for k in sorted(sto)] == [True, False, False, False]
+          and [sto[k]["relax"]["n_populations"] for k in sorted(sto)] == [5, 14, 14, 10],
+          "[3.5/S2.4/R3.2] 4x4x4 SrTiO3 100 K: no Hessian on any of 4 (CHGNet relax converged in 5; 14/14/10 not)")
     tim = gsum[(gsum.system == "ti_bcc") & (gsum.model == "mace_mp0") & (gsum.converged == True)]  # noqa: E712
     check([r2(x) for x in tim.sort_values("T_K").hessian_min_thz] == [1.57, 1.66, 1.71],
           "[3.3] Ti/MACE-MP-0 converged 3x3x3 hardens +1.57 -> +1.71 THz (100 -> 600 K)")

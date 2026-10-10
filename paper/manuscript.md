@@ -1001,13 +1001,17 @@ in 3×3×3 (in 2×2×2 the fresh-ensemble check does not confirm a minimum for t
 start), consistent with the ω mode entering the larger cell; the production recipe gives the
 same sign change (+1.95 to −2.11 THz) without converging. The bcc SSCHA calls are therefore
 cell-dependent for MatterSim, and the converged grid's 3×3×3 bcc values (Section 3.3) are not a
-converged version of the 2×2×2 ones. A nested 4×4×4 and 6×6×6 test was not run.
+converged version of the 2×2×2 ones. A nested bcc test (4×4×4 against 6×6×6) was not run.
 
 Zone-boundary systems. The SrTiO₃ antiferrodistortive instability lives at the zone-boundary
 R point, (½,½,½), and the fluorite instability at the X point; both are commensurate with even
-supercells only, so neither has a cell-size comparison in this work, and the even-cell test
-(4×4×4, a ~320-atom SSCHA) was not run. **We make no supercell-convergence claim for the
-zone-boundary systems, and their SSCHA calls are stated for the 2×2×2 cell only.** This matters
+supercells only, so the nested test is 4×4×4. We ran it, pre-registered, on the four SrTiO₃ units
+at 100 K and on the fluorite unit closest to a sign change (HfO₂/MACE-MP-0 at 600 K), with the
+grid's recipe and a 9 h cap per unit (ESI Section S2.4). It gave a call for the fluorite only:
+the relaxation converged and the lowest Hessian frequency is −3.22 THz against −2.20 THz in
+2×2×2, so that call is unchanged (one start, no bootstrap). No SrTiO₃ unit reached a 4×4×4
+Hessian within the cap. **We make no supercell-convergence claim for the zone-boundary systems,
+and their SSCHA calls are stated for the 2×2×2 cell only.** This matters
 for one result in particular: converged SSCHA calls SrTiO₃ stable at 100 K, 5 K below its
 transition, in every model where it converged (+1.06 to +1.20 THz). The cell contains the R
 point, so this is not a missing **q**-point, but whether the finite-temperature renormalisation
@@ -1156,7 +1160,8 @@ that survive convergence (BaTiO₃ and KNbO₃ at 100 K) have no first-principle
 sampled configurations.
 SSCHA cells are 2×2×2 for the non-bcc systems; the bcc cell-size comparison (2×2×2 against
 3×3×3) changes the **q**-set and the MatterSim call with it (Section 3.5), and we make no convergence
-claim for the zone-boundary systems. The production SSCHA grid did not record convergence, and
+claim for the zone-boundary systems (a 4×4×4 attempt gave a call for one fluorite unit and none
+for SrTiO₃). The production SSCHA grid did not record convergence, and
 its recipe converged on none of the 16 seeds re-run to record it (its step cap counted steps over
 the whole relaxation and its gradient error was a placeholder; Section 2.5); the
 converged recipe met its stopping test on 159 of 178 units, 65 units were replicated from a

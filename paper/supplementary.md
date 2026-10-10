@@ -813,19 +813,46 @@ print to the run log rather than to a ledger).
   larger cell; the production recipe gives the same sign change (+1.95 to −2.11 THz) without
   converging. The bcc SSCHA calls are therefore cell-dependent for MatterSim, and the converged
   grid's 3×3×3 bcc values (Table S22) are not a converged version of the 2×2×2 ones. A nested
-  4×4×4 and 6×6×6 test was not run. The v1-generation rows of `results/convergence_study.parquet`
+  bcc test (4×4×4 against 6×6×6) was not run. The v1-generation rows of `results/convergence_study.parquet`
   and its soft-mode rows (produced by the earlier single-mode selection, before the correction
   described in Section 2.4) are retained for audit only.
 - **Zone-boundary systems: no convergence claim.** The SrTiO₃ antiferrodistortive instability is
   at the R point (½,½,½) and the fluorite instability at the X point; both are commensurate with
-  even supercells only, so neither has a cell-size comparison in this work, and the even-cell test
-  (4×4×4, a ~320-atom SSCHA) was not run. We make no supercell-convergence claim for the R-point
+  even supercells only, so the nested test is 4×4×4; it was attempted (next item) and gives a call
+  for one fluorite unit and none for SrTiO₃. We make no supercell-convergence claim for the R-point
   or X-point systems, and their SSCHA calls are stated for the 2×2×2 cell only.
+- **The 4×4×4 attempt (pre-registered).** Registered before any unit ran
+  (`tasks/preregistration-4x4x4-2026-10-09.md`, commit f47cc2a): every SrTiO₃ unit at 100 K that
+  converged in the grid (CHGNet, MACE-MP-0, MatterSim, SevenNet-0) and the converged fluorite unit
+  with the smallest |lowest Hessian frequency| in the grid (HfO₂/MACE-MP-0 at 600 K, −2.20 THz).
+  Recipe: the grid's converged recipe (Table S22), start A, unchanged except for the supercell,
+  4×4×4 (320 atoms for SrTiO₃, 192 for the fluorite primitive cell), with an 8 h wall cap on the
+  relaxation and a 9 h cap on the whole unit. All five ran in parallel on one RTX 3090 and all five
+  reached the 9 h cap, so no unit finished its bootstrap (`results/revision/sscha_converged_sc444/`).
+
+  Per unit, the 4×4×4 lowest free-energy-Hessian frequency against the grid's 2×2×2 value (±
+  bootstrap SD):
+  - HfO₂ / MACE-MP-0, 600 K: relaxation converged in 7 populations, fresh-ensemble check
+    consistent with a minimum; −3.22 THz against −2.20 ± 0.15 THz. Call unchanged (unstable); one
+    start, no 4×4×4 SD.
+  - SrTiO₃ / CHGNet, 100 K: relaxation converged in 5 populations, stopped while computing the
+    Hessian; no 4×4×4 call (2×2×2: +1.06 ± 0.03 THz).
+  - SrTiO₃ / MACE-MP-0, 100 K: not converged after 14 populations (wall cap); no 4×4×4 call
+    (+1.12 ± 0.03 THz).
+  - SrTiO₃ / MatterSim, 100 K: not converged after 14 populations (wall cap); no 4×4×4 call
+    (+1.20 ± 0.02 THz).
+  - SrTiO₃ / SevenNet-0, 100 K: not converged after 10 populations (wall cap); no 4×4×4 call
+    (+1.09 ± 0.03 THz).
+
+  The auxiliary matrices at the end of the SrTiO₃ relaxations have their lowest frequencies at
+  +0.87 to +1.21 THz, but the start-A auxiliary matrix is positive definite by construction, so
+  these are not stability calls and are not used as such. The 4×4×4 result therefore checks one
+  fluorite call and leaves the SrTiO₃ 100 K false-stables untested for cell size.
 - **SrTiO₃.** Converged SSCHA calls SrTiO₃ stable at 100 K, 5 K below its transition, in every
   model where it converged (+1.06 to +1.20 THz), and stable at every higher temperature (Table
   S22). The cell contains the R point, so this is not a missing q-point, but whether the
-  finite-temperature renormalisation of the R mode is converged in 2×2×2 is untested, and that
-  call may be a finite-size effect. The start-A/start-B pair at 100 K agrees in sign (+1.13 and
+  finite-temperature renormalisation of the R mode is converged in 2×2×2 is untested (the 4×4×4
+  attempt above reached no call), and that call may be a finite-size effect. The start-A/start-B pair at 100 K agrees in sign (+1.13 and
   +1.02 THz) and differs by 0.11 THz, more than its bootstrap standard deviation (0.03 THz), so it
   is flagged start-dependent. The production recipe never called SrTiO₃ stable: it was
   false-unstable in all 14 returned units above the transition, at −3.4 to −914 THz (Table S17),
@@ -836,7 +863,8 @@ print to the run log rather than to a ledger).
 - **Fluorites.** Converged SSCHA calls every fluorite unit unstable in the 2×2×2 cell, as the
   labels and the screen do, so no result rests on a fluorite SSCHA false-stable; the production
   recipe's 100 K false-stables (+1.9 to +3.3 THz, against harmonic −3.8 to −10.6 THz in the same
-  cell) were the unconverged relaxation. No claim is made that the 2×2×2 frequencies are converged.
+  cell) were the unconverged relaxation. No claim is made that the 2×2×2 frequencies are converged;
+  the one fluorite unit run in 4×4×4 keeps its call (above).
 - **BaTiO₃.** Its ferroelectric instability includes the zone-centre (Γ) mode, which every
   supercell contains, so a missing q-point cannot produce its false-stable. This rules out one
   explanation for one system and is not a convergence test.
