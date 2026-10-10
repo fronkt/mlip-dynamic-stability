@@ -72,7 +72,7 @@ Editor agreed to **9 Oct** (RSC, 09-28). The 14 Oct request is still an UNSENT G
 - [x] Final adversarial audit (4 blockers / 9 major / 17 minor, 0 wrong numbers) -> all fixed or justified,
       tasks/audit-fixes-2026-10-09.md, 463a5ca; Section-sign pass done; verify_claims 215/215; abstract 247 words.
 - [x] Draft builds OK (0041c22): clean manuscript 53 pp + ESI 78 pp; marked changes 538 + 112 revisions vs 76d3a84.
-- [ ] **Release sequence, blocked on Frank's AI-use wording (DRAFT-FOR-FRANK):** remove marker -> merge
+- [x] **Release sequence (done 2026-10-10: AI-use = Frank's own wording in his docx, marker 102099a; merged to main 0343264, tag v2.1.0; Zenodo 10.5281/zenodo.23286095; P5 4462fdc; CRLF-safe hashes 6d4f9a4; final manuscript builds in scratchpad/release_build, 48 pp clean, 58 pp marked):** remove marker -> merge
       rsc-figure-fixes to main -> tag -> Zenodo new version under concept 10.5281/zenodo.20805799 -> fill PENDING-P5
       -> final build_docx --pdf + build_marked_changes --pdf (no --allow-pending) -> drop PENDING-B1 in letter.
 - [ ] Portal at upload (Frank): ORCID link + transparent-review choice (PENDING-P4).
@@ -394,7 +394,7 @@ reproduced by the screen's own curvature on 52/57. PENDING markers remain for C1
 - [ ] P2 Marked-changes manuscript against `manuscript-as-reviewed.md` (and ESI).
 - [ ] P3 TOC graphic regenerated from the ledger (no ranking claim) + blurb ≤ 250 characters.
 - [ ] P4 CRediT roles; AI-use statement; affiliation; corresponding e-mail per Frank.
-- [ ] P5 DAS names the new scripts/outputs; merge `rsc-figure-fixes` → `main`; tag; new Zenodo version.
+- [x] P5 DAS names the new scripts/outputs; merge `rsc-figure-fixes` → `main`; tag; new Zenodo version. (4462fdc; v2.1.0 @ 0343264; Zenodo 10.5281/zenodo.23286095)
 - [ ] P6 Short cover note to Dr Rhyman; response letter exported to .docx/.pdf; stale PDF/cover
   letter quarantined.
 
