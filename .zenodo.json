@@ -1,11 +1,15 @@
 {
   "title": "mlip-dynamic-stability: a finite-temperature dynamic-stability benchmark of foundation MLIPs",
   "upload_type": "software",
-  "description": "Code, curated reference set, and per-unit results ledger for the paper 'Finite-temperature dynamic stability separates foundation machine-learning interatomic potentials that harmonic benchmarks rank equally'. Benchmarks five foundation MLIPs (MACE-MP-0, CHGNet, ORB-v2, SevenNet-0, MatterSim) on the harmonic-unstable to finite-T-stabilised regime. Introduces a quantum soft-mode free-energy screen that evaluates every imaginary force-constant-commensurate mode and calls the high-symmetry phase unstable if any of them condenses, and cross-validates it against multi-mode SSCHA. Includes pinned per-model environment manifests and the cached E(Q) maps, so the temperature solves regenerate without a GPU.",
+  "description": "Code, curated reference set, and per-unit results ledger for the paper 'Neither harmonic benchmarks nor a default SSCHA cross-check certifies a foundation machine-learning interatomic potential for finite-temperature dynamic stability' (RSC Advances, revision of RA-ART-07-2026-006452). Benchmarks five foundation MLIPs (MACE-MP-0, CHGNet, ORB-v2, SevenNet-0, MatterSim) on the harmonic-unstable to finite-T-stabilised regime. Introduces a quantum soft-mode free-energy screen that evaluates every imaginary force-constant-commensurate mode and calls the high-symmetry phase unstable if any of them condenses, and cross-validates it against multi-mode SSCHA. Includes pinned per-model environment manifests and the cached E(Q) maps, so the temperature solves regenerate without a GPU. This version adds the revision's first-principles (PBE) checks along the soft-mode coordinates and at PBE's own lattice, the converged and replicated SSCHA grid, the pre-registered fine-tuning and force-level-uncertainty trials, and the pre-registered 4x4x4 SSCHA attempt.",
   "license": "cc-by-4.0",
   "access_right": "open",
   "creators": [
-    {"name": "Cai, Frank", "affiliation": "Purdue University", "orcid": "0009-0003-0041-1459"}
+    {
+      "name": "Cai, Frank",
+      "affiliation": "Purdue University",
+      "orcid": "0009-0003-0041-1459"
+    }
   ],
   "keywords": [
     "machine-learning interatomic potentials",
@@ -18,6 +22,10 @@
     "foundation models"
   ],
   "related_identifiers": [
-    {"relation": "cites", "identifier": "arXiv:2512.21227", "scheme": "arxiv"}
+    {
+      "relation": "cites",
+      "identifier": "arXiv:2512.21227",
+      "scheme": "arxiv"
+    }
   ]
 }
