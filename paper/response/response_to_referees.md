@@ -918,7 +918,6 @@ finite-temperature calls a screen makes with a model, not about the model's surf
 **Changes.** Title; Abstract; Section 1 (H2); Section 2.4; Section 3.2; Section 4; Section 5; ESI Section S1.3.
 
 ## R3.2 Zone-boundary convergence
-<!-- PENDING-4x4x4: a 4x4x4 SSCHA run (SrTiO3 and one fluorite) is being prepared; rewrite this response, its Changes line, Section 3.5 "Zone-boundary systems" and the verify_claims 'no 4x4x4 result' check when results exist. -->
 
 > Complete the deferred 4×4×4 SSCHA for SrTiO₃ and one fluorite, or remove all convergence claims
 > for zone-boundary systems. The manuscript concedes that the SrTiO₃ antiferrodistortive
@@ -929,12 +928,22 @@ finite-temperature calls a screen makes with a model, not about the model's surf
 > occurs for the Γ mode of BaTiO₃ establishes this for one system only and does not extend to the
 > fluorites or to SrTiO₃.
 
-**Response.** I have taken the second option; the 4×4×4 SSCHA (about 320 atoms) was not run.
-Section 3.5 and ESI Section S2.4 now state that the R-point and X-point systems have no supercell-convergence
-test in this work, that no convergence claim is made for them, and that their SSCHA calls are
-stated for the 2×2×2 cell only. I agree that the 2×2×2 cell is marginal for the fluorite X-point
-mode: it is the smallest cell that contains X, 3×3×3 does not, and so no cell-size comparison
-exists there. The Limitations repeat this.
+**Response.** I have now attempted the first option and, where it did not finish, kept the
+second. The 4×4×4 run was pre-registered before any unit ran
+(`tasks/preregistration-4x4x4-2026-10-09.md`, commit f47cc2a): the four SrTiO₃ units that
+converged SSCHA calls stable at 100 K, and the fluorite unit closest to a sign change, HfO₂ with
+MACE-MP-0 at 600 K, each with the converged recipe of R1.4 unchanged except for the supercell
+(320 atoms for SrTiO₃) and a 9 h cap per unit. For the fluorite the relaxation converged and the
+lowest free-energy-Hessian frequency is −3.22 THz in 4×4×4 against −2.20 THz in 2×2×2, so its
+call is unchanged. That is one start, and the unit reached the cap before its bootstrap, so it has
+no uncertainty in 4×4×4. For SrTiO₃ no unit reached a 4×4×4 Hessian within the cap: CHGNet's
+relaxation converged and the run stopped while computing the Hessian, and the other three had not
+converged after 10 to 14 populations. SrTiO₃ therefore still has no cell-size test. Section 3.5
+and ESI Section S2.4 give the five results, state that no supercell-convergence claim is made for
+the R-point and X-point systems, and state their SSCHA calls for the 2×2×2 cell only. I agree that
+the 2×2×2 cell is marginal for the fluorite X-point mode: it is the smallest cell that contains X,
+and 3×3×3 does not; the one 4×4×4 unit checks one call and is not a convergence test of the
+fluorite frequencies. The Limitations repeat this.
 
 Since the first version of this reply the SSCHA has been re-run with a recipe that converges
 (R1.4), and that changes two of the points I would otherwise make here. First, the fluorite
@@ -945,7 +954,8 @@ because SSCHA never called it stable; that is no longer true. Converged SSCHA ca
 100 K, 5 K below its transition, for all four models where it converged (+1.06 to +1.20 THz). The
 R point is in the 2×2×2 cell, so this is not a missing **q**-point, but whether the R mode's
 finite-temperature renormalisation is converged in that cell is exactly the question the referee
-raises, and Section 3.5 now says that this call may be a finite-size effect. Those four units are also in the
+raises, and Section 3.5 now says that this call may be a finite-size effect; the 4×4×4 attempt above did not
+reach a call for any of these units, so it remains untested. Those four units are also in the
 headline count of converged SSCHA false-stables, so Section 3.3 and the Conclusions give that count
 without them as well: 23 of 73, all on the three ferroelectrics. For BaTiO₃ the zone-centre
 argument stands, restricted to BaTiO₃, as the referee says.
@@ -957,7 +967,8 @@ the call holds; with MatterSim, converged from two starts, it changes sign betwe
 with even cells, ω only with multiples of three), so Section 3.5 reports this as a change of **q**-set,
 not a convergence test, and as a reason not to read the 2×2×2 bcc margins as converged.
 
-**Changes.** Section 3.5 ("Finite size", "Zone-boundary systems"); Section 4 (Limitations); ESI Sections S2.4, S4,
+**Changes.** Section 3.5 ("Finite size", "Zone-boundary systems", now with the 4×4×4 attempt);
+Section 4 (Limitations); ESI Sections S2.4 (new item "The 4×4×4 attempt", with its five results), S4,
 Tables S17, S21 and S22.
 
 ## R3.3 Counts, intervals and tests that respect the clustering
