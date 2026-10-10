@@ -9,18 +9,20 @@ ORCID: 0009-0003-0041-1459
 
 Foundation machine-learning interatomic potentials (MLIPs) are benchmarked mainly on harmonic
 phonons, yet cubic perovskites, bcc metals and fluorites are harmonically unstable and thermally
-stabilised. We test five, as shipped, on 20 systems. A single-mode quantum self-consistent harmonic
-approximation (SCHA) screen shows harmonic correctness does not certify the finite-temperature calls
-made with a model: at 300 K, 17 harmonically correct units are mis-called against 4 the other way,
-insignificant when system-clustered (p = 0.15). PBE on the screen's coordinates corrects eight
-(BaTiO₃, KNbO₃), but PBE at its own, 0.3–0.8 % smaller lattice errs alike on the modes profiled, and
-pre-registered fine-tuning toward PBE corrected neither. Converged, replicated stochastic SCHA
-(SSCHA), by its default symmetric-point Hessian, calls 27 of 77 label-unstable non-bcc units stable
-(seven unresolved), all oxide perovskites (23/73 without four size-untested SrTiO₃ units); on the
-same energies the screen finds a lower displaced minimum, which that local curvature cannot exclude,
-in 15 of them. On ferroelectric perovskites at T ≤ 300 K the screen recovers 14/22 [0.43, 0.80]
-against 4/22 [0.07, 0.39] for converged SSCHA (paired, system-clustered p = 0.5). Ensemble vote
-splits flag consensus errors (AUC 0.76 [0.59, 0.93]), not robustly (0.63 without ORB-v2);
+stabilised. We test five, as shipped, on 20 systems. Harmonically, MatterSim and SevenNet-0 score
+19/19; MACE-MP-0 and CHGNet flatten the bcc Zr and Hf instabilities. A single-mode quantum
+self-consistent harmonic approximation (SCHA) screen shows harmonic correctness does not certify the
+finite-temperature calls made with a model: at 300 K, 17 harmonically correct units are mis-called
+against 4 the other way (7–24 under other conventions), insignificant when system-clustered (p =
+0.15). PBE on the screen's coordinates corrects eight (BaTiO₃, KNbO₃), but PBE at its own, 0.3–0.8 %
+smaller lattice errs alike on the modes profiled, and pre-registered fine-tuning toward PBE
+corrected neither. Converged, replicated stochastic SCHA (SSCHA), by its default symmetric-point
+Hessian, calls 27 of 77 label-unstable non-bcc units stable (seven unresolved), all oxide
+perovskites (23/73 without four size-untested SrTiO₃ units); on the same energies the screen finds a
+lower displaced minimum, which that local curvature cannot exclude, in 15 of them. Fluorite
+false-stables vanish. On ferroelectric perovskites at T ≤ 300 K the screen recovers 14/22 [0.43,
+0.80] against 4/22 [0.07, 0.39] for converged SSCHA (paired, system-clustered p = 0.5). Ensemble
+vote splits flag consensus errors (AUC 0.76 [0.59, 0.93]), not robustly (0.63 without ORB-v2);
 force-level spread does not.
 
 ## 1. Introduction
