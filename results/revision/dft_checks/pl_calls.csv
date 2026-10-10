@@ -1,0 +1,16 @@
+system,T,gt_stable,mlip_ledger_stable,pbe_lattice_deciding_stable,pbe_lattice_deciding_Q0_A,pbe_lattice_softest_stable,pbe_lattice_softest_Q0_A,pbe_mlip_lattice_stable,pbe_mlip_lattice_Q0_A,pbe_lattice_deciding_error,pbe_lattice_softest_error,pbe_mlip_lattice_error
+batio3_cubic,50.0,False,,False,0.075,True,0.0,False,0.085,,,
+batio3_cubic,100.0,False,False,False,0.075,True,0.0,False,0.085,False,True,False
+batio3_cubic,300.0,False,True,True,0.0,True,0.0,False,0.08,True,True,False
+batio3_cubic,600.0,True,True,True,0.0,True,0.0,True,0.0,False,False,False
+batio3_cubic,900.0,True,True,True,0.0,True,0.0,True,0.0,False,False,False
+cssnbr3_cubic,50.0,False,,False,0.37,,,False,0.435,,,
+cssnbr3_cubic,100.0,False,False,False,0.37,,,False,0.43,False,,False
+cssnbr3_cubic,300.0,True,False,False,0.36,,,False,0.42,True,,True
+cssnbr3_cubic,600.0,True,False,False,0.34,,,False,0.395,True,,True
+cssnbr3_cubic,900.0,True,True,True,0.0,,,True,0.0,False,,False
+knbo3_cubic,50.0,False,,False,0.07,False,0.08,False,0.09,,,
+knbo3_cubic,100.0,False,False,False,0.07,False,0.08,False,0.085,False,False,False
+knbo3_cubic,300.0,False,True,True,0.0,True,0.0,False,0.085,True,True,False
+knbo3_cubic,600.0,False,True,True,0.0,True,0.0,True,0.0,True,True,True
+knbo3_cubic,900.0,True,True,True,0.0,True,0.0,True,0.0,False,False,False

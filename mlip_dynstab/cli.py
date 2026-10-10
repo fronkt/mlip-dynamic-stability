@@ -16,6 +16,7 @@ import sys
 import time
 
 from . import ledger
+from . import METHOD_VERSION, SOFTMODE_EQMAP_VERSION
 from .calculators import get_calculator
 from .systems import get_spec, build_atoms
 
@@ -33,9 +34,13 @@ def _finite_t_gt(spec, temperature_K: float) -> bool:
     return float(temperature_K) >= float(Tc)
 
 
+PRODUCTION_DISP_ANG = 0.01   # the displacement every deposited harmonic row was measured at
+
+
 def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
              device: str = "cuda", supercell=(2, 2, 2), force: bool = False,
-             ledger_path=None) -> dict:
+             ledger_path=None, max_modes: int = 24,
+             disp: float = PRODUCTION_DISP_ANG) -> dict:
     spec = get_spec(system)
     # Finite-T (hiPhive) needs a larger supercell so the pair cutoff can exceed nearest
     # neighbors while staying < L/2; harmonic finite-displacement is fine at 2x2x2.
@@ -46,7 +51,37 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
     # a 1-atom primitive with cubic symmetry, so 6x6x6 still needs only ~1 displacement.
     if method == "softmode" and spec.klass == "bcc-metal" and tuple(supercell) == (2, 2, 2):
         supercell = (6, 6, 6)
-    settings = {"supercell": list(supercell)}
+    # The unit hash must change whenever the ALGORITHM changes, not just its inputs. Carrying
+    # only the supercell here is what let the v1 softmode rows survive the FC-commensurate
+    # q-search fix (e592e86): the hash was unchanged, so `has_unit` skipped every stale unit as
+    # "already present" and the deposited ledger kept data the deposited code cannot reproduce.
+    settings = {"supercell": list(supercell), "mv": METHOD_VERSION.get(method, 1)}
+    # Any parameter that can change the RESULT belongs in the hash, not just in the code. The
+    # mode cap bounds how many imaginary modes the screen examines, so a unit computed under a
+    # tighter cap is not the same measurement as one computed under a looser one.
+    if method == "softmode":
+        settings["max_modes"] = int(max_modes)
+
+    # Displacement amplitude. Two hazards here, and the fix has to dodge both.
+    #
+    # (1) `disp` was not in the hash at all, so a re-run at a different amplitude would be
+    #     skipped by has_unit() as "already present" -- the same failure that let the stale
+    #     softmode rows survive the q-search fix.
+    # (2) Adding it unconditionally would change the hash of every EXISTING harmonic row,
+    #     detaching the deposited ledger from the code that produced it.
+    #
+    # So the production amplitude is left out of the hash, exactly as before, and only a
+    # departure from it is recorded. A swept unit is also retagged to its own method name
+    # rather than sharing "harmonic": sweep rows carry the same method_version as production,
+    # so if they shared the method they would pass straight through canonical() and inflate
+    # the denominator of every harmonic rate in the paper.
+    swept = abs(float(disp) - PRODUCTION_DISP_ANG) > 1e-12
+    if swept:
+        if method != "harmonic":
+            raise SystemExit("--disp is only meaningful for --method harmonic")
+        method = "harmonic_dispsweep"
+        settings["disp"] = float(disp)
+        settings["mv"] = METHOD_VERSION.get(method, 1)
 
     # We need the model version for the hash, so load the calculator first.
     handle = get_calculator(model, device=device)
@@ -59,14 +94,17 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
     atoms = build_atoms(spec)
     t0 = time.time()
     base = dict(uhash=uhash, system=system, klass=spec.klass, model=model,
-                model_version=handle.version, method=method, temperature_K=temperature_K,
+                model_version=handle.version, method=method,
+                method_version=settings["mv"], temperature_K=temperature_K,
                 gt_harmonic_stable=spec.harmonic_stable, gt_finite_T_stable=spec.finite_T_stable,
                 transition_T_K=spec.transition_T_K)
 
-    if method == "harmonic":
+    if method in ("harmonic", "harmonic_dispsweep"):
         from .harmonic import compute_harmonic
-        res = compute_harmonic(atoms, handle.calc, supercell=supercell)
+        # identical code path; only the displacement amplitude differs
+        res = compute_harmonic(atoms, handle.calc, supercell=supercell, disp=float(disp))
         base.update(res.as_row())
+        base["disp_ang"] = float(disp)
         base["gt_stable"] = spec.harmonic_stable
     elif method == "hiphive":
         from .finite_t import compute_finite_t_hiphive
@@ -86,9 +124,15 @@ def run_unit(system: str, model: str, method: str, temperature_K: float = 0.0,
         from .finite_t import compute_finite_t_softmode
         # The E(Q) double-well map is temperature-independent, so the cache key omits T;
         # every extra temperature then reuses it for a sub-second 1D quantum solve.
-        cache = f"results/cache/softmode_{system}_{model}_sc{''.join(map(str,supercell))}.json"
+        # The cache key carries the E(Q)-MAP version (not METHOD_VERSION): the cache holds the
+        # map layer only -- relax, FCs, q-search, modulation, well sampling, fit -- so it stays
+        # valid when the solve layer changes (v4 changed only the reported scalar). A map-layer
+        # change MUST bump SOFTMODE_EQMAP_VERSION or a stale map is silently reused.
+        cache = (f"results/cache/softmode_v{SOFTMODE_EQMAP_VERSION}m{max_modes}_{system}"
+                 f"_{model}_sc{''.join(map(str,supercell))}.json")
         res = compute_finite_t_softmode(atoms, handle.calc, temperature_K,
-                                        supercell=supercell, cache_path=cache)
+                                        supercell=supercell, max_modes=max_modes,
+                                        cache_path=cache)
         base.update(res.as_row())
         base["gt_stable"] = _finite_t_gt(spec, temperature_K)
     elif method == "tdep":
@@ -130,10 +174,14 @@ def main(argv=None):
     p.add_argument("--T", type=float, default=0.0, dest="temperature_K")
     p.add_argument("--device", default="cuda")
     p.add_argument("--supercell", type=int, nargs=3, default=[2, 2, 2])
+    p.add_argument("--disp", type=float, default=PRODUCTION_DISP_ANG,
+                   help="finite-displacement amplitude in Angstrom (default 0.01, the "
+                        "production value). Any other value is recorded as method "
+                        "'harmonic_dispsweep' so it cannot contaminate the harmonic rates.")
     p.add_argument("--force", action="store_true", help="recompute even if in ledger")
     args = p.parse_args(argv)
     run_unit(args.system, args.model, args.method, args.temperature_K, args.device,
-             tuple(args.supercell), args.force)
+             tuple(args.supercell), args.force, disp=args.disp)
     return 0
 
 

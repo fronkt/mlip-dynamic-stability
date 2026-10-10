@@ -1,190 +1,911 @@
-"""Regenerate the paper figures from results/ledger.parquet. Reproducible: all numbers come
-from the ledger, independent of when/where units were computed.
+"""Regenerate the paper figures from results/ledger.parquet. Every plotted number is computed
+here from the ledger (through ``analysis.canonical``), independent of when or where a unit ran.
 
-Figures:
-  fig_sscha_zr.png      - SSCHA multi-mode dynamic-stabilization curve for bcc-Zr, 5 MLIPs.
-  fig_softmode_heat.png - per-system softmode min effective frequency at the lowest T, 5 MLIPs.
+Figures, in the order the manuscript first cites them:
+  Fig. 1  fig_tolerance_sweep     harmonic false-stable / false-unstable calls vs imaginary tolerance
+  Fig. 2  fig_harmonic_heat       harmonic layer: minimum phonon frequency per unit, with its call
+  Fig. 3  fig_sscha_bcc           SSCHA lowest free-energy-Hessian frequency vs T, bcc Ti/Zr/Hf
+  Fig. 4  fig_method_agreement    SSCHA Hessian frequency vs the screen's call on the bcc metals
+  Fig. 5  fig_displacive_recall   recall of the unstable cubic phase, FE perovskites, T <= 300 K
+  Fig. 6  fig_ensemble_guardrail  consensus error on split-vote vs unanimous units, +/- ORB-v2
+
+Each figure is written as a 600 dpi PNG (the copy embedded in the DOCX) and a 600 dpi LZW TIFF,
+both flattened to RGB on white, plus a numbered upload copy results/figures/upload/FigN.tif.
+The numbering is checked against the figure links in paper/manuscript.md before anything is
+written. Run from the repository root: python scripts/make_figures.py
+
+fig_softmode_heat (the screen's 100 K symmetric-point curvature map, formerly Fig. 2) is retired
+and no longer called: that curvature is positive by construction for a single even mode, so the
+map showed only numerical noise in its sign (scripts/curvature_identity_check.py). The function
+is kept for reference; its last outputs results/figures/fig_softmode_heat.{png,tiff} were left in
+place and are not part of the paper.
 """
 from __future__ import annotations
 import os
+import re
 import sys
+from io import BytesIO
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.colors import SymLogNorm
+from matplotlib.lines import Line2D
+from matplotlib.patches import Patch, Rectangle
+from PIL import Image
 
 LEDGER = os.environ.get("LEDGER", "results/ledger.parquet")
 OUT = os.environ.get("FIGDIR", "results/figures")
+MANUSCRIPT = "paper/manuscript.md"
+SSCHA_GRID = "results/sscha_units_v1.csv"     # the attempted SSCHA grid (208 units)
+# The converged-recipe SSCHA grid (ESI Table S22) and its comparison with the production claims.
+CONV_SUMMARY = "results/revision/sscha_converged_grid/summary.csv"
+GRID_COMPARE = "results/revision/grid_compare.json"
+E3_SUMMARY = "results/revision/e3_replicates/summary.csv"   # pre-registered replicates (Table S24)
 os.makedirs(OUT, exist_ok=True)
-df = pd.read_parquet(LEDGER)
-MODELS = ["mattersim", "sevennet0", "mace_mp0", "chgnet", "orb_v2"]
+from mlip_dynstab import DEFAULT_IMAG_TOL_THZ
+from mlip_dynstab import analysis as A
+from mlip_dynstab import stats as S
+from mlip_dynstab.systems import load_specs
+# The ledger is append-only and holds BOTH the legacy single-mode softmode grid and the current
+# multi-mode one. `canonical` keeps only the current generation; reading the parquet directly
+# would double-count every softmode unit and blend two different measurements in one figure.
+df = A.canonical(pd.read_parquet(LEDGER))
+_sm = df[df["method"] == "softmode"]
+print(f"[figures] canonical ledger: {len(df)} rows, {len(_sm)} softmode "
+      f"({'multi-mode' if _sm.get('ft_n_imag_total') is not None and _sm['ft_n_imag_total'].notna().any() else 'legacy'})")
+
+# Model order and names as the paper writes them; one colour per model across every figure
+# (Okabe-Ito, colour-blind safe).
+MODELS = ["mace_mp0", "chgnet", "orb_v2", "sevennet0", "mattersim"]
+NAME = {"mace_mp0": "MACE-MP-0", "chgnet": "CHGNet", "orb_v2": "ORB-v2",
+        "sevennet0": "SevenNet-0", "mattersim": "MatterSim"}
+COLOR = {"mace_mp0": "#0072B2", "chgnet": "#E69F00", "orb_v2": "#CC79A7",
+         "sevennet0": "#009E73", "mattersim": "#D55E00"}
+C_A, C_B = "#0072B2", "#D55E00"               # two-category bars (blue / vermillion)
+KEY = ["system", "model", "temperature_K"]
+DPI = 600
+N_RESAMPLE, SEED = 10000, 0                    # as scripts/stats_hardening.py
+
+# Upload numbering: order of first citation in the manuscript (checked by _check_numbering).
+FIG_NUMBER = {"fig_tolerance_sweep": 1, "fig_harmonic_heat": 2, "fig_lattice_flip": 3,
+              "fig_sscha_bcc": 4, "fig_method_agreement": 5, "fig_displacive_recall": 6,
+              "fig_sscha_map": 7, "fig_ensemble_guardrail": 8}
+
+_SPECS = {s.id: s for s in load_specs()}
+_SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+
+
+def sys_label(sid: str) -> str:
+    """Display name for a system id, e.g. batio3_cubic -> BaTiO₃, zr_bcc -> bcc Zr."""
+    s = _SPECS.get(sid)
+    if s is None:
+        return sid
+    f = s.formula.translate(_SUB)
+    if s.klass == "bcc-metal":
+        return f"bcc {f}"
+    if s.prototype == "alpha-AgI":
+        return f"α-{f}"
+    if s.prototype in ("diamond", "fcc"):
+        return f"{f} ({s.prototype})"
+    return f
+
+
+def _trivial_bcc_pairs() -> set:
+    """(system, model) bcc pairs whose harmonic layer has no instability at the production
+    tolerance: there both the screen and SSCHA agree without any thermal stabilisation being
+    tested (the same definition as stats_hardening.bcc_agreement and verify_claims)."""
+    h = df[(df["method"] == "harmonic") & df["system"].str.contains("bcc")]
+    h = h[h["pred_stable"].astype(bool)]
+    return set(zip(h["system"], h["model"]))
+
+
+def _check_numbering() -> None:
+    """Refuse to write numbered upload copies that disagree with the manuscript's figure links."""
+    if not os.path.exists(MANUSCRIPT):
+        print(f"[figures] WARNING: {MANUSCRIPT} not found; upload numbering not checked")
+        return
+    text = open(MANUSCRIPT, encoding="utf-8").read()
+    found = {name: int(n) for n, name in re.findall(
+        r"!\[\*\*Fig\.\s*(\d+)\*\*.*?\]\([^)]*?results/figures/(\w+)\.png\)", text, flags=re.S)}
+    if not found:
+        print("[figures] WARNING: no figure links parsed from the manuscript; numbering not checked")
+        return
+    if found != FIG_NUMBER:
+        raise SystemExit(f"[figures] upload numbering {FIG_NUMBER} disagrees with the manuscript "
+                         f"figure links {found}; fix FIG_NUMBER before regenerating")
+    print(f"[figures] upload numbering matches the manuscript: "
+          + ", ".join(f"Fig{n}={k}" for k, n in sorted(found.items(), key=lambda kv: kv[1])))
+
+
+def _save(fig, name: str) -> None:
+    """Write <name>.png and <name>.tiff at 600 dpi, flattened to RGB on white (no alpha; the TIFF
+    LZW-compressed), and the numbered upload copy upload/FigN.tif."""
+    buf = BytesIO()
+    fig.savefig(buf, format="png", dpi=DPI, facecolor="white")
+    plt.close(fig)
+    buf.seek(0)
+    with Image.open(buf) as im:
+        im.load()
+        rgb = Image.new("RGB", im.size, (255, 255, 255))
+        rgb.paste(im, mask=im.getchannel("A") if "A" in im.getbands() else None)
+    rgb.save(f"{OUT}/{name}.png", dpi=(DPI, DPI), optimize=True)
+    rgb.save(f"{OUT}/{name}.tiff", dpi=(DPI, DPI), compression="tiff_lzw")
+    n = FIG_NUMBER.get(name)
+    if n is not None:
+        os.makedirs(f"{OUT}/upload", exist_ok=True)
+        rgb.save(f"{OUT}/upload/Fig{n}.tif", dpi=(DPI, DPI), compression="tiff_lzw")
+    print(f"wrote {OUT}/{name}.png/.tiff" + (f" and upload/Fig{n}.tif" if n else "")
+          + f"  ({rgb.size[0]}x{rgb.size[1]} px, {DPI} dpi, RGB)")
 
 
 def fig_sscha_bcc():
-    """Multi-mode SSCHA dynamic-stabilization curves for the three bcc metals, one panel each."""
-    metals = [("ti_bcc", "bcc-Ti"), ("zr_bcc", "bcc-Zr"), ("hf_bcc", "bcc-Hf")]
-    have = [(s, t) for s, t in metals if not df[(df["method"] == "sscha") & (df["system"] == s)].empty]
+    """Fig. 4. SSCHA on the three bcc metals, one panel each: the lowest free-energy-Hessian
+    frequency (the default criterion, a bubble-level Hessian evaluated at the bcc reference)
+    against temperature. SSCHA here runs on each MLIP's own energies, so it inherits that PES.
+    Dashed lines with open markers are the (metal, model) pairs whose harmonic layer has no
+    instability at all; a positive frequency there tests no thermal stabilisation."""
+    metals = ["ti_bcc", "zr_bcc", "hf_bcc"]
+    have = [s for s in metals if not df[(df["method"] == "sscha") & (df["system"] == s)].empty]
     if not have:
         return
-    fig, axes = plt.subplots(1, len(have), figsize=(4.0 * len(have), 4.2), sharey=True)
-    if len(have) == 1:
-        axes = [axes]
-    for ax, (s, title) in zip(axes, have):
-        piv = (df[(df["method"] == "sscha") & (df["system"] == s)]
-               .pivot_table(index="temperature_K", columns="model", values="min_eff_freq_thz"))
-        for m in [c for c in MODELS if c in piv.columns]:
-            ax.plot(piv.index, piv[m], "o-", label=m)
-        ax.axhline(0, color="k", lw=0.8, ls="--")
-        ax.set_xlabel("Temperature (K)"); ax.set_title(title)
-    axes[0].set_ylabel("min free-energy Hessian freq (THz)")
-    axes[-1].legend(fontsize=8, title="MLIP")
-    fig.suptitle("Multi-mode SSCHA dynamic stabilization of bcc Ti/Zr/Hf")
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_sscha_bcc.png", dpi=300)
-    fig.savefig(f"{OUT}/fig_sscha_bcc.tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
-    plt.close(fig)
-    print(f"wrote {OUT}/fig_sscha_bcc.png")
+    trivial = _trivial_bcc_pairs()
+    conv = None
+    if os.path.exists(CONV_SUMMARY):
+        conv = pd.read_csv(CONV_SUMMARY)
+        conv = conv[(conv["start"] == "A") & (conv["family"] == "bcc") & (conv["status"] == "ok")
+                    & (conv["converged"].astype(str) == "True")].copy()
+        # A converged unit whose pre-registered replicates disagree on the call (ESI Table S24) is
+        # unresolved and is not drawn as a converged value: it gets its own marker (Ti/ORB-v2/600 K).
+        unres = set()
+        if os.path.exists(E3_SUMMARY):
+            e3 = pd.read_csv(E3_SUMMARY)
+            unres = set(e3.loc[e3["verdict"] == "unresolved", "unit_tag"])
+        conv["unresolved"] = conv["unit_tag"].isin(unres)
+    # Sized for the 17.1 cm double column, so the text prints at its set size (not shrunk ~56%).
+    with plt.rc_context({"font.size": 8, "axes.titlesize": 9, "axes.labelsize": 8.5,
+                         "xtick.labelsize": 8, "ytick.labelsize": 8}):
+        fig, axes = plt.subplots(1, len(have), figsize=(6.7, 3.3), sharey=True)
+        axes = np.atleast_1d(axes)
+        for ax, s in zip(axes, have):
+            piv = (df[(df["method"] == "sscha") & (df["system"] == s)]
+                   .pivot_table(index="temperature_K", columns="model", values="min_eff_freq_thz"))
+            for m in [c for c in MODELS if c in piv.columns]:
+                triv = (s, m) in trivial
+                ax.plot(piv.index, piv[m], marker="o", ms=4, lw=1.3, color=COLOR[m],
+                        ls="--" if triv else "-", mfc="white" if triv else COLOR[m])
+            if conv is not None:
+                cs = conv[conv["system"] == s]
+                for m in [c for c in MODELS if c in set(cs["model"])]:
+                    g = cs[cs["model"] == m].sort_values("T_K")
+                    gr, gu = g[~g["unresolved"]], g[g["unresolved"]]
+                    ax.scatter(gr["T_K"], gr["hessian_min_thz"], marker="s", s=22,
+                               facecolors="none", edgecolors=COLOR[m], linewidths=1.1, zorder=4)
+                    ax.scatter(gu["T_K"], gu["hessian_min_thz"], marker="x", s=26,
+                               color=COLOR[m], linewidths=1.2, zorder=4)
+            ax.axhline(0, color="k", lw=0.8, ls=":")
+            ax.set_xticks([0, 200, 400, 600])
+            ax.set_xlabel("Temperature (K)")
+            ax.set_title(sys_label(s))
+        axes[0].set_ylabel("SSCHA lowest free-energy\nHessian frequency (THz)")
+        handles = [Line2D([], [], color=COLOR[m], marker="o", ms=4, label=NAME[m])
+                   for m in MODELS]
+        if trivial:
+            handles.append(Line2D([], [], color="0.35", marker="o", ms=4, ls="--", mfc="white",
+                                  label="no harmonic instability on this model's PES"))
+        handles.append(Line2D([], [], color="0.35", marker="o", ms=4,
+                              label="production recipe, 2×2×2"))
+        if conv is not None:
+            handles.append(Line2D([], [], ls="", marker="s", ms=4, mfc="none", mec="0.35",
+                                  label="converged recipe, 3×3×3"))
+            if conv["unresolved"].any():
+                handles.append(Line2D([], [], ls="", marker="x", ms=4, color="0.35",
+                                      label="converged, unresolved by replicates"))
+        fig.legend(handles=handles, fontsize=7.5, loc="lower center", ncol=3,
+                   frameon=False, bbox_to_anchor=(0.5, 0.0))
+        fig.suptitle("SSCHA on bcc Ti, Zr and Hf: free-energy Hessian at the bcc reference\n"
+                     "(lines: production recipe, 2×2×2; squares: converged recipe, "
+                     "3×3×3)",
+                     fontsize=9.5)
+        fig.tight_layout(rect=(0, 0.14, 1, 0.97))
+        _save(fig, "fig_sscha_bcc")
+
+
+def fig_harmonic_heat():
+    """Fig. 2. The harmonic layer (§2.3, §3.1): for every system and model, the minimum phonon
+    frequency over the Gamma-centred 12x12x12 mesh interpolated from 2x2x2 finite-displacement
+    force constants (negative = imaginary). The minimum includes the acoustic branch at Gamma,
+    so a system with no instability reads numerical zero (printed unsigned, 0.00) and no cell is
+    positive beyond it; the diverging scale is centred at 0 and only its negative half is drawn on
+    the colour bar.
+    Boxed cells are the harmonic calls 'unstable' at the production tolerance (minimum below
+    -0.1 THz). FS / FU mark calls that disagree with the reference label (false-stable /
+    false-unstable). The borderline KTaO3 is shown but not scored, so it carries no FS / FU mark.
+    Rows and columns keep the order and labels of the retired screen-curvature map."""
+    h = df[df["method"] == "harmonic"]
+    if h.empty:
+        return
+    if h.groupby(["system", "model"]).size().max() != 1:
+        raise SystemExit("[figures] more than one canonical harmonic row per (system, model)")
+    tol = abs(float(DEFAULT_IMAG_TOL_THZ))
+    stable = h["pred_stable"].astype(bool)
+    # The boxes are the ledger's calls; refuse to draw them if those are not the calls at the
+    # production tolerance that the caption describes.
+    if not (stable == (h["min_freq_thz"] >= -tol)).all():
+        raise SystemExit(f"[figures] harmonic pred_stable is not min_freq >= -{tol} THz")
+    h = h.assign(ps=stable.astype(float), gt=h["gt_stable"].astype(bool).astype(float))
+    rows = [s for s in _SPECS if s in set(h["system"])] + sorted(set(h["system"]) - set(_SPECS))
+    cols = [c for c in MODELS if c in set(h["model"])]
+    freq = h.pivot_table(index="system", columns="model", values="min_freq_thz").loc[rows, cols]
+    pred = h.pivot_table(index="system", columns="model", values="ps").loc[rows, cols]
+    label = h.pivot_table(index="system", columns="model", values="gt").loc[rows, cols]
+    borderline = A.borderline_systems()
+
+    # Diverging scale centred at 0, linear within +/- the tolerance and logarithmic out to
+    # +/-10 THz, so the calls just past the tolerance (about -0.2 to -0.3 THz) are already clearly
+    # red while the acoustic zero stays white. HfO2/CHGNet (-10.6 THz) sits at the saturated end;
+    # its printed value gives the true number.
+    vlim = 10.0
+    norm = SymLogNorm(linthresh=tol, linscale=1.0, vmin=-vlim, vmax=vlim, base=10)
+    cmap = plt.get_cmap("RdBu")                  # negative (imaginary) = red, 0 = white
+    fig, ax = plt.subplots(figsize=(6.5, 7.6))
+    im = ax.imshow(freq.values, aspect="auto", cmap=cmap, norm=norm)
+    ax.set_xticks(range(len(cols)))
+    ax.set_xticklabels([NAME[c] for c in cols], rotation=35, ha="right")
+    ax.set_yticks(range(len(rows)))
+    ax.set_yticklabels([sys_label(s) + ("*" if s in borderline else "") for s in rows], fontsize=8)
+    n_fs = n_fu = 0
+    for i, s in enumerate(rows):
+        for j in range(len(cols)):
+            v = freq.values[i, j]
+            if not np.isfinite(v):
+                continue
+            ink = "white" if abs(float(norm(v)) - 0.5) > 0.36 else "black"
+            # A value that rounds to zero is the acoustic zero at Gamma (|v| < 1e-5 THz in the
+            # ledger); its sign is numerical, so it prints as the unsigned 0.00 the caption quotes.
+            txt = f"{v:.2f}"
+            if float(txt) == 0.0:
+                txt = "0.00"
+            ax.text(j, i, txt.replace("-", "−"), ha="center", va="center",
+                    fontsize=6.5, color=ink)
+            called_stable = pred.values[i, j] == 1
+            if not called_stable:
+                ax.add_patch(Rectangle((j - 0.44, i - 0.42), 0.88, 0.84, fill=False,
+                                       ec="black", lw=1.3, zorder=3))
+            if s not in borderline and called_stable != (label.values[i, j] == 1):
+                tag = "FS" if called_stable else "FU"
+                n_fs += tag == "FS"
+                n_fu += tag == "FU"
+                ax.text(j + 0.33, i, tag, ha="center", va="center", fontsize=5.5,
+                        fontweight="bold", color=ink, zorder=4)
+    ax.set_title("Harmonic layer: minimum phonon frequency\n"
+                 "(2×2×2 force constants, 12×12×12 mesh; §2.3)",
+                 fontsize=10.5)
+    cb = fig.colorbar(im, ax=ax, extend="min", fraction=0.05, pad=0.03)
+    cb.ax.set_ylim(-vlim, 0.0)                   # the minimum cannot sit above the acoustic zero
+    cb.set_ticks([-10, -1, -tol, 0])
+    cb.set_ticklabels(["−10", "−1", f"−{tol:g}", "0"])
+    cb.ax.axhline(-tol, color="black", lw=0.9, ls="--")
+    cb.set_label("minimum harmonic frequency (THz)\n"
+                 f"negative = imaginary (red); dashed: −{tol:g} THz tolerance")
+    note = (f"Boxed: harmonic call unstable (minimum below −{tol:g} THz). "
+            "FS / FU: the call disagrees with the reference label\n"
+            "(false-stable / false-unstable).")
+    if any(s in borderline for s in rows):
+        note += " * borderline label, not scored (no FS / FU mark)."
+    fig.text(0.02, 0.01, note, fontsize=7.5, ha="left", va="bottom")
+    fig.tight_layout(rect=(0, 0.04, 1, 1))
+    _save(fig, "fig_harmonic_heat")
+    print(f"  harmonic heat map: {len(rows)} systems x {len(cols)} models, "
+          f"{int((pred.values == 0).sum())} boxed, {n_fs} FS, {n_fu} FU at tol {tol} THz")
 
 
 def fig_softmode_heat():
+    """RETIRED 2026-09-27, not called and not in the paper (kept for reference; it writes no
+    numbered upload copy because it is no longer in FIG_NUMBER). The symmetric-point curvature it
+    maps equals the trial stiffness M*Omega^2 for a single even mode, so it is positive by
+    construction and every negative cell was numerical (scripts/curvature_identity_check.py).
+
+    Formerly Fig. 2. The soft-mode screen at the lowest ladder temperature (100 K): for every system
+    and model, the symmetric-point curvature frequency, i.e. the signed curvature of the
+    single-mode SCHA free energy at Q = 0, minimised over the screened modes (negative =
+    imaginary). This is the screen's curvature observable; it is neither a harmonic frequency
+    nor the screen's stability call, which is the free-energy comparison over the centroid.
+    Boxed cells are the units the screen calls unstable (some mode condenses). For a system with
+    no imaginary commensurate mode the cell holds the softest harmonic commensurate frequency."""
     sm = df[df["method"] == "softmode"]
     if sm.empty:
         return
-    d = sm[sm["temperature_K"] == sm["temperature_K"].min()]
-    piv = d.pivot_table(index="system", columns="model", values="min_eff_freq_thz")
-    piv = piv[[c for c in MODELS if c in piv.columns]]
-    fig, ax = plt.subplots(figsize=(6.5, 7))
-    # clip the colour scale so a few extreme (float32/direct-model) outliers don't wash out the
-    # structure; the printed cell values still report the true numbers.
-    vmax = 10.0
-    im = ax.imshow(np.clip(piv.values, -vmax, vmax), aspect="auto", cmap="RdBu",
-                   vmin=-vmax, vmax=vmax)
-    ax.set_xticks(range(len(piv.columns))); ax.set_xticklabels(piv.columns, rotation=45, ha="right")
-    ax.set_yticks(range(len(piv.index))); ax.set_yticklabels(piv.index, fontsize=8)
+    t0 = sm["temperature_K"].min()
+    d = sm[sm["temperature_K"] == t0]
+    rows = [s for s in _SPECS if s in set(d["system"])] + sorted(set(d["system"]) - set(_SPECS))
+    cols = [c for c in MODELS if c in set(d["model"])]
+    piv = d.pivot_table(index="system", columns="model", values="min_eff_freq_thz").loc[rows, cols]
+    called_stable = (d.assign(ps=d["pred_stable"].astype(float))
+                     .pivot_table(index="system", columns="model", values="ps").loc[rows, cols])
+    borderline = A.borderline_systems()
+    fig, ax = plt.subplots(figsize=(6.5, 7.4))
+    # Symmetric log colour scale: linear within +/-1 THz so the sign of the near-zero cells reads
+    # clearly, logarithmic out to +/-10 THz; the few larger values (C diamond, HfO2/CHGNet) sit at
+    # the saturated end and their printed values give the true numbers.
+    norm = SymLogNorm(linthresh=1.0, linscale=1.0, vmin=-10.0, vmax=10.0, base=10)
+    cmap = plt.get_cmap("RdBu")                  # low (negative, imaginary) = red, high = blue
+    im = ax.imshow(piv.values, aspect="auto", cmap=cmap, norm=norm)
+    ax.set_xticks(range(len(cols)))
+    ax.set_xticklabels([NAME[c] for c in cols], rotation=35, ha="right")
+    ax.set_yticks(range(len(rows)))
+    ax.set_yticklabels([sys_label(s) + ("*" if s in borderline else "") for s in rows], fontsize=8)
     for i in range(piv.shape[0]):
         for j in range(piv.shape[1]):
             v = piv.values[i, j]
-            if np.isfinite(v):
-                ax.text(j, i, f"{v:.1f}", ha="center", va="center", fontsize=6.5)
-    ax.set_title(f"softmode min eff. freq (THz) @ {int(d['temperature_K'].iloc[0])} K")
-    fig.colorbar(im, ax=ax, label="THz (blue<0 unstable)")
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_softmode_heat.png", dpi=300)
-    fig.savefig(f"{OUT}/fig_softmode_heat.tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
-    plt.close(fig)
-    print(f"wrote {OUT}/fig_softmode_heat.png")
+            if not np.isfinite(v):
+                continue
+            dark = abs(float(norm(v)) - 0.5) > 0.36
+            ax.text(j, i, f"{v:.2f}".replace("-", "−"), ha="center", va="center",
+                    fontsize=6.5, color="white" if dark else "black")
+            if called_stable.values[i, j] == 0:
+                ax.add_patch(Rectangle((j - 0.44, i - 0.42), 0.88, 0.84, fill=False,
+                                       ec="black", lw=1.3, zorder=3))
+    ax.set_title(f"Soft-mode screen, {int(t0)} K: symmetric-point curvature")
+    cb = fig.colorbar(im, ax=ax, extend="both", fraction=0.05, pad=0.03)
+    cb.set_ticks([-10, -3, -1, 0, 1, 3, 10])
+    cb.set_ticklabels(["−10", "−3", "−1", "0", "1", "3", "10"])
+    cb.set_label("curvature frequency (THz); negative = imaginary\n"
+                 "(red: negative, blue: positive)")
+    note = f"Boxed: the screen calls the phase unstable at {int(t0)} K (a mode condenses)."
+    if any(s in borderline for s in rows):
+        note += "\n* borderline label, excluded from scoring."
+    fig.text(0.02, 0.01, note, fontsize=7.5, ha="left", va="bottom")
+    fig.tight_layout(rect=(0, 0.04, 1, 1))
+    _save(fig, "fig_softmode_heat")
 
 
 def fig_method_agreement():
-    """VALIDATION figure: on the bcc metals -- where SSCHA is numerically clean -- the cheap
-    single-mode softmode minimum frequency tracks the gold-standard multi-mode SSCHA free-energy
-    Hessian minimum (points along y=x). This is the positive cross-validation that justifies
-    softmode as the screening method. (Perovskite SSCHA is excluded here because it is unreliable
-    on deep displacive instabilities -- see fig_displacive_recall.)"""
-    from mlip_dynstab.analysis import method_agreement, method_agreement_summary
+    """Fig. 5. Screen vs SSCHA on the bcc metals at the temperatures both ran: the production
+    SSCHA lowest free-energy-Hessian frequency (2x2x2) against the screen's stability CALL, both on
+    the same MLIP energies. The x-axis is the call, not the screen's symmetric-point curvature:
+    for a single even mode that curvature is positive by construction and its negative values are
+    numerical (scripts/curvature_identity_check.py), so it is not plotted against SSCHA (audit
+    2026-10-09, M7). Points in the screen-stable column above the SSCHA tolerance, and in the
+    screen-unstable column below it, agree on the call. Reported on the panel: stability-call
+    agreement as k/n with a Wilson 95% interval. Open markers are pairs with no harmonic
+    instability on that model's PES, where agreement is trivial."""
     dfb = df[df["system"].str.contains("bcc")]
-    m = method_agreement(dfb)
+    m = A.method_agreement(dfb)
     if m.empty:
         return
-    summ = method_agreement_summary(dfb)
-    fig, ax = plt.subplots(figsize=(6.0, 5.8))
-    for mod in [c for c in MODELS if c in set(m["model"])]:
-        g = m[m["model"] == mod]
-        ax.scatter(g["min_eff_freq_thz_softmode"], g["min_eff_freq_thz_sscha"], s=42,
-                   alpha=0.85, label=mod)
-    # readable window: most points sit in [-4,3]; orb_v2's float32 over-softening drives Ti/Hf
-    # softmode to ~-35 THz, annotated off-scale rather than allowed to squash the cluster.
-    lo, hi = -4.0, 3.5
-    ax.plot([lo, hi], [lo, hi], "k-", lw=0.7, alpha=0.5, zorder=0)
-    ax.axhline(0, color="grey", lw=0.7, ls="--"); ax.axvline(0, color="grey", lw=0.7, ls="--")
-    ax.set_xlim(lo, hi); ax.set_ylim(-0.8, 3.5)
-    n_off = int((m["min_eff_freq_thz_softmode"] < lo).sum())
-    if n_off:
-        ax.annotate(f"<- {n_off} orb_v2 Ti/Hf pts: softmode ~ -35 THz (float32)",
-                    xy=(lo + 0.1, 1.3), fontsize=7.0, color="purple")
-    ax.set_xlabel("softmode min eff. freq (THz)")
-    ax.set_ylabel("SSCHA min free-energy Hessian freq (THz)")
-    ax.set_title(f"bcc: softmode vs SSCHA  (ρ={summ.get('spearman_freq','?')}, "
-                 f"sign agree {summ.get('sign_agreement','?')}, n={summ.get('n_paired',0)})")
-    ax.legend(fontsize=8, title="MLIP", loc="lower right")
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_method_agreement.png", dpi=300)
-    fig.savefig(f"{OUT}/fig_method_agreement.tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
-    plt.close(fig)
-    print(f"wrote {OUT}/fig_method_agreement.png  (bcc {summ})")
+    calls = dfb[dfb["method"] == "softmode"][KEY + ["pred_stable"]].merge(
+        dfb[dfb["method"] == "sscha"][KEY + ["pred_stable"]], on=KEY, suffixes=("_scr", "_ss"))
+    m = m.merge(calls, on=KEY)
+    call_agree = m["pred_stable_scr"].astype(bool) == m["pred_stable_ss"].astype(bool)
+    call = S.rate_ci(int(call_agree.sum()), len(m))
+    trivial = _trivial_bcc_pairs()
+    temps = sorted(m["temperature_K"].unique())
+    y = m["min_eff_freq_thz_sscha"]
+    mods = [c for c in MODELS if c in set(m["model"])]
+    ylo, yhi = min(-0.4, float(y.min()) - 0.3), max(2.5, float(y.max()) + 0.3)
+    fig, ax = plt.subplots(figsize=(6.0, 5.0))
+    ax.axhline(0, color="grey", lw=0.8, ls=":")
+    ax.axhline(DEFAULT_IMAG_TOL_THZ, color="grey", lw=0.8, ls="--")   # -0.1 THz
+    for i, mod in enumerate(mods):
+        g = m[m["model"] == mod].reset_index(drop=True)
+        for col, stable in ((0, False), (1, True)):
+            gg = g[g["pred_stable_scr"].astype(bool) == stable]
+            if gg.empty:
+                continue
+            # one sub-column per model, points spread across it in (system, T) order
+            base = col + (i - (len(mods) - 1) / 2) * 0.15
+            xs = base + np.linspace(-0.045, 0.045, len(gg)) if len(gg) > 1 else np.array([base])
+            triv = np.array([(s, mod) in trivial for s in gg["system"]])
+            for sel, face in ((~triv, COLOR[mod]), (triv, "white")):
+                ax.scatter(xs[sel], gg["min_eff_freq_thz_sscha"].to_numpy()[sel], s=36, marker="o",
+                           facecolors=face, edgecolors=COLOR[mod], linewidths=1.1, alpha=0.9,
+                           zorder=3)
+    ax.set_xlim(-0.55, 1.55)
+    ax.set_ylim(ylo, yhi)
+    ax.set_xticks([0, 1])
+    ax.set_xticklabels(["screen calls unstable", "screen calls stable"])
+    ax.text(0.98, 0.03, f"stability-call agreement {S.fmt_rate(call)}",
+            transform=ax.transAxes, ha="right", va="bottom", fontsize=7.5,
+            bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="0.7"))
+    ax.set_xlabel("soft-mode screen: stability call (free-energy comparison)")
+    ax.set_ylabel("SSCHA (production recipe, 2×2×2):\nlowest free-energy Hessian frequency (THz)")
+    ax.set_title("bcc Ti, Zr, Hf at " + ", ".join(str(int(t)) for t in temps)
+                 + f" K: screen call vs SSCHA (n = {len(m)})")
+    handles = [Line2D([], [], ls="", marker="o", ms=6, color=COLOR[c], label=NAME[c]) for c in mods]
+    handles.append(Line2D([], [], ls="", marker="o", ms=6, mfc="white", mec="0.35",
+                          label="open: no harmonic instability"))
+    handles.append(Line2D([], [], color="grey", lw=0.8, ls="--", label="SSCHA tolerance (−0.1 THz)"))
+    ax.legend(handles=handles, fontsize=7.5, loc="upper left", framealpha=0.9)
+    fig.tight_layout()
+    _save(fig, "fig_method_agreement")
+    print(f"  bcc: call {S.fmt_rate(call)}")
 
 
 def fig_displacive_recall():
-    """CAUTIONARY figure: on the ferroelectric perovskites at T<=300 K (cubic phase definitively
-    unstable, far below every Tc), the fraction of model units each method correctly calls
-    unstable. Softmode catches the displacive instability; multi-mode SSCHA (v4=False) collapses
-    to the cubic minimum and reports false-stable. This is why softmode, not SSCHA, is the
-    perovskite headline method."""
-    from mlip_dynstab.analysis import displacive_recall
-    r = displacive_recall(df)
+    """Fig. 6. Recall of the unstable cubic phase on the ferroelectric oxide perovskites
+    (BaTiO3, KNbO3, PbTiO3) at T <= 300 K, below every transition temperature: the fraction of
+    (system, model, T) units each method calls unstable, as k/n with a Wilson 95% interval.
+    SSCHA units that blew up numerically (|f| > 50 THz) or returned no result are left out of its
+    denominator and counted under the bar. Both methods see the same units, so the comparison is
+    a paired one; its system-clustered test is in the text, and two marginal intervals are not
+    that test. The first two bars are the screen and converged SSCHA on the units where converged
+    SSCHA returned a value (ESI Table S22); the hatched bar is the production recipe."""
+    r = A.displacive_recall(df)
     if r.empty:
         return
-    fig, ax = plt.subplots(figsize=(4.6, 4.6))
-    bars = ax.bar(r["method"], r["recall_unstable"], color=["#2c7fb8", "#d95f0e"], width=0.6)
-    for b, (_, row) in zip(bars, r.iterrows()):
-        ax.text(b.get_x() + b.get_width() / 2, row["recall_unstable"] + 0.02,
-                f"{row['correct_unstable']}/{row['n_valid']}", ha="center", fontsize=9)
-    ax.set_ylim(0, 1.05); ax.set_ylabel("recall: cubic correctly called unstable")
-    ax.set_title("FE perovskites, T≤300 K\n(cubic definitively unstable)")
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_displacive_recall.png", dpi=300)
-    fig.savefig(f"{OUT}/fig_displacive_recall.tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
-    plt.close(fig)
-    print(f"wrote {OUT}/fig_displacive_recall.png  ({r.to_dict('records')})")
+    fe = ["batio3_cubic", "knbo3_cubic", "pbtio3_cubic"]
+    n_failed = None
+    if os.path.exists(SSCHA_GRID):
+        grid = pd.read_csv(SSCHA_GRID)
+        grid = grid[grid["system"].isin(fe) & (grid["temperature_K"] <= 300.0)]
+        ran = df[(df["method"] == "sscha") & df["system"].isin(fe) & (df["temperature_K"] <= 300.0)]
+        n_failed = int(len(grid.merge(ran[KEY], on=KEY, how="left", indicator=True)
+                           .query("_merge == 'left_only'")))
+    prod = {row["method"]: row for _, row in r.iterrows()}
+    # Bars: the screen and converged SSCHA on the same units (the converged-recipe grid,
+    # grid_compare.json, converged_only / converged_matched), then production SSCHA for reference.
+    bars = []
+    conv_note = ""
+    if os.path.exists(GRID_COMPARE) and os.path.exists(CONV_SUMMARY):
+        import json
+        gc = json.load(open(GRID_COMPARE, encoding="utf-8"))
+        cii = gc["variants"]["converged_only"]["converged_matched"]["ii"]["all_models"]
+        cs = pd.read_csv(CONV_SUMMARY)
+        cs = cs[(cs["start"] == "A") & cs["system"].isin(fe) & (cs["T_K"] <= 300.0)]
+        n_cf = int((cs["status"] == "failed").sum())
+        n_cu = int(((cs["status"] == "ok") & (cs["converged"].astype(str) != "True")).sum())
+        # The pre-registered replicates (results/revision/e3_replicates/): a unit whose call
+        # differs between replicates is unresolved and is left out, not resolved by majority.
+        unres = set()
+        if os.path.exists(E3_SUMMARY):
+            e3 = pd.read_csv(E3_SUMMARY)
+            unres = set(e3.loc[e3["verdict"] == "unresolved", "unit_tag"])
+        u = cs[(cs["status"] == "ok") & (cs["converged"].astype(str) == "True")
+               & ~cs["gt_stable"].astype(bool) & ~cs["unit_tag"].isin(unres)]
+        n_ur = int(cs["unit_tag"].isin(unres).sum())
+        k_scr = int((~u["screen_stable_call"].astype(bool)).sum())
+        k_ss = int((u["stable_call"].astype(str) != "True").sum())
+        check_a = (int((~cs[(cs["status"] == "ok") & (cs["converged"].astype(str) == "True")]
+                        ["stable_call"].astype(str).eq("True")).sum()), cii["sscha"]["recall"]["k"])
+        assert check_a[0] == check_a[1], f"Fig. 5: start-A recall {check_a} disagrees with grid_compare"
+        bars.append(("soft-mode screen\n(same units)", k_scr, len(u), C_A, None))
+        bars.append(("SSCHA, converged\n(default criterion)", k_ss, len(u), C_B, None))
+        conv_note = (f"Converged SSCHA: {len(cs)} units, {n_cf} failed, {n_cu} did not converge and "
+                     f"{n_ur} are unresolved between\n"
+                     "pre-registered replicates; the screen is scored "
+                     f"on the same {len(u)} (start A alone: {cii['softmode']['recall']['k']}/"
+                     f"{cii['softmode']['recall']['n']} against {cii['sscha']['recall']['k']}/"
+                     f"{cii['sscha']['recall']['n']}).")
+    ps = prod["sscha"]
+    bars.append(("SSCHA, production\n(not converged)", int(ps["correct_unstable"]),
+                 int(ps["n_valid"]), "0.75", "//"))
+    parts = []
+    if int(ps["n_numerical_blowup"]):
+        parts.append(f"{int(ps['n_numerical_blowup'])} numerical blow-up (|f| > 50 THz)")
+    if n_failed:
+        parts.append(f"{n_failed} failed run{'s' if n_failed != 1 else ''}")
+    note = conv_note
+    if parts:
+        note += ("\n" if note else "") + "Production SSCHA excludes " + " and ".join(parts) + "."
+    fig, ax = plt.subplots(figsize=(5.2, 5.0))
+    for i, (lab, k, n, col, hatch) in enumerate(bars):
+        rc = S.rate_ci(int(k), int(n))
+        ax.bar(i, rc.p, width=0.55, color=col, hatch=hatch, edgecolor="0.3" if hatch else col)
+        ax.errorbar(i, rc.p, yerr=[[rc.p - rc.lo], [rc.hi - rc.p]], color="k", capsize=5, lw=1)
+        ax.text(i, rc.hi + 0.025, f"{rc.k}/{rc.n}", ha="center", va="bottom", fontsize=9)
+    ax.set_xticks(range(len(bars)))
+    ax.set_xticklabels([b[0] for b in bars], fontsize=8)
+    ax.set_ylim(0, 1.05)
+    ax.set_ylabel("recall: cubic phase called unstable")
+    ax.set_title("FE oxide perovskites, T ≤ 300 K\n(below every T$_\\mathrm{c}$; "
+                 "Wilson 95% intervals)", fontsize=10)
+    if note:
+        fig.text(0.02, 0.01, note, fontsize=6.5, ha="left", va="bottom")
+    fig.tight_layout(rect=(0, 0.07 if note else 0, 1, 1))
+    _save(fig, "fig_displacive_recall")
+    print(f"  bars {[(b[0].replace(chr(10), ' '), b[1], b[2]) for b in bars]}, "
+          f"production SSCHA failed runs {n_failed}")
 
 
 def fig_tolerance_sweep():
-    """Referee m5: harmonic false-stable / false-unstable counts vs the imaginary tolerance.
-    The default -0.1 THz sits between the strict regime (tol=0 floods false-unstables from
-    finite-displacement Γ noise) and the loose regime (inflated false-stables)."""
-    from mlip_dynstab.analysis import harmonic_tolerance_sweep
-    s = harmonic_tolerance_sweep(df)
+    """Fig. 1. Harmonic false-stable and false-unstable call counts against the imaginary
+    tolerance (a call is 'stable' iff the minimum harmonic frequency >= -tol), summed over the
+    five models on the scored systems. The default 0.1 THz sits between the strict regime
+    (tol = 0, where finite-displacement noise near Gamma floods false-unstables) and the loose
+    regime (inflated false-stables)."""
+    s = A.harmonic_tolerance_sweep(df)
     if s.empty:
         return
+    h = df[(df["method"] == "harmonic") & ~df["system"].isin(A.borderline_systems())]
+    n_calls, n_mod, n_sys = int(s["n_calls"].iloc[0]), h["model"].nunique(), h["system"].nunique()
     fig, ax = plt.subplots(figsize=(5.2, 4.2))
-    ax.plot(s["tol_THz"], s["false_stable"], "o-", color="#d95f0e", label="false-stable")
-    ax.plot(s["tol_THz"], s["false_unstable"], "s-", color="#2c7fb8", label="false-unstable")
-    ax.axvline(0.1, color="k", lw=0.8, ls="--", label="default −0.1 THz")
-    ax.set_xlabel("imaginary tolerance |tol| (THz)"); ax.set_ylabel("count (5 models × scored set)")
-    ax.set_title("Stability-call sensitivity to imaginary tolerance"); ax.legend(fontsize=8)
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_tolerance_sweep.png", dpi=300)
-    fig.savefig(f"{OUT}/fig_tolerance_sweep.tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
-    plt.close(fig)
-    print(f"wrote {OUT}/fig_tolerance_sweep.png  ({s.to_dict('records')})")
+    ax.plot(s["tol_THz"], s["false_stable"], "o-", color=C_B, label="false-stable")
+    ax.plot(s["tol_THz"], s["false_unstable"], "s-", color=C_A, label="false-unstable")
+    ax.axvline(0.1, color="k", lw=0.8, ls="--", label="default tolerance (0.1 THz)")
+    ax.set_xlabel("imaginary tolerance |tol| (THz)")
+    ax.set_ylabel(f"calls (of {n_calls}: {n_mod} models \u00d7 {n_sys} systems)")
+    ax.set_title("Harmonic stability calls vs imaginary tolerance")
+    ax.legend(fontsize=8)
+    fig.tight_layout()
+    _save(fig, "fig_tolerance_sweep")
+    print(f"  sweep {s.to_dict('records')}")
+
+
+def _guardrail_stats(d: pd.DataFrame) -> dict:
+    """Guardrail numbers for one model set, computed exactly as stats_hardening.guardrail_clustered
+    does (same unit set, same row order, same resampling seed), so the intervals match the
+    deposited results/stats_hardening.json."""
+    g = A.h3_ensemble_guardrail(d, method="softmode")
+    g = g[~g["system"].str.contains("bcc") & ~g["system"].isin(A.borderline_systems())]
+    g = g.sort_values(["system", "T"]).reset_index(drop=True)
+    err = (~g["consensus_correct"].astype(bool)).to_numpy()
+    split, unan = g[g["disagreement"] > 0], g[g["disagreement"] == 0]
+    out = {"n_units": len(g), "n_systems": g["system"].nunique(),
+           "n_ties": int((g["stable_vote_frac"] == 0.5).sum()),
+           "split": S.rate_ci(int((~split["consensus_correct"].astype(bool)).sum()), len(split)),
+           "unan": S.rate_ci(int((~unan["consensus_correct"].astype(bool)).sum()), len(unan))}
+    for key, col in (("vote", "disagreement"), ("freq", "freq_std_thz")):
+        score = g[col].to_numpy(float)
+        out[key] = {"auc": S.auc(score, err)} | S.cluster_bootstrap_auc(
+            score, err, g["system"].to_numpy(), n_boot=N_RESAMPLE, seed=SEED)
+    return out
 
 
 def fig_ensemble_guardrail():
-    """H3: cross-model disagreement as a guardrail. Consensus finite-T error rate on units where
-    the five MLIPs split on the stable/unstable call vs unanimous units; the binary vote split is
-    a useful predictor of consensus error (AUC annotated) where the continuous frequency spread
-    is not."""
-    from mlip_dynstab.analysis import h3_guardrail_summary
-    s = h3_guardrail_summary(df)
-    if not s:
+    """Fig. 8. The ensemble guardrail (H3) with and without ORB-v2: the majority-vote consensus
+    finite-T error rate on units where the models split on the stable/unstable call against
+    units where they are unanimous (k/n with Wilson 95% intervals), and the AUC of the vote split
+    and of the cross-model frequency spread as predictors of consensus error, each with a
+    cluster-bootstrap 95% interval that resamples whole systems. Without ORB-v2 a 2-2 tie is
+    called 'stable' (analysis.h3_ensemble_guardrail)."""
+    sets = [("all five models", df), ("without ORB-v2", df[df["model"] != "orb_v2"])]
+    res = [(lab, _guardrail_stats(d)) for lab, d in sets]
+    if not res[0][1]["n_units"]:
         return
-    fig, ax = plt.subplots(figsize=(4.6, 4.6))
-    labels = [f"split vote\n(n={s['n_split']})", f"unanimous\n(n={s['n_unanimous']})"]
-    vals = [s["split_vote_error_rate"], s["unanimous_error_rate"]]
-    bars = ax.bar(labels, vals, color=["#d95f0e", "#2c7fb8"], width=0.6)
-    for b, v in zip(bars, vals):
-        ax.text(b.get_x() + b.get_width() / 2, v + 0.01, f"{v:.2f}", ha="center", fontsize=10)
-    ax.set_ylim(0, max(vals) * 1.25 + 0.05); ax.set_ylabel("consensus finite-T error rate")
-    ax.set_title(f"Ensemble disagreement guardrail (H3)\nvote-split AUC {s['auc_vote_disagreement']}, "
-                 f"freq-std AUC {s['auc_freq_std']}")
-    fig.tight_layout(); fig.savefig(f"{OUT}/fig_ensemble_guardrail.png", dpi=300)
-    fig.savefig(f"{OUT}/fig_ensemble_guardrail.tiff", dpi=600, pil_kwargs={"compression": "tiff_lzw"})
-    plt.close(fig)
-    print(f"wrote {OUT}/fig_ensemble_guardrail.png  ({s})")
+    fig, ax = plt.subplots(figsize=(6.4, 5.0))
+    w = 0.36
+    for gi, (lab, r) in enumerate(res):
+        for k, (key, col) in enumerate((("split", C_B), ("unan", C_A))):
+            rc = r[key]
+            xx = gi + (k - 0.5) * (w + 0.04)
+            ax.bar(xx, rc.p, width=w, color=col)
+            ax.errorbar(xx, rc.p, yerr=[[rc.p - rc.lo], [rc.hi - rc.p]], color="k", capsize=4, lw=1)
+            ax.text(xx, rc.hi + 0.02, f"{rc.k}/{rc.n}", ha="center", va="bottom", fontsize=8.5)
+        v, f = r["vote"], r["freq"]
+        ax.text(gi, 1.06, f"vote-split AUC {v['auc']:.3f} [{v['ci_lo']:.3f}, {v['ci_hi']:.3f}]\n"
+                f"frequency-spread AUC {f['auc']:.3f} [{f['ci_lo']:.3f}, {f['ci_hi']:.3f}]",
+                ha="center", va="bottom", fontsize=7.5)
+    ax.set_xticks(range(len(res)))
+    ax.set_xticklabels([lab for lab, _ in res])
+    ax.set_xlim(-0.6, len(res) - 0.4)
+    ax.set_ylim(0, 1.28)
+    ax.set_yticks(np.arange(0, 1.01, 0.2))
+    ax.set_ylabel("consensus finite-T error rate")
+    ax.legend(handles=[Patch(color=C_B, label="models split"), Patch(color=C_A, label="unanimous")],
+              fontsize=8, loc="center right", bbox_to_anchor=(1.0, 0.62), framealpha=0.9)
+    r0 = res[0][1]
+    ax.set_title(f"Ensemble vote-split guardrail: {r0['n_units']} units, {r0['n_systems']} systems",
+                 fontsize=10)
+    ties = [f"{r['n_ties']} tied 2\u20132 unit{'s' if r['n_ties'] != 1 else ''} called stable"
+            f" ({lab})" for lab, r in res if r["n_ties"]]
+    fig.text(0.02, 0.01, "Error bars: Wilson 95%. AUC intervals: cluster bootstrap over systems"
+             + (".\n" + "; ".join(ties) + "." if ties else "."), fontsize=7, ha="left", va="bottom")
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
+    _save(fig, "fig_ensemble_guardrail")
+    for lab, r in res:
+        print(f"  {lab}: split {S.fmt_rate(r['split'])}, unanimous {S.fmt_rate(r['unan'])}, "
+              f"vote AUC {r['vote']['auc']:.3f} [{r['vote']['ci_lo']:.3f}, {r['vote']['ci_hi']:.3f}], "
+              f"freq AUC {r['freq']['auc']:.3f} [{r['freq']['ci_lo']:.3f}, {r['freq']['ci_hi']:.3f}]")
+
+
+# Call colours shared by the two revision figures: a correct call is light grey so the errors
+# carry the colour; a false-stable is vermillion and a false-unstable blue (Okabe-Ito).
+C_OK, C_FS, C_FU = "#E3E3E3", "#D55E00", "#0072B2"
+PL_CALLS = "results/revision/dft_checks/pl_calls.csv"
+PL_PROFILE = "results/revision/dft_checks/pl_profile.csv"
+PL_LATTICE = "results/revision/dft_checks/pl_lattice.csv"
+FT_LATTICE = "results/revision/finetune_mace30/lattice_diag.json"
+
+
+def fig_sscha_map():
+    """Fig. 7. Converged-recipe SSCHA (ESI Table S22) on every unit of the grid, one cell per (system,
+    model, temperature), start A. Non-bcc units are scored against the label; bcc units have no
+    label and are compared with the screen's call, as in the text. Units whose pre-registered
+    replicates disagree on the call (ESI Table S24) are hatched and left out of the counts, not
+    resolved by majority; units that failed or did not converge have no call. The counts printed
+    under the map are recomputed here, with the definitions of build_esi_tables.e3_resolved_counts."""
+    if not os.path.exists(CONV_SUMMARY):
+        return
+    c = pd.read_csv(CONV_SUMMARY)
+    c = c[c["start"] == "A"].copy()
+    unres = set()
+    if os.path.exists(E3_SUMMARY):
+        e3 = pd.read_csv(E3_SUMMARY)
+        unres = set(e3.loc[e3["verdict"] == "unresolved", "unit_tag"])
+    conv = (c["status"] == "ok") & (c["converged"].astype(str) == "True")
+    stable = c["stable_call"].astype(str) == "True"
+    bcc = c["family"] == "bcc"
+    c["unres"] = c["unit_tag"].isin(unres)
+    # Headline counts (Section 3.3): converged, label-unstable, non-bcc, replicates resolved.
+    lu = c[conv & ~bcc & ~c["gt_stable"].astype(bool) & c["label_scored"].astype(bool)]
+    lr = lu[~lu["unres"]]
+    fs = int(stable[lr.index].sum())
+    lr_no = lr[lr["model"] != "orb_v2"]
+    fs_no = int(stable[lr_no.index].sum())
+    ls = c[conv & ~bcc & c["gt_stable"].astype(bool) & ~c["unres"]]
+    fu = int((~stable[ls.index]).sum())
+    bc = c[conv & bcc & ~c["unres"]]
+    b_agree = int(bc["call_matches_screen"].astype(bool).sum())
+    counts = dict(fs=fs, n_lu=len(lr), fs_no=fs_no, n_lu_no=len(lr_no), n_unres_lu=int(lu["unres"].sum()),
+                  fu=fu, n_ls=len(ls), b_agree=b_agree, n_b=len(bc))
+
+    systems = ["batio3_cubic", "knbo3_cubic", "pbtio3_cubic", "srtio3_cubic", "cssni3_cubic",
+               "zro2_cubic", "hfo2_cubic", "ti_bcc", "zr_bcc", "hf_bcc"]
+    systems = [s for s in systems if s in set(c["system"])]
+    cols = []                                      # (system, T) in display order
+    for s in systems:
+        for T in sorted(c.loc[c["system"] == s, "T_K"].unique()):
+            cols.append((s, float(T)))
+    gap = 0.45                                     # space between system blocks
+    xpos, x, prev = [], 0.0, None
+    for s, T in cols:
+        if prev is not None and s != prev:
+            x += gap
+        xpos.append(x)
+        x += 1.0
+        prev = s
+    idx = {(r.system, r.model, float(r.T_K)): r for r in c.itertuples()}
+    C_BS, C_BU = "#F3B79A", "#9DC3E3"              # bcc: SSCHA v the screen, lighter tints
+    with plt.rc_context({"font.size": 7.5, "hatch.linewidth": 0.6}):
+        fig, ax = plt.subplots(figsize=(6.7, 3.0))
+        for yi, m in enumerate(MODELS):
+            for (s, T), x0 in zip(cols, xpos):
+                r = idx.get((s, m, T))
+                y0 = len(MODELS) - 1 - yi
+                if r is None:                      # not in the grid: no cell
+                    ax.add_patch(Rectangle((x0, y0), 1, 1, fc="white", ec="0.85", lw=0.4))
+                    continue
+                ok = r.status == "ok" and str(r.converged) == "True"
+                st = str(r.stable_call) == "True"
+                hatch, mark = None, None
+                if r.status != "ok":
+                    fc, mark = "white", "x"
+                elif not ok:
+                    fc, mark = "white", "o"
+                elif r.unres:
+                    fc, hatch = "#BDBDBD", "//////"
+                elif r.family == "bcc":
+                    fc = C_OK if bool(r.call_matches_screen) else (C_BS if st else C_BU)
+                elif bool(r.gt_stable):
+                    fc = C_OK if st else C_FU
+                else:
+                    fc = C_FS if st else C_OK
+                ax.add_patch(Rectangle((x0, y0), 1, 1, fc=fc, ec="white", lw=0.8, hatch=hatch))
+                if mark == "x":
+                    ax.plot(x0 + 0.5, y0 + 0.5, marker="x", ms=4, mew=0.9, color="0.3")
+                elif mark == "o":
+                    ax.plot(x0 + 0.5, y0 + 0.5, marker="o", ms=3.2, mew=0.8, mfc="none", mec="0.3")
+        ax.set_xlim(-0.1, xpos[-1] + 1.1)
+        ax.set_ylim(0, len(MODELS) + 1.25)
+        ax.set_yticks([len(MODELS) - 1 - i + 0.5 for i in range(len(MODELS))])
+        ax.set_yticklabels([NAME[m] for m in MODELS])
+        ax.set_xticks([x0 + 0.5 for x0 in xpos])
+        ax.set_xticklabels([f"{int(T) // 100}" for _, T in cols], fontsize=6.5)
+        ax.tick_params(length=0, pad=1.5)
+        for sp in ax.spines.values():
+            sp.set_visible(False)
+        for s in systems:
+            xs = [x0 for (ss, _), x0 in zip(cols, xpos) if ss == s]
+            ax.text((xs[0] + xs[-1] + 1) / 2, len(MODELS) + 0.15, sys_label(s), ha="center",
+                    va="bottom", fontsize=7.5)
+        # Brackets for the two comparisons.
+        xb = [x0 for (s, _), x0 in zip(cols, xpos) if s.endswith("_bcc")]
+        xn = [x0 for (s, _), x0 in zip(cols, xpos) if not s.endswith("_bcc")]
+        for xs, lab in ((xn, "scored against the label"), (xb, "compared with the screen")):
+            if xs:
+                ax.plot([xs[0] + 0.05, xs[-1] + 0.95], [len(MODELS) + 0.95] * 2, color="0.4", lw=0.7)
+                ax.text((xs[0] + xs[-1] + 1) / 2, len(MODELS) + 1.0, lab, ha="center", va="bottom",
+                        fontsize=7, color="0.3", style="italic")
+        ax.set_xlabel("Temperature (100 K)", labelpad=1.5)
+        handles = [Patch(fc=C_OK, label="correct / agrees with screen"),
+                   Patch(fc=C_FS, label="false-stable"),
+                   Patch(fc=C_FU, label="false-unstable"),
+                   Patch(fc=C_BS, label="bcc: stable, screen unstable"),
+                   Patch(fc=C_BU, label="bcc: unstable, screen stable"),
+                   Patch(fc="#BDBDBD", hatch="//////", ec="white",
+                         label="unresolved by replicates (not counted)"),
+                   Line2D([], [], ls="", marker="o", ms=3.2, mfc="none", mec="0.3",
+                          label="did not converge (no call)"),
+                   Line2D([], [], ls="", marker="x", ms=4, color="0.3", label="run failed"),
+                   Patch(fc="white", ec="0.75", label="not in the grid")]
+        fig.legend(handles=handles, loc="lower center", ncol=3, fontsize=6.5, frameon=False,
+                   bbox_to_anchor=(0.5, 0.0), handlelength=1.3, columnspacing=1.2)
+        fig.tight_layout(rect=(0, 0.2, 1, 1))
+        _save(fig, "fig_sscha_map")
+    print(f"  label-unstable non-bcc: false-stable {fs}/{len(lr)} ({fs_no}/{len(lr_no)} without "
+          f"ORB-v2), {counts['n_unres_lu']} unresolved; label-stable false-unstable {fu}/{len(ls)}; "
+          f"bcc agree with screen {b_agree}/{len(bc)}")
+    return counts
+
+
+def fig_lattice_flip():
+    """Fig. 3. The lattice knife edge on BaTiO3 and KNbO3 (ESI Section S5.3, Table S23; Section 4).
+    (a) The screen's call at 100/300/600 K on PBE at the PBE lattice (on the two modes profiled
+    there; the X-point mode was not profiled), on PBE at MACE-MP-0's lattice along MACE-MP-0's
+    eigenvector, on MACE-MP-0 itself, and on the three 30-epoch MACE-MP-0 fine-tunes at their own
+    lattice and at the base model's lattice (300 K only; a post hoc check, not pre-registered).
+    (b, c) At 300 K, the depth of the profiled well against the lattice parameter relative to PBE:
+    filled markers are called unstable (correct), open ones stable (wrong). The lattice and the
+    eigenvector change together in the PBE pair, so the check does not separate the two."""
+    import json
+    if not all(os.path.exists(p) for p in (PL_CALLS, PL_PROFILE, PL_LATTICE, FT_LATTICE)):
+        return
+    calls = pd.read_csv(PL_CALLS)
+    prof = pd.read_csv(PL_PROFILE).set_index(["system", "curve"])
+    lat = pd.read_csv(PL_LATTICE)
+    ft = json.load(open(FT_LATTICE, encoding="utf-8"))
+    systems = [s for s in ("batio3_cubic", "knbo3_cubic", "cssnbr3_cubic") if s in set(calls["system"])]
+    Ts = [100.0, 300.0, 600.0]
+    seeds = ["seed0", "seed1", "seed2"]
+    a_pbe = {s: float(lat[(lat["system"] == s) & lat["source"].str.startswith("PBE")]["a_A"].iloc[0])
+             for s in systems}
+
+    def pct(s, a):
+        return 100.0 * (a / a_pbe[s] - 1.0)
+
+    def pbe_own(r):
+        """PBE at its lattice: unstable if either profiled mode condenses (softest may be absent)."""
+        v = [r["pbe_lattice_deciding_stable"], r.get("pbe_lattice_softest_stable")]
+        v = [bool(x) for x in v if pd.notna(x)]
+        return all(v)
+
+    rows = [("label (experiment)", "label"),
+            ("PBE, PBE lattice*", "pbe_own"),
+            ("PBE, MACE-MP-0 lattice", "pbe_mace"),
+            ("MACE-MP-0", "mace"),
+            ("fine-tuned, own lattice", "ft_own"),
+            ("fine-tuned, base lattice", "ft_base")]
+
+    def cell(s, T, key):
+        """(stable call or None, n_stable, n) for one cell."""
+        r = calls[(calls["system"] == s) & (calls["T"] == T)]
+        if r.empty:
+            return None
+        r = r.iloc[0]
+        if key == "label":
+            return bool(r["gt_stable"]), None
+        if key == "pbe_own":
+            return pbe_own(r), None
+        if key == "pbe_mace":
+            return bool(r["pbe_mlip_lattice_stable"]), None
+        if key == "mace":
+            return (None if pd.isna(r["mlip_ledger_stable"]) else bool(r["mlip_ledger_stable"])), None
+        if key in ("ft_own", "ft_base") and T == ft.get("T_K") and s in ft["systems"]:
+            k = "own_lattice" if key == "ft_own" else "base_lattice"
+            v = [bool(ft["systems"][s][sd][k]["pred_stable"]) for sd in seeds]
+            return (all(v) if len(set(v)) == 1 else None), (sum(v), len(v))
+        return None
+
+    with plt.rc_context({"font.size": 7.5, "axes.titlesize": 8.5, "axes.labelsize": 7.5,
+                         "xtick.labelsize": 7, "ytick.labelsize": 7}):
+        fig = plt.figure(figsize=(6.7, 5.0))
+        gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.05], hspace=0.42, wspace=0.08,
+                              left=0.2, right=0.985, top=0.93, bottom=0.17)
+        ax = fig.add_subplot(gs[0, :])
+        gap = 0.5
+        for si, s in enumerate(systems):
+            for ti, T in enumerate(Ts):
+                x0 = si * (len(Ts) + gap) + ti
+                gt = cell(s, T, "label")[0]
+                for ri, (_, key) in enumerate(rows):
+                    y0 = len(rows) - 1 - ri
+                    got = cell(s, T, key)
+                    if got is None or got[0] is None:
+                        ax.add_patch(Rectangle((x0, y0), 1, 1, fc="white", ec="0.85", lw=0.4))
+                        if got is None and key.startswith("ft"):
+                            pass
+                        continue
+                    st, frac = got
+                    if key == "label":
+                        fc, tc = "white", "k"
+                    else:
+                        fc = C_OK if st == gt else (C_FS if st else C_FU)
+                        tc = "k" if st == gt else "white"
+                    ax.add_patch(Rectangle((x0, y0), 1, 1, fc=fc, ec="0.7" if key == "label" else "white",
+                                           lw=0.8))
+                    txt = "stable" if st else "unstable"
+                    if frac is not None:
+                        txt += f"\n{frac[1]}/{frac[1]}"
+                    ax.text(x0 + 0.5, y0 + 0.5, txt, ha="center", va="center", fontsize=6.2, color=tc,
+                            linespacing=0.9)
+            xc = si * (len(Ts) + gap) + len(Ts) / 2
+            ax.text(xc, len(rows) + 0.55, sys_label(s), ha="center", va="bottom", fontsize=8)
+        ax.set_xlim(-0.05, len(systems) * (len(Ts) + gap) - gap + 0.05)
+        ax.set_ylim(0, len(rows) + 1.3)
+        ax.set_yticks([len(rows) - 1 - i + 0.5 for i in range(len(rows))])
+        ax.set_yticklabels([lab for lab, _ in rows])
+        ax.set_xticks([si * (len(Ts) + gap) + ti + 0.5 for si in range(len(systems)) for ti in range(len(Ts))])
+        ax.set_xticklabels([f"{int(T)} K" for _ in systems for T in Ts])
+        ax.xaxis.tick_top()
+        ax.tick_params(length=0, pad=1)
+        for sp in ax.spines.values():
+            sp.set_visible(False)
+        ax.text(-0.02, 1.07, "(a)", transform=ax.transAxes, ha="right", fontsize=9, fontweight="bold")
+
+        # (b, c): well depth against the lattice offset at 300 K. MACE-MP-0 is drawn in grey, not
+        # its usual blue, because blue here means a false-unstable call (panel a, shared legend).
+        CP, CM, CF = "#000000", "#7F7F7F", "#009E73"
+        axb = None
+        for k, s in enumerate([x for x in systems if x in ft["systems"]][:2]):
+            a2 = fig.add_subplot(gs[1, k], sharey=axb)
+            axb = axb or a2
+            r300 = calls[(calls["system"] == s) & (calls["T"] == 300.0)].iloc[0]
+            a_mace = float(lat[(lat["system"] == s) & (lat["source"] == "mace_mp0 relaxed")]["a_A"].iloc[0])
+            pts = [  # (x %, depth meV, stable call, colour, marker)
+                (0.0, prof.loc[(s, "pbe_lattice_deciding"), "depth_meV"], pbe_own(r300), CP, "o"),
+                (pct(s, a_mace), prof.loc[(s, "pbe_mlip_lattice"), "depth_meV"],
+                 bool(r300["pbe_mlip_lattice_stable"]), CP, "o"),
+                (pct(s, ft["systems"][s]["base"]["a_relaxed_A"]),
+                 ft["systems"][s]["base"]["own_lattice"]["well_depth_meV"],
+                 bool(ft["systems"][s]["base"]["own_lattice"]["pred_stable"]), CM, "s")]
+            for sd in seeds:
+                e = ft["systems"][s][sd]
+                pts.append((pct(s, e["a_relaxed_A"]), e["own_lattice"]["well_depth_meV"],
+                            bool(e["own_lattice"]["pred_stable"]), CF, "D"))
+                pts.append((pct(s, ft["systems"][s]["base"]["a_relaxed_A"]), e["base_lattice"]["well_depth_meV"],
+                            bool(e["base_lattice"]["pred_stable"]), CF, "D"))
+            for xx, dd, st, col, mk in pts:
+                a2.scatter(xx, dd, s=30, marker=mk, facecolors="none" if st else col, edgecolors=col,
+                           linewidths=1.1, zorder=3)
+            # Connect each method's own-lattice point to its point at the MACE-MP-0 lattice.
+            a2.plot([0.0, pct(s, a_mace)], [pts[0][1], pts[1][1]], color=CP, lw=0.8, ls="--", zorder=2)
+            for sd in seeds:
+                e = ft["systems"][s][sd]
+                a2.plot([pct(s, e["a_relaxed_A"]), pct(s, ft["systems"][s]["base"]["a_relaxed_A"])],
+                        [e["own_lattice"]["well_depth_meV"], e["base_lattice"]["well_depth_meV"]],
+                        color=CF, lw=0.6, ls=":", zorder=2)
+            a2.axvline(0, color="0.6", lw=0.6)
+            a2.axvline(pct(s, a_mace), color=CM, lw=0.6, alpha=0.6)
+            a2.set_xlabel("lattice parameter relative to PBE (%)")
+            a2.set_title(f"{sys_label(s)}, 300 K (label: unstable)")
+            a2.text(-0.02 if k == 0 else -0.02, 1.04, "(b)" if k == 0 else "(c)", transform=a2.transAxes,
+                    ha="right", fontsize=9, fontweight="bold")
+            a2.set_xlim(-0.55, 1.0)
+            if k == 0:
+                a2.set_ylabel("well depth (meV per modulated cell)")
+            else:
+                plt.setp(a2.get_yticklabels(), visible=False)
+        axb.set_ylim(0, None)
+        h = [Line2D([], [], ls="", marker="o", ms=5, mfc=CP, mec=CP, label="PBE"),
+             Line2D([], [], ls="", marker="s", ms=5, mfc=CM, mec=CM, label="MACE-MP-0"),
+             Line2D([], [], ls="", marker="D", ms=4.5, mfc=CF, mec=CF, label="MACE-MP-0 fine-tuned (3 seeds)"),
+             Line2D([], [], ls="", marker="o", ms=5, mfc="0.4", mec="0.4", label="filled: called unstable"),
+             Line2D([], [], ls="", marker="o", ms=5, mfc="none", mec="0.4", label="open: called stable"),
+             Patch(fc=C_OK, label="correct"), Patch(fc=C_FS, label="false-stable"),
+             Patch(fc=C_FU, label="false-unstable")]
+        fig.legend(handles=h, loc="lower center", ncol=4, fontsize=6.5, frameon=False,
+                   bbox_to_anchor=(0.55, 0.0), columnspacing=1.0)
+        ax.text(0.0, -0.04, "* On the two modes profiled; PBE's X-point mode, also imaginary, was not "
+                "profiled.\nBlank: not computed (fine-tunes: 300 K, BaTiO₃ and KNbO₃ only).",
+                transform=ax.transAxes, fontsize=6, ha="left", va="top", color="0.25")
+        _save(fig, "fig_lattice_flip")
+    for s in systems:
+        print(f"  {s}: a_PBE {a_pbe[s]:.4f} A; " + "; ".join(
+            f"{lab} " + "/".join("-" if cell(s, T, key) is None or cell(s, T, key)[0] is None else
+                                 ("S" if cell(s, T, key)[0] else "U") for T in Ts) for lab, key in rows))
 
 
 if __name__ == "__main__":
+    _check_numbering()
+    fig_tolerance_sweep()
+    fig_harmonic_heat()
     fig_sscha_bcc()
-    fig_softmode_heat()
     fig_method_agreement()
     fig_displacive_recall()
     fig_ensemble_guardrail()
-    fig_tolerance_sweep()
+    fig_sscha_map()
+    fig_lattice_flip()
     print("FIGURES_DONE")

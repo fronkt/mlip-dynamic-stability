@@ -1,0 +1,36 @@
+/root/env-mace/lib/python3.11/site-packages/e3nn/o3/_wigner.py:10: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  _Jd, _W3j_flat, _W3j_indices = torch.load(os.path.join(os.path.dirname(__file__), 'constants.pt'))
+cuequivariance or cuequivariance_torch is not available. Cuequivariance acceleration will be disabled.
+Using float64 for MACECalculator, which is slower but more accurate. Recommended for geometry optimization.
+/root/env-mace/lib/python3.11/site-packages/mace/calculators/mace.py:226: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  torch.load(f=model_path, map_location=device)
+[evaluate] mace_mp0/seed0: mace-torch=0.3.16;ckpt=finetuned:ft_mace_mp0_seed0.model:sha256=eaa7953194d7d4fd
+[evaluate] PBE: 650 finished jobs; flags 0
+[c3a] mace_mp0/seed0: 10/65 paths (30 s)
+[c3a] mace_mp0/seed0: 20/65 paths (42 s)
+[c3a] mace_mp0/seed0: 30/65 paths (56 s)
+[c3a] mace_mp0/seed0: 40/65 paths (83 s)
+[c3a] mace_mp0/seed0: 50/65 paths (112 s)
+[c3a] mace_mp0/seed0: 60/65 paths (141 s)
+[evaluate] wrote results/revision/finetune_mace30/eval/c3a_mace_mp0_seed0.json
+[evaluate] wrote results/revision/finetune_mace30/eval/c3b_mace_mp0_seed0.json
+[p2] batio3_cubic mace_mp0/seed0 T=100: pred_stable=False gt=False min_eff +2.143 THz (15.5 s)
+[p2] batio3_cubic mace_mp0/seed0 T=300: pred_stable=True gt=False min_eff +3.307 THz (0.6 s)
+[p2] batio3_cubic mace_mp0/seed0 T=600: pred_stable=True gt=True min_eff +4.275 THz (0.6 s)
+[p2] batio3_cubic mace_mp0/seed0 T=900: pred_stable=True gt=True min_eff +4.926 THz (0.6 s)
+[p2] knbo3_cubic mace_mp0/seed0 T=100: pred_stable=False gt=False min_eff +1.742 THz (16.2 s)
+[p2] knbo3_cubic mace_mp0/seed0 T=300: pred_stable=True gt=False min_eff +2.721 THz (0.6 s)
+[p2] knbo3_cubic mace_mp0/seed0 T=600: pred_stable=True gt=False min_eff +3.530 THz (0.6 s)
+[p2] knbo3_cubic mace_mp0/seed0 T=900: pred_stable=True gt=True min_eff +4.074 THz (0.6 s)
+[p2] cssnbr3_cubic mace_mp0/seed0 T=100: pred_stable=False gt=False min_eff -0.390 THz (19.9 s)
+[p2] cssnbr3_cubic mace_mp0/seed0 T=300: pred_stable=False gt=True min_eff +0.219 THz (0.3 s)
+[p2] cssnbr3_cubic mace_mp0/seed0 T=600: pred_stable=False gt=True min_eff +0.300 THz (0.3 s)
+[p2] cssnbr3_cubic mace_mp0/seed0 T=900: pred_stable=False gt=True min_eff +0.358 THz (0.3 s)
+[evaluate] wrote results/revision/finetune_mace30/eval/p2_mace_mp0_seed0.json
+[s2] si_diamond mace_mp0/seed0: min_freq -0.0000 THz stable=True
+[s2] mgo_rocksalt mace_mp0/seed0: min_freq -0.0000 THz stable=True
+[s2] nacl_rocksalt mace_mp0/seed0: min_freq -0.0000 THz stable=True
+[s2] cu_fcc mace_mp0/seed0: min_freq -0.0000 THz stable=True
+[s2] c_diamond mace_mp0/seed0: min_freq -0.0000 THz stable=True
+[s2] ceo2_cubic mace_mp0/seed0: min_freq +0.0000 THz stable=True
+[evaluate] wrote results/revision/finetune_mace30/eval/s2_mace_mp0_seed0.json

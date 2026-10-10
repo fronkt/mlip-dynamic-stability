@@ -1,0 +1,124 @@
+2026-10-04 21:33:33.599 INFO: ===========VERIFYING SETTINGS===========
+2026-10-04 21:33:33.600 INFO: MACE version: 0.3.16
+2026-10-04 21:33:33.600 DEBUG: Configuration: Namespace(config=None, name='ft_mace_mp0_seed0', seed=0, work_dir='results/revision/finetune/models/mace_mp0/seed0', log_dir='results/revision/finetune/models/mace_mp0/seed0/logs', model_dir='results/revision/finetune/models/mace_mp0/seed0', checkpoints_dir='results/revision/finetune/models/mace_mp0/seed0/checkpoints', results_dir='results/revision/finetune/models/mace_mp0/seed0/results', downloads_dir='results/revision/finetune/models/mace_mp0/seed0/downloads', device='cuda', default_dtype='float64', distributed=False, launcher='slurm', log_level='INFO', plot=True, plot_frequency=0, plot_interaction_e=False, error_table='PerAtomRMSE', model='MACE', r_max=5.0, radial_type='bessel', num_radial_basis=8, num_cutoff_basis=5, pair_repulsion=False, distance_transform='None', apply_cutoff=True, use_last_readout_only=False, use_embedding_readout=False, interaction='RealAgnosticResidualInteractionBlock', interaction_first='RealAgnosticResidualInteractionBlock', max_ell=3, correlation=3, use_reduced_cg=False, use_so3=False, use_agnostic_product=False, num_interactions=2, MLP_irreps='16x0e', radial_MLP='[64, 64, 64]', hidden_irreps='128x0e + 128x1o', edge_irreps=None, use_edge_irreps_first=False, num_channels=128, max_L=1, gate='silu', kspace_cutoff_factor=1.5, atomic_multipoles_max_l=0, atomic_multipoles_smearing_width=1.0, field_feature_max_l=0, field_feature_widths='[1.0]', field_feature_norms=None, num_recursion_steps=1, field_si=False, include_electrostatic_self_interaction=False, add_local_electron_energy=False, quadrupole_feature_corrections=False, return_electrostatic_potentials=False, field_norm_factor=0.02, fixedpoint_update_config=None, field_readout_config=None, scaling='rms_forces_scaling', avg_num_neighbors=1, compute_avg_num_neighbors=True, compute_stress=False, compute_forces=True, compute_polarizability=False, compute_atomic_dipole=False, train_file='results/revision/finetune/dataset/mace_mp0/train.extxyz', valid_file='results/revision/finetune/dataset/mace_mp0/valid.extxyz', valid_fraction=0.1, test_file=None, test_dir=None, multi_processed_test=False, num_workers=0, pin_memory=True, atomic_numbers=None, mean=None, std=None, statistics_file=None, les_arguments=None, E0s='estimated', pseudolabel_replay=False, pseudolabel_replay_compute_stress=False, foundation_filter_elements=True, heads=None, multiheads_finetuning=False, foundation_head=None, weight_pt_head=1.0, real_pt_data_ratio_threshold=0.1, num_samples_pt=10000, force_mh_ft_lr=False, subselect_pt='random', filter_type_pt='none', allow_random_padding_pt=True, pt_train_file=None, pt_valid_file=None, foundation_model_elements=True, keep_isolated_atoms=False, lora=False, lora_rank=4, lora_alpha=1.0, energy_key='REF_energy', forces_key='REF_forces', virials_key='REF_virials', stress_key='REF_stress', dipole_key='dipole', polarizability_key='polarizability', head_key='head', charges_key='REF_charges', elec_temp_key='elec_temp', total_spin_key='total_spin', total_charge_key='total_charge', embedding_specs=None, skip_evaluate_heads='pt_head', loss='weighted', forces_weight=10.0, swa_forces_weight=100.0, energy_weight=10.0, swa_energy_weight=1000.0, virials_weight=1.0, swa_virials_weight=10.0, stress_weight=1.0, swa_stress_weight=10.0, dipole_weight=1.0, swa_dipole_weight=1.0, swa_polarizability_weight=1.0, polarizability_weight=1.0, config_type_weights='{"Default":1.0}', huber_delta=0.01, optimizer='adam', beta=0.9, beta1_schedulefree=0.9, beta2_schedulefree=0.98, batch_size=2, valid_batch_size=10, lr=0.001, swa_lr=0.001, weight_decay=0.0, lr_params_factors='{"embedding_lr_factor": 1.0, "interactions_lr_factor": 1.0, "products_lr_factor": 1.0, "readouts_lr_factor": 1.0}', freeze=None, amsgrad=True, scheduler='ReduceLROnPlateau', lr_factor=0.8, scheduler_patience=50, lr_scheduler_gamma=0.9993, swa=False, start_swa=None, lbfgs=False, ema=True, ema_decay=0.999, max_num_epochs=6, patience=2048, foundation_model='medium', foundation_model_kwargs='{}', foundation_model_readout=True, eval_interval=1, keep_checkpoints=False, save_all_checkpoints=False, restart_latest=False, save_cpu=True, clip_grad=1.0, dry_run=False, enable_cueq=False, only_cueq=False, enable_oeq=False, wandb=False, wandb_dir=None, wandb_project='', wandb_entity='', wandb_name='', wandb_log_hypers=['num_channels', 'max_L', 'correlation', 'lr', 'swa_lr', 'weight_decay', 'batch_size', 'max_num_epochs', 'start_swa', 'energy_weight', 'forces_weight'], key_specification=KeySpecification(info_keys={'energy': 'REF_energy', 'stress': 'REF_stress', 'virials': 'REF_virials', 'dipole': 'dipole', 'head': 'head', 'elec_temp': 'elec_temp', 'total_charge': 'total_charge', 'polarizability': 'polarizability', 'total_spin': 'total_spin'}, arrays_keys={'forces': 'REF_forces', 'charges': 'REF_charges'}))
+2026-10-04 21:33:33.782 INFO: CUDA version: 12.4, CUDA device: 0
+2026-10-04 21:33:33.969 DEBUG: Popen(['git', 'version'], cwd=/root/mlip-dynamic-stability, stdin=None, shell=False, universal_newlines=False)
+2026-10-04 21:33:33.973 DEBUG: Popen(['git', 'version'], cwd=/root/mlip-dynamic-stability, stdin=None, shell=False, universal_newlines=False)
+2026-10-04 21:33:33.977 DEBUG: sys.platform='linux', git_executable='git'
+2026-10-04 21:33:33.979 DEBUG: Popen(['git', 'cat-file', '--batch-check'], cwd=/root/mlip-dynamic-stability, stdin=<valid stream>, shell=False, universal_newlines=False)
+2026-10-04 21:33:33.981 DEBUG: Current Git commit: 0467fe76015aee5ddadddf63f7b95b4927920e0f
+2026-10-04 21:33:33.981 INFO: Using foundation model mace medium as initial checkpoint.
+2026-10-04 21:33:34.334 INFO: CUDA version: 12.4, CUDA device: 0
+2026-10-04 21:33:34.339 INFO: Using head Default out of  ['Default']
+2026-10-04 21:33:34.339 INFO: ===========LOADING INPUT DATA===========
+2026-10-04 21:33:34.339 INFO: Using heads: ['Default']
+2026-10-04 21:33:34.339 INFO: Using the key specifications to parse data:
+2026-10-04 21:33:34.339 INFO: Default: KeySpecification(info_keys={'energy': 'REF_energy', 'stress': 'REF_stress', 'virials': 'REF_virials', 'dipole': 'dipole', 'head': 'head', 'elec_temp': 'elec_temp', 'total_charge': 'total_charge', 'polarizability': 'polarizability', 'total_spin': 'total_spin'}, arrays_keys={'forces': 'REF_forces', 'charges': 'REF_charges'})
+2026-10-04 21:33:34.339 INFO: =============    Processing head Default     ===========
+2026-10-04 21:33:34.340 DEBUG: Loading training file: results/revision/finetune/dataset/mace_mp0/train.extxyz
+2026-10-04 21:33:34.430 INFO: Training set 1/1 [energy: 108, stress: 0, virials: 0, dipole components: 0, head: 108, elec_temp: 0, total_charge: 0, polarizability: 0, total_spin: 0, forces: 108, charges: 0]
+2026-10-04 21:33:34.431 INFO: Total Training set [energy: 108, stress: 0, virials: 0, dipole components: 0, head: 108, elec_temp: 0, total_charge: 0, polarizability: 0, total_spin: 0, forces: 108, charges: 0]
+2026-10-04 21:33:34.457 INFO: Validation set 1/1 [energy: 12, stress: 0, virials: 0, dipole components: 0, head: 12, elec_temp: 0, total_charge: 0, polarizability: 0, total_spin: 0, forces: 12, charges: 0]
+2026-10-04 21:33:34.458 INFO: Total Validation set [energy: 12, stress: 0, virials: 0, dipole components: 0, head: 12, elec_temp: 0, total_charge: 0, polarizability: 0, total_spin: 0, forces: 12, charges: 0]
+2026-10-04 21:33:34.458 INFO: Total number of configurations: train=108, valid=12, tests=[],
+2026-10-04 21:33:34.459 INFO: Atomic Numbers used: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 89, 90, 91, 92, 93, 94]
+2026-10-04 21:33:34.459 INFO: Estimating E0s from foundation model predictions on training data
+2026-10-04 21:33:34.462 INFO: Estimating E0s using foundation model on 108 configurations with 8 elements
+2026-10-04 21:33:39.578 INFO: ================================================================================
+2026-10-04 21:33:39.578 INFO: E0 ESTIMATION FROM FOUNDATION MODEL
+2026-10-04 21:33:39.578 INFO: ================================================================================
+2026-10-04 21:33:39.578 INFO: Rank of system: 3/8
+2026-10-04 21:33:39.578 INFO: Residuals: []
+2026-10-04 21:33:39.578 INFO: Element 8: foundation E0 = -7.284599 eV, correction = -0.000000 eV, new E0 = -7.284599 eV
+2026-10-04 21:33:39.579 INFO: Element 19: foundation E0 = -2.617645 eV, correction = -0.000000 eV, new E0 = -2.617645 eV
+2026-10-04 21:33:39.579 INFO: Element 22: foundation E0 = -10.268393 eV, correction = 0.000000 eV, new E0 = -10.268393 eV
+2026-10-04 21:33:39.579 INFO: Element 35: foundation E0 = -2.518494 eV, correction = -0.000000 eV, new E0 = -2.518494 eV
+2026-10-04 21:33:39.579 INFO: Element 41: foundation E0 = -12.138896 eV, correction = -0.000000 eV, new E0 = -12.138896 eV
+2026-10-04 21:33:39.579 INFO: Element 50: foundation E0 = -3.818604 eV, correction = -0.000000 eV, new E0 = -3.818604 eV
+2026-10-04 21:33:39.579 INFO: Element 55: foundation E0 = -2.765285 eV, correction = -0.000000 eV, new E0 = -2.765285 eV
+2026-10-04 21:33:39.579 INFO: Element 56: foundation E0 = -4.990956 eV, correction = 0.000000 eV, new E0 = -4.990956 eV
+2026-10-04 21:33:39.579 INFO: ================================================================================
+2026-10-04 21:33:39.579 INFO: FIT STATISTICS
+2026-10-04 21:33:39.579 INFO: ================================================================================
+2026-10-04 21:33:39.579 INFO: RMSE before E0 correction: 0.389178 eV
+2026-10-04 21:33:39.579 INFO: RMSE after E0 correction:  0.389178 eV
+2026-10-04 21:33:39.579 INFO: MAE before E0 correction:  0.224898 eV
+2026-10-04 21:33:39.580 INFO: MAE after E0 correction:   0.224898 eV
+2026-10-04 21:33:39.580 WARNING: System is rank deficient (rank 3/8). Some elements may not be sufficiently represented in the dataset.
+2026-10-04 21:33:39.580 INFO: ================================================================================
+2026-10-04 21:33:39.580 INFO: Atomic Energies used (z: eV) for head Default: {8: -7.284598634213367, 19: -2.6176454856897, 22: -10.26839298621426, 35: -2.518494009963501, 41: -12.138896361658706, 50: -3.8186042754419263, 55: -2.7652845071323213, 56: -4.990956432167603}
+2026-10-04 21:33:39.580 INFO: Processing datasets for head 'Default'
+2026-10-04 21:33:39.839 DEBUG: Successfully loaded dataset from ASE files: ['results/revision/finetune/dataset/mace_mp0/train.extxyz']
+2026-10-04 21:33:39.840 INFO: Combining 1 list datasets for head 'Default'
+2026-10-04 21:33:39.870 DEBUG: Successfully loaded validation dataset from ASE files: ['results/revision/finetune/dataset/mace_mp0/valid.extxyz']
+2026-10-04 21:33:39.870 INFO: Combining 1 list datasets for head 'Default_valid'
+2026-10-04 21:33:39.870 INFO: Combined validation datasets for Default
+2026-10-04 21:33:39.870 INFO: Head 'Default' training dataset size: 108
+2026-10-04 21:33:39.870 INFO: Computing average number of neighbors
+2026-10-04 21:33:40.075 INFO: Average number of neighbors: 49.72824074074074
+2026-10-04 21:33:40.075 INFO: During training the following quantities will be reported: energy, forces
+2026-10-04 21:33:40.075 INFO: ===========MODEL DETAILS===========
+2026-10-04 21:33:40.283 INFO: Loading FOUNDATION model
+2026-10-04 21:33:40.285 INFO: Using all elements from foundation model: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 89, 90, 91, 92, 93, 94]
+2026-10-04 21:33:40.285 INFO: Model configuration extracted from foundation model
+2026-10-04 21:33:40.285 INFO: Using weighted loss function for fine-tuning
+2026-10-04 21:33:40.285 INFO: Message passing with hidden irreps 128x0e+128x1o)
+2026-10-04 21:33:40.285 INFO: 2 layers, each with correlation order: 3 (body order: 4) and spherical harmonics up to: l=3
+2026-10-04 21:33:40.285 INFO: Radial cutoff: 6.0 A (total receptive field for each atom: 12.0 A)
+2026-10-04 21:33:40.285 INFO: Distance transform for radial basis functions: None
+2026-10-04 21:33:42.624 INFO: ===========OPTIMIZER INFORMATION===========
+2026-10-04 21:33:42.624 INFO: Using ADAM as parameter optimizer
+2026-10-04 21:33:42.624 INFO: Batch size: 2
+2026-10-04 21:33:42.624 INFO: Using Exponential Moving Average with decay: 0.999
+2026-10-04 21:33:42.624 INFO: Number of gradient updates: 324
+2026-10-04 21:33:42.624 INFO: Learning rate: 0.001, weight decay: 0.0
+2026-10-04 21:33:42.624 INFO: WeightedEnergyForcesLoss(energy_weight=10.000, forces_weight=10.000)
+2026-10-04 21:33:42.625 INFO: === Layer's learning rates ===
+2026-10-04 21:33:42.625 INFO: Param group 0: lr = 0.001
+2026-10-04 21:33:42.626 INFO: Param group 1: lr = 0.001
+2026-10-04 21:33:42.626 INFO: Param group 2: lr = 0.001
+2026-10-04 21:33:42.626 INFO: Param group 3: lr = 0.001
+2026-10-04 21:33:42.626 INFO: Param group 4: lr = 0.001
+2026-10-04 21:33:42.627 INFO: Using gradient clipping with tolerance=1.000
+2026-10-04 21:33:42.628 INFO: 
+2026-10-04 21:33:42.628 INFO: ===========TRAINING===========
+2026-10-04 21:33:42.628 INFO: Started training, reporting errors on validation set
+2026-10-04 21:33:42.628 INFO: Loss metrics on validation set
+2026-10-04 21:33:43.580 INFO: Initial: head: Default, loss=0.05343529, RMSE_E_per_atom=   11.35 meV, RMSE_F=  143.69 meV / A
+2026-10-04 21:34:05.234 INFO: Epoch 0: head: Default, loss=0.01887258, RMSE_E_per_atom=    4.26 meV, RMSE_F=   68.27 meV / A
+2026-10-04 21:34:05.236 DEBUG: Saving checkpoint: results/revision/finetune/models/mace_mp0/seed0/checkpoints/ft_mace_mp0_seed0_run-0_epoch-0.pt
+2026-10-04 21:34:20.580 INFO: Epoch 1: head: Default, loss=0.01505140, RMSE_E_per_atom=    1.28 meV, RMSE_F=   58.64 meV / A
+2026-10-04 21:34:20.583 DEBUG: Deleting old checkpoint file: results/revision/finetune/models/mace_mp0/seed0/checkpoints/ft_mace_mp0_seed0_run-0_epoch-0.pt
+2026-10-04 21:34:20.585 DEBUG: Saving checkpoint: results/revision/finetune/models/mace_mp0/seed0/checkpoints/ft_mace_mp0_seed0_run-0_epoch-1.pt
+2026-10-04 21:34:35.165 INFO: Epoch 2: head: Default, loss=0.00800041, RMSE_E_per_atom=    4.68 meV, RMSE_F=   44.90 meV / A
+2026-10-04 21:34:35.168 DEBUG: Deleting old checkpoint file: results/revision/finetune/models/mace_mp0/seed0/checkpoints/ft_mace_mp0_seed0_run-0_epoch-1.pt
+2026-10-04 21:34:35.171 DEBUG: Saving checkpoint: results/revision/finetune/models/mace_mp0/seed0/checkpoints/ft_mace_mp0_seed0_run-0_epoch-2.pt
+2026-10-04 21:34:49.753 INFO: Epoch 3: head: Default, loss=0.00633286, RMSE_E_per_atom=    1.20 meV, RMSE_F=   40.21 meV / A
+2026-10-04 21:34:49.755 DEBUG: Deleting old checkpoint file: results/revision/finetune/models/mace_mp0/seed0/checkpoints/ft_mace_mp0_seed0_run-0_epoch-2.pt
+2026-10-04 21:34:49.758 DEBUG: Saving checkpoint: results/revision/finetune/models/mace_mp0/seed0/checkpoints/ft_mace_mp0_seed0_run-0_epoch-3.pt
+2026-10-04 21:35:04.348 INFO: Epoch 4: head: Default, loss=0.00470664, RMSE_E_per_atom=    8.72 meV, RMSE_F=   38.88 meV / A
+2026-10-04 21:35:04.351 DEBUG: Deleting old checkpoint file: results/revision/finetune/models/mace_mp0/seed0/checkpoints/ft_mace_mp0_seed0_run-0_epoch-3.pt
+2026-10-04 21:35:04.354 DEBUG: Saving checkpoint: results/revision/finetune/models/mace_mp0/seed0/checkpoints/ft_mace_mp0_seed0_run-0_epoch-4.pt
+2026-10-04 21:35:18.926 INFO: Epoch 5: head: Default, loss=0.00600788, RMSE_E_per_atom=    2.98 meV, RMSE_F=   38.81 meV / A
+2026-10-04 21:35:18.927 INFO: Training complete
+2026-10-04 21:35:18.927 INFO: 
+2026-10-04 21:35:18.927 INFO: ===========RESULTS===========
+2026-10-04 21:35:18.927 INFO: Loading checkpoint: results/revision/finetune/models/mace_mp0/seed0/checkpoints/ft_mace_mp0_seed0_run-0_epoch-4.pt
+2026-10-04 21:35:19.046 INFO: Loaded Stage one model from epoch 4 for evaluation
+2026-10-04 21:35:19.046 INFO: Saving model to results/revision/finetune/models/mace_mp0/seed0/checkpoints/ft_mace_mp0_seed0_run-0.model
+2026-10-04 21:35:19.326 INFO: Compiling model, saving metadata to results/revision/finetune/models/mace_mp0/seed0/ft_mace_mp0_seed0_compiled.model
+2026-10-04 21:35:20.405 INFO: Computing metrics for training, validation, and test sets
+2026-10-04 21:35:20.406 INFO: Skipping evaluation for heads: ['pt_head']
+2026-10-04 21:35:20.406 INFO: Evaluating train_Default ...
+2026-10-04 21:35:26.646 INFO: Evaluating valid_Default ...
+2026-10-04 21:35:27.371 INFO: Error-table on TRAIN and VALID:
++---------------+---------------------+------------------+-------------------+
+|  config_type  | RMSE E / meV / atom | RMSE F / meV / A | relative F RMSE % |
++---------------+---------------------+------------------+-------------------+
+| train_Default |            8.8      |         37.0     |          3.97     |
+| valid_Default |            8.7      |         38.9     |          3.40     |
++---------------+---------------------+------------------+-------------------+
+2026-10-04 21:35:27.372 DEBUG: Running inference on train_Default dataset
+2026-10-04 21:35:33.795 DEBUG: Running inference on valid_Default dataset
+2026-10-04 21:35:34.520 DEBUG: Plotting failed: label must be scalar or have the same length as the input data, but found 2 for 1 datasets.
+2026-10-04 21:35:34.520 INFO: Done

@@ -1,0 +1,182 @@
+{
+ "job": "pl_knbo3_cubic_profsoft_i08",
+ "study": "pbe-lattice",
+ "system": "knbo3_cubic",
+ "n_atoms": 5,
+ "structure_sha": "125dd220176683b90a00",
+ "structure": {
+  "symbols": [
+   "K",
+   "Nb",
+   "O",
+   "O",
+   "O"
+  ],
+  "cell": [
+   [
+    4.026883538999999,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    4.026883538999999,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    4.026883538999999
+   ]
+  ],
+  "positions": [
+   [
+    9.699349290279308e-05,
+    0.012541310477800804,
+    -0.012165860754396227
+   ],
+   [
+    2.0123221858981046,
+    1.8686790113292662,
+    2.153870759073687
+   ],
+   [
+    0.002749838249788338,
+    2.240649175572994,
+    1.7930362808116844
+   ],
+   [
+    2.0151989734195914,
+    0.35555555555555557,
+    1.7930362808116844
+   ],
+   [
+    2.0151989734195914,
+    2.2406491755729943,
+    -0.34491127438377295
+   ]
+  ]
+ },
+ "members": [
+  {
+   "part": "profsoft",
+   "system": "knbo3_cubic",
+   "frame": 8,
+   "Q": 0.35555555555555557,
+   "n_images": 1
+  }
+ ],
+ "qe": {
+  "is_metal": false,
+  "smearing": "mv",
+  "degauss_Ry": 0.005,
+  "kspacing_inv_A": 0.25,
+  "kspacing_convention": "n_i = max(1, ceil(|b_i| / spacing)) with b = 2*pi*inv(cell).T, i.e. |b_i| includes 2*pi (the VASP KSPACING convention); Gamma-centred, unshifted",
+  "kmesh": [
+   7,
+   7,
+   7
+  ],
+  "nk_full": 343,
+  "nk_tr_upper": 172,
+  "nk_irr_spglib": 172,
+  "ecutwfc_Ry": 60.0,
+  "ecutrho_Ry": 480.0,
+  "ecut_scale": 1.0,
+  "conv_thr_Ry": 5e-10,
+  "mixing_beta": 0.4,
+  "calculation": "scf",
+  "disk_io": "none",
+  "input_dft": null,
+  "nosym": false,
+  "functional": "PBE (from the SSSP PBE set)",
+  "pseudos": {
+   "K": {
+    "filename": "K.pbe-spn-kjpaw_psl.1.0.0.UPF",
+    "ecutwfc": 60.0,
+    "ecutrho": 480.0,
+    "md5": "7d58810084cac21f60fbe77ea2b688fd",
+    "family": "100PAW"
+   },
+   "Nb": {
+    "filename": "Nb.pbe-spn-kjpaw_psl.0.3.0.UPF",
+    "ecutwfc": 40.0,
+    "ecutrho": 320.0,
+    "md5": "411d72ad547312f8017e2943ceca08cc",
+    "family": "031PAW"
+   },
+   "O": {
+    "filename": "O.pbe-n-kjpaw_psl.0.1.UPF",
+    "ecutwfc": 50.0,
+    "ecutrho": 400.0,
+    "md5": "0234752ac141de4415c5fc33072bef88",
+    "family": "031PAW"
+   }
+  },
+  "sssp_json": "SSSP_1.3.0_PBE_efficiency.json",
+  "sssp_sha256": "2c8642a70308ecd072a209a30c160bf51423560bb202116cb31fd5275eff814a"
+ },
+ "pw_in_sha256": "b204781e9fe3c96cfb64d1bfc10008fc35373a01624a466ae00fde29bc7368d5",
+ "provenance": {
+  "script": "scripts/dft_checks.py",
+  "stage": "pbe-lattice-C",
+  "git_head": "a9fa30a",
+  "versions": {
+   "numpy": "2.3.5",
+   "scipy": "1.17.1",
+   "ase": "3.28.0",
+   "phonopy": "3.5.1",
+   "spglib": "2.7.0",
+   "pandas": "3.0.6",
+   "torch": null,
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": null,
+   "cellconstructor": null
+  },
+  "python": "3.12.15",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "host": "427cd5d94dd5",
+  "utc": "2026-10-09T02:17:17Z",
+  "settings": {
+   "stage": "pbe-lattice",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft_checks",
+   "dft_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "sssp_dir": "/root/sssp",
+   "sssp_json": null,
+   "kspacing_insulator": null,
+   "degauss_insulator": null,
+   "no_require_pbe": false,
+   "phase": "C",
+   "model": "mace_mp0",
+   "select": [
+    "deciding",
+    "softest"
+   ],
+   "fd_disp": 0.01,
+   "fd_plusminus": false,
+   "fd_supercell": null,
+   "pos_tol": 0.001
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "script_sha256": "34fceb0fb1e45204b16e7d977d45cdefcbecd0a3b378ee50e8935320d47d037e",
+  "dft_reference_sha256": "c636c66408c17c067b30f170bd175c57ae41247bbdb14cceaa56769cca6796cf"
+ }
+}

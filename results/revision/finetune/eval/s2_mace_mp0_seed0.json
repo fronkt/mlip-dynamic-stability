@@ -1,0 +1,185 @@
+{
+ "part": "s2",
+ "model": "mace_mp0",
+ "tag": "seed0",
+ "model_version": "mace-torch=0.3.16;ckpt=finetuned:ft_mace_mp0_seed0.model:sha256=2cf1810e3f94ef32",
+ "rows": [
+  {
+   "min_freq_thz": -1.0800611969489568e-07,
+   "n_imag_modes": 0,
+   "dynamically_stable": true,
+   "imag_tol_thz": -0.1,
+   "supercell": [
+    2,
+    2,
+    2
+   ],
+   "mesh": [
+    12,
+    12,
+    12
+   ],
+   "n_atoms_prim": 2,
+   "system": "si_diamond",
+   "model": "mace_mp0",
+   "tag": "seed0",
+   "pred_stable": true,
+   "label_stable": true,
+   "wall_s": 1.7
+  },
+  {
+   "min_freq_thz": -1.073575167629745e-07,
+   "n_imag_modes": 0,
+   "dynamically_stable": true,
+   "imag_tol_thz": -0.1,
+   "supercell": [
+    2,
+    2,
+    2
+   ],
+   "mesh": [
+    12,
+    12,
+    12
+   ],
+   "n_atoms_prim": 2,
+   "system": "mgo_rocksalt",
+   "model": "mace_mp0",
+   "tag": "seed0",
+   "pred_stable": true,
+   "label_stable": true,
+   "wall_s": 1.2
+  },
+  {
+   "min_freq_thz": -2.8576992768699452e-08,
+   "n_imag_modes": 0,
+   "dynamically_stable": true,
+   "imag_tol_thz": -0.1,
+   "supercell": [
+    2,
+    2,
+    2
+   ],
+   "mesh": [
+    12,
+    12,
+    12
+   ],
+   "n_atoms_prim": 2,
+   "system": "nacl_rocksalt",
+   "model": "mace_mp0",
+   "tag": "seed0",
+   "pred_stable": true,
+   "label_stable": true,
+   "wall_s": 2.5
+  },
+  {
+   "min_freq_thz": -6.28769721712981e-08,
+   "n_imag_modes": 0,
+   "dynamically_stable": true,
+   "imag_tol_thz": -0.1,
+   "supercell": [
+    2,
+    2,
+    2
+   ],
+   "mesh": [
+    12,
+    12,
+    12
+   ],
+   "n_atoms_prim": 1,
+   "system": "cu_fcc",
+   "model": "mace_mp0",
+   "tag": "seed0",
+   "pred_stable": true,
+   "label_stable": true,
+   "wall_s": 0.8
+  },
+  {
+   "min_freq_thz": -6.386632013010132e-07,
+   "n_imag_modes": 0,
+   "dynamically_stable": true,
+   "imag_tol_thz": -0.1,
+   "supercell": [
+    2,
+    2,
+    2
+   ],
+   "mesh": [
+    12,
+    12,
+    12
+   ],
+   "n_atoms_prim": 2,
+   "system": "c_diamond",
+   "model": "mace_mp0",
+   "tag": "seed0",
+   "pred_stable": true,
+   "label_stable": true,
+   "wall_s": 0.8
+  },
+  {
+   "min_freq_thz": -1.409244727694516e-07,
+   "n_imag_modes": 0,
+   "dynamically_stable": true,
+   "imag_tol_thz": -0.1,
+   "supercell": [
+    2,
+    2,
+    2
+   ],
+   "mesh": [
+    12,
+    12,
+    12
+   ],
+   "n_atoms_prim": 3,
+   "system": "ceo2_cubic",
+   "model": "mace_mp0",
+   "tag": "seed0",
+   "pred_stable": true,
+   "label_stable": true,
+   "wall_s": 1.8
+  }
+ ],
+ "provenance": {
+  "script": "scripts/finetune_trial.py",
+  "stage": "evaluate:s2",
+  "git_head": "0467fe7",
+  "git_dirty": false,
+  "host": "cd177441fe9b",
+  "utc": "2026-10-04T21:46:19Z",
+  "python": "3.11.17",
+  "platform": "Linux-6.8.0-101-generic-x86_64-with-glibc2.35",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "torch": "2.6.0+cu124",
+   "mace-torch": "0.3.16",
+   "chgnet": null,
+   "pandas": "3.0.5"
+  },
+  "settings": {
+   "stage": "evaluate",
+   "out": "/root/mlip-dynamic-stability/results/revision/finetune",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "model": "mace_mp0",
+   "tag": "seed0",
+   "part": "all",
+   "device": "cuda",
+   "workers": 8,
+   "dft_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "ckpt": null,
+   "max_paths": null
+  }
+ }
+}

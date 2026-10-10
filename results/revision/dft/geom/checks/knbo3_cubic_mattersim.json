@@ -1,0 +1,517 @@
+{
+ "paths": {
+  "knbo3_cubic_mattersim_q0-0-0-b0": {
+   "role": "decide",
+   "n_atoms": 5,
+   "check": {
+    "pass": true,
+    "max_abs_diff_meV": 0.003814697265625,
+    "tol_meV": 1.0,
+    "max_abs_diff_window_meV": 0.003814697265625,
+    "pass_window": true,
+    "diff_meV": [
+     0.0,
+     0.0,
+     0.0,
+     0.003814697265625,
+     0.0,
+     0.003814697265625,
+     0.0,
+     0.0,
+     0.003814697265625,
+     0.0019073486328125
+    ],
+    "depth_regen_meV": 25.44403076171875,
+    "depth_cache_meV": 25.44403076171875,
+    "recovery": {
+     "bands": [
+      0,
+      1,
+      2
+     ],
+     "subspace_dim": 3,
+     "coeffs": [
+      -0.1384682140885167,
+      -0.7698344724789038,
+      0.6230420841887524
+     ],
+     "max_abs_resid_meV": 0.003814697265625,
+     "n_candidates_meff": 48,
+     "n_single_points": 339,
+     "m_eff_found": 59.49473668408246,
+     "phonopy_pattern_check": {
+      "pass": false,
+      "max_abs_diff_meV": 251.21498107910156,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 8.453369140625,
+      "pass_window": false,
+      "diff_meV": [
+       0.0,
+       0.0457763671875,
+       0.690460205078125,
+       3.185272216796875,
+       7.6751708984375,
+       8.453369140625,
+       10.517120361328125,
+       66.53976440429688,
+       108.40988159179688,
+       251.21498107910156
+      ],
+      "depth_regen_meV": 17.76885986328125,
+      "depth_cache_meV": 25.44403076171875
+     },
+     "recovered_check": {
+      "pass": true,
+      "max_abs_diff_meV": 0.003814697265625,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 0.003814697265625,
+      "pass_window": true,
+      "diff_meV": [
+       0.0,
+       0.0,
+       0.0,
+       0.003814697265625,
+       0.0,
+       0.003814697265625,
+       0.0,
+       0.0,
+       0.003814697265625,
+       0.0019073486328125
+      ],
+      "depth_regen_meV": 25.44403076171875,
+      "depth_cache_meV": 25.44403076171875
+     },
+     "adopted": true
+    },
+    "m_eff_regen": 59.49473668408246,
+    "m_eff_cache": 59.49705274807371,
+    "m_eff_rel_diff": 3.892737344585229e-05,
+    "harm_regen_thz": -6.704034392004276,
+    "harm_cache_thz": -6.704251054640534,
+    "harm_drift": false,
+    "dim_regen": [
+     1,
+     1,
+     1
+    ],
+    "dim_cache": [
+     1,
+     1,
+     1
+    ],
+    "dim_match": true
+   },
+   "decide_T": [
+    100.0
+   ],
+   "decide_lowest_T": true,
+   "cache_index": 0
+  },
+  "knbo3_cubic_mattersim_q0-0-1d2-b0": {
+   "role": "mode",
+   "n_atoms": 10,
+   "check": {
+    "pass": false,
+    "max_abs_diff_meV": 1.03759765625,
+    "tol_meV": 1.0,
+    "max_abs_diff_window_meV": 0.00762939453125,
+    "pass_window": true,
+    "diff_meV": [
+     0.0,
+     0.0,
+     0.00762939453125,
+     0.0,
+     0.0,
+     0.030517578125,
+     0.1983642578125,
+     0.579833984375,
+     1.03759765625,
+     0.02288818359375
+    ],
+    "depth_regen_meV": 20.6298828125,
+    "depth_cache_meV": 20.6298828125,
+    "recovery": {
+     "bands": [
+      0,
+      1
+     ],
+     "subspace_dim": 2,
+     "coeffs": [
+      -0.9548423797288296,
+      -0.29711282347583995
+     ],
+     "max_abs_resid_meV": 1.03759765625,
+     "n_candidates_meff": 48,
+     "n_single_points": 618,
+     "m_eff_found": 186.67905479849185,
+     "phonopy_pattern_check": {
+      "pass": false,
+      "max_abs_diff_meV": 5553.073883056641,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 6.58416748046875,
+      "pass_window": false,
+      "diff_meV": [
+       0.0,
+       0.06103515625,
+       0.946044921875,
+       3.99017333984375,
+       6.58416748046875,
+       6.3323974609375,
+       53.03955078125,
+       40.8172607421875,
+       761.7416381835938,
+       5553.073883056641
+      ],
+      "depth_regen_meV": 16.63970947265625,
+      "depth_cache_meV": 20.6298828125
+     },
+     "recovered_check": {
+      "pass": false,
+      "max_abs_diff_meV": 1.03759765625,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 0.00762939453125,
+      "pass_window": true,
+      "diff_meV": [
+       0.0,
+       0.0,
+       0.00762939453125,
+       0.0,
+       0.0,
+       0.030517578125,
+       0.1983642578125,
+       0.579833984375,
+       1.03759765625,
+       0.02288818359375
+      ],
+      "depth_regen_meV": 20.6298828125,
+      "depth_cache_meV": 20.6298828125
+     },
+     "adopted": true
+    },
+    "m_eff_regen": 186.67905479849185,
+    "m_eff_cache": 186.72211180515598,
+    "m_eff_rel_diff": 0.00023059404292223254,
+    "harm_regen_thz": -5.412521538501129,
+    "harm_cache_thz": -5.412287476878661,
+    "harm_drift": false,
+    "dim_regen": [
+     1,
+     1,
+     2
+    ],
+    "dim_cache": [
+     1,
+     1,
+     2
+    ],
+    "dim_match": true
+   },
+   "decide_T": [],
+   "decide_lowest_T": false,
+   "cache_index": 1
+  },
+  "knbo3_cubic_mattersim_q0-1d2-1d2-b0": {
+   "role": "decide",
+   "n_atoms": 20,
+   "check": {
+    "pass": false,
+    "max_abs_diff_meV": 3.83758544921875,
+    "tol_meV": 1.0,
+    "max_abs_diff_window_meV": 0.0152587890625,
+    "pass_window": true,
+    "diff_meV": [
+     0.0,
+     0.0152587890625,
+     0.0152587890625,
+     0.0152587890625,
+     0.0,
+     0.0457763671875,
+     0.091552734375,
+     0.335693359375,
+     1.220703125,
+     3.83758544921875
+    ],
+    "depth_regen_meV": 28.8848876953125,
+    "depth_cache_meV": 28.86962890625,
+    "recovery": {
+     "bands": [
+      0
+     ],
+     "subspace_dim": 2,
+     "coeffs": [
+      1.0,
+      -3.812298518223985e-11
+     ],
+     "max_abs_resid_meV": 3.8299560546875,
+     "n_candidates_meff": 12,
+     "n_single_points": 879,
+     "m_eff_found": 399.5114106562825,
+     "phonopy_pattern_check": {
+      "pass": false,
+      "max_abs_diff_meV": 3.83758544921875,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 0.0152587890625,
+      "pass_window": true,
+      "diff_meV": [
+       0.0,
+       0.0152587890625,
+       0.0152587890625,
+       0.0152587890625,
+       0.0,
+       0.0457763671875,
+       0.091552734375,
+       0.335693359375,
+       1.220703125,
+       3.83758544921875
+      ],
+      "depth_regen_meV": 28.8848876953125,
+      "depth_cache_meV": 28.86962890625
+     },
+     "recovered_check": {
+      "pass": false,
+      "max_abs_diff_meV": 3.83758544921875,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 0.0152587890625,
+      "pass_window": true,
+      "diff_meV": [
+       0.0,
+       0.0152587890625,
+       0.0152587890625,
+       0.0152587890625,
+       0.0,
+       0.0457763671875,
+       0.091552734375,
+       0.335693359375,
+       1.220703125,
+       3.83758544921875
+      ],
+      "depth_regen_meV": 28.8848876953125,
+      "depth_cache_meV": 28.86962890625
+     },
+     "adopted": false
+    },
+    "m_eff_regen": 399.51141068970367,
+    "m_eff_cache": 399.5131529627868,
+    "m_eff_rel_diff": 4.360990546198498e-06,
+    "harm_regen_thz": -4.386225363603934,
+    "harm_cache_thz": -4.386293166346563,
+    "harm_drift": false,
+    "dim_regen": [
+     1,
+     2,
+     2
+    ],
+    "dim_cache": [
+     1,
+     2,
+     2
+    ],
+    "dim_match": true
+   },
+   "decide_T": [
+    300.0,
+    600.0,
+    900.0
+   ],
+   "decide_lowest_T": false,
+   "cache_index": 2
+  }
+ },
+ "system": "knbo3_cubic",
+ "model": "mattersim",
+ "status": "done",
+ "cache_file": "results/cache/softmode_v3m24_knbo3_cubic_mattersim_sc222.json",
+ "cache_sha256": "f166f90a9337f2509f57190e60d5bdbc582fb1d272e29a4c123118290e7ae13e",
+ "fc_supercell": [
+  2,
+  2,
+  2
+ ],
+ "relaxed_prim_cell": [
+  [
+   4.0589940089893615,
+   -4.217920626462226e-09,
+   -2.8923618650531336e-09
+  ],
+  [
+   -4.21792218279308e-09,
+   4.058994034854516,
+   -1.2712271400432095e-09
+  ],
+  [
+   -2.8923606501281823e-09,
+   -1.2712319608578469e-09,
+   4.058993979428263
+  ]
+ ],
+ "harmonically_stable_in_cache": false,
+ "deciding": {
+  "by_T": {
+   "100": {
+    "T": 100.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": false,
+    "stable_cache_solve": false,
+    "agree": true
+   },
+   "300": {
+    "T": 300.0,
+    "idx": 2,
+    "idx_cache_solve": 2,
+    "idx_ledger": 2,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "600": {
+    "T": 600.0,
+    "idx": 2,
+    "idx_cache_solve": 2,
+    "idx_ledger": 2,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "900": {
+    "T": 900.0,
+    "idx": 2,
+    "idx_cache_solve": 2,
+    "idx_ledger": 2,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   }
+  },
+  "lowest_T": 100.0,
+  "idx_lowest": 0,
+  "idx_all": [
+   0,
+   2
+  ],
+  "all_agree": true
+ },
+ "mode_list": {
+  "n_imag_total_regen": 3,
+  "n_imag_total_cache": 3,
+  "regen": [
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "band": 0,
+    "harm_thz": -6.704034392004276
+   },
+   {
+    "q": [
+     0.0,
+     0.5,
+     0.0
+    ],
+    "band": 0,
+    "harm_thz": -5.41252159432778
+   },
+   {
+    "q": [
+     0.5,
+     0.5,
+     0.0
+    ],
+    "band": 0,
+    "harm_thz": -4.386225411627552
+   }
+  ],
+  "cache": [
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "band": 0,
+    "harm_thz": -6.704251054640534
+   },
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.5
+    ],
+    "band": 0,
+    "harm_thz": -5.412287476878661
+   },
+   {
+    "q": [
+     0.0,
+     0.5,
+     0.5
+    ],
+    "band": 0,
+    "harm_thz": -4.386293166346563
+   }
+  ]
+ },
+ "wall_s": 135.5,
+ "provenance": {
+  "script": "scripts/dft_reference.py",
+  "stage": "geom",
+  "git_head": "5531546",
+  "versions": {
+   "numpy": "2.5.2",
+   "scipy": "1.18.0",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.5",
+   "torch": "2.13.0",
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": "1.2.5",
+   "python-sscha": "1.6.1",
+   "cellconstructor": "1.6.2"
+  },
+  "python": "3.12.14",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T06:58:52Z",
+  "settings": {
+   "stage": "geom",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "srtio3_cubic",
+    "batio3_cubic",
+    "zr_bcc",
+    "zro2_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "model": "mattersim",
+   "device": "cuda",
+   "force": false,
+   "no_recover": false,
+   "recover_max_atoms": 12,
+   "harm_tol": 0.02
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "model": "mattersim",
+  "env_lock": {
+   "lock": "envs/lock-mattersim-2026-08-17.txt",
+   "mismatches": {}
+  },
+  "model_version": "mattersim=1.2.5;ckpt=mattersim-v1.0.0-5m",
+  "device": "cuda"
+ }
+}

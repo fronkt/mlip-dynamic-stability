@@ -1,0 +1,68 @@
+RUN start Sun Oct  4 21:06:08 UTC 2026
+APT_DONE rc=0
+downloading uv 0.12.23 x86_64-unknown-linux-gnu
+installing to /root/.local/bin
+  uv
+  uvx
+everything's installed!
+
+To add $HOME/.local/bin to your PATH, either restart your shell or run:
+
+    source $HOME/.local/bin/env (sh, bash, zsh)
+    source $HOME/.local/bin/env.fish (fish)
+Downloading cpython-3.11.17-linux-x86_64-gnu (download) (29.4MiB)
+ Downloaded cpython-3.11.17-linux-x86_64-gnu (download)
+Installed Python 3.11.17 in 2.21s
+ + cpython-3.11.17-linux-x86_64-gnu (python3.11)
+Cloning into 'mlip-dynamic-stability'...
+Updating files:  93% (4141/4435)Updating files:  94% (4169/4435)Updating files:  95% (4214/4435)Updating files:  96% (4258/4435)Updating files:  97% (4302/4435)Updating files:  98% (4347/4435)Updating files:  99% (4391/4435)Updating files: 100% (4435/4435)Updating files: 100% (4435/4435), done.
+557ea99 E5 fine-tuning GPU runner (vast 54202873): bootstrap, wait for ft_ data, run the committed runbook, grace pull window, self-stop + watchdog; box 1 destroyed
+ENVCHECK 2.6.0+cu124 True 2.2.2 3.29.0 4.4.0
+SSCHA_OK
+ENV_DONE chgnet rc=0 Sun Oct  4 21:08:13 UTC 2026
+ENVCHECK 2.6.0+cu124 True 2.2.2 3.29.0 4.4.0
+SSCHA_OK
+ENV_DONE mace rc=0 Sun Oct  4 21:08:14 UTC 2026
+SMOKE mace_mp0 ckpt=None version=mace-torch=0.3.16;ckpt=medium E=-85.35822 |F|max=0.4588 dtype=float64 t=16.1s
+SMOKE chgnet ckpt=None version=chgnet=0.4.2 E=-84.87431 |F|max=0.5148 dtype=float32 t=6.9s
+BOOTSTRAP_DONE Sun Oct  4 21:08:44 UTC 2026
+From https://github.com/fronkt/mlip-dynamic-stability
+   557ea99..0467fe7  rsc-figure-fixes -> origin/rsc-figure-fixes
+Updating 557ea99..0467fe7
+Fast-forward
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c33/pw.in.ran   |   77 +
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c33/pw.out      | 1467 +++++++++++++++++++
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c34/pw.in.ran   |   77 +
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c34/pw.out      | 1456 +++++++++++++++++++
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c35/pw.in.ran   |   77 +
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c35/pw.out      | 1466 +++++++++++++++++++
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c36/pw.in.ran   |   77 +
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c36/pw.out      | 1468 ++++++++++++++++++++
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c37/pw.in.ran   |   77 +
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c37/pw.out      | 1467 +++++++++++++++++++
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c38/pw.in.ran   |   77 +
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c38/pw.out      | 1465 +++++++++++++++++++
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c39/pw.in.ran   |   77 +
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_c39/pw.out      | 1465 +++++++++++++++++++
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_ref/pw.in.ran   |   77 +
+ .../dft/qe/ft_knbo3_cubic_mace_mp0_ref/pw.out      |  732 ++++++++++
+ 16 files changed, 11602 insertions(+)
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c33/pw.in.ran
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c33/pw.out
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c34/pw.in.ran
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c34/pw.out
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c35/pw.in.ran
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c35/pw.out
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c36/pw.in.ran
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c36/pw.out
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c37/pw.in.ran
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c37/pw.out
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c38/pw.in.ran
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c38/pw.out
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c39/pw.in.ran
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_c39/pw.out
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_ref/pw.in.ran
+ create mode 100644 results/revision/dft/qe/ft_knbo3_cubic_mace_mp0_ref/pw.out
+0467fe7 E5: last 8 KNbO3 fine-tuning PBE single points (ft_ 246/246 done, 0 SCF non-convergence)
+ft_ JOB DONE: 246
+RUN_DONE rc=0 Sun Oct  4 22:16:36 UTC 2026

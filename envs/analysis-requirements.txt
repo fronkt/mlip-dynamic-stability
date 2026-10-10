@@ -1,0 +1,22 @@
+# CPU-only re-analysis environment: everything scripts/reproduce.sh needs to regenerate the
+# derived statistics, the ESI generated tables and the paper figures from the deposited ledger,
+# with no GPU, no MLIP package and no network beyond `pip install`.
+#
+#   python -m venv .venv-analysis && . .venv-analysis/bin/activate     # Python 3.12
+#   pip install -r envs/analysis-requirements.txt
+#   bash scripts/reproduce.sh
+#
+# It is envs/ci-requirements.txt (numpy, pandas, pyarrow, pyyaml, scipy) plus the packages the
+# remaining CPU scripts import. Generating NEW data (harmonic, screen, SSCHA, DFT) is a different
+# job and uses the per-model environments in envs/lock-*.txt; see the README.
+-r ci-requirements.txt
+# figures: scripts/make_figures.py, paper/toc_entry/make_toc_graphic.py
+matplotlib==3.10.8
+pillow==12.2.0
+# scripts/dft_reference.py analyze (lazy `from ase.io import read`); the version of the locks
+ase==3.29.0
+# scripts/reproduce.sh --resolve only: scripts/screen_sensitivity.py and scripts/h2_by_convention.py
+# build the reference cells (mlip_dynstab.systems.build_atoms uses pymatgen for the perovskites).
+# screen_sensitivity.py also runs one MACE-MP-0 CPU check unless given --no-mlip-check; for that,
+# run reproduce.sh with PYTHON set to the interpreter of the MACE environment (envs/lock-mace-*.txt).
+pymatgen==2026.5.4

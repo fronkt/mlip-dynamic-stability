@@ -1,0 +1,178 @@
+{
+ "job": "pl_cssnbr3_cubic_vcrelax",
+ "study": "pbe-lattice",
+ "system": "cssnbr3_cubic",
+ "n_atoms": 5,
+ "structure_sha": "48f6cd040eff0fa489e5",
+ "structure": {
+  "symbols": [
+   "Cs",
+   "Sn",
+   "Br",
+   "Br",
+   "Br"
+  ],
+  "cell": [
+   [
+    5.8,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    5.8,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    5.8
+   ]
+  ],
+  "positions": [
+   [
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    2.9,
+    2.9,
+    2.9
+   ],
+   [
+    0.0,
+    2.9,
+    2.9
+   ],
+   [
+    2.9,
+    0.0,
+    2.9
+   ],
+   [
+    2.9,
+    2.9,
+    0.0
+   ]
+  ]
+ },
+ "members": [
+  {
+   "part": "vcrelax",
+   "system": "cssnbr3_cubic"
+  }
+ ],
+ "qe": {
+  "is_metal": false,
+  "smearing": "mv",
+  "degauss_Ry": 0.005,
+  "kspacing_inv_A": 0.25,
+  "kspacing_convention": "n_i = max(1, ceil(|b_i| / spacing)) with b = 2*pi*inv(cell).T, i.e. |b_i| includes 2*pi (the VASP KSPACING convention); Gamma-centred, unshifted",
+  "kmesh": [
+   5,
+   5,
+   5
+  ],
+  "nk_full": 125,
+  "nk_tr_upper": 63,
+  "nk_irr_spglib": 10,
+  "ecutwfc_Ry": 60.0,
+  "ecutrho_Ry": 480.0,
+  "ecut_scale": 1.0,
+  "conv_thr_Ry": 5e-10,
+  "mixing_beta": 0.4,
+  "calculation": "vc-relax",
+  "disk_io": "low",
+  "input_dft": null,
+  "functional": "PBE (from the SSSP PBE set)",
+  "pseudos": {
+   "Cs": {
+    "filename": "Cs_pbe_v1.uspp.F.UPF",
+    "ecutwfc": 30.0,
+    "ecutrho": 240.0,
+    "md5": "3476d69cb178dfad3ffaa59df4e07ca4",
+    "family": "GBRV-1.2"
+   },
+   "Sn": {
+    "filename": "Sn_pbe_v1.uspp.F.UPF",
+    "ecutwfc": 60.0,
+    "ecutrho": 480.0,
+    "md5": "4cf58ce39ec5d5d420df3dd08604eb00",
+    "family": "GBRV-1.2"
+   },
+   "Br": {
+    "filename": "br_pbe_v1.4.uspp.F.UPF",
+    "ecutwfc": 30.0,
+    "ecutrho": 240.0,
+    "md5": "d3ffb7b29f6225aa16fe06858fb2a80b",
+    "family": "GBRV-1.4"
+   }
+  },
+  "sssp_json": "SSSP_1.3.0_PBE_efficiency.json",
+  "sssp_sha256": "2c8642a70308ecd072a209a30c160bf51423560bb202116cb31fd5275eff814a"
+ },
+ "pw_in_sha256": "d1ba282a4856bd6480160754a8ca950e93b58cdba46b56d8b242892304004581",
+ "provenance": {
+  "script": "scripts/dft_checks.py",
+  "stage": "pbe-lattice-A",
+  "git_head": "30d5674",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.6",
+   "torch": null,
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": null,
+   "cellconstructor": null
+  },
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "host": "fd6e78900fba",
+  "utc": "2026-10-03T22:07:57Z",
+  "settings": {
+   "stage": "pbe-lattice",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft_checks",
+   "dft_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "sssp_dir": "/root/sssp",
+   "sssp_json": null,
+   "kspacing_insulator": null,
+   "degauss_insulator": null,
+   "no_require_pbe": false,
+   "phase": "A",
+   "model": "mace_mp0",
+   "select": [
+    "deciding",
+    "softest"
+   ],
+   "fd_disp": 0.01,
+   "fd_plusminus": false,
+   "fd_supercell": null,
+   "pos_tol": 0.001
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "script_sha256": "963f25d823e04a57a1f542ac41509877c82a43d76f86eb9b5914f7e6fe5fd6d6",
+  "dft_reference_sha256": "c636c66408c17c067b30f170bd175c57ae41247bbdb14cceaa56769cca6796cf"
+ }
+}

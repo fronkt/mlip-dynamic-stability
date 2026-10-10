@@ -1,0 +1,144 @@
+/root/lock-chgnet.filtered.txt 103 requirements
+Using CPython 3.11.17
+Creating virtual environment at: /root/env-chgnet
+Activate with: source /root/env-chgnet/bin/activate
+Using Python 3.11.17 environment at: /root/env-chgnet
+Resolved 116 packages in 12.40s
+   Building bibtexparser==1.4.4
+   Building nvidia-ml-py3==7.352.0
+   Building python-etcd==0.4.5
+Downloading cython (3.3MiB)
+Downloading chgnet (13.0MiB)
+      Built nvidia-ml-py3==7.352.0
+      Built bibtexparser==1.4.4
+      Built python-etcd==0.4.5
+ Downloaded cython
+ Downloaded chgnet
+Prepared 116 packages in 1m 08s
+Installed 116 packages in 5.18s
+ + annotated-types==0.8.0
+ + arro3-core==0.8.1
+ + ase==3.29.0
+ + astunparse==1.6.3
+ + attrs==26.1.0
+ + bibtexparser==1.4.4
+ + blake3==1.0.9
+ + boto3==1.43.72
+ + botocore==1.43.72
+ + cellconstructor==1.6.2
+ + certifi==2026.7.22
+ + charset-normalizer==3.5.2
+ + chgnet==0.4.2
+ + cmake==3.31.4
+ + contourpy==1.3.3
+ + cycler==0.12.1
+ + cython==3.2.9
+ + deltalake==1.5.1
+ + deprecated==1.3.1
+ + dnspython==2.7.0
+ + emmet-core==0.87.1
+ + expecttest==0.3.0
+ + filelock==4.0.10
+ + fonttools==4.63.0
+ + fsspec==2024.12.0
+ + h5py==3.16.0
+ + hypothesis==6.124.7
+ + idna==3.20
+ + inflect==7.5.0
+ + jarvis-tools==2026.6.12
+ + jinja2==3.1.6
+ + jmespath==1.1.0
+ + joblib==1.5.3
+ + kiwisolver==1.5.0
+ + latexcodec==3.0.1
+ + lintrunner==0.12.7
+ + lxml==6.1.1
+ + markupsafe==3.0.4
+ + matplotlib==3.11.1
+ + monty==2026.7.16
+ + more-itertools==11.1.0
+ + mp-api==0.46.4
+ + mpmath==1.3.0
+ + narwhals==2.24.0
+ + networkx==3.4.2
+ + ninja==1.11.1.3
+ + numpy==2.2.2
+ + nvidia-cublas-cu12==12.4.5.8
+ + nvidia-cuda-cupti-cu12==12.4.127
+ + nvidia-cuda-nvrtc-cu12==12.4.127
+ + nvidia-cuda-runtime-cu12==12.4.127
+ + nvidia-cudnn-cu12==9.1.0.70
+ + nvidia-cufft-cu12==11.2.1.3
+ + nvidia-curand-cu12==10.3.5.147
+ + nvidia-cusolver-cu12==11.6.1.9
+ + nvidia-cusparse-cu12==12.3.1.170
+ + nvidia-cusparselt-cu12==0.6.2
+ + nvidia-ml-py3==7.352.0
+ + nvidia-nccl-cu12==2.21.5
+ + nvidia-nvjitlink-cu12==12.4.127
+ + nvidia-nvtx-cu12==12.4.127
+ + optree==0.14.0
+ + orjson==3.12.0
+ + packaging==26.3
+ + palettable==3.3.3
+ + pandas==3.0.5
+ + phonopy==4.4.0
+ + phonors==0.3.0
+ + pillow==11.0.0
+ + plotly==6.9.0
+ + ptyprocess==0.7.0
+ + pubchempy==1.0.5
+ + pyarrow==25.0.1
+ + pybtex==0.26.1
+ + pydantic==2.13.4
+ + pydantic-core==2.46.4
+ + pydantic-settings==2.15.0
+ + pymatgen==2026.5.4
+ + pymatgen-core==2026.8.13
+ + pymatgen-io-validation==0.1.4
+ + pyparsing==3.3.2
+ + python-dateutil==2.9.0.post0
+ + python-dotenv==1.2.3
+ + python-etcd==0.4.5
+ + python-sscha==1.6.1
+ + pyyaml==6.0.3
+ + requests==2.34.2
+ + ruamel-yaml==0.19.1
+ + s3transfer==0.19.2
+ + scikit-learn==1.9.0
+ + scipy==1.17.1
+ + seaborn==0.13.2
+ + six==1.17.0
+ + sortedcontainers==2.4.0
+ + spglib==2.7.0
+ + symfc==1.7.3
+ + sympy==1.13.1
+ + tabulate==0.10.0
+ + threadpoolctl==3.6.0
+ + toolz==1.1.0
+ + torch==2.6.0+cu124
+ + torchaudio==2.6.0+cu124
+ + torchelastic==0.2.2
+ + torchvision==0.21.0+cu124
+ + tqdm==4.70.0
+ + triton==3.2.0
+ + typeguard==4.6.0
+ + types-dataclasses==0.6.6
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + uncertainties==3.2.3
+ + urllib3==2.8.0
+ + wheel==0.48.0
+ + wrapt==2.3.0
+ + xmltodict==1.0.4
+ + zstandard==0.23.0
+Using Python 3.11.17 environment at: /root/env-chgnet
+Resolved 1 package in 2ms
+   Building mlip-dynamic-stability @ file:///root/mlip-dynamic-stability
+      Built mlip-dynamic-stability @ file:///root/mlip-dynamic-stability
+Prepared 1 package in 1.09s
+Installed 1 package in 10ms
+ + mlip-dynamic-stability==0.1.0 (from file:///root/mlip-dynamic-stability)
+ENVCHECK 2.6.0+cu124 True 2.2.2 3.29.0 4.4.0
+SSCHA_OK
+ENV_DONE chgnet rc=0 Sun Oct  4 21:08:13 UTC 2026

@@ -1,0 +1,180 @@
+{
+ "provenance": {
+  "script": "scripts/dft_checks.py",
+  "stage": "pbe-lattice-B",
+  "git_head": "a9fa30a",
+  "versions": {
+   "numpy": "2.3.5",
+   "scipy": "1.17.1",
+   "ase": "3.28.0",
+   "phonopy": "3.5.1",
+   "spglib": "2.7.0",
+   "pandas": "3.0.6",
+   "torch": null,
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": null,
+   "cellconstructor": null
+  },
+  "python": "3.12.15",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "host": "427cd5d94dd5",
+  "utc": "2026-10-09T01:02:13Z",
+  "settings": {
+   "stage": "pbe-lattice",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft_checks",
+   "dft_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "sssp_dir": "/root/sssp",
+   "sssp_json": null,
+   "kspacing_insulator": null,
+   "degauss_insulator": null,
+   "no_require_pbe": false,
+   "phase": "B",
+   "model": "mace_mp0",
+   "select": [
+    "deciding",
+    "softest"
+   ],
+   "fd_disp": 0.01,
+   "fd_plusminus": false,
+   "fd_supercell": null,
+   "pos_tol": 0.001
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "script_sha256": "34fceb0fb1e45204b16e7d977d45cdefcbecd0a3b378ee50e8935320d47d037e",
+  "dft_reference_sha256": "c636c66408c17c067b30f170bd175c57ae41247bbdb14cceaa56769cca6796cf"
+ },
+ "system": "cssnbr3_cubic",
+ "a_pbe_A": 5.887105496,
+ "vcrelax": {
+  "job_done": true,
+  "bfgs_converged": true,
+  "bfgs_failed": false,
+  "qe_version": "7.5",
+  "nproc": 8,
+  "nk_irr": 10,
+  "wall_s": 242.11,
+  "xc": [
+   3,
+   4
+  ],
+  "n_scf_cycles": 7,
+  "n_bfgs_steps": 6,
+  "converged": true,
+  "energy_Ry": -367.30621729,
+  "final_scf_pressure_kbar": 0.02,
+  "volume_A3": 204.03537,
+  "cell_A": [
+   [
+    5.887105496,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    5.887105496,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    5.887105496
+   ]
+  ],
+  "a_A": 5.887105496,
+  "cubic_deviation_A": 0.0
+ },
+ "cell": [
+  [
+   5.887105496,
+   0.0,
+   0.0
+  ],
+  [
+   0.0,
+   5.887105496,
+   0.0
+  ],
+  [
+   0.0,
+   0.0,
+   5.887105496
+  ]
+ ],
+ "symbols": [
+  "Cs",
+  "Sn",
+  "Br",
+  "Br",
+  "Br"
+ ],
+ "scaled_positions": [
+  [
+   0.0,
+   0.0,
+   0.0
+  ],
+  [
+   0.5,
+   0.5,
+   0.5
+  ],
+  [
+   0.0,
+   0.5,
+   0.5
+  ],
+  [
+   0.5,
+   0.0,
+   0.5
+  ],
+  [
+   0.5,
+   0.5,
+   0.0
+  ]
+ ],
+ "supercell": [
+  2,
+  2,
+  2
+ ],
+ "disp_A": 0.01,
+ "plusminus": false,
+ "n_displacements": 3,
+ "jobs": [
+  "pl_cssnbr3_cubic_fd01",
+  "pl_cssnbr3_cubic_fd02",
+  "pl_cssnbr3_cubic_fd03"
+ ],
+ "q_decide": [
+  0.5,
+  0.5,
+  0.5
+ ],
+ "q_decide_model": "mace_mp0",
+ "q_decide_stem": "cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0",
+ "kspacing": 0.25,
+ "degauss": 0.005,
+ "settings_source": "production job.json",
+ "n_atoms_supercell": 40,
+ "est_core_h": 10.560209523809522
+}

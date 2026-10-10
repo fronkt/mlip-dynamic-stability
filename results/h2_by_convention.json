@@ -1,0 +1,229 @@
+{
+ "script": "scripts/h2_by_convention.py",
+ "utc": "2026-09-27T08:27:04+00:00",
+ "matched_set": "15 non-bcc, non-borderline systems x 5 models",
+ "conventions": {
+  "production": {
+   "is_production": true,
+   "by_T": {
+    "100": {
+     "n_pairs": 75,
+     "b": 5,
+     "c": 3,
+     "p_clustered": 0.84375,
+     "systems_favouring_b": 3,
+     "systems_favouring_c": 3
+    },
+    "300": {
+     "n_pairs": 75,
+     "b": 17,
+     "c": 4,
+     "p_clustered": 0.15234,
+     "systems_favouring_b": 5,
+     "systems_favouring_c": 4
+    },
+    "600": {
+     "n_pairs": 75,
+     "b": 23,
+     "c": 4,
+     "p_clustered": 0.06641,
+     "systems_favouring_b": 6,
+     "systems_favouring_c": 4
+    },
+    "900": {
+     "n_pairs": 75,
+     "b": 11,
+     "c": 4,
+     "p_clustered": 0.41406,
+     "systems_favouring_b": 4,
+     "systems_favouring_c": 4
+    }
+   }
+  },
+  "cell_minimal": {
+   "is_production": true,
+   "by_T": {
+    "100": {
+     "n_pairs": 75,
+     "b": 5,
+     "c": 3,
+     "p_clustered": 0.84375,
+     "systems_favouring_b": 3,
+     "systems_favouring_c": 3
+    },
+    "300": {
+     "n_pairs": 75,
+     "b": 17,
+     "c": 4,
+     "p_clustered": 0.15234,
+     "systems_favouring_b": 5,
+     "systems_favouring_c": 4
+    },
+    "600": {
+     "n_pairs": 75,
+     "b": 23,
+     "c": 4,
+     "p_clustered": 0.06641,
+     "systems_favouring_b": 6,
+     "systems_favouring_c": 4
+    },
+    "900": {
+     "n_pairs": 75,
+     "b": 11,
+     "c": 4,
+     "p_clustered": 0.41406,
+     "systems_favouring_b": 4,
+     "systems_favouring_c": 4
+    }
+   }
+  },
+  "cell_common_fc": {
+   "is_production": false,
+   "by_T": {
+    "100": {
+     "n_pairs": 75,
+     "b": 3,
+     "c": 3,
+     "p_clustered": 1.0,
+     "systems_favouring_b": 3,
+     "systems_favouring_c": 3
+    },
+    "300": {
+     "n_pairs": 75,
+     "b": 7,
+     "c": 4,
+     "p_clustered": 0.89062,
+     "systems_favouring_b": 3,
+     "systems_favouring_c": 4
+    },
+    "600": {
+     "n_pairs": 75,
+     "b": 19,
+     "c": 4,
+     "p_clustered": 0.12891,
+     "systems_favouring_b": 5,
+     "systems_favouring_c": 4
+    },
+    "900": {
+     "n_pairs": 75,
+     "b": 18,
+     "c": 4,
+     "p_clustered": 0.11719,
+     "systems_favouring_b": 6,
+     "systems_favouring_c": 4
+    }
+   }
+  },
+  "cell_per_fu": {
+   "is_production": false,
+   "by_T": {
+    "100": {
+     "n_pairs": 75,
+     "b": 20,
+     "c": 3,
+     "p_clustered": 0.04492,
+     "systems_favouring_b": 7,
+     "systems_favouring_c": 3
+    },
+    "300": {
+     "n_pairs": 75,
+     "b": 24,
+     "c": 4,
+     "p_clustered": 0.06348,
+     "systems_favouring_b": 7,
+     "systems_favouring_c": 4
+    },
+    "600": {
+     "n_pairs": 75,
+     "b": 20,
+     "c": 4,
+     "p_clustered": 0.125,
+     "systems_favouring_b": 4,
+     "systems_favouring_c": 4
+    },
+    "900": {
+     "n_pairs": 75,
+     "b": 10,
+     "c": 4,
+     "p_clustered": 0.5,
+     "systems_favouring_b": 2,
+     "systems_favouring_c": 4
+    }
+   }
+  },
+  "cell_doubled": {
+   "is_production": false,
+   "by_T": {
+    "100": {
+     "n_pairs": 75,
+     "b": 3,
+     "c": 3,
+     "p_clustered": 1.0,
+     "systems_favouring_b": 3,
+     "systems_favouring_c": 3
+    },
+    "300": {
+     "n_pairs": 75,
+     "b": 10,
+     "c": 4,
+     "p_clustered": 0.5,
+     "systems_favouring_b": 3,
+     "systems_favouring_c": 3
+    },
+    "600": {
+     "n_pairs": 75,
+     "b": 22,
+     "c": 4,
+     "p_clustered": 0.07617,
+     "systems_favouring_b": 6,
+     "systems_favouring_c": 4
+    },
+    "900": {
+     "n_pairs": 75,
+     "b": 15,
+     "c": 4,
+     "p_clustered": 0.25,
+     "systems_favouring_b": 4,
+     "systems_favouring_c": 4
+    }
+   }
+  },
+  "cell_x8": {
+   "is_production": false,
+   "by_T": {
+    "100": {
+     "n_pairs": 75,
+     "b": 2,
+     "c": 3,
+     "p_clustered": 1.0,
+     "systems_favouring_b": 2,
+     "systems_favouring_c": 3
+    },
+    "300": {
+     "n_pairs": 75,
+     "b": 11,
+     "c": 4,
+     "p_clustered": 0.42188,
+     "systems_favouring_b": 4,
+     "systems_favouring_c": 3
+    },
+    "600": {
+     "n_pairs": 75,
+     "b": 23,
+     "c": 4,
+     "p_clustered": 0.07812,
+     "systems_favouring_b": 6,
+     "systems_favouring_c": 3
+    },
+    "900": {
+     "n_pairs": 75,
+     "b": 29,
+     "c": 4,
+     "p_clustered": 0.03125,
+     "systems_favouring_b": 7,
+     "systems_favouring_c": 3
+    }
+   }
+  }
+ }
+}

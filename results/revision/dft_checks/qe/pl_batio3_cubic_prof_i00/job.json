@@ -1,0 +1,212 @@
+{
+ "job": "pl_batio3_cubic_prof_i00",
+ "study": "pbe-lattice",
+ "system": "batio3_cubic",
+ "n_atoms": 10,
+ "structure_sha": "f9bd1e025bab2a1383af",
+ "structure": {
+  "symbols": [
+   "Ba",
+   "Ba",
+   "Ti",
+   "Ti",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O"
+  ],
+  "cell": [
+   [
+    4.02374737,
+    0.0,
+    4.02374737
+   ],
+   [
+    4.02374737,
+    0.0,
+    -4.02374737
+   ],
+   [
+    0.0,
+    4.02374737,
+    0.0
+   ]
+  ],
+  "positions": [
+   [
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    4.02374737,
+    0.0,
+    0.0
+   ],
+   [
+    6.035621055,
+    2.011873685,
+    -2.011873685
+   ],
+   [
+    2.011873685000001,
+    2.011873685,
+    -2.0118736849999994
+   ],
+   [
+    4.02374737,
+    2.011873685,
+    -2.011873685
+   ],
+   [
+    4.02374737,
+    2.011873685,
+    2.0118736850000003
+   ],
+   [
+    6.035621055,
+    0.0,
+    -2.011873685
+   ],
+   [
+    2.011873685000001,
+    0.0,
+    -2.0118736849999994
+   ],
+   [
+    2.011873685,
+    2.011873685,
+    0.0
+   ],
+   [
+    6.035621055000001,
+    2.011873685,
+    2.1940811723020207e-16
+   ]
+  ]
+ },
+ "members": [
+  {
+   "part": "prof",
+   "system": "batio3_cubic",
+   "frame": 0,
+   "Q": 0.0,
+   "n_images": 2
+  }
+ ],
+ "qe": {
+  "is_metal": false,
+  "smearing": "mv",
+  "degauss_Ry": 0.005,
+  "kspacing_inv_A": 0.25,
+  "kspacing_convention": "n_i = max(1, ceil(|b_i| / spacing)) with b = 2*pi*inv(cell).T, i.e. |b_i| includes 2*pi (the VASP KSPACING convention); Gamma-centred, unshifted",
+  "kmesh": [
+   5,
+   5,
+   7
+  ],
+  "nk_full": 175,
+  "nk_tr_upper": 88,
+  "nk_irr_spglib": 24,
+  "ecutwfc_Ry": 50.0,
+  "ecutrho_Ry": 400.0,
+  "ecut_scale": 1.0,
+  "conv_thr_Ry": 1e-09,
+  "mixing_beta": 0.4,
+  "calculation": "scf",
+  "disk_io": "none",
+  "input_dft": null,
+  "nosym": false,
+  "functional": "PBE (from the SSSP PBE set)",
+  "pseudos": {
+   "Ba": {
+    "filename": "Ba.pbe-spn-kjpaw_psl.1.0.0.UPF",
+    "ecutwfc": 30.0,
+    "ecutrho": 240.0,
+    "md5": "c432291d3e53af55f19d5e8866385beb",
+    "family": "100PAW"
+   },
+   "Ti": {
+    "filename": "ti_pbe_v1.4.uspp.F.UPF",
+    "ecutwfc": 35.0,
+    "ecutrho": 280.0,
+    "md5": "88a00a6731bd790ddea75d31a80cb452",
+    "family": "GBRV-1.4"
+   },
+   "O": {
+    "filename": "O.pbe-n-kjpaw_psl.0.1.UPF",
+    "ecutwfc": 50.0,
+    "ecutrho": 400.0,
+    "md5": "0234752ac141de4415c5fc33072bef88",
+    "family": "031PAW"
+   }
+  },
+  "sssp_json": "SSSP_1.3.0_PBE_efficiency.json",
+  "sssp_sha256": "2c8642a70308ecd072a209a30c160bf51423560bb202116cb31fd5275eff814a"
+ },
+ "pw_in_sha256": "e1435051639193938cd36e3d390bafbde60dac51bc59b717363486fda814af51",
+ "provenance": {
+  "script": "scripts/dft_checks.py",
+  "stage": "pbe-lattice-C",
+  "git_head": "a9fa30a",
+  "versions": {
+   "numpy": "2.3.5",
+   "scipy": "1.17.1",
+   "ase": "3.28.0",
+   "phonopy": "3.5.1",
+   "spglib": "2.7.0",
+   "pandas": "3.0.6",
+   "torch": null,
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": null,
+   "cellconstructor": null
+  },
+  "python": "3.12.15",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "host": "427cd5d94dd5",
+  "utc": "2026-10-09T02:17:17Z",
+  "settings": {
+   "stage": "pbe-lattice",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft_checks",
+   "dft_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "sssp_dir": "/root/sssp",
+   "sssp_json": null,
+   "kspacing_insulator": null,
+   "degauss_insulator": null,
+   "no_require_pbe": false,
+   "phase": "C",
+   "model": "mace_mp0",
+   "select": [
+    "deciding",
+    "softest"
+   ],
+   "fd_disp": 0.01,
+   "fd_plusminus": false,
+   "fd_supercell": null,
+   "pos_tol": 0.001
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "script_sha256": "34fceb0fb1e45204b16e7d977d45cdefcbecd0a3b378ee50e8935320d47d037e",
+  "dft_reference_sha256": "c636c66408c17c067b30f170bd175c57ae41247bbdb14cceaa56769cca6796cf"
+ }
+}

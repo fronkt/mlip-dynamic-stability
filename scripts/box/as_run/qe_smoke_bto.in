@@ -1,0 +1,39 @@
+&CONTROL
+  ! QE smoke test for scripts/box/as_run/qe_pl_2026-10-08.sh: 5-atom cubic BaTiO3 SCF with the
+  ! production SSSP 1.3 pseudos and cutoffs; pseudo_dir from $ESPRESSO_PSEUDO
+  calculation = 'scf'
+  prefix = 'pwscf'
+  outdir = './scratch'
+  disk_io = 'none'
+  tprnfor = .true.
+/
+&SYSTEM
+  ibrav = 0
+  nat = 5
+  ntyp = 3
+  ecutwfc = 50.0
+  ecutrho = 400.0
+  occupations = 'smearing'
+  smearing = 'mv'
+  degauss = 0.005
+/
+&ELECTRONS
+  conv_thr = 1.0d-9
+  mixing_beta = 0.4
+/
+ATOMIC_SPECIES
+Ba 137.3270 Ba.pbe-spn-kjpaw_psl.1.0.0.UPF
+Ti 47.8670 ti_pbe_v1.4.uspp.F.UPF
+O 15.9990 O.pbe-n-kjpaw_psl.0.1.UPF
+CELL_PARAMETERS angstrom
+  4.0237000000 0.0000000000 0.0000000000
+  0.0000000000 4.0237000000 0.0000000000
+  0.0000000000 0.0000000000 4.0237000000
+ATOMIC_POSITIONS crystal
+Ba 0.00 0.00 0.00
+Ti 0.50 0.50 0.52
+O  0.00 0.50 0.50
+O  0.50 0.00 0.50
+O  0.50 0.50 0.00
+K_POINTS automatic
+4 4 4 0 0 0

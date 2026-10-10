@@ -13,6 +13,45 @@ import pandas as pd
 from .ledger import load as load_ledger
 
 
+# ------------------------------------------------------------ generations ----
+
+def canonical(df: pd.DataFrame) -> pd.DataFrame:
+    """Keep exactly one generation of each method's rows: the current one.
+
+    The ledger is append-only and the unit hash now carries the method version, so a re-run
+    under a changed algorithm ADDS rows rather than replacing them. Every downstream selector
+    is written as ``df[df.method == "softmode"]``, which would silently match both the legacy
+    single-mode grid and the current multi-mode grid and count each unit twice -- inflating n,
+    corrupting every rate, and blending two different measurements in one figure.
+
+    Rows written since 2026-08 carry an explicit ``method_version`` column; for each method the
+    highest version present wins. Rows written before the column existed are inferred: softmode
+    rows with a non-null ``ft_n_imag_total`` are the multi-mode generation (3), everything else
+    is generation 1. If a method has only one generation, its rows pass through unchanged, so
+    this is safe on an old ledger.
+
+    Call this ONCE at load. Anything that reads the ledger directly is a bug.
+    """
+    if "method" not in df.columns:
+        return df
+    inferred = pd.Series(1.0, index=df.index)
+    if "ft_n_imag_total" in df.columns:
+        inferred[(df["method"] == "softmode") & df["ft_n_imag_total"].notna()] = 3.0
+    if "method_version" in df.columns:
+        mv = pd.to_numeric(df["method_version"], errors="coerce").fillna(inferred)
+    else:
+        mv = inferred
+    keep = pd.Series(False, index=df.index)
+    for _, g in df.groupby("method"):
+        keep[g.index[mv[g.index] == mv[g.index].max()]] = True
+    return df[keep].copy()
+
+
+def load_canonical(path=None) -> pd.DataFrame:
+    """Load the ledger and drop superseded method generations."""
+    return canonical(load_ledger(path) if path else load_ledger())
+
+
 # --------------------------------------------------------------- confusion ----
 
 def confusion(df: pd.DataFrame) -> dict[str, int]:
@@ -256,14 +295,12 @@ def h2_harmonic_predictiveness(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def h2_paired_summary(df: pd.DataFrame, t: float = 100.0) -> dict:
-    """H2 done correctly: pair the harmonic and finite-T (softmode at T=``t``) call for each
+    """Pair the harmonic call with the finite-T call (softmode at T=``t``) for each
     (system, model) on the MATCHED non-bcc, non-borderline set, so harmonic and finite-T accuracy
-    share the same denominator (the model-level 'inversion' seen with bcc-in-harmonic vs
-    bcc-out-of-finite-T is a denominator artifact). Reports the 2x2 concordance of correctness,
-    the phi correlation, an exact-binomial McNemar test on the discordant pairs, and the matched
-    per-model accuracies with their rank correlation. The honest finding is that harmonic accuracy
-    is a WEAK (not negative) predictor of finite-T accuracy, and that the harmonic leaders are not
-    the finite-T leaders -- not a clean inversion."""
+    share the same denominator. Returns the 2x2 concordance of correctness, the phi coefficient,
+    the two-sided exact-binomial McNemar p on the discordant pairs (unit level: the pairs are
+    treated as independent), and the matched per-model accuracies with their Spearman rank
+    correlation over the models."""
     from math import comb
     bl = borderline_systems()
     def nonbcc(d):
@@ -360,7 +397,7 @@ def h3_guardrail_summary(df: pd.DataFrame, method: str = "softmode",
 # ------------------------------------------------------------------- report ----
 
 def summary(ledger_path=None) -> dict:
-    df = load_ledger(ledger_path) if ledger_path else load_ledger()
+    df = load_canonical(ledger_path) if ledger_path else load_canonical()
     out = {"n_rows": len(df)}
     if df.empty:
         return out

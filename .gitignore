@@ -40,3 +40,20 @@ Thumbs.db
 mp_api_key.txt
 
 !results/convergence_study.parquet
+
+# Revision compute: raw SSCHA ensembles are deposited on Zenodo, not in git
+results/revision/*/work/
+results/revision/*/locks/
+results/revision/sscha_seeds/_dryrun/
+# Revision DFT: pw.x stderr (gfortran IEEE notes only); the full box tree is in the raw archive.
+# (ax_ was ignored while it held unrun C3a inputs; all 533 ran for E1 by 2026-10-05, so it is tracked.)
+results/revision/dft/qe/*/pw.err
+results/revision/dft_checks/qe/*/pw.err
+# E5 fine-tuned weights (~0.9 GB, MACE checkpoints 157 MB > GitHub limit): sha256 in
+# results/revision/finetune/models/WEIGHTS.sha256, files in the raw archive (Zenodo at publication)
+results/revision/finetune/models/**/*.model
+results/revision/finetune/models/**/*.pt
+results/revision/finetune/models/**/*.pth.tar
+results/revision/finetune_mace30/models/**/*.model
+results/revision/finetune_mace30/models/**/*.pt
+results/revision/finetune_mace30/models/**/*.pth.tar

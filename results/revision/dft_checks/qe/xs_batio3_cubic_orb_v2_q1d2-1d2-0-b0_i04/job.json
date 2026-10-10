@@ -1,0 +1,211 @@
+{
+ "job": "xs_batio3_cubic_orb_v2_q1d2-1d2-0-b0_i04",
+ "study": "xc",
+ "system": "batio3_cubic",
+ "n_atoms": 10,
+ "structure_sha": "43551d9a021c37086b0e",
+ "structure": {
+  "symbols": [
+   "Ba",
+   "Ba",
+   "Ti",
+   "Ti",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O"
+  ],
+  "cell": [
+   [
+    5.430575091835976e-07,
+    -1.4417589007109653e-06,
+    4.036708345203325
+   ],
+   [
+    -4.0347528550109075,
+    -4.035811711604125,
+    9.010954133970013e-07
+   ],
+   [
+    4.034768497749843,
+    -4.035827353808929,
+    1.9838987856957147e-06
+   ]
+  ],
+  "positions": [
+   [
+    0.00012586885395391925,
+    -4.035821268930856,
+    4.036699875400851
+   ],
+   [
+    4.0344601085571945,
+    -4.036031949376759,
+    1.6053000896744793e-05
+   ],
+   [
+    -2.0175813542035548,
+    -6.053439817171954,
+    2.1073269901975245
+   ],
+   [
+    -2.017283969192647,
+    -2.0182420755678296,
+    1.9295477691021112
+   ],
+   [
+    0.0001333208073528662,
+    -2.01782962556783,
+    2.018351619102112
+   ],
+   [
+    4.5918557194929156e-05,
+    -6.053652049376758,
+    2.018255803000897
+   ],
+   [
+    -2.017317184203555,
+    -4.035899897171955,
+    2.0184146001975245
+   ],
+   [
+    2.0174228585571963,
+    -4.035768429376759,
+    2.0182913230008968
+   ],
+   [
+    -2.0172908742035545,
+    -6.053553547171955,
+    4.034860130197525
+   ],
+   [
+    -2.0173944322501556,
+    -2.0179560338089284,
+    0.0017914638987856957
+   ]
+  ]
+ },
+ "members": [
+  {
+   "part": "xc",
+   "stem": "batio3_cubic_orb_v2_q1d2-1d2-0-b0",
+   "system": "batio3_cubic",
+   "frame": 4,
+   "Q": 0.08888888888888889,
+   "n_images": 2,
+   "role": "decide",
+   "path_model": "orb_v2",
+   "decide_T": [
+    100.0,
+    300.0,
+    600.0,
+    900.0
+   ]
+  }
+ ],
+ "qe": {
+  "is_metal": false,
+  "smearing": "mv",
+  "degauss_Ry": 0.005,
+  "kspacing_inv_A": 0.25,
+  "kspacing_convention": "n_i = max(1, ceil(|b_i| / spacing)) with b = 2*pi*inv(cell).T, i.e. |b_i| includes 2*pi (the VASP KSPACING convention); Gamma-centred, unshifted",
+  "kmesh": [
+   7,
+   5,
+   5
+  ],
+  "nk_full": 175,
+  "nk_tr_upper": 88,
+  "nk_irr_spglib": 88,
+  "ecutwfc_Ry": 50.0,
+  "ecutrho_Ry": 400.0,
+  "ecut_scale": 1.0,
+  "conv_thr_Ry": 1e-09,
+  "mixing_beta": 0.4,
+  "calculation": "scf",
+  "disk_io": "none",
+  "input_dft": "pbesol",
+  "functional": "pbesol via input_dft on SSSP 1.3 PBE-efficiency pseudopotentials (PBE-generated; not the SSSP PBEsol set)",
+  "pseudos": {
+   "Ba": {
+    "filename": "Ba.pbe-spn-kjpaw_psl.1.0.0.UPF",
+    "ecutwfc": 30.0,
+    "ecutrho": 240.0,
+    "md5": "c432291d3e53af55f19d5e8866385beb",
+    "family": "100PAW"
+   },
+   "Ti": {
+    "filename": "ti_pbe_v1.4.uspp.F.UPF",
+    "ecutwfc": 35.0,
+    "ecutrho": 280.0,
+    "md5": "88a00a6731bd790ddea75d31a80cb452",
+    "family": "GBRV-1.4"
+   },
+   "O": {
+    "filename": "O.pbe-n-kjpaw_psl.0.1.UPF",
+    "ecutwfc": 50.0,
+    "ecutrho": 400.0,
+    "md5": "0234752ac141de4415c5fc33072bef88",
+    "family": "031PAW"
+   }
+  },
+  "sssp_json": "SSSP_1.3.0_PBE_efficiency.json",
+  "sssp_sha256": "2c8642a70308ecd072a209a30c160bf51423560bb202116cb31fd5275eff814a"
+ },
+ "pw_in_sha256": "24ba984ccb3e1599f6ff6887a4ab450e47491f5a0718e71eeccbd562f4705b68",
+ "provenance": {
+  "script": "scripts/dft_checks.py",
+  "stage": "xc-inputs",
+  "git_head": "30d5674",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.6",
+   "torch": null,
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": null,
+   "cellconstructor": null
+  },
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "host": "fd6e78900fba",
+  "utc": "2026-10-03T22:07:27Z",
+  "settings": {
+   "stage": "xc-inputs",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft_checks",
+   "dft_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "sssp_dir": "/root/sssp",
+   "sssp_json": null,
+   "kspacing_insulator": null,
+   "degauss_insulator": null,
+   "no_require_pbe": false,
+   "functional": "pbesol"
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "script_sha256": "963f25d823e04a57a1f542ac41509877c82a43d76f86eb9b5914f7e6fe5fd6d6",
+  "dft_reference_sha256": "c636c66408c17c067b30f170bd175c57ae41247bbdb14cceaa56769cca6796cf"
+ }
+}

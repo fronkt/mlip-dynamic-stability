@@ -1,0 +1,38 @@
+&CONTROL
+  ! job a_zr_bcc_orb_v2_q1d3-2d3-0-b0-refmattersim_i05, written by scripts/dft_reference.py
+  ! pseudo_dir is taken from $ESPRESSO_PSEUDO (exported by scripts/box/qe_queue.sh)
+  calculation = 'scf'
+  prefix = 'pwscf'
+  outdir = './scratch'
+  disk_io = 'none'
+  tprnfor = .true.
+  tstress = .false.
+  verbosity = 'low'
+/
+&SYSTEM
+  ibrav = 0
+  nat = 3
+  ntyp = 1
+  ecutwfc = 30.0
+  ecutrho = 240.0
+  occupations = 'smearing'
+  smearing = 'mv'
+  degauss = 0.02
+/
+&ELECTRONS
+  conv_thr = 3.000d-10
+  mixing_beta = 0.4
+  electron_maxstep = 200
+/
+ATOMIC_SPECIES
+Zr 91.2240 Zr_pbe_v1.uspp.F.UPF
+CELL_PARAMETERS angstrom
+  -1.7897445430 -1.7894972133 -1.7894921488
+  -1.7897457589 -1.7895026593 1.7894988107
+  -3.5794957081 7.1580051517 -0.0000096765
+ATOMIC_POSITIONS angstrom
+Zr -3.4406014119 -3.4401109826 0.0000066619
+Zr -3.6489365430 -0.0694426433 0.0000012212
+Zr -3.6489383441 3.5095590360 -0.0000042296
+K_POINTS automatic
+15 15 6 0 0 0

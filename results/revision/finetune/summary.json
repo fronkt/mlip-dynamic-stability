@@ -1,0 +1,2675 @@
+{
+ "preregistration": "tasks/preregistration-finetune-2026-10-03.md (commit 033b3d8)",
+ "provenance": {
+  "script": "scripts/finetune_trial.py",
+  "stage": "summary",
+  "git_head": "0467fe7",
+  "git_dirty": false,
+  "host": "cd177441fe9b",
+  "utc": "2026-10-04T22:16:35Z",
+  "python": "3.11.17",
+  "platform": "Linux-6.8.0-101-generic-x86_64-with-glibc2.35",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "torch": "2.6.0+cu124",
+   "mace-torch": "0.3.16",
+   "chgnet": null,
+   "pandas": "3.0.5"
+  },
+  "settings": {}
+ },
+ "available": [
+  "c3a_chgnet_base",
+  "c3a_chgnet_seed0",
+  "c3a_chgnet_seed1",
+  "c3a_chgnet_seed2",
+  "c3a_mace_mp0_base",
+  "c3a_mace_mp0_seed0",
+  "c3a_mace_mp0_seed1",
+  "c3a_mace_mp0_seed2",
+  "c3b_chgnet_base",
+  "c3b_chgnet_seed0",
+  "c3b_chgnet_seed1",
+  "c3b_chgnet_seed2",
+  "c3b_mace_mp0_base",
+  "c3b_mace_mp0_seed0",
+  "c3b_mace_mp0_seed1",
+  "c3b_mace_mp0_seed2",
+  "p2_chgnet_base",
+  "p2_chgnet_seed0",
+  "p2_chgnet_seed1",
+  "p2_chgnet_seed2",
+  "p2_mace_mp0_base",
+  "p2_mace_mp0_seed0",
+  "p2_mace_mp0_seed1",
+  "p2_mace_mp0_seed2",
+  "s2_chgnet_base",
+  "s2_chgnet_seed0",
+  "s2_chgnet_seed1",
+  "s2_chgnet_seed2",
+  "s2_mace_mp0_base",
+  "s2_mace_mp0_seed0",
+  "s2_mace_mp0_seed1",
+  "s2_mace_mp0_seed2"
+ ],
+ "missing": [],
+ "rules": "summary.json: the evaluation files mapped onto the pre-registered outcomes P1, P2, P3, S1, S2.\n\nAll replicates are listed.  Verdict rules (pre-registration, 'Outcomes' and 'Analysis'):\n\n  * a screen call counts as CHANGED only if all three replicates differ from the base call, and as\n    UNCHANGED only if all three equal it; otherwise it is UNRESOLVED;\n  * P2 predictions: BaTiO3 and KNbO3 at 300 K corrected (supported iff changed, refuted iff\n    unchanged); CsSnBr3 at 300 and 600 K and KNbO3 at 600 K persist (supported iff unchanged,\n    refuted iff changed).  A prediction about a mis-call that the base model did not make is\n    reported as 'n/a (base call already correct)'.\n  * P1: per base model, the median over (deciding paths of BaTiO3 and KNbO3) x (replicates) of the\n    ratio of fine-tuned to PBE well depth.  Supported iff that median AND each replicate's median\n    over paths lie in [0.8, 1.2]; refuted iff all lie outside; otherwise unresolved.\n  * P3: supported iff the converged SSCHA (fine-tuned MACE-MP-0, seed 0) calls BaTiO3 100 K STABLE\n    (the label is unstable); refuted iff it calls it unstable; unresolved if the run did not finish.\n  * S2: harmonic calls of the six controls are 'unchanged' iff all replicates equal the base call.\nNothing is dropped: a missing evaluation file is listed under \"missing\", never silently skipped.\n",
+ "P1": {
+  "mace_mp0": {
+   "primary_own_deciding": {
+    "n_paths": 2,
+    "paths": [
+     {
+      "stem": "batio3_cubic_mace_mp0_q1d2-0-1d2-b0",
+      "system": "batio3_cubic",
+      "path_model": "mace_mp0",
+      "role": "decide",
+      "pbe_depth_meV": 73.4979478220339,
+      "base_ratio": 0.5792284749126618,
+      "replicates": {
+       "seed0": 1.141881071981716,
+       "seed1": 0.9939503005058314,
+       "seed2": 0.9225094474149559
+      }
+     },
+     {
+      "stem": "knbo3_cubic_mace_mp0_q0-1d2-1d2-b0",
+      "system": "knbo3_cubic",
+      "path_model": "mace_mp0",
+      "role": "decide",
+      "pbe_depth_meV": 87.7958973578643,
+      "base_ratio": 0.3175489085904542,
+      "replicates": {
+       "seed0": 1.0000541329922643,
+       "seed1": 1.009166564454005,
+       "seed2": 1.134951623857635
+      }
+     }
+    ],
+    "base_median_ratio": 0.44838869175155804,
+    "replicate_median_ratio": {
+     "seed0": 1.07096760248699,
+     "seed1": 1.0015584324799183,
+     "seed2": 1.0287305356362955
+    },
+    "median_over_paths_and_replicates": 1.0046103487231348,
+    "band": [
+     0.8,
+     1.2
+    ],
+    "verdict": "supported"
+   },
+   "own_all_modes": {
+    "n_paths": 2,
+    "paths": [
+     {
+      "stem": "batio3_cubic_mace_mp0_q1d2-0-1d2-b0",
+      "system": "batio3_cubic",
+      "path_model": "mace_mp0",
+      "role": "decide",
+      "pbe_depth_meV": 73.4979478220339,
+      "base_ratio": 0.5792284749126618,
+      "replicates": {
+       "seed0": 1.141881071981716,
+       "seed1": 0.9939503005058314,
+       "seed2": 0.9225094474149559
+      }
+     },
+     {
+      "stem": "knbo3_cubic_mace_mp0_q0-1d2-1d2-b0",
+      "system": "knbo3_cubic",
+      "path_model": "mace_mp0",
+      "role": "decide",
+      "pbe_depth_meV": 87.7958973578643,
+      "base_ratio": 0.3175489085904542,
+      "replicates": {
+       "seed0": 1.0000541329922643,
+       "seed1": 1.009166564454005,
+       "seed2": 1.134951623857635
+      }
+     }
+    ],
+    "base_median_ratio": 0.44838869175155804,
+    "replicate_median_ratio": {
+     "seed0": 1.07096760248699,
+     "seed1": 1.0015584324799183,
+     "seed2": 1.0287305356362955
+    },
+    "median_over_paths_and_replicates": 1.0046103487231348,
+    "band": [
+     0.8,
+     1.2
+    ]
+   },
+   "all_models_paths": {
+    "n_paths": 15,
+    "paths": [
+     {
+      "stem": "batio3_cubic_chgnet_q0-0-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 22.474017991044093,
+      "base_ratio": 0.596587996936393,
+      "replicates": {
+       "seed0": 1.1333496288761324,
+       "seed1": 0.9642483366426985,
+       "seed2": 0.8663885650633935
+      }
+     },
+     {
+      "stem": "batio3_cubic_chgnet_q1d2-1d2-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 73.29086919344263,
+      "base_ratio": 0.5578176334129769,
+      "replicates": {
+       "seed0": 1.1533215625931614,
+       "seed1": 0.9957666833765105,
+       "seed2": 0.9100853954977582
+      }
+     },
+     {
+      "stem": "batio3_cubic_mace_mp0_q1d2-0-1d2-b0",
+      "system": "batio3_cubic",
+      "path_model": "mace_mp0",
+      "role": "decide",
+      "pbe_depth_meV": 73.4979478220339,
+      "base_ratio": 0.5792284749126618,
+      "replicates": {
+       "seed0": 1.141881071981716,
+       "seed1": 0.9939503005058314,
+       "seed2": 0.9225094474149559
+      }
+     },
+     {
+      "stem": "batio3_cubic_mattersim_q0-0-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "mattersim",
+      "role": "decide",
+      "pbe_depth_meV": 43.54692182641884,
+      "base_ratio": 0.5706520436426498,
+      "replicates": {
+       "seed0": 0.9883869341237631,
+       "seed1": 0.9471939559574152,
+       "seed2": 0.9149579007701727
+      }
+     },
+     {
+      "stem": "batio3_cubic_mattersim_q1d2-0-1d2-b0",
+      "system": "batio3_cubic",
+      "path_model": "mattersim",
+      "role": "decide",
+      "pbe_depth_meV": 73.0247418541694,
+      "base_ratio": 0.5734972468613125,
+      "replicates": {
+       "seed0": 1.1442358758893036,
+       "seed1": 0.9938806973605708,
+       "seed2": 0.9203587207176854
+      }
+     },
+     {
+      "stem": "batio3_cubic_orb_v2_q1d2-1d2-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "orb_v2",
+      "role": "decide",
+      "pbe_depth_meV": 21.431413813843392,
+      "base_ratio": 0.5650171276143582,
+      "replicates": {
+       "seed0": 1.081292109267173,
+       "seed1": 0.9120612327804442,
+       "seed2": 0.9676607226163144
+      }
+     },
+     {
+      "stem": "batio3_cubic_sevennet0_q1d2-0-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "sevennet0",
+      "role": "decide",
+      "pbe_depth_meV": 42.396288459713105,
+      "base_ratio": 0.5607007519584825,
+      "replicates": {
+       "seed0": 1.0730232370032868,
+       "seed1": 0.9659092711287726,
+       "seed2": 0.8902877019824612
+      }
+     },
+     {
+      "stem": "batio3_cubic_sevennet0_q1d2-0-1d2-b0",
+      "system": "batio3_cubic",
+      "path_model": "sevennet0",
+      "role": "decide",
+      "pbe_depth_meV": 68.95800053462153,
+      "base_ratio": 0.5141582193384721,
+      "replicates": {
+       "seed0": 1.167049026562201,
+       "seed1": 0.9920361431980164,
+       "seed2": 0.8945181735700685
+      }
+     },
+     {
+      "stem": "knbo3_cubic_chgnet_q0-0-0-b0",
+      "system": "knbo3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 57.84473530820833,
+      "base_ratio": 0.511818129820343,
+      "replicates": {
+       "seed0": 0.8944424166301652,
+       "seed1": 0.9804355908134561,
+       "seed2": 1.0149274520861926
+      }
+     },
+     {
+      "stem": "knbo3_cubic_mace_mp0_q0-1d2-1d2-b0",
+      "system": "knbo3_cubic",
+      "path_model": "mace_mp0",
+      "role": "decide",
+      "pbe_depth_meV": 87.7958973578643,
+      "base_ratio": 0.3175489085904542,
+      "replicates": {
+       "seed0": 1.0000541329922643,
+       "seed1": 1.009166564454005,
+       "seed2": 1.134951623857635
+      }
+     },
+     {
+      "stem": "knbo3_cubic_mattersim_q0-0-0-b0",
+      "system": "knbo3_cubic",
+      "path_model": "mattersim",
+      "role": "decide",
+      "pbe_depth_meV": 48.77341232713661,
+      "base_ratio": 0.45518177449280683,
+      "replicates": {
+       "seed0": 0.8073689323385673,
+       "seed1": 0.9507414186040559,
+       "seed2": 1.0332832389201405
+      }
+     },
+     {
+      "stem": "knbo3_cubic_mattersim_q0-1d2-1d2-b0",
+      "system": "knbo3_cubic",
+      "path_model": "mattersim",
+      "role": "decide",
+      "pbe_depth_meV": 91.78318143676734,
+      "base_ratio": 0.3195014450017842,
+      "replicates": {
+       "seed0": 0.9992863027873973,
+       "seed1": 1.0089557183831381,
+       "seed2": 1.1291481563903047
+      }
+     },
+     {
+      "stem": "knbo3_cubic_orb_v2_q0-1d2-1d2-b0",
+      "system": "knbo3_cubic",
+      "path_model": "orb_v2",
+      "role": "decide",
+      "pbe_depth_meV": 97.58546481680241,
+      "base_ratio": 0.5598530456938913,
+      "replicates": {
+       "seed0": 0.9802629184881478,
+       "seed1": 1.0017616972783698,
+       "seed2": 1.1268511474573153
+      }
+     },
+     {
+      "stem": "knbo3_cubic_orb_v2_q1d2-1d2-0-b0",
+      "system": "knbo3_cubic",
+      "path_model": "orb_v2",
+      "role": "decide",
+      "pbe_depth_meV": 100.1495935197454,
+      "base_ratio": 0.5653582101356494,
+      "replicates": {
+       "seed0": 0.9804377996121757,
+       "seed1": 1.0014068176933453,
+       "seed2": 1.1238258018900609
+      }
+     },
+     {
+      "stem": "knbo3_cubic_sevennet0_q0-1d2-1d2-b0",
+      "system": "knbo3_cubic",
+      "path_model": "sevennet0",
+      "role": "decide",
+      "pbe_depth_meV": 94.64445844787406,
+      "base_ratio": 0.36993323359487723,
+      "replicates": {
+       "seed0": 1.0047909943679183,
+       "seed1": 1.0083944348763465,
+       "seed2": 1.1155864704508998
+      }
+     }
+    ],
+    "base_median_ratio": 0.5598530456938913,
+    "replicate_median_ratio": {
+     "seed0": 1.0047909943679183,
+     "seed1": 0.9938806973605708,
+     "seed2": 0.9676607226163144
+    },
+    "median_over_paths_and_replicates": 0.9957666833765105,
+    "band": [
+     0.8,
+     1.2
+    ]
+   },
+   "negative_control_cssnbr3_own_deciding": {
+    "n_paths": 2,
+    "paths": [
+     {
+      "stem": "cssnbr3_cubic_mace_mp0_q1d2-1d2-0-b0",
+      "system": "cssnbr3_cubic",
+      "path_model": "mace_mp0",
+      "role": "decide",
+      "pbe_depth_meV": 60.57743853307329,
+      "base_ratio": 0.920103124793008,
+      "replicates": {
+       "seed0": 1.6822593181439258,
+       "seed1": 1.6646350809427837,
+       "seed2": 1.4747898542876714
+      }
+     },
+     {
+      "stem": "cssnbr3_cubic_mace_mp0_q1d2-1d2-1d2-b0",
+      "system": "cssnbr3_cubic",
+      "path_model": "mace_mp0",
+      "role": "decide",
+      "pbe_depth_meV": 127.20886574970791,
+      "base_ratio": 0.9184237776317472,
+      "replicates": {
+       "seed0": 1.7279939974429361,
+       "seed1": 1.7277539852264139,
+       "seed2": 1.5095965127853217
+      }
+     }
+    ],
+    "base_median_ratio": 0.9192634512123776,
+    "replicate_median_ratio": {
+     "seed0": 1.705126657793431,
+     "seed1": 1.6961945330845989,
+     "seed2": 1.4921931835364965
+    },
+    "median_over_paths_and_replicates": 1.6734471995433546,
+    "band": [
+     0.8,
+     1.2
+    ]
+   }
+  },
+  "chgnet": {
+   "primary_own_deciding": {
+    "n_paths": 3,
+    "paths": [
+     {
+      "stem": "batio3_cubic_chgnet_q0-0-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 22.474017991044093,
+      "base_ratio": 0.7383607645095523,
+      "replicates": {
+       "seed0": 1.6698834945390748,
+       "seed1": 1.0662947868158639,
+       "seed2": 1.0377787848761846
+      }
+     },
+     {
+      "stem": "batio3_cubic_chgnet_q1d2-1d2-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 73.29086919344263,
+      "base_ratio": 0.5269414258855979,
+      "replicates": {
+       "seed0": 1.3316149189902347,
+       "seed1": 0.985594907207594,
+       "seed2": 0.9695638958313826
+      }
+     },
+     {
+      "stem": "knbo3_cubic_chgnet_q0-0-0-b0",
+      "system": "knbo3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 57.84473530820833,
+      "base_ratio": 0.5240163052203465,
+      "replicates": {
+       "seed0": 0.9212161801690184,
+       "seed1": 1.059705261588944,
+       "seed2": 0.9907245096054953
+      }
+     }
+    ],
+    "base_median_ratio": 0.5269414258855979,
+    "replicate_median_ratio": {
+     "seed0": 1.3316149189902347,
+     "seed1": 1.059705261588944,
+     "seed2": 0.9907245096054953
+    },
+    "median_over_paths_and_replicates": 1.0377787848761846,
+    "band": [
+     0.8,
+     1.2
+    ],
+    "verdict": "unresolved"
+   },
+   "own_all_modes": {
+    "n_paths": 3,
+    "paths": [
+     {
+      "stem": "batio3_cubic_chgnet_q0-0-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 22.474017991044093,
+      "base_ratio": 0.7383607645095523,
+      "replicates": {
+       "seed0": 1.6698834945390748,
+       "seed1": 1.0662947868158639,
+       "seed2": 1.0377787848761846
+      }
+     },
+     {
+      "stem": "batio3_cubic_chgnet_q1d2-1d2-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 73.29086919344263,
+      "base_ratio": 0.5269414258855979,
+      "replicates": {
+       "seed0": 1.3316149189902347,
+       "seed1": 0.985594907207594,
+       "seed2": 0.9695638958313826
+      }
+     },
+     {
+      "stem": "knbo3_cubic_chgnet_q0-0-0-b0",
+      "system": "knbo3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 57.84473530820833,
+      "base_ratio": 0.5240163052203465,
+      "replicates": {
+       "seed0": 0.9212161801690184,
+       "seed1": 1.059705261588944,
+       "seed2": 0.9907245096054953
+      }
+     }
+    ],
+    "base_median_ratio": 0.5269414258855979,
+    "replicate_median_ratio": {
+     "seed0": 1.3316149189902347,
+     "seed1": 1.059705261588944,
+     "seed2": 0.9907245096054953
+    },
+    "median_over_paths_and_replicates": 1.0377787848761846,
+    "band": [
+     0.8,
+     1.2
+    ]
+   },
+   "all_models_paths": {
+    "n_paths": 15,
+    "paths": [
+     {
+      "stem": "batio3_cubic_chgnet_q0-0-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 22.474017991044093,
+      "base_ratio": 0.7383607645095523,
+      "replicates": {
+       "seed0": 1.6698834945390748,
+       "seed1": 1.0662947868158639,
+       "seed2": 1.0377787848761846
+      }
+     },
+     {
+      "stem": "batio3_cubic_chgnet_q1d2-1d2-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 73.29086919344263,
+      "base_ratio": 0.5269414258855979,
+      "replicates": {
+       "seed0": 1.3316149189902347,
+       "seed1": 0.985594907207594,
+       "seed2": 0.9695638958313826
+      }
+     },
+     {
+      "stem": "batio3_cubic_mace_mp0_q1d2-0-1d2-b0",
+      "system": "batio3_cubic",
+      "path_model": "mace_mp0",
+      "role": "decide",
+      "pbe_depth_meV": 73.4979478220339,
+      "base_ratio": 0.54642522686137,
+      "replicates": {
+       "seed0": 1.303572948124066,
+       "seed1": 0.9674549989262856,
+       "seed2": 0.9601887060158951
+      }
+     },
+     {
+      "stem": "batio3_cubic_mattersim_q0-0-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "mattersim",
+      "role": "decide",
+      "pbe_depth_meV": 43.54692182641884,
+      "base_ratio": 0.7803381230397753,
+      "replicates": {
+       "seed0": 1.269319645582212,
+       "seed1": 0.9585159117985206,
+       "seed2": 0.9595671081923774
+      }
+     },
+     {
+      "stem": "batio3_cubic_mattersim_q1d2-0-1d2-b0",
+      "system": "batio3_cubic",
+      "path_model": "mattersim",
+      "role": "decide",
+      "pbe_depth_meV": 73.0247418541694,
+      "base_ratio": 0.5403542349307469,
+      "replicates": {
+       "seed0": 1.3103485720227044,
+       "seed1": 0.9699630156800182,
+       "seed2": 0.9626496366302981
+      }
+     },
+     {
+      "stem": "batio3_cubic_orb_v2_q1d2-1d2-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "orb_v2",
+      "role": "decide",
+      "pbe_depth_meV": 21.431413813843392,
+      "base_ratio": 0.7888764795502793,
+      "replicates": {
+       "seed0": 1.4937390379932185,
+       "seed1": 0.7547013252015308,
+       "seed2": 0.8757383301866819
+      }
+     },
+     {
+      "stem": "batio3_cubic_sevennet0_q1d2-0-0-b0",
+      "system": "batio3_cubic",
+      "path_model": "sevennet0",
+      "role": "decide",
+      "pbe_depth_meV": 42.396288459713105,
+      "base_ratio": 0.6183229844349538,
+      "replicates": {
+       "seed0": 1.2519420846082578,
+       "seed1": 0.9078694576467817,
+       "seed2": 0.9004913312318129
+      }
+     },
+     {
+      "stem": "batio3_cubic_sevennet0_q1d2-0-1d2-b0",
+      "system": "batio3_cubic",
+      "path_model": "sevennet0",
+      "role": "decide",
+      "pbe_depth_meV": 68.95800053462153,
+      "base_ratio": 0.4801701326737392,
+      "replicates": {
+       "seed0": 1.371914664782112,
+       "seed1": 0.9933104726140163,
+       "seed2": 0.9793700494073593
+      }
+     },
+     {
+      "stem": "knbo3_cubic_chgnet_q0-0-0-b0",
+      "system": "knbo3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 57.84473530820833,
+      "base_ratio": 0.5240163052203465,
+      "replicates": {
+       "seed0": 0.9212161801690184,
+       "seed1": 1.059705261588944,
+       "seed2": 0.9907245096054953
+      }
+     },
+     {
+      "stem": "knbo3_cubic_mace_mp0_q0-1d2-1d2-b0",
+      "system": "knbo3_cubic",
+      "path_model": "mace_mp0",
+      "role": "decide",
+      "pbe_depth_meV": 87.7958973578643,
+      "base_ratio": 0.17084385603234492,
+      "replicates": {
+       "seed0": 0.7049264293664201,
+       "seed1": 1.1557595550509598,
+       "seed2": 1.0292342984980127
+      }
+     },
+     {
+      "stem": "knbo3_cubic_mattersim_q0-0-0-b0",
+      "system": "knbo3_cubic",
+      "path_model": "mattersim",
+      "role": "decide",
+      "pbe_depth_meV": 48.77341232713661,
+      "base_ratio": 0.3809737620207688,
+      "replicates": {
+       "seed0": 0.8499367423280013,
+       "seed1": 1.097323317830299,
+       "seed2": 0.999088243903367
+      }
+     },
+     {
+      "stem": "knbo3_cubic_mattersim_q0-1d2-1d2-b0",
+      "system": "knbo3_cubic",
+      "path_model": "mattersim",
+      "role": "decide",
+      "pbe_depth_meV": 91.78318143676734,
+      "base_ratio": 0.17988055662462873,
+      "replicates": {
+       "seed0": 0.7082173486330114,
+       "seed1": 1.1569212509711566,
+       "seed2": 1.0290763821686246
+      }
+     },
+     {
+      "stem": "knbo3_cubic_orb_v2_q0-1d2-1d2-b0",
+      "system": "knbo3_cubic",
+      "path_model": "orb_v2",
+      "role": "decide",
+      "pbe_depth_meV": 97.58546481680241,
+      "base_ratio": 0.33633754099602564,
+      "replicates": {
+       "seed0": 0.7602385515214676,
+       "seed1": 1.065303424828416,
+       "seed2": 0.9768017752683273
+      }
+     },
+     {
+      "stem": "knbo3_cubic_orb_v2_q1d2-1d2-0-b0",
+      "system": "knbo3_cubic",
+      "path_model": "orb_v2",
+      "role": "decide",
+      "pbe_depth_meV": 100.1495935197454,
+      "base_ratio": 0.337324973542847,
+      "replicates": {
+       "seed0": 0.7624092897960283,
+       "seed1": 1.061339550903104,
+       "seed2": 0.9744943680126692
+      }
+     },
+     {
+      "stem": "knbo3_cubic_sevennet0_q0-1d2-1d2-b0",
+      "system": "knbo3_cubic",
+      "path_model": "sevennet0",
+      "role": "decide",
+      "pbe_depth_meV": 94.64445844787406,
+      "base_ratio": 0.18105254547602526,
+      "replicates": {
+       "seed0": 0.7540362913547374,
+       "seed1": 1.1427430474924907,
+       "seed2": 1.0445587196252606
+      }
+     }
+    ],
+    "base_median_ratio": 0.5240163052203465,
+    "replicate_median_ratio": {
+     "seed0": 1.2519420846082578,
+     "seed1": 1.059705261588944,
+     "seed2": 0.9768017752683273
+    },
+    "median_over_paths_and_replicates": 0.9907245096054953,
+    "band": [
+     0.8,
+     1.2
+    ]
+   },
+   "negative_control_cssnbr3_own_deciding": {
+    "n_paths": 1,
+    "paths": [
+     {
+      "stem": "cssnbr3_cubic_chgnet_q1d2-1d2-1d2-b0",
+      "system": "cssnbr3_cubic",
+      "path_model": "chgnet",
+      "role": "decide",
+      "pbe_depth_meV": 105.22587717423448,
+      "base_ratio": 2.169492422344573,
+      "replicates": {
+       "seed0": 2.46096222843458,
+       "seed1": 0.3541140629212919,
+       "seed2": 1.4796805479315571
+      }
+     }
+    ],
+    "base_median_ratio": 2.169492422344573,
+    "replicate_median_ratio": {
+     "seed0": 2.46096222843458,
+     "seed1": 0.3541140629212919,
+     "seed2": 1.4796805479315571
+    },
+    "median_over_paths_and_replicates": 1.4796805479315571,
+    "band": [
+     0.8,
+     1.2
+    ]
+   }
+  }
+ },
+ "P2": {
+  "base_call_source": "base calls from results/ledger.parquet (read-only, canonical softmode rows)",
+  "models": {
+   "mace_mp0": {
+    "batio3_cubic@100": {
+     "system": "batio3_cubic",
+     "T": 100.0,
+     "label_stable": false,
+     "base_call_ledger": false,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 2.0309852717978996
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 2.039361488470757,
+       "correct": true
+      },
+      "seed1": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 2.0875185728167676,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 2.1063380811181402,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unchanged",
+     "n_replicates_correct": 3
+    },
+    "batio3_cubic@300": {
+     "system": "batio3_cubic",
+     "T": 300.0,
+     "label_stable": false,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 3.17495182299959
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": false,
+     "replicates": {
+      "seed0": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 3.18711590045837,
+       "correct": false
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 3.2412957553397477,
+       "correct": false
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 3.281749555067802,
+       "correct": false
+      }
+     },
+     "prediction": "corrected",
+     "status": "refuted",
+     "n_replicates_correct": 0
+    },
+    "batio3_cubic@600": {
+     "system": "batio3_cubic",
+     "T": 600.0,
+     "label_stable": true,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 4.139786712085454
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.149767402591749,
+       "correct": true
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.203850874198807,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.267272806889352,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unchanged",
+     "n_replicates_correct": 3
+    },
+    "batio3_cubic@900": {
+     "system": "batio3_cubic",
+     "T": 900.0,
+     "label_stable": true,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 4.7964131625621285
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.8001018165398595,
+       "correct": true
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.852545009548192,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.932814229043289,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unchanged",
+     "n_replicates_correct": 3
+    },
+    "knbo3_cubic@100": {
+     "system": "knbo3_cubic",
+     "T": 100.0,
+     "label_stable": false,
+     "base_call_ledger": false,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 1.7688221791676255
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 1.7805734029865259,
+       "correct": true
+      },
+      "seed1": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 1.703096744708935,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 1.6935276640025079,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unchanged",
+     "n_replicates_correct": 3
+    },
+    "knbo3_cubic@300": {
+     "system": "knbo3_cubic",
+     "T": 300.0,
+     "label_stable": false,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 2.759567557359966
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": false,
+     "replicates": {
+      "seed0": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 2.785957034321126,
+       "correct": false
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 2.6751875908313565,
+       "correct": false
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 2.677669252112798,
+       "correct": false
+      }
+     },
+     "prediction": "corrected",
+     "status": "refuted",
+     "n_replicates_correct": 0
+    },
+    "knbo3_cubic@600": {
+     "system": "knbo3_cubic",
+     "T": 600.0,
+     "label_stable": false,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 3.5869144258678025
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": false,
+     "replicates": {
+      "seed0": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 3.6201132149592397,
+       "correct": false
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 3.482834380705336,
+       "correct": false
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 3.501899629113131,
+       "correct": false
+      }
+     },
+     "prediction": "persist",
+     "status": "supported",
+     "n_replicates_correct": 0
+    },
+    "knbo3_cubic@900": {
+     "system": "knbo3_cubic",
+     "T": 900.0,
+     "label_stable": true,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 4.149898444808057
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.181462173552181,
+       "correct": true
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.026754346448062,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.058930663333355,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unchanged",
+     "n_replicates_correct": 3
+    },
+    "cssnbr3_cubic@100": {
+     "system": "cssnbr3_cubic",
+     "T": 100.0,
+     "label_stable": false,
+     "base_call_ledger": false,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 0.14759908277448947
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.12568064316891508,
+       "correct": true
+      },
+      "seed1": {
+       "pred_stable": false,
+       "min_eff_freq_thz": -0.5207173441046061,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": false,
+       "min_eff_freq_thz": -0.08555915879612447,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unchanged",
+     "n_replicates_correct": 3
+    },
+    "cssnbr3_cubic@300": {
+     "system": "cssnbr3_cubic",
+     "T": 300.0,
+     "label_stable": true,
+     "base_call_ledger": false,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 0.2447518965685119
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": false,
+     "replicates": {
+      "seed0": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.2130636599360292,
+       "correct": false
+      },
+      "seed1": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.2204508904921797,
+       "correct": false
+      },
+      "seed2": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.2274033881313358,
+       "correct": false
+      }
+     },
+     "prediction": "persist",
+     "status": "supported",
+     "n_replicates_correct": 0
+    },
+    "cssnbr3_cubic@600": {
+     "system": "cssnbr3_cubic",
+     "T": 600.0,
+     "label_stable": true,
+     "base_call_ledger": false,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 0.32916063046350913
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": false,
+     "replicates": {
+      "seed0": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.29304774115026033,
+       "correct": false
+      },
+      "seed1": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.3026845300191935,
+       "correct": false
+      },
+      "seed2": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.31157752084078194,
+       "correct": false
+      }
+     },
+     "prediction": "persist",
+     "status": "supported",
+     "n_replicates_correct": 0
+    },
+    "cssnbr3_cubic@900": {
+     "system": "cssnbr3_cubic",
+     "T": 900.0,
+     "label_stable": true,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 0.38747375222864777
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.3503753066703293,
+       "correct": false
+      },
+      "seed1": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.3614284683659109,
+       "correct": false
+      },
+      "seed2": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.3714727312753564,
+       "correct": false
+      }
+     },
+     "prediction": null,
+     "status": "changed",
+     "n_replicates_correct": 0
+    }
+   },
+   "chgnet": {
+    "batio3_cubic@100": {
+     "system": "batio3_cubic",
+     "T": 100.0,
+     "label_stable": false,
+     "base_call_ledger": false,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 2.0443746668212
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 2.510445502464898,
+       "correct": true
+      },
+      "seed1": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 2.545374738929928,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 2.4258968975098387,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unchanged",
+     "n_replicates_correct": 3
+    },
+    "batio3_cubic@300": {
+     "system": "batio3_cubic",
+     "T": 300.0,
+     "label_stable": false,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 3.181501175501983
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": false,
+     "replicates": {
+      "seed0": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 3.792212275621137,
+       "correct": false
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.004337006264797,
+       "correct": false
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 3.7474048982222308,
+       "correct": false
+      }
+     },
+     "prediction": "corrected",
+     "status": "refuted",
+     "n_replicates_correct": 0
+    },
+    "batio3_cubic@600": {
+     "system": "batio3_cubic",
+     "T": 600.0,
+     "label_stable": true,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 4.130626447875516
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.855302746143907,
+       "correct": true
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 5.310759630775408,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.889226321723986,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unchanged",
+     "n_replicates_correct": 3
+    },
+    "batio3_cubic@900": {
+     "system": "batio3_cubic",
+     "T": 900.0,
+     "label_stable": true,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 4.770484112897344
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 5.569157445501977,
+       "correct": true
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 6.2376648246429225,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 5.6823242786007295,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unchanged",
+     "n_replicates_correct": 3
+    },
+    "knbo3_cubic@100": {
+     "system": "knbo3_cubic",
+     "T": 100.0,
+     "label_stable": false,
+     "base_call_ledger": false,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 2.518932552158371
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 2.1277534221285883,
+       "correct": true
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 2.066441294636261,
+       "correct": false
+      },
+      "seed2": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 1.5021428572233468,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unresolved",
+     "n_replicates_correct": 2
+    },
+    "knbo3_cubic@300": {
+     "system": "knbo3_cubic",
+     "T": 300.0,
+     "label_stable": false,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 3.8392419285611394
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": false,
+     "replicates": {
+      "seed0": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 3.1976278630636283,
+       "correct": false
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 2.066441294636261,
+       "correct": false
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 2.3497801685561615,
+       "correct": false
+      }
+     },
+     "prediction": "corrected",
+     "status": "refuted",
+     "n_replicates_correct": 0
+    },
+    "knbo3_cubic@600": {
+     "system": "knbo3_cubic",
+     "T": 600.0,
+     "label_stable": false,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 4.967096201700848
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": false,
+     "replicates": {
+      "seed0": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.065481906109734,
+       "correct": false
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 2.066441294636261,
+       "correct": false
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 3.0450902275218135,
+       "correct": false
+      }
+     },
+     "prediction": "persist",
+     "status": "supported",
+     "n_replicates_correct": 0
+    },
+    "knbo3_cubic@900": {
+     "system": "knbo3_cubic",
+     "T": 900.0,
+     "label_stable": true,
+     "base_call_ledger": true,
+     "base_rerun": {
+      "pred_stable": true,
+      "min_eff_freq_thz": 5.744616626033753
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 4.644416946082112,
+       "correct": true
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 2.066441294636261,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 3.511137799155491,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unchanged",
+     "n_replicates_correct": 3
+    },
+    "cssnbr3_cubic@100": {
+     "system": "cssnbr3_cubic",
+     "T": 100.0,
+     "label_stable": false,
+     "base_call_ledger": false,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 0.1506745107955306
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": true,
+     "replicates": {
+      "seed0": {
+       "pred_stable": false,
+       "min_eff_freq_thz": -0.7263884571092786,
+       "correct": true
+      },
+      "seed1": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.16729681108164904,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.16503106354535363,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unchanged",
+     "n_replicates_correct": 3
+    },
+    "cssnbr3_cubic@300": {
+     "system": "cssnbr3_cubic",
+     "T": 300.0,
+     "label_stable": true,
+     "base_call_ledger": false,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 0.256137860193352
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": false,
+     "replicates": {
+      "seed0": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.2357567037729754,
+       "correct": false
+      },
+      "seed1": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.2720604211070051,
+       "correct": false
+      },
+      "seed2": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.27625301495190613,
+       "correct": false
+      }
+     },
+     "prediction": "persist",
+     "status": "supported",
+     "n_replicates_correct": 0
+    },
+    "cssnbr3_cubic@600": {
+     "system": "cssnbr3_cubic",
+     "T": 600.0,
+     "label_stable": true,
+     "base_call_ledger": false,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 0.35376276962420394
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": false,
+     "replicates": {
+      "seed0": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.32624105981846346,
+       "correct": false
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 0.35993522016687707,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.3748949998398802,
+       "correct": false
+      }
+     },
+     "prediction": "persist",
+     "status": "unresolved",
+     "n_replicates_correct": 1
+    },
+    "cssnbr3_cubic@900": {
+     "system": "cssnbr3_cubic",
+     "T": 900.0,
+     "label_stable": true,
+     "base_call_ledger": false,
+     "base_rerun": {
+      "pred_stable": false,
+      "min_eff_freq_thz": 0.4246714048119532
+     },
+     "base_rerun_agrees_with_ledger": true,
+     "base_correct": false,
+     "replicates": {
+      "seed0": {
+       "pred_stable": false,
+       "min_eff_freq_thz": 0.3919117329037069,
+       "correct": false
+      },
+      "seed1": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 0.41949228605147526,
+       "correct": true
+      },
+      "seed2": {
+       "pred_stable": true,
+       "min_eff_freq_thz": 0.44394790914396853,
+       "correct": true
+      }
+     },
+     "prediction": null,
+     "status": "unresolved",
+     "n_replicates_correct": 2
+    }
+   }
+  }
+ },
+ "P3": {
+  "file": "results/revision/finetune/sscha_converged_grid/batio3_cubic_mace_mp0_100K_sc222_startA.json",
+  "run_status": "ok",
+  "model_version": "mace-torch=0.3.16;ckpt=finetuned:ft_mace_mp0_seed0.model:sha256=2cf1810e3f94ef32",
+  "min_nonac_thz": 1.7351226215297784,
+  "called_stable": true,
+  "relax_converged": true,
+  "label_stable": false,
+  "prediction": "called stable",
+  "status": "supported"
+ },
+ "S1": {
+  "mace_mp0": {
+   "c3a": {
+    "base": {
+     "batio3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 50,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 3980.9655336041774,
+      "energy_rmse_meV_per_atom": 210.5639218914182,
+      "force_rmse_eV_A": 3.2248343910809556,
+      "force_rel_rmse": 0.39601572643579586,
+      "window_energy_rmse_meV_per_cell": 28.05322049974979,
+      "window_energy_rmse_meV_per_atom": 3.0568217595585496,
+      "window_force_rmse_eV_A": 0.03169123581223234,
+      "window_force_rel_rmse": 0.16747406151359978
+     },
+     "knbo3_cubic": {
+      "n_paths": 7,
+      "n_points": 70,
+      "n_points_window": 45,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 4731.352263326505,
+      "energy_rmse_meV_per_atom": 243.82295885339093,
+      "force_rmse_eV_A": 3.5866632643915706,
+      "force_rel_rmse": 0.6027253873953061,
+      "window_energy_rmse_meV_per_cell": 60.996857078806684,
+      "window_energy_rmse_meV_per_atom": 5.187898696128525,
+      "window_force_rmse_eV_A": 0.08956893749486036,
+      "window_force_rel_rmse": 0.5036235509164115
+     },
+     "cssnbr3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 80,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 5.462962628552285,
+      "energy_rmse_meV_per_atom": 0.14911953588191684,
+      "force_rmse_eV_A": 0.0012957062058856744,
+      "force_rel_rmse": 0.16552114395949927,
+      "window_energy_rmse_meV_per_cell": 5.462962628552285,
+      "window_energy_rmse_meV_per_atom": 0.14911953588191684,
+      "window_force_rmse_eV_A": 0.0012957062058856744,
+      "window_force_rel_rmse": 0.16552114395949927
+     }
+    },
+    "seed0": {
+     "batio3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 50,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 2460.1652974820213,
+      "energy_rmse_meV_per_atom": 128.54756963663112,
+      "force_rmse_eV_A": 2.247333014418721,
+      "force_rel_rmse": 0.2759767195207373,
+      "window_energy_rmse_meV_per_cell": 9.418890586633362,
+      "window_energy_rmse_meV_per_atom": 0.682350048196084,
+      "window_force_rmse_eV_A": 0.010418898322469571,
+      "window_force_rel_rmse": 0.05505923558486498
+     },
+     "knbo3_cubic": {
+      "n_paths": 7,
+      "n_points": 70,
+      "n_points_window": 45,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 3418.3303597128024,
+      "energy_rmse_meV_per_atom": 173.31541084697304,
+      "force_rmse_eV_A": 2.9887432377618675,
+      "force_rel_rmse": 0.5022471564836753,
+      "window_energy_rmse_meV_per_cell": 7.0285620170024075,
+      "window_energy_rmse_meV_per_atom": 0.8579015776266402,
+      "window_force_rmse_eV_A": 0.01389698095396362,
+      "window_force_rel_rmse": 0.0781392198099314
+     },
+     "cssnbr3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 80,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 30.618564441842402,
+      "energy_rmse_meV_per_atom": 0.84712313293016,
+      "force_rmse_eV_A": 0.0038896790567189187,
+      "force_rel_rmse": 0.49689051744823454,
+      "window_energy_rmse_meV_per_cell": 30.618564441842402,
+      "window_energy_rmse_meV_per_atom": 0.84712313293016,
+      "window_force_rmse_eV_A": 0.0038896790567189187,
+      "window_force_rel_rmse": 0.49689051744823454
+     }
+    },
+    "seed1": {
+     "batio3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 50,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 2228.0942090900844,
+      "energy_rmse_meV_per_atom": 116.88574360153378,
+      "force_rmse_eV_A": 1.9215263887324028,
+      "force_rel_rmse": 0.23596705331722287,
+      "window_energy_rmse_meV_per_cell": 0.9401065532482086,
+      "window_energy_rmse_meV_per_atom": 0.10184068645426911,
+      "window_force_rmse_eV_A": 0.0036657507280907775,
+      "window_force_rel_rmse": 0.019371859354655865
+     },
+     "knbo3_cubic": {
+      "n_paths": 7,
+      "n_points": 70,
+      "n_points_window": 45,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 2935.8777355080374,
+      "energy_rmse_meV_per_atom": 148.50187714997045,
+      "force_rmse_eV_A": 2.6528437624905585,
+      "force_rel_rmse": 0.44580050218837075,
+      "window_energy_rmse_meV_per_cell": 2.1240717271935905,
+      "window_energy_rmse_meV_per_atom": 0.35106557921112286,
+      "window_force_rmse_eV_A": 0.0059173547898744615,
+      "window_force_rel_rmse": 0.03327179393503265
+     },
+     "cssnbr3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 80,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 29.926726944286727,
+      "energy_rmse_meV_per_atom": 0.8253877434296343,
+      "force_rmse_eV_A": 0.003911925281898159,
+      "force_rel_rmse": 0.49973238130882436,
+      "window_energy_rmse_meV_per_cell": 29.926726944286727,
+      "window_energy_rmse_meV_per_atom": 0.8253877434296343,
+      "window_force_rmse_eV_A": 0.003911925281898159,
+      "window_force_rel_rmse": 0.49973238130882436
+     }
+    },
+    "seed2": {
+     "batio3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 50,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 2309.9633658280545,
+      "energy_rmse_meV_per_atom": 120.96934581324778,
+      "force_rmse_eV_A": 2.0483565453719255,
+      "force_rel_rmse": 0.2515420350137963,
+      "window_energy_rmse_meV_per_cell": 8.158509033322925,
+      "window_energy_rmse_meV_per_atom": 0.5898009746882995,
+      "window_force_rmse_eV_A": 0.012059908482529308,
+      "window_force_rel_rmse": 0.06373124314299901
+     },
+     "knbo3_cubic": {
+      "n_paths": 7,
+      "n_points": 70,
+      "n_points_window": 45,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 2933.684816770612,
+      "energy_rmse_meV_per_atom": 148.41412997507098,
+      "force_rmse_eV_A": 2.664964612561499,
+      "force_rel_rmse": 0.44783736584576994,
+      "window_energy_rmse_meV_per_cell": 11.204238729809507,
+      "window_energy_rmse_meV_per_atom": 0.7384636768512706,
+      "window_force_rmse_eV_A": 0.013935756237318245,
+      "window_force_rel_rmse": 0.07835724345112918
+     },
+     "cssnbr3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 80,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 21.661550712562278,
+      "energy_rmse_meV_per_atom": 0.5984325375415899,
+      "force_rmse_eV_A": 0.0027309589803910634,
+      "force_rel_rmse": 0.3488687886864078,
+      "window_energy_rmse_meV_per_cell": 21.661550712562278,
+      "window_energy_rmse_meV_per_atom": 0.5984325375415899,
+      "window_force_rmse_eV_A": 0.0027309589803910634,
+      "window_force_rel_rmse": 0.3488687886864078
+     }
+    }
+   },
+   "c3b": {
+    "base": {
+     "sscha": {
+      "n_configs": 12,
+      "force_rmse_eV_A": 0.05169314511519646,
+      "force_rel_rmse": 0.10425869178057383,
+      "energy_err_rms_meV_atom": 0.5358976569464182,
+      "energy_err_mean_meV_atom": 0.305224447526579,
+      "systems": [
+       "batio3_cubic"
+      ]
+     },
+     "baseline": {
+      "n_configs": 4,
+      "force_rmse_eV_A": 0.027136437466098184,
+      "force_rel_rmse": 0.10022640983284493,
+      "energy_err_rms_meV_atom": 0.21103283176561413,
+      "energy_err_mean_meV_atom": -0.18829371598094724,
+      "systems": [
+       "batio3_cubic"
+      ]
+     }
+    },
+    "seed0": {
+     "sscha": {
+      "n_configs": 12,
+      "force_rmse_eV_A": 0.014212918403642206,
+      "force_rel_rmse": 0.0286657017259366,
+      "energy_err_rms_meV_atom": 0.10905993432212145,
+      "energy_err_mean_meV_atom": -0.051445375831823036,
+      "systems": [
+       "batio3_cubic"
+      ]
+     },
+     "baseline": {
+      "n_configs": 4,
+      "force_rmse_eV_A": 0.005973745393346467,
+      "force_rel_rmse": 0.022063583503862953,
+      "energy_err_rms_meV_atom": 0.027113799600147183,
+      "energy_err_mean_meV_atom": 0.018750202866613108,
+      "systems": [
+       "batio3_cubic"
+      ]
+     }
+    },
+    "seed1": {
+     "sscha": {
+      "n_configs": 12,
+      "force_rmse_eV_A": 0.0127669708285573,
+      "force_rel_rmse": 0.025749403980351606,
+      "energy_err_rms_meV_atom": 0.19223916744293215,
+      "energy_err_mean_meV_atom": 0.1732073425712836,
+      "systems": [
+       "batio3_cubic"
+      ]
+     },
+     "baseline": {
+      "n_configs": 4,
+      "force_rmse_eV_A": 0.005132971932571134,
+      "force_rel_rmse": 0.018958249372898847,
+      "energy_err_rms_meV_atom": 0.03065447884358987,
+      "energy_err_mean_meV_atom": 0.02728519261339102,
+      "systems": [
+       "batio3_cubic"
+      ]
+     }
+    },
+    "seed2": {
+     "sscha": {
+      "n_configs": 12,
+      "force_rmse_eV_A": 0.014519185624417225,
+      "force_rel_rmse": 0.02928340489919329,
+      "energy_err_rms_meV_atom": 0.14807406644384924,
+      "energy_err_mean_meV_atom": 0.1150102707342171,
+      "systems": [
+       "batio3_cubic"
+      ]
+     },
+     "baseline": {
+      "n_configs": 4,
+      "force_rmse_eV_A": 0.006414517813356597,
+      "force_rel_rmse": 0.023691543595018655,
+      "energy_err_rms_meV_atom": 0.025801554250669222,
+      "energy_err_mean_meV_atom": -0.007752752122058837,
+      "systems": [
+       "batio3_cubic"
+      ]
+     }
+    }
+   }
+  },
+  "chgnet": {
+   "c3a": {
+    "base": {
+     "batio3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 50,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 5471.921340573658,
+      "energy_rmse_meV_per_atom": 284.1966608267092,
+      "force_rmse_eV_A": 5.100093768594385,
+      "force_rel_rmse": 0.6263011037858527,
+      "window_energy_rmse_meV_per_cell": 26.755084038586485,
+      "window_energy_rmse_meV_per_atom": 2.021712874587939,
+      "window_force_rmse_eV_A": 0.03262616133679447,
+      "window_force_rel_rmse": 0.17241472636298744
+     },
+     "knbo3_cubic": {
+      "n_paths": 7,
+      "n_points": 70,
+      "n_points_window": 45,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 5256.36176147973,
+      "energy_rmse_meV_per_atom": 270.0610254177821,
+      "force_rmse_eV_A": 3.726861309022526,
+      "force_rel_rmse": 0.6262851460158555,
+      "window_energy_rmse_meV_per_cell": 80.26720602928842,
+      "window_energy_rmse_meV_per_atom": 5.662475710627608,
+      "window_force_rmse_eV_A": 0.10315090166065095,
+      "window_force_rel_rmse": 0.5799915107572595
+     },
+     "cssnbr3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 80,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 42.331819336807975,
+      "energy_rmse_meV_per_atom": 1.172497066717006,
+      "force_rmse_eV_A": 0.007433883794462867,
+      "force_rel_rmse": 0.9496481101442266,
+      "window_energy_rmse_meV_per_cell": 42.331819336807975,
+      "window_energy_rmse_meV_per_atom": 1.172497066717006,
+      "window_force_rmse_eV_A": 0.007433883794462867,
+      "window_force_rel_rmse": 0.9496481101442266
+     }
+    },
+    "seed0": {
+     "batio3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 50,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 1261.4752315486526,
+      "energy_rmse_meV_per_atom": 69.49420112555282,
+      "force_rmse_eV_A": 1.0893177473580766,
+      "force_rel_rmse": 0.13377026746939824,
+      "window_energy_rmse_meV_per_cell": 14.09484542872716,
+      "window_energy_rmse_meV_per_atom": 1.331139091467197,
+      "window_force_rmse_eV_A": 0.025346829271452057,
+      "window_force_rel_rmse": 0.13394669964064296
+     },
+     "knbo3_cubic": {
+      "n_paths": 7,
+      "n_points": 70,
+      "n_points_window": 45,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 249.25634801049972,
+      "energy_rmse_meV_per_atom": 12.868578798347796,
+      "force_rmse_eV_A": 0.18727546278492724,
+      "force_rel_rmse": 0.03147094319595357,
+      "window_energy_rmse_meV_per_cell": 16.378258740143945,
+      "window_energy_rmse_meV_per_atom": 0.8885694322033557,
+      "window_force_rmse_eV_A": 0.021018257908480182,
+      "window_force_rel_rmse": 0.118180364510332
+     },
+     "cssnbr3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 80,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 85.06933805825045,
+      "energy_rmse_meV_per_atom": 2.343496105460406,
+      "force_rmse_eV_A": 0.0104441155704298,
+      "force_rel_rmse": 1.3341928509797467,
+      "window_energy_rmse_meV_per_cell": 85.06933805825045,
+      "window_energy_rmse_meV_per_atom": 2.343496105460406,
+      "window_force_rmse_eV_A": 0.0104441155704298,
+      "window_force_rel_rmse": 1.3341928509797467
+     }
+    },
+    "seed1": {
+     "batio3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 50,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 784.8619001128324,
+      "energy_rmse_meV_per_atom": 44.8494014032638,
+      "force_rmse_eV_A": 1.2950487954184158,
+      "force_rel_rmse": 0.15903442697890513,
+      "window_energy_rmse_meV_per_cell": 3.041399581173614,
+      "window_energy_rmse_meV_per_atom": 0.25903077266583185,
+      "window_force_rmse_eV_A": 0.017896368679685123,
+      "window_force_rel_rmse": 0.09457433490096909
+     },
+     "knbo3_cubic": {
+      "n_paths": 7,
+      "n_points": 70,
+      "n_points_window": 45,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 152.08051557048998,
+      "energy_rmse_meV_per_atom": 7.987866456331461,
+      "force_rmse_eV_A": 0.2229296176974311,
+      "force_rel_rmse": 0.0374624909794438,
+      "window_energy_rmse_meV_per_cell": 7.669039025034766,
+      "window_energy_rmse_meV_per_atom": 0.692790643671945,
+      "window_force_rmse_eV_A": 0.02441654902519041,
+      "window_force_rel_rmse": 0.13728809858771243
+     },
+     "cssnbr3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 80,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 25.9976665265487,
+      "energy_rmse_meV_per_atom": 0.7112648587739762,
+      "force_rmse_eV_A": 0.004716083422396501,
+      "force_rel_rmse": 0.6024602796047547,
+      "window_energy_rmse_meV_per_cell": 25.9976665265487,
+      "window_energy_rmse_meV_per_atom": 0.7112648587739762,
+      "window_force_rmse_eV_A": 0.004716083422396501,
+      "window_force_rel_rmse": 0.6024602796047547
+     }
+    },
+    "seed2": {
+     "batio3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 50,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 730.9295697953258,
+      "energy_rmse_meV_per_atom": 42.824912112416555,
+      "force_rmse_eV_A": 1.2229157293273132,
+      "force_rel_rmse": 0.15017635084106845,
+      "window_energy_rmse_meV_per_cell": 4.124754928777946,
+      "window_energy_rmse_meV_per_atom": 0.36775260408737676,
+      "window_force_rmse_eV_A": 0.021723099495706243,
+      "window_force_rel_rmse": 0.11479690229706095
+     },
+     "knbo3_cubic": {
+      "n_paths": 7,
+      "n_points": 70,
+      "n_points_window": 45,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 168.484663092818,
+      "energy_rmse_meV_per_atom": 8.74588586454069,
+      "force_rmse_eV_A": 0.28032610730042096,
+      "force_rel_rmse": 0.047107757033423694,
+      "window_energy_rmse_meV_per_cell": 3.035820238015284,
+      "window_energy_rmse_meV_per_atom": 0.2991138860616923,
+      "window_force_rmse_eV_A": 0.016087118304171276,
+      "window_force_rel_rmse": 0.09045380989167187
+     },
+     "cssnbr3_cubic": {
+      "n_paths": 8,
+      "n_points": 80,
+      "n_points_window": 80,
+      "note": "all points include the steep repulsive wall at large Q; the window is the well region the screen fits",
+      "energy_rmse_meV_per_cell": 32.87824545345952,
+      "energy_rmse_meV_per_atom": 0.9182882701805392,
+      "force_rmse_eV_A": 0.004761842774069146,
+      "force_rel_rmse": 0.608305848763331,
+      "window_energy_rmse_meV_per_cell": 32.87824545345952,
+      "window_energy_rmse_meV_per_atom": 0.9182882701805392,
+      "window_force_rmse_eV_A": 0.004761842774069146,
+      "window_force_rel_rmse": 0.608305848763331
+     }
+    }
+   },
+   "c3b": {
+    "base": {
+     "sscha": {
+      "n_configs": 12,
+      "force_rmse_eV_A": 0.06609795713234375,
+      "force_rel_rmse": 0.13331141923420609,
+      "energy_err_rms_meV_atom": 1.9967065012087968,
+      "energy_err_mean_meV_atom": -1.9667107163210555,
+      "systems": [
+       "batio3_cubic"
+      ]
+     },
+     "baseline": {
+      "n_configs": 4,
+      "force_rmse_eV_A": 0.036568141620904875,
+      "force_rel_rmse": 0.13506170636809506,
+      "energy_err_rms_meV_atom": 0.539702808243267,
+      "energy_err_mean_meV_atom": -0.5364309976357617,
+      "systems": [
+       "batio3_cubic"
+      ]
+     }
+    },
+    "seed0": {
+     "sscha": {
+      "n_configs": 12,
+      "force_rmse_eV_A": 0.041160046362195085,
+      "force_rel_rmse": 0.08301473198791104,
+      "energy_err_rms_meV_atom": 1.2448093913509655,
+      "energy_err_mean_meV_atom": -1.2184578476687118,
+      "systems": [
+       "batio3_cubic"
+      ]
+     },
+     "baseline": {
+      "n_configs": 4,
+      "force_rmse_eV_A": 0.026460162787858836,
+      "force_rel_rmse": 0.09772863969829904,
+      "energy_err_rms_meV_atom": 0.5224888487180304,
+      "energy_err_mean_meV_atom": -0.519074125077168,
+      "systems": [
+       "batio3_cubic"
+      ]
+     }
+    },
+    "seed1": {
+     "sscha": {
+      "n_configs": 12,
+      "force_rmse_eV_A": 0.038623145900670806,
+      "force_rel_rmse": 0.07789811695691148,
+      "energy_err_rms_meV_atom": 0.25172924896568577,
+      "energy_err_mean_meV_atom": -0.1224317449668888,
+      "systems": [
+       "batio3_cubic"
+      ]
+     },
+     "baseline": {
+      "n_configs": 4,
+      "force_rmse_eV_A": 0.025676066718149277,
+      "force_rel_rmse": 0.09483263928817841,
+      "energy_err_rms_meV_atom": 0.03033754713295646,
+      "energy_err_mean_meV_atom": 0.01841671964939451,
+      "systems": [
+       "batio3_cubic"
+      ]
+     }
+    },
+    "seed2": {
+     "sscha": {
+      "n_configs": 12,
+      "force_rmse_eV_A": 0.039330652197226056,
+      "force_rel_rmse": 0.07932506980996365,
+      "energy_err_rms_meV_atom": 0.5527606668286442,
+      "energy_err_mean_meV_atom": -0.5019305446088159,
+      "systems": [
+       "batio3_cubic"
+      ]
+     },
+     "baseline": {
+      "n_configs": 4,
+      "force_rmse_eV_A": 0.024995518376913235,
+      "force_rel_rmse": 0.09231908469778677,
+      "energy_err_rms_meV_atom": 0.04625940649676115,
+      "energy_err_mean_meV_atom": -0.04452578523341799,
+      "systems": [
+       "batio3_cubic"
+      ]
+     }
+    }
+   }
+  }
+ },
+ "S2": {
+  "mace_mp0": {
+   "controls": {
+    "si_diamond": {
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -1.3332791145173269e-07,
+      "pred_stable": true
+     },
+     "replicates": {
+      "seed0": {
+       "min_freq_thz": -1.0800611969489568e-07,
+       "pred_stable": true
+      },
+      "seed1": {
+       "min_freq_thz": -1.606463072981226e-07,
+       "pred_stable": true
+      },
+      "seed2": {
+       "min_freq_thz": -2.425940441929233e-07,
+       "pred_stable": true
+      }
+     },
+     "status": "unchanged"
+    },
+    "mgo_rocksalt": {
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -2.498320781959863e-08,
+      "pred_stable": true
+     },
+     "replicates": {
+      "seed0": {
+       "min_freq_thz": -1.073575167629745e-07,
+       "pred_stable": true
+      },
+      "seed1": {
+       "min_freq_thz": -1.198291052514761e-07,
+       "pred_stable": true
+      },
+      "seed2": {
+       "min_freq_thz": -1.6388648435151097e-07,
+       "pred_stable": true
+      }
+     },
+     "status": "unchanged"
+    },
+    "nacl_rocksalt": {
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -2.927738753785968e-08,
+      "pred_stable": true
+     },
+     "replicates": {
+      "seed0": {
+       "min_freq_thz": -2.8576992768699452e-08,
+       "pred_stable": true
+      },
+      "seed1": {
+       "min_freq_thz": -6.033240417102173e-08,
+       "pred_stable": true
+      },
+      "seed2": {
+       "min_freq_thz": -5.135807383e-08,
+       "pred_stable": true
+      }
+     },
+     "status": "unchanged"
+    },
+    "cu_fcc": {
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -7.171706364455598e-08,
+      "pred_stable": true
+     },
+     "replicates": {
+      "seed0": {
+       "min_freq_thz": -6.28769721712981e-08,
+       "pred_stable": true
+      },
+      "seed1": {
+       "min_freq_thz": -1.924644484020539e-08,
+       "pred_stable": true
+      },
+      "seed2": {
+       "min_freq_thz": -6.157442360590377e-08,
+       "pred_stable": true
+      }
+     },
+     "status": "unchanged"
+    },
+    "c_diamond": {
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": 2.0492244258983084e-07,
+      "pred_stable": true
+     },
+     "replicates": {
+      "seed0": {
+       "min_freq_thz": -6.386632013010132e-07,
+       "pred_stable": true
+      },
+      "seed1": {
+       "min_freq_thz": -2.595079042509481e-07,
+       "pred_stable": true
+      },
+      "seed2": {
+       "min_freq_thz": -4.260914483931725e-07,
+       "pred_stable": true
+      }
+     },
+     "status": "unchanged"
+    },
+    "ceo2_cubic": {
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -1.6007421106211958e-07,
+      "pred_stable": true
+     },
+     "replicates": {
+      "seed0": {
+       "min_freq_thz": -1.409244727694516e-07,
+       "pred_stable": true
+      },
+      "seed1": {
+       "min_freq_thz": -1.360378536104755e-07,
+       "pred_stable": true
+      },
+      "seed2": {
+       "min_freq_thz": 7.181560575806292e-08,
+       "pred_stable": true
+      }
+     },
+     "status": "unchanged"
+    }
+   },
+   "n_unchanged": 6,
+   "n_changed": 0,
+   "n_unresolved": 0,
+   "prediction": "all six unchanged"
+  },
+  "chgnet": {
+   "controls": {
+    "si_diamond": {
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -2.8964804805006676e-07,
+      "pred_stable": true
+     },
+     "replicates": {
+      "seed0": {
+       "min_freq_thz": -3.196216002917283,
+       "pred_stable": false
+      },
+      "seed1": {
+       "min_freq_thz": -2.248443994118251e-07,
+       "pred_stable": true
+      },
+      "seed2": {
+       "min_freq_thz": -3.6889505405416424e-07,
+       "pred_stable": true
+      }
+     },
+     "status": "unresolved"
+    },
+    "mgo_rocksalt": {
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -2.2753884019179273e-07,
+      "pred_stable": true
+     },
+     "replicates": {
+      "seed0": {
+       "min_freq_thz": -1.6822469821199402e-06,
+       "pred_stable": true
+      },
+      "seed1": {
+       "min_freq_thz": -1.1603466118410096e-06,
+       "pred_stable": true
+      },
+      "seed2": {
+       "min_freq_thz": -7.577632266330393e-07,
+       "pred_stable": true
+      }
+     },
+     "status": "unchanged"
+    },
+    "nacl_rocksalt": {
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -0.23917465491814627,
+      "pred_stable": false
+     },
+     "replicates": {
+      "seed0": {
+       "min_freq_thz": -1.7338999872703589,
+       "pred_stable": false
+      },
+      "seed1": {
+       "min_freq_thz": -8.238201266050669e-08,
+       "pred_stable": true
+      },
+      "seed2": {
+       "min_freq_thz": -6.72710756763963e-08,
+       "pred_stable": true
+      }
+     },
+     "status": "unresolved"
+    },
+    "cu_fcc": {
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -4.73933346054744e-08,
+      "pred_stable": true
+     },
+     "replicates": {
+      "seed0": {
+       "min_freq_thz": -0.3971395183309357,
+       "pred_stable": false
+      },
+      "seed1": {
+       "min_freq_thz": -1.4990708959528354e-08,
+       "pred_stable": true
+      },
+      "seed2": {
+       "min_freq_thz": -4.976188415804389e-08,
+       "pred_stable": true
+      }
+     },
+     "status": "unresolved"
+    },
+    "c_diamond": {
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -5.179951700401269e-06,
+      "pred_stable": true
+     },
+     "replicates": {
+      "seed0": {
+       "min_freq_thz": -1.0769238371962673e-05,
+       "pred_stable": true
+      },
+      "seed1": {
+       "min_freq_thz": -8.241870157455083e-06,
+       "pred_stable": true
+      },
+      "seed2": {
+       "min_freq_thz": -6.45100852316212e-06,
+       "pred_stable": true
+      }
+     },
+     "status": "unchanged"
+    },
+    "ceo2_cubic": {
+     "label_stable": true,
+     "base": {
+      "min_freq_thz": -0.2663556736741839,
+      "pred_stable": false
+     },
+     "replicates": {
+      "seed0": {
+       "min_freq_thz": -1.518196320630377e-07,
+       "pred_stable": true
+      },
+      "seed1": {
+       "min_freq_thz": -1.12716854185644,
+       "pred_stable": false
+      },
+      "seed2": {
+       "min_freq_thz": -0.8729671041787169,
+       "pred_stable": false
+      }
+     },
+     "status": "unresolved"
+    }
+   },
+   "n_unchanged": 2,
+   "n_changed": 0,
+   "n_unresolved": 4,
+   "prediction": "all six unchanged"
+  }
+ },
+ "base_reproduction_vs_c3a_paths_csv": {
+  "mace_mp0": {
+   "n_compared": 23,
+   "max_abs_depth_diff_meV": 7.105427357601002e-11
+  },
+  "chgnet": {
+   "n_compared": 23,
+   "max_abs_depth_diff_meV": 0.0152587890625
+  }
+ },
+ "dataset": {
+  "mace_mp0": {
+   "model": "mace_mp0",
+   "mock": false,
+   "provenance": {
+    "script": "scripts/finetune_trial.py",
+    "stage": "dataset",
+    "git_head": "0467fe7",
+    "git_dirty": false,
+    "host": "cd177441fe9b",
+    "utc": "2026-10-04T21:33:09Z",
+    "python": "3.11.17",
+    "platform": "Linux-6.8.0-101-generic-x86_64-with-glibc2.35",
+    "versions": {
+     "numpy": "2.2.2",
+     "scipy": "1.17.1",
+     "ase": "3.29.0",
+     "phonopy": "4.4.0",
+     "spglib": "2.7.0",
+     "torch": "2.6.0+cu124",
+     "mace-torch": "0.3.16",
+     "chgnet": null,
+     "pandas": "3.0.5"
+    },
+    "settings": {
+     "stage": "dataset",
+     "out": "/root/mlip-dynamic-stability/results/revision/finetune",
+     "systems": [
+      "batio3_cubic",
+      "knbo3_cubic",
+      "cssnbr3_cubic"
+     ],
+     "force": false,
+     "model": "mace_mp0",
+     "device": "cuda",
+     "qe_root": "/root/mlip-dynamic-stability/results/revision/dft/qe",
+     "allow_partial": false,
+     "mock": false
+    }
+   },
+   "model_version": "mace-torch=0.3.16;ckpt=medium",
+   "n_planned": 120,
+   "n_labelled": 120,
+   "n_train": 108,
+   "n_valid": 12,
+   "unusable_jobs": [],
+   "split": {
+    "seed": [
+     20261003,
+     "crc32(model)"
+    ],
+    "val_fraction": 0.1,
+    "valid_ids": [
+     "batio3_cubic_c04",
+     "batio3_cubic_c07",
+     "batio3_cubic_c25",
+     "batio3_cubic_c37",
+     "knbo3_cubic_c14",
+     "knbo3_cubic_c15",
+     "knbo3_cubic_c17",
+     "knbo3_cubic_c39",
+     "cssnbr3_cubic_c03",
+     "cssnbr3_cubic_c06",
+     "cssnbr3_cubic_c16",
+     "cssnbr3_cubic_c31"
+    ],
+    "per_system_valid": {
+     "batio3_cubic": 4,
+     "knbo3_cubic": 4,
+     "cssnbr3_cubic": 4
+    }
+   },
+   "energy_reference": {
+    "rule": "target = E_PBE - mean_train(E_PBE - E_base) per system",
+    "offsets": {
+     "batio3_cubic": {
+      "n_train": 36,
+      "offset_eV": -73818.25979870005,
+      "std_of_residual_eV": 0.04925905037343086,
+      "std_per_atom_meV": 1.2314762593357715
+     },
+     "knbo3_cubic": {
+      "n_train": 36,
+      "offset_eV": -62037.89503490221,
+      "std_of_residual_eV": 0.08513981156741095,
+      "std_per_atom_meV": 2.1284952891852735
+     },
+     "cssnbr3_cubic": {
+      "n_train": 36,
+      "offset_eV": -39850.83154096018,
+      "std_of_residual_eV": 0.6668607368495015,
+      "std_per_atom_meV": 16.671518421237536
+     }
+    }
+   },
+   "base_vs_target": {
+    "train": {
+     "n": 108,
+     "force_rmse_eV_A": 0.13878890500846966,
+     "energy_rmse_meV_atom": 9.72944932397167
+    },
+    "valid": {
+     "n": 12,
+     "force_rmse_eV_A": 0.14369210292172868,
+     "energy_rmse_meV_atom": 11.347845031805537
+    }
+   },
+   "reference_cells_not_in_training": {
+    "batio3_cubic": {
+     "n_atoms": 40,
+     "pbe": {
+      "energy_qe_eV": -74138.16408132574,
+      "max_abs_force_eV_A": 1.6455060232229727e-05,
+      "base_energy_eV": -319.9395684996777,
+      "base_minus_pbe_offset_eV": 73818.22451282607
+     }
+    },
+    "knbo3_cubic": {
+     "n_atoms": 40,
+     "pbe": {
+      "energy_qe_eV": -62343.32510184139,
+      "max_abs_force_eV_A": 2.1083045922544333e-05,
+      "base_energy_eV": -305.48695482877764,
+      "base_minus_pbe_offset_eV": 62037.83814701261
+     }
+    },
+    "cssnbr3_cubic": {
+     "n_atoms": 40,
+     "pbe": {
+      "energy_qe_eV": -39979.46782832423,
+      "max_abs_force_eV_A": 0.00012778382711590896,
+      "base_energy_eV": -127.66091715919623,
+      "base_minus_pbe_offset_eV": 39851.80691116503
+     }
+    }
+   },
+   "files": {
+    "train.extxyz": {
+     "sha256": "c5d698b443000e73dd2692646f48292285f89598f87e7f6968c6ce90408fcb4e"
+    },
+    "valid.extxyz": {
+     "sha256": "081cf8a1e85d9011c6ff749016af6a3be7f95466864a43dc45c175446d631790"
+    },
+    "labelled_all.extxyz": {
+     "sha256": "4ef1893a4f12a51f15a195b3a0d038a73aa0cbe49abc2c61f91dc6ca74cd4fdb"
+    }
+   }
+  },
+  "chgnet": {
+   "model": "chgnet",
+   "mock": false,
+   "provenance": {
+    "script": "scripts/finetune_trial.py",
+    "stage": "dataset",
+    "git_head": "0467fe7",
+    "git_dirty": false,
+    "host": "cd177441fe9b",
+    "utc": "2026-10-04T21:33:26Z",
+    "python": "3.11.17",
+    "platform": "Linux-6.8.0-101-generic-x86_64-with-glibc2.35",
+    "versions": {
+     "numpy": "2.2.2",
+     "scipy": "1.17.1",
+     "ase": "3.29.0",
+     "phonopy": "4.4.0",
+     "spglib": "2.7.0",
+     "torch": "2.6.0+cu124",
+     "mace-torch": null,
+     "chgnet": "0.4.2",
+     "pandas": "3.0.5"
+    },
+    "settings": {
+     "stage": "dataset",
+     "out": "/root/mlip-dynamic-stability/results/revision/finetune",
+     "systems": [
+      "batio3_cubic",
+      "knbo3_cubic",
+      "cssnbr3_cubic"
+     ],
+     "force": false,
+     "model": "chgnet",
+     "device": "cuda",
+     "qe_root": "/root/mlip-dynamic-stability/results/revision/dft/qe",
+     "allow_partial": false,
+     "mock": false
+    }
+   },
+   "model_version": "chgnet=0.4.2",
+   "n_planned": 120,
+   "n_labelled": 120,
+   "n_train": 108,
+   "n_valid": 12,
+   "unusable_jobs": [],
+   "split": {
+    "seed": [
+     20261003,
+     "crc32(model)"
+    ],
+    "val_fraction": 0.1,
+    "valid_ids": [
+     "batio3_cubic_c00",
+     "batio3_cubic_c16",
+     "batio3_cubic_c17",
+     "batio3_cubic_c19",
+     "batio3_cubic_c33",
+     "batio3_cubic_c37",
+     "knbo3_cubic_c07",
+     "knbo3_cubic_c09",
+     "knbo3_cubic_c34",
+     "knbo3_cubic_c35",
+     "cssnbr3_cubic_c30",
+     "cssnbr3_cubic_c36"
+    ],
+    "per_system_valid": {
+     "batio3_cubic": 6,
+     "knbo3_cubic": 4,
+     "cssnbr3_cubic": 2
+    }
+   },
+   "energy_reference": {
+    "rule": "target = E_PBE - mean_train(E_PBE - E_base) per system",
+    "offsets": {
+     "batio3_cubic": {
+      "n_train": 34,
+      "offset_eV": -73801.84934295047,
+      "std_of_residual_eV": 0.08723987081052685,
+      "std_per_atom_meV": 2.180996770263171
+     },
+     "knbo3_cubic": {
+      "n_train": 36,
+      "offset_eV": -62025.985953285344,
+      "std_of_residual_eV": 4.810849640064287,
+      "std_per_atom_meV": 120.27124100160718
+     },
+     "cssnbr3_cubic": {
+      "n_train": 38,
+      "offset_eV": -39837.13142525455,
+      "std_of_residual_eV": 1.4623602296772866,
+      "std_per_atom_meV": 36.55900574193217
+     }
+    }
+   },
+   "base_vs_target": {
+    "train": {
+     "n": 108,
+     "force_rmse_eV_A": 1.8756391883193524,
+     "energy_rmse_meV_atom": 72.75639302833301
+    },
+    "valid": {
+     "n": 12,
+     "force_rmse_eV_A": 2.7133810144423958,
+     "energy_rmse_meV_atom": 112.49941042319695
+    }
+   },
+   "reference_cells_not_in_training": {
+    "batio3_cubic": {
+     "n_atoms": 40,
+     "pbe": {
+      "energy_qe_eV": -74138.15733507946,
+      "max_abs_force_eV_A": 0.00011492831130947949,
+      "base_energy_eV": -336.1352233886719,
+      "base_minus_pbe_offset_eV": 73802.02211169079
+     }
+    },
+    "knbo3_cubic": {
+     "n_atoms": 40,
+     "pbe": {
+      "energy_qe_eV": -62343.31897873579,
+      "max_abs_force_eV_A": 5.476449733538956e-05,
+      "base_energy_eV": -321.7921447753906,
+      "base_minus_pbe_offset_eV": 62021.5268339604
+     }
+    },
+    "cssnbr3_cubic": {
+     "n_atoms": 40,
+     "pbe": {
+      "energy_qe_eV": -39979.454622911755,
+      "max_abs_force_eV_A": 0.00014218200481910998,
+      "base_energy_eV": -139.27008056640625,
+      "base_minus_pbe_offset_eV": 39840.18454234535
+     }
+    }
+   },
+   "files": {
+    "train.extxyz": {
+     "sha256": "66ba92942063930098efeded610f0e583069a2b97ead482c64f9adeacbb300b6"
+    },
+    "valid.extxyz": {
+     "sha256": "795e9b2801104e37bb80ebd119cd45fb7eb393241c800e10b5559d1c71d10a4b"
+    },
+    "labelled_all.extxyz": {
+     "sha256": "79eb628403bed8c1b0b63f2d22674923e1612d8f49b73594f02d0c7914cb8e5c"
+    }
+   }
+  }
+ },
+ "configs_manifest": "results/revision/finetune/manifest.json"
+}

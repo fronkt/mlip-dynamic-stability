@@ -1,0 +1,390 @@
+{
+ "job": "pl_knbo3_cubic_fd02",
+ "study": "pbe-lattice",
+ "system": "knbo3_cubic",
+ "n_atoms": 40,
+ "structure_sha": "4f6fcd0cd48f8b9bd75d",
+ "structure": {
+  "symbols": [
+   "K",
+   "K",
+   "K",
+   "K",
+   "K",
+   "K",
+   "K",
+   "K",
+   "Nb",
+   "Nb",
+   "Nb",
+   "Nb",
+   "Nb",
+   "Nb",
+   "Nb",
+   "Nb",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O",
+   "O"
+  ],
+  "cell": [
+   [
+    8.053767078,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    8.053767078,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    8.053767078
+   ]
+  ],
+  "positions": [
+   [
+    0.0,
+    0.0,
+    0.0
+   ],
+   [
+    4.026883539,
+    0.0,
+    0.0
+   ],
+   [
+    0.0,
+    4.026883539,
+    0.0
+   ],
+   [
+    4.026883539,
+    4.026883539,
+    0.0
+   ],
+   [
+    0.0,
+    0.0,
+    4.026883539
+   ],
+   [
+    4.026883539,
+    0.0,
+    4.026883539
+   ],
+   [
+    0.0,
+    4.026883539,
+    4.026883539
+   ],
+   [
+    4.026883539,
+    4.026883539,
+    4.026883539
+   ],
+   [
+    2.0234417694999998,
+    2.0134417695,
+    2.0134417695
+   ],
+   [
+    6.0403253085,
+    2.0134417695,
+    2.0134417695
+   ],
+   [
+    2.0134417695,
+    6.0403253085,
+    2.0134417695
+   ],
+   [
+    6.0403253085,
+    6.0403253085,
+    2.0134417695
+   ],
+   [
+    2.0134417695,
+    2.0134417695,
+    6.0403253085
+   ],
+   [
+    6.0403253085,
+    2.0134417695,
+    6.0403253085
+   ],
+   [
+    2.0134417695,
+    6.0403253085,
+    6.0403253085
+   ],
+   [
+    6.0403253085,
+    6.0403253085,
+    6.0403253085
+   ],
+   [
+    0.0,
+    2.0134417695,
+    2.0134417695
+   ],
+   [
+    4.026883539,
+    2.0134417695,
+    2.0134417695
+   ],
+   [
+    0.0,
+    6.0403253085,
+    2.0134417695
+   ],
+   [
+    4.026883539,
+    6.0403253085,
+    2.0134417695
+   ],
+   [
+    0.0,
+    2.0134417695,
+    6.0403253085
+   ],
+   [
+    4.026883539,
+    2.0134417695,
+    6.0403253085
+   ],
+   [
+    0.0,
+    6.0403253085,
+    6.0403253085
+   ],
+   [
+    4.026883539,
+    6.0403253085,
+    6.0403253085
+   ],
+   [
+    2.0134417695,
+    0.0,
+    2.0134417695
+   ],
+   [
+    6.0403253085,
+    0.0,
+    2.0134417695
+   ],
+   [
+    2.0134417695,
+    4.026883539,
+    2.0134417695
+   ],
+   [
+    6.0403253085,
+    4.026883539,
+    2.0134417695
+   ],
+   [
+    2.0134417695,
+    0.0,
+    6.0403253085
+   ],
+   [
+    6.0403253085,
+    0.0,
+    6.0403253085
+   ],
+   [
+    2.0134417695,
+    4.026883539,
+    6.0403253085
+   ],
+   [
+    6.0403253085,
+    4.026883539,
+    6.0403253085
+   ],
+   [
+    2.0134417695,
+    2.0134417695,
+    0.0
+   ],
+   [
+    6.0403253085,
+    2.0134417695,
+    0.0
+   ],
+   [
+    2.0134417695,
+    6.0403253085,
+    0.0
+   ],
+   [
+    6.0403253085,
+    6.0403253085,
+    0.0
+   ],
+   [
+    2.0134417695,
+    2.0134417695,
+    4.026883539
+   ],
+   [
+    6.0403253085,
+    2.0134417695,
+    4.026883539
+   ],
+   [
+    2.0134417695,
+    6.0403253085,
+    4.026883539
+   ],
+   [
+    6.0403253085,
+    6.0403253085,
+    4.026883539
+   ]
+  ]
+ },
+ "members": [
+  {
+   "part": "fd",
+   "system": "knbo3_cubic",
+   "index": 2
+  }
+ ],
+ "qe": {
+  "is_metal": false,
+  "smearing": "mv",
+  "degauss_Ry": 0.005,
+  "kspacing_inv_A": 0.25,
+  "kspacing_convention": "n_i = max(1, ceil(|b_i| / spacing)) with b = 2*pi*inv(cell).T, i.e. |b_i| includes 2*pi (the VASP KSPACING convention); Gamma-centred, unshifted",
+  "kmesh": [
+   4,
+   4,
+   4
+  ],
+  "nk_full": 64,
+  "nk_tr_upper": 36,
+  "nk_irr_spglib": 18,
+  "ecutwfc_Ry": 60.0,
+  "ecutrho_Ry": 480.0,
+  "ecut_scale": 1.0,
+  "conv_thr_Ry": 4e-09,
+  "mixing_beta": 0.4,
+  "calculation": "scf",
+  "disk_io": "none",
+  "input_dft": null,
+  "nosym": false,
+  "functional": "PBE (from the SSSP PBE set)",
+  "pseudos": {
+   "K": {
+    "filename": "K.pbe-spn-kjpaw_psl.1.0.0.UPF",
+    "ecutwfc": 60.0,
+    "ecutrho": 480.0,
+    "md5": "7d58810084cac21f60fbe77ea2b688fd",
+    "family": "100PAW"
+   },
+   "Nb": {
+    "filename": "Nb.pbe-spn-kjpaw_psl.0.3.0.UPF",
+    "ecutwfc": 40.0,
+    "ecutrho": 320.0,
+    "md5": "411d72ad547312f8017e2943ceca08cc",
+    "family": "031PAW"
+   },
+   "O": {
+    "filename": "O.pbe-n-kjpaw_psl.0.1.UPF",
+    "ecutwfc": 50.0,
+    "ecutrho": 400.0,
+    "md5": "0234752ac141de4415c5fc33072bef88",
+    "family": "031PAW"
+   }
+  },
+  "sssp_json": "SSSP_1.3.0_PBE_efficiency.json",
+  "sssp_sha256": "2c8642a70308ecd072a209a30c160bf51423560bb202116cb31fd5275eff814a"
+ },
+ "pw_in_sha256": "37754b0c81e4815decb2428753e637d4ff5bdd324dec1f2b54a723e36022a149",
+ "provenance": {
+  "script": "scripts/dft_checks.py",
+  "stage": "pbe-lattice-B",
+  "git_head": "a9fa30a",
+  "versions": {
+   "numpy": "2.3.5",
+   "scipy": "1.17.1",
+   "ase": "3.28.0",
+   "phonopy": "3.5.1",
+   "spglib": "2.7.0",
+   "pandas": "3.0.6",
+   "torch": null,
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": null,
+   "cellconstructor": null
+  },
+  "python": "3.12.15",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "host": "427cd5d94dd5",
+  "utc": "2026-10-09T01:02:13Z",
+  "settings": {
+   "stage": "pbe-lattice",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft_checks",
+   "dft_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "batio3_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "sssp_dir": "/root/sssp",
+   "sssp_json": null,
+   "kspacing_insulator": null,
+   "degauss_insulator": null,
+   "no_require_pbe": false,
+   "phase": "B",
+   "model": "mace_mp0",
+   "select": [
+    "deciding",
+    "softest"
+   ],
+   "fd_disp": 0.01,
+   "fd_plusminus": false,
+   "fd_supercell": null,
+   "pos_tol": 0.001
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "script_sha256": "34fceb0fb1e45204b16e7d977d45cdefcbecd0a3b378ee50e8935320d47d037e",
+  "dft_reference_sha256": "c636c66408c17c067b30f170bd175c57ae41247bbdb14cceaa56769cca6796cf"
+ }
+}

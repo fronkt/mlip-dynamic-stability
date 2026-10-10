@@ -1,0 +1,267 @@
+{
+  "A_noise_floor": {
+    "per_model": {
+      "chgnet": {
+        "n_paired": 20,
+        "median_abs_delta_thz": 5.716192994420499e-05,
+        "mean_abs_delta_thz": 0.0011006893916429242,
+        "p95_abs_delta_thz": 0.0036364089373652126,
+        "max_abs_delta_thz": 0.007550949198606105,
+        "call_flips": 0,
+        "flipped_units": []
+      },
+      "mace_mp0": {
+        "n_paired": 20,
+        "median_abs_delta_thz": 1.509514735431594e-12,
+        "mean_abs_delta_thz": 0.04764728286597368,
+        "p95_abs_delta_thz": 0.42312170437648944,
+        "max_abs_delta_thz": 0.5357514668555179,
+        "call_flips": 0,
+        "flipped_units": []
+      },
+      "mattersim": {
+        "n_paired": 20,
+        "median_abs_delta_thz": 5.419034861064986e-05,
+        "mean_abs_delta_thz": 0.00012986446603756823,
+        "p95_abs_delta_thz": 0.0005399789762296825,
+        "max_abs_delta_thz": 0.0005699221864494675,
+        "call_flips": 0,
+        "flipped_units": []
+      },
+      "orb_v2": {
+        "n_paired": 20,
+        "median_abs_delta_thz": 0.04319613953173268,
+        "mean_abs_delta_thz": 0.36532162880612773,
+        "p95_abs_delta_thz": 1.8848167761465002,
+        "max_abs_delta_thz": 2.010706464855437,
+        "call_flips": 2,
+        "flipped_units": [
+          "hf_bcc",
+          "ktao3_cubic"
+        ]
+      },
+      "sevennet0": {
+        "n_paired": 20,
+        "median_abs_delta_thz": 1.7118840328789187e-05,
+        "mean_abs_delta_thz": 0.00010526248338156548,
+        "p95_abs_delta_thz": 0.0004795197766817587,
+        "max_abs_delta_thz": 0.0010233118835101251,
+        "call_flips": 0,
+        "flipped_units": []
+      }
+    },
+    "pooled": {
+      "n_paired": 100,
+      "median_abs_delta_thz": 1.956645550527103e-05,
+      "mean_abs_delta_thz": 0.08286094560263271,
+      "max_abs_delta_thz": 2.010706464855437,
+      "call_flips": 2,
+      "WARNING": "pooled spread is an ORB-v2 float32 artifact; report per model"
+    },
+    "claim_models_worst_max_abs_delta_thz": 0.007550949198606105,
+    "claim_models_call_flips": 0
+  },
+  "B_tolerance_bands": {
+    "per_model_accuracy": {
+      "chgnet": {
+        "0.00": 0.6842105263157895,
+        "0.05": 0.7894736842105263,
+        "0.10": 0.7894736842105263,
+        "0.20": 0.7894736842105263,
+        "0.30": 0.8947368421052632,
+        "0.50": 0.8947368421052632
+      },
+      "mace_mp0": {
+        "0.00": 0.7368421052631579,
+        "0.05": 0.8947368421052632,
+        "0.10": 0.8947368421052632,
+        "0.20": 0.8947368421052632,
+        "0.30": 0.8947368421052632,
+        "0.50": 0.8947368421052632
+      },
+      "mattersim": {
+        "0.00": 0.6842105263157895,
+        "0.05": 1.0,
+        "0.10": 1.0,
+        "0.20": 1.0,
+        "0.30": 1.0,
+        "0.50": 1.0
+      },
+      "orb_v2": {
+        "0.00": 0.631578947368421,
+        "0.05": 0.8947368421052632,
+        "0.10": 0.8947368421052632,
+        "0.20": 0.8421052631578947,
+        "0.30": 0.8421052631578947,
+        "0.50": 0.5263157894736842
+      },
+      "sevennet0": {
+        "0.00": 0.6842105263157895,
+        "0.05": 1.0,
+        "0.10": 1.0,
+        "0.20": 1.0,
+        "0.30": 0.9473684210526315,
+        "0.50": 0.8947368421052632
+      }
+    },
+    "band": {
+      "chgnet": {
+        "min": 0.6842105263157895,
+        "max": 0.8947368421052632,
+        "plateau_min": 0.7894736842105263,
+        "plateau_max": 0.7894736842105263
+      },
+      "mace_mp0": {
+        "min": 0.7368421052631579,
+        "max": 0.8947368421052632,
+        "plateau_min": 0.8947368421052632,
+        "plateau_max": 0.8947368421052632
+      },
+      "mattersim": {
+        "min": 0.6842105263157895,
+        "max": 1.0,
+        "plateau_min": 1.0,
+        "plateau_max": 1.0
+      },
+      "orb_v2": {
+        "min": 0.5263157894736842,
+        "max": 0.8947368421052632,
+        "plateau_min": 0.8421052631578947,
+        "plateau_max": 0.8947368421052632
+      },
+      "sevennet0": {
+        "min": 0.6842105263157895,
+        "max": 1.0,
+        "plateau_min": 1.0,
+        "plateau_max": 1.0
+      }
+    },
+    "uniquely_worst_at": {
+      "0.00": [
+        "orb_v2"
+      ],
+      "0.05": [
+        "chgnet"
+      ],
+      "0.10": [
+        "chgnet"
+      ],
+      "0.20": [
+        "chgnet"
+      ],
+      "0.30": [
+        "orb_v2"
+      ],
+      "0.50": [
+        "orb_v2"
+      ]
+    },
+    "chgnet_below_mattersim_at_every_tol": {
+      "0.00": false,
+      "0.05": true,
+      "0.10": true,
+      "0.20": true,
+      "0.30": true,
+      "0.50": true
+    },
+    "ordering_invariant": false
+  },
+  "C_association": {
+    "matched_set_note": "systems containing 'bcc' are dropped, which also removes the superionic agi_bcc; retained for comparability with the published n=15",
+    "n_perm": 10000,
+    "seed": 0,
+    "by_temperature": {
+      "100": {
+        "n_pairs": 75,
+        "n_systems": 15,
+        "n_models": 5,
+        "cells": {
+          "a_both_ok": 66,
+          "b_harm_ok_ft_bad": 5,
+          "c_harm_bad_ft_ok": 3,
+          "d_both_bad": 1
+        },
+        "phi": 0.14873419783092606,
+        "phi_perm_p_two_sided": 0.12468753124687532,
+        "phi_cluster_bootstrap_ci95": [
+          -0.08201785620582068,
+          0.4863013698630137
+        ],
+        "phi_ci_excludes_zero": false,
+        "empty_cell_warning": null
+      },
+      "300": {
+        "n_pairs": 75,
+        "n_systems": 15,
+        "n_models": 5,
+        "cells": {
+          "a_both_ok": 54,
+          "b_harm_ok_ft_bad": 17,
+          "c_harm_bad_ft_ok": 4,
+          "d_both_bad": 0
+        },
+        "phi": -0.1285024136948433,
+        "phi_perm_p_two_sided": 0.3050694930506949,
+        "phi_cluster_bootstrap_ci95": [
+          -0.19468146967692807,
+          -0.05719540767910321
+        ],
+        "phi_ci_excludes_zero": true,
+        "empty_cell_warning": "d cell is empty; phi's sign is driven by a structural zero"
+      },
+      "600": {
+        "n_pairs": 75,
+        "n_systems": 15,
+        "n_models": 5,
+        "cells": {
+          "a_both_ok": 48,
+          "b_harm_ok_ft_bad": 23,
+          "c_harm_bad_ft_ok": 4,
+          "d_both_bad": 0
+        },
+        "phi": -0.15785671740094712,
+        "phi_perm_p_two_sided": 0.08309169083091691,
+        "phi_cluster_bootstrap_ci95": [
+          -0.23662118107501195,
+          -0.07731190708507324
+        ],
+        "phi_ci_excludes_zero": true,
+        "empty_cell_warning": "d cell is empty; phi's sign is driven by a structural zero"
+      },
+      "900": {
+        "n_pairs": 75,
+        "n_systems": 15,
+        "n_models": 5,
+        "cells": {
+          "a_both_ok": 60,
+          "b_harm_ok_ft_bad": 11,
+          "c_harm_bad_ft_ok": 4,
+          "d_both_bad": 0
+        },
+        "phi": -0.09840273670762059,
+        "phi_perm_p_two_sided": 0.35836416358364165,
+        "phi_cluster_bootstrap_ci95": [
+          -0.16116459280507614,
+          -0.039287499552260616
+        ],
+        "phi_ci_excludes_zero": true,
+        "empty_cell_warning": "d cell is empty; phi's sign is driven by a structural zero"
+      }
+    }
+  },
+  "D_not_covered": {
+    "displacement_amplitude_sweep": {
+      "status": "NOT COMPUTED - requires compute",
+      "why_it_matters": "Dyna-Mat sec. II.4 names finite displacement specifically. Analysis A probes environment/library nondeterminism at FIXED disp=0.01 Ang, so it is necessary but not sufficient against that exact objection.",
+      "how": "disp is hardcoded at harmonic.py:40 and is NOT in the unit hash (cli.py:54). Add it to the settings dict and bump METHOD_VERSION, or has_unit() silently skips every re-run unit.",
+      "cost": "95 scored units x 4 displacements ~= 400 units at 0.31-9.70 s each",
+      "suggested_grid_ang": [
+        0.005,
+        0.01,
+        0.02,
+        0.03
+      ]
+    },
+    "independence_caveat": "v1 and v2 share the same code path, disp and seedless algorithm, so A is a LOWER BOUND on estimator noise, not a full characterisation."
+  }
+}

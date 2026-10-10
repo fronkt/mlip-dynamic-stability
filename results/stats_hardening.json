@@ -1,0 +1,6341 @@
+{
+  "_generated_by": "scripts/stats_hardening.py",
+  "_answers": [
+    "RSC Advances R3 item 3 (counts, intervals, clustering)",
+    "RSC Advances R3 item 5 (ORB-v2 split)",
+    "RSC Advances R1 item 6 (statistical language)"
+  ],
+  "_n_perm": 10000,
+  "_seed": 0,
+  "harmonic_per_model": {
+    "chgnet": {
+      "accuracy": {
+        "k": 15,
+        "n": 19,
+        "p": 0.7894736842105263,
+        "lo": 0.566657215370657,
+        "hi": 0.9149232337314461,
+        "fmt": "15/19 = 0.789 [0.567, 0.915]"
+      },
+      "false_stable": {
+        "k": 2,
+        "n": 13,
+        "p": 0.15384615384615385,
+        "lo": 0.04325817831792836,
+        "hi": 0.42234631043152104,
+        "fmt": "2/13 = 0.154 [0.043, 0.422]"
+      },
+      "n_systems": 19
+    },
+    "mace_mp0": {
+      "accuracy": {
+        "k": 17,
+        "n": 19,
+        "p": 0.8947368421052632,
+        "lo": 0.6860591726836749,
+        "hi": 0.9706414397282841,
+        "fmt": "17/19 = 0.895 [0.686, 0.971]"
+      },
+      "false_stable": {
+        "k": 2,
+        "n": 13,
+        "p": 0.15384615384615385,
+        "lo": 0.04325817831792836,
+        "hi": 0.42234631043152104,
+        "fmt": "2/13 = 0.154 [0.043, 0.422]"
+      },
+      "n_systems": 19
+    },
+    "mattersim": {
+      "accuracy": {
+        "k": 19,
+        "n": 19,
+        "p": 1.0,
+        "lo": 0.8318207757218146,
+        "hi": 1.0,
+        "fmt": "19/19 = 1.000 [0.832, 1.000]"
+      },
+      "false_stable": {
+        "k": 0,
+        "n": 13,
+        "p": 0.0,
+        "lo": 0.0,
+        "hi": 0.22809537263809343,
+        "fmt": "0/13 = 0.000 [0.000, 0.228]"
+      },
+      "n_systems": 19
+    },
+    "orb_v2": {
+      "accuracy": {
+        "k": 17,
+        "n": 19,
+        "p": 0.8947368421052632,
+        "lo": 0.6860591726836749,
+        "hi": 0.9706414397282841,
+        "fmt": "17/19 = 0.895 [0.686, 0.971]"
+      },
+      "false_stable": {
+        "k": 1,
+        "n": 13,
+        "p": 0.07692307692307693,
+        "lo": 0.013710421226987068,
+        "hi": 0.3331395094667843,
+        "fmt": "1/13 = 0.077 [0.014, 0.333]"
+      },
+      "n_systems": 19
+    },
+    "sevennet0": {
+      "accuracy": {
+        "k": 19,
+        "n": 19,
+        "p": 1.0,
+        "lo": 0.8318207757218146,
+        "hi": 1.0,
+        "fmt": "19/19 = 1.000 [0.832, 1.000]"
+      },
+      "false_stable": {
+        "k": 0,
+        "n": 13,
+        "p": 0.0,
+        "lo": 0.0,
+        "hi": 0.22809537263809343,
+        "fmt": "0/13 = 0.000 [0.000, 0.228]"
+      },
+      "n_systems": 19
+    }
+  },
+  "finite_t_per_model": {
+    "chgnet": {
+      "accuracy": {
+        "k": 26,
+        "n": 30,
+        "p": 0.8666666666666667,
+        "lo": 0.7031867330228921,
+        "hi": 0.9469034451972108,
+        "fmt": "26/30 = 0.867 [0.703, 0.947]"
+      },
+      "false_stable": {
+        "k": 3,
+        "n": 16,
+        "p": 0.1875,
+        "lo": 0.06591599066150139,
+        "hi": 0.4300888098298569,
+        "fmt": "3/16 = 0.188 [0.066, 0.430]"
+      },
+      "n_systems": 15
+    },
+    "mace_mp0": {
+      "accuracy": {
+        "k": 25,
+        "n": 30,
+        "p": 0.8333333333333334,
+        "lo": 0.664356494780228,
+        "hi": 0.9266345763289564,
+        "fmt": "25/30 = 0.833 [0.664, 0.927]"
+      },
+      "false_stable": {
+        "k": 4,
+        "n": 16,
+        "p": 0.25,
+        "lo": 0.10182067483951532,
+        "hi": 0.49498316555357136,
+        "fmt": "4/16 = 0.250 [0.102, 0.495]"
+      },
+      "n_systems": 15
+    },
+    "mattersim": {
+      "accuracy": {
+        "k": 25,
+        "n": 30,
+        "p": 0.8333333333333334,
+        "lo": 0.664356494780228,
+        "hi": 0.9266345763289564,
+        "fmt": "25/30 = 0.833 [0.664, 0.927]"
+      },
+      "false_stable": {
+        "k": 4,
+        "n": 16,
+        "p": 0.25,
+        "lo": 0.10182067483951532,
+        "hi": 0.49498316555357136,
+        "fmt": "4/16 = 0.250 [0.102, 0.495]"
+      },
+      "n_systems": 15
+    },
+    "orb_v2": {
+      "accuracy": {
+        "k": 24,
+        "n": 30,
+        "p": 0.8,
+        "lo": 0.626943035714534,
+        "hi": 0.904948928283732,
+        "fmt": "24/30 = 0.800 [0.627, 0.905]"
+      },
+      "false_stable": {
+        "k": 5,
+        "n": 16,
+        "p": 0.3125,
+        "lo": 0.14164643845620956,
+        "hi": 0.5559564418386054,
+        "fmt": "5/16 = 0.312 [0.142, 0.556]"
+      },
+      "n_systems": 15
+    },
+    "sevennet0": {
+      "accuracy": {
+        "k": 27,
+        "n": 30,
+        "p": 0.9,
+        "lo": 0.7437891740507678,
+        "hi": 0.9654001112802535,
+        "fmt": "27/30 = 0.900 [0.744, 0.965]"
+      },
+      "false_stable": {
+        "k": 2,
+        "n": 16,
+        "p": 0.125,
+        "lo": 0.03497748771084325,
+        "hi": 0.3602282728787867,
+        "fmt": "2/16 = 0.125 [0.035, 0.360]"
+      },
+      "n_systems": 15
+    }
+  },
+  "family_recall": {
+    "fe_oxide": {
+      "k": 16,
+      "n": 30,
+      "p": 0.5333333333333333,
+      "lo": 0.36142299607310463,
+      "hi": 0.6976761110378138,
+      "fmt": "16/30 = 0.533 [0.361, 0.698]",
+      "systems": [
+        "batio3_cubic",
+        "knbo3_cubic",
+        "pbtio3_cubic"
+      ]
+    },
+    "halide": {
+      "k": 23,
+      "n": 25,
+      "p": 0.92,
+      "lo": 0.7503389103191594,
+      "hi": 0.9777795987356678,
+      "fmt": "23/25 = 0.920 [0.750, 0.978]",
+      "systems": [
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic"
+      ]
+    },
+    "fluorite": {
+      "k": 20,
+      "n": 20,
+      "p": 1.0,
+      "lo": 0.83887484172924,
+      "hi": 1.0,
+      "fmt": "20/20 = 1.000 [0.839, 1.000]",
+      "systems": [
+        "zro2_cubic",
+        "hfo2_cubic"
+      ]
+    },
+    "afd_srtio3": {
+      "k": 3,
+      "n": 5,
+      "p": 0.6,
+      "lo": 0.2307242810852,
+      "hi": 0.8823792258789283,
+      "fmt": "3/5 = 0.600 [0.231, 0.882]",
+      "systems": [
+        "srtio3_cubic"
+      ]
+    }
+  },
+  "h3_guardrail": {
+    "composition": {
+      "n_units": 60,
+      "n_systems": 15,
+      "systems": [
+        "batio3_cubic",
+        "c_diamond",
+        "ceo2_cubic",
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic",
+        "cu_fcc",
+        "hfo2_cubic",
+        "knbo3_cubic",
+        "mgo_rocksalt",
+        "nacl_rocksalt",
+        "pbtio3_cubic",
+        "si_diamond",
+        "srtio3_cubic",
+        "zro2_cubic"
+      ],
+      "temperature_ladder_K": [
+        100.0,
+        300.0,
+        600.0,
+        900.0
+      ],
+      "units_per_system": {
+        "batio3_cubic": 4,
+        "c_diamond": 4,
+        "ceo2_cubic": 4,
+        "cspbi3_cubic": 4,
+        "cssnbr3_cubic": 4,
+        "cssni3_cubic": 4,
+        "cu_fcc": 4,
+        "hfo2_cubic": 4,
+        "knbo3_cubic": 4,
+        "mgo_rocksalt": 4,
+        "nacl_rocksalt": 4,
+        "pbtio3_cubic": 4,
+        "si_diamond": 4,
+        "srtio3_cubic": 4,
+        "zro2_cubic": 4
+      },
+      "balanced": true,
+      "note": "each unit already collapses five model votes, so the five models are NOT an independent axis here; the clustering unit is the system"
+    },
+    "consensus_error_rate": {
+      "k": 48,
+      "n": 60,
+      "p": 0.8,
+      "lo": 0.6821819418382982,
+      "hi": 0.8817149468217376,
+      "fmt": "48/60 = 0.800 [0.682, 0.882]",
+      "reported_as": "fraction CORRECT; the manuscript quotes the error rate, 1 - this"
+    },
+    "split_vote_error": {
+      "k": 8,
+      "n": 14,
+      "p": 0.5714285714285714,
+      "lo": 0.3259064456308049,
+      "hi": 0.786192011082044,
+      "fmt": "8/14 = 0.571 [0.326, 0.786]"
+    },
+    "unanimous_error": {
+      "k": 4,
+      "n": 46,
+      "p": 0.08695652173913043,
+      "lo": 0.034335867870330924,
+      "hi": 0.20324664086033262,
+      "fmt": "4/46 = 0.087 [0.034, 0.203]"
+    },
+    "auc_vote_disagreement": {
+      "auc": 0.762,
+      "p_perm_clustered": 0.0035,
+      "n_perm": 10000,
+      "n_clusters": 15,
+      "n_units": 60,
+      "ci_lo": 0.59,
+      "ci_hi": 0.934,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level": 0.0003
+    },
+    "auc_freq_std": {
+      "auc": 0.361,
+      "p_perm_clustered": 0.2748,
+      "n_perm": 10000,
+      "n_clusters": 15,
+      "n_units": 60,
+      "ci_lo": 0.046,
+      "ci_hi": 0.625,
+      "n_boot": 9998,
+      "p_perm_naive_unit_level": 0.1386
+    }
+  },
+  "h2_matched_set": {
+    "100": {
+      "n_pairs": 75,
+      "n_systems": 15,
+      "n_models": 5,
+      "systems": [
+        "batio3_cubic",
+        "c_diamond",
+        "ceo2_cubic",
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic",
+        "cu_fcc",
+        "hfo2_cubic",
+        "knbo3_cubic",
+        "mgo_rocksalt",
+        "nacl_rocksalt",
+        "pbtio3_cubic",
+        "si_diamond",
+        "srtio3_cubic",
+        "zro2_cubic"
+      ],
+      "harmonic_correct": {
+        "k": 71,
+        "n": 75,
+        "p": 0.9466666666666667,
+        "lo": 0.8707401283803868,
+        "hi": 0.9790665722682097,
+        "fmt": "71/75 = 0.947 [0.871, 0.979]"
+      },
+      "finite_t_correct": {
+        "k": 69,
+        "n": 75,
+        "p": 0.92,
+        "lo": 0.836252096579779,
+        "hi": 0.9628198756718865,
+        "fmt": "69/75 = 0.920 [0.836, 0.963]"
+      },
+      "spearman_over_models": {
+        "rho": 0.645,
+        "p_perm": 0.6033,
+        "n": 5,
+        "exact": true,
+        "n_pairings": 120,
+        "finest_attainable_p": 0.6033
+      }
+    },
+    "300": {
+      "n_pairs": 75,
+      "n_systems": 15,
+      "n_models": 5,
+      "systems": [
+        "batio3_cubic",
+        "c_diamond",
+        "ceo2_cubic",
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic",
+        "cu_fcc",
+        "hfo2_cubic",
+        "knbo3_cubic",
+        "mgo_rocksalt",
+        "nacl_rocksalt",
+        "pbtio3_cubic",
+        "si_diamond",
+        "srtio3_cubic",
+        "zro2_cubic"
+      ],
+      "harmonic_correct": {
+        "k": 71,
+        "n": 75,
+        "p": 0.9466666666666667,
+        "lo": 0.8707401283803868,
+        "hi": 0.9790665722682097,
+        "fmt": "71/75 = 0.947 [0.871, 0.979]"
+      },
+      "finite_t_correct": {
+        "k": 58,
+        "n": 75,
+        "p": 0.7733333333333333,
+        "lo": 0.6666446451838127,
+        "hi": 0.8533863208847313,
+        "fmt": "58/75 = 0.773 [0.667, 0.853]"
+      },
+      "spearman_over_models": {
+        "rho": -0.667,
+        "p_perm": 0.405,
+        "n": 5,
+        "exact": true,
+        "n_pairings": 120,
+        "finest_attainable_p": 0.1074
+      }
+    },
+    "600": {
+      "n_pairs": 75,
+      "n_systems": 15,
+      "n_models": 5,
+      "systems": [
+        "batio3_cubic",
+        "c_diamond",
+        "ceo2_cubic",
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic",
+        "cu_fcc",
+        "hfo2_cubic",
+        "knbo3_cubic",
+        "mgo_rocksalt",
+        "nacl_rocksalt",
+        "pbtio3_cubic",
+        "si_diamond",
+        "srtio3_cubic",
+        "zro2_cubic"
+      ],
+      "harmonic_correct": {
+        "k": 71,
+        "n": 75,
+        "p": 0.9466666666666667,
+        "lo": 0.8707401283803868,
+        "hi": 0.9790665722682097,
+        "fmt": "71/75 = 0.947 [0.871, 0.979]"
+      },
+      "finite_t_correct": {
+        "k": 52,
+        "n": 75,
+        "p": 0.6933333333333334,
+        "lo": 0.5816954516809208,
+        "hi": 0.7861313291968298,
+        "fmt": "52/75 = 0.693 [0.582, 0.786]"
+      },
+      "spearman_over_models": {
+        "rho": -0.889,
+        "p_perm": 0.1074,
+        "n": 5,
+        "exact": true,
+        "n_pairings": 120,
+        "finest_attainable_p": 0.1074
+      }
+    },
+    "900": {
+      "n_pairs": 75,
+      "n_systems": 15,
+      "n_models": 5,
+      "systems": [
+        "batio3_cubic",
+        "c_diamond",
+        "ceo2_cubic",
+        "cspbi3_cubic",
+        "cssnbr3_cubic",
+        "cssni3_cubic",
+        "cu_fcc",
+        "hfo2_cubic",
+        "knbo3_cubic",
+        "mgo_rocksalt",
+        "nacl_rocksalt",
+        "pbtio3_cubic",
+        "si_diamond",
+        "srtio3_cubic",
+        "zro2_cubic"
+      ],
+      "harmonic_correct": {
+        "k": 71,
+        "n": 75,
+        "p": 0.9466666666666667,
+        "lo": 0.8707401283803868,
+        "hi": 0.9790665722682097,
+        "fmt": "71/75 = 0.947 [0.871, 0.979]"
+      },
+      "finite_t_correct": {
+        "k": 64,
+        "n": 75,
+        "p": 0.8533333333333334,
+        "lo": 0.7561523213162998,
+        "hi": 0.9160828299430378,
+        "fmt": "64/75 = 0.853 [0.756, 0.916]"
+      },
+      "spearman_over_models": {
+        "rho": -0.167,
+        "p_perm": 1.0,
+        "n": 5,
+        "exact": true,
+        "n_pairings": 120,
+        "finest_attainable_p": 0.1074
+      }
+    },
+    "composition_note": "n = 75 is 15 systems x 5 models. The same 15 systems carry the n = 60 guardrail set (15 x 4 temperatures), so the two analysis sets share their clustering structure. Systems whose id contains 'bcc' are dropped, which also removes the superionic agi_bcc; this is retained for comparability with the published numbers and is stated in section 3.2.",
+    "spearman_power_note": "With five models there are only 5! = 120 distinct pairings, so this statistic has a resolution floor (reported per temperature as finest_attainable_p) and any rho at this n is descriptive only. Note also that the coefficient changes sign across the ladder, which is itself the argument against reading it."
+  },
+  "screen_vs_sscha_paired": {
+    "fe_oxide__all_models": {
+      "n_paired_units": 27,
+      "n_systems": 3,
+      "both_correct": 2,
+      "screen_right_sscha_wrong": 14,
+      "sscha_right_screen_wrong": 3,
+      "both_wrong": 8,
+      "mcnemar_exact_p_UNIT_LEVEL": 0.0127258,
+      "clustered_by_system": {
+        "n_clusters": 3,
+        "per_cluster_net": [
+          6,
+          6,
+          -1
+        ],
+        "clusters_favouring_a": 2,
+        "clusters_favouring_b": 1,
+        "clusters_tied": 0,
+        "observed_net": 11,
+        "p_exact_clustered": 0.5,
+        "finest_attainable_p": 0.25,
+        "at_resolution_floor": false
+      },
+      "note": "Two tests, and the unit-level one is NOT the one to quote. Pairing is the right structure -- both methods see the same (system, model, temperature) units, so comparing two marginal Wilson intervals would ignore it -- but an exact McNemar over discordant units also assumes those units are independent, and they are not: they cluster by system. That is the same objection Referee 3 raised about the guardrail AUC, and it applies here too. The clustered test randomises the method label over whole systems and is exact. Its resolution floor is 2/2^k, so with five systems no arrangement can reach p < 0.0625, and the honest report is the effect size and its consistency across systems rather than a significance claim."
+    },
+    "fe_oxide__excl_orb_v2": {
+      "n_paired_units": 23,
+      "n_systems": 3,
+      "both_correct": 2,
+      "screen_right_sscha_wrong": 10,
+      "sscha_right_screen_wrong": 3,
+      "both_wrong": 8,
+      "mcnemar_exact_p_UNIT_LEVEL": 0.0922852,
+      "clustered_by_system": {
+        "n_clusters": 3,
+        "per_cluster_net": [
+          4,
+          4,
+          -1
+        ],
+        "clusters_favouring_a": 2,
+        "clusters_favouring_b": 1,
+        "clusters_tied": 0,
+        "observed_net": 7,
+        "p_exact_clustered": 0.5,
+        "finest_attainable_p": 0.25,
+        "at_resolution_floor": false
+      },
+      "note": "Two tests, and the unit-level one is NOT the one to quote. Pairing is the right structure -- both methods see the same (system, model, temperature) units, so comparing two marginal Wilson intervals would ignore it -- but an exact McNemar over discordant units also assumes those units are independent, and they are not: they cluster by system. That is the same objection Referee 3 raised about the guardrail AUC, and it applies here too. The clustered test randomises the method label over whole systems and is exact. Its resolution floor is 2/2^k, so with five systems no arrangement can reach p < 0.0625, and the honest report is the effect size and its consistency across systems rather than a significance claim."
+    },
+    "fluorite__all_models": {
+      "n_paired_units": 20,
+      "n_systems": 2,
+      "both_correct": 1,
+      "screen_right_sscha_wrong": 19,
+      "sscha_right_screen_wrong": 0,
+      "both_wrong": 0,
+      "mcnemar_exact_p_UNIT_LEVEL": 3.8e-06,
+      "clustered_by_system": {
+        "n_clusters": 2,
+        "per_cluster_net": [
+          9,
+          10
+        ],
+        "clusters_favouring_a": 2,
+        "clusters_favouring_b": 0,
+        "clusters_tied": 0,
+        "observed_net": 19,
+        "p_exact_clustered": 0.5,
+        "finest_attainable_p": 0.5,
+        "at_resolution_floor": true
+      },
+      "note": "Two tests, and the unit-level one is NOT the one to quote. Pairing is the right structure -- both methods see the same (system, model, temperature) units, so comparing two marginal Wilson intervals would ignore it -- but an exact McNemar over discordant units also assumes those units are independent, and they are not: they cluster by system. That is the same objection Referee 3 raised about the guardrail AUC, and it applies here too. The clustered test randomises the method label over whole systems and is exact. Its resolution floor is 2/2^k, so with five systems no arrangement can reach p < 0.0625, and the honest report is the effect size and its consistency across systems rather than a significance claim."
+    },
+    "fluorite__excl_orb_v2": {
+      "n_paired_units": 16,
+      "n_systems": 2,
+      "both_correct": 0,
+      "screen_right_sscha_wrong": 16,
+      "sscha_right_screen_wrong": 0,
+      "both_wrong": 0,
+      "mcnemar_exact_p_UNIT_LEVEL": 3.05e-05,
+      "clustered_by_system": {
+        "n_clusters": 2,
+        "per_cluster_net": [
+          8,
+          8
+        ],
+        "clusters_favouring_a": 2,
+        "clusters_favouring_b": 0,
+        "clusters_tied": 0,
+        "observed_net": 16,
+        "p_exact_clustered": 0.5,
+        "finest_attainable_p": 0.5,
+        "at_resolution_floor": true
+      },
+      "note": "Two tests, and the unit-level one is NOT the one to quote. Pairing is the right structure -- both methods see the same (system, model, temperature) units, so comparing two marginal Wilson intervals would ignore it -- but an exact McNemar over discordant units also assumes those units are independent, and they are not: they cluster by system. That is the same objection Referee 3 raised about the guardrail AUC, and it applies here too. The clustered test randomises the method label over whole systems and is exact. Its resolution floor is 2/2^k, so with five systems no arrangement can reach p < 0.0625, and the honest report is the effect size and its consistency across systems rather than a significance claim."
+    },
+    "displacive_combined__all_models": {
+      "n_paired_units": 47,
+      "n_systems": 5,
+      "both_correct": 3,
+      "screen_right_sscha_wrong": 33,
+      "sscha_right_screen_wrong": 3,
+      "both_wrong": 8,
+      "mcnemar_exact_p_UNIT_LEVEL": 2e-07,
+      "clustered_by_system": {
+        "n_clusters": 5,
+        "per_cluster_net": [
+          6,
+          6,
+          -1,
+          9,
+          10
+        ],
+        "clusters_favouring_a": 4,
+        "clusters_favouring_b": 1,
+        "clusters_tied": 0,
+        "observed_net": 30,
+        "p_exact_clustered": 0.125,
+        "finest_attainable_p": 0.0625,
+        "at_resolution_floor": false
+      },
+      "note": "Two tests, and the unit-level one is NOT the one to quote. Pairing is the right structure -- both methods see the same (system, model, temperature) units, so comparing two marginal Wilson intervals would ignore it -- but an exact McNemar over discordant units also assumes those units are independent, and they are not: they cluster by system. That is the same objection Referee 3 raised about the guardrail AUC, and it applies here too. The clustered test randomises the method label over whole systems and is exact. Its resolution floor is 2/2^k, so with five systems no arrangement can reach p < 0.0625, and the honest report is the effect size and its consistency across systems rather than a significance claim."
+    },
+    "displacive_combined__excl_orb_v2": {
+      "n_paired_units": 39,
+      "n_systems": 5,
+      "both_correct": 2,
+      "screen_right_sscha_wrong": 26,
+      "sscha_right_screen_wrong": 3,
+      "both_wrong": 8,
+      "mcnemar_exact_p_UNIT_LEVEL": 1.52e-05,
+      "clustered_by_system": {
+        "n_clusters": 5,
+        "per_cluster_net": [
+          4,
+          4,
+          -1,
+          8,
+          8
+        ],
+        "clusters_favouring_a": 4,
+        "clusters_favouring_b": 1,
+        "clusters_tied": 0,
+        "observed_net": 23,
+        "p_exact_clustered": 0.125,
+        "finest_attainable_p": 0.0625,
+        "at_resolution_floor": false
+      },
+      "note": "Two tests, and the unit-level one is NOT the one to quote. Pairing is the right structure -- both methods see the same (system, model, temperature) units, so comparing two marginal Wilson intervals would ignore it -- but an exact McNemar over discordant units also assumes those units are independent, and they are not: they cluster by system. That is the same objection Referee 3 raised about the guardrail AUC, and it applies here too. The clustered test randomises the method label over whole systems and is exact. Its resolution floor is 2/2^k, so with five systems no arrangement can reach p < 0.0625, and the honest report is the effect size and its consistency across systems rather than a significance claim."
+    }
+  },
+  "orb_split": {
+    "all_models": {
+      "harmonic": {
+        "chgnet": {
+          "accuracy": {
+            "k": 15,
+            "n": 19,
+            "p": 0.7894736842105263,
+            "lo": 0.566657215370657,
+            "hi": 0.9149232337314461,
+            "fmt": "15/19 = 0.789 [0.567, 0.915]"
+          },
+          "false_stable": {
+            "k": 2,
+            "n": 13,
+            "p": 0.15384615384615385,
+            "lo": 0.04325817831792836,
+            "hi": 0.42234631043152104,
+            "fmt": "2/13 = 0.154 [0.043, 0.422]"
+          },
+          "n_systems": 19
+        },
+        "mace_mp0": {
+          "accuracy": {
+            "k": 17,
+            "n": 19,
+            "p": 0.8947368421052632,
+            "lo": 0.6860591726836749,
+            "hi": 0.9706414397282841,
+            "fmt": "17/19 = 0.895 [0.686, 0.971]"
+          },
+          "false_stable": {
+            "k": 2,
+            "n": 13,
+            "p": 0.15384615384615385,
+            "lo": 0.04325817831792836,
+            "hi": 0.42234631043152104,
+            "fmt": "2/13 = 0.154 [0.043, 0.422]"
+          },
+          "n_systems": 19
+        },
+        "mattersim": {
+          "accuracy": {
+            "k": 19,
+            "n": 19,
+            "p": 1.0,
+            "lo": 0.8318207757218146,
+            "hi": 1.0,
+            "fmt": "19/19 = 1.000 [0.832, 1.000]"
+          },
+          "false_stable": {
+            "k": 0,
+            "n": 13,
+            "p": 0.0,
+            "lo": 0.0,
+            "hi": 0.22809537263809343,
+            "fmt": "0/13 = 0.000 [0.000, 0.228]"
+          },
+          "n_systems": 19
+        },
+        "orb_v2": {
+          "accuracy": {
+            "k": 17,
+            "n": 19,
+            "p": 0.8947368421052632,
+            "lo": 0.6860591726836749,
+            "hi": 0.9706414397282841,
+            "fmt": "17/19 = 0.895 [0.686, 0.971]"
+          },
+          "false_stable": {
+            "k": 1,
+            "n": 13,
+            "p": 0.07692307692307693,
+            "lo": 0.013710421226987068,
+            "hi": 0.3331395094667843,
+            "fmt": "1/13 = 0.077 [0.014, 0.333]"
+          },
+          "n_systems": 19
+        },
+        "sevennet0": {
+          "accuracy": {
+            "k": 19,
+            "n": 19,
+            "p": 1.0,
+            "lo": 0.8318207757218146,
+            "hi": 1.0,
+            "fmt": "19/19 = 1.000 [0.832, 1.000]"
+          },
+          "false_stable": {
+            "k": 0,
+            "n": 13,
+            "p": 0.0,
+            "lo": 0.0,
+            "hi": 0.22809537263809343,
+            "fmt": "0/13 = 0.000 [0.000, 0.228]"
+          },
+          "n_systems": 19
+        }
+      },
+      "finite_t": {
+        "chgnet": {
+          "accuracy": {
+            "k": 26,
+            "n": 30,
+            "p": 0.8666666666666667,
+            "lo": 0.7031867330228921,
+            "hi": 0.9469034451972108,
+            "fmt": "26/30 = 0.867 [0.703, 0.947]"
+          },
+          "false_stable": {
+            "k": 3,
+            "n": 16,
+            "p": 0.1875,
+            "lo": 0.06591599066150139,
+            "hi": 0.4300888098298569,
+            "fmt": "3/16 = 0.188 [0.066, 0.430]"
+          },
+          "n_systems": 15
+        },
+        "mace_mp0": {
+          "accuracy": {
+            "k": 25,
+            "n": 30,
+            "p": 0.8333333333333334,
+            "lo": 0.664356494780228,
+            "hi": 0.9266345763289564,
+            "fmt": "25/30 = 0.833 [0.664, 0.927]"
+          },
+          "false_stable": {
+            "k": 4,
+            "n": 16,
+            "p": 0.25,
+            "lo": 0.10182067483951532,
+            "hi": 0.49498316555357136,
+            "fmt": "4/16 = 0.250 [0.102, 0.495]"
+          },
+          "n_systems": 15
+        },
+        "mattersim": {
+          "accuracy": {
+            "k": 25,
+            "n": 30,
+            "p": 0.8333333333333334,
+            "lo": 0.664356494780228,
+            "hi": 0.9266345763289564,
+            "fmt": "25/30 = 0.833 [0.664, 0.927]"
+          },
+          "false_stable": {
+            "k": 4,
+            "n": 16,
+            "p": 0.25,
+            "lo": 0.10182067483951532,
+            "hi": 0.49498316555357136,
+            "fmt": "4/16 = 0.250 [0.102, 0.495]"
+          },
+          "n_systems": 15
+        },
+        "orb_v2": {
+          "accuracy": {
+            "k": 24,
+            "n": 30,
+            "p": 0.8,
+            "lo": 0.626943035714534,
+            "hi": 0.904948928283732,
+            "fmt": "24/30 = 0.800 [0.627, 0.905]"
+          },
+          "false_stable": {
+            "k": 5,
+            "n": 16,
+            "p": 0.3125,
+            "lo": 0.14164643845620956,
+            "hi": 0.5559564418386054,
+            "fmt": "5/16 = 0.312 [0.142, 0.556]"
+          },
+          "n_systems": 15
+        },
+        "sevennet0": {
+          "accuracy": {
+            "k": 27,
+            "n": 30,
+            "p": 0.9,
+            "lo": 0.7437891740507678,
+            "hi": 0.9654001112802535,
+            "fmt": "27/30 = 0.900 [0.744, 0.965]"
+          },
+          "false_stable": {
+            "k": 2,
+            "n": 16,
+            "p": 0.125,
+            "lo": 0.03497748771084325,
+            "hi": 0.3602282728787867,
+            "fmt": "2/16 = 0.125 [0.035, 0.360]"
+          },
+          "n_systems": 15
+        }
+      },
+      "bcc_method_agreement": {
+        "n_paired": 45,
+        "sign_agreement": 0.778,
+        "pearson_freq": 0.143,
+        "spearman_freq": 0.113
+      },
+      "displacive_recall": {
+        "softmode": {
+          "k": 16,
+          "n": 30,
+          "p": 0.5333333333333333,
+          "lo": 0.36142299607310463,
+          "hi": 0.6976761110378138,
+          "fmt": "16/30 = 0.533 [0.361, 0.698]",
+          "n_numerical_blowup": 0
+        },
+        "sscha": {
+          "k": 5,
+          "n": 27,
+          "p": 0.18518518518518517,
+          "lo": 0.08180707137686663,
+          "hi": 0.36698683634908447,
+          "fmt": "5/27 = 0.185 [0.082, 0.367]",
+          "n_numerical_blowup": 1
+        }
+      }
+    },
+    "excl_orb_v2": {
+      "harmonic": {
+        "chgnet": {
+          "accuracy": {
+            "k": 15,
+            "n": 19,
+            "p": 0.7894736842105263,
+            "lo": 0.566657215370657,
+            "hi": 0.9149232337314461,
+            "fmt": "15/19 = 0.789 [0.567, 0.915]"
+          },
+          "false_stable": {
+            "k": 2,
+            "n": 13,
+            "p": 0.15384615384615385,
+            "lo": 0.04325817831792836,
+            "hi": 0.42234631043152104,
+            "fmt": "2/13 = 0.154 [0.043, 0.422]"
+          },
+          "n_systems": 19
+        },
+        "mace_mp0": {
+          "accuracy": {
+            "k": 17,
+            "n": 19,
+            "p": 0.8947368421052632,
+            "lo": 0.6860591726836749,
+            "hi": 0.9706414397282841,
+            "fmt": "17/19 = 0.895 [0.686, 0.971]"
+          },
+          "false_stable": {
+            "k": 2,
+            "n": 13,
+            "p": 0.15384615384615385,
+            "lo": 0.04325817831792836,
+            "hi": 0.42234631043152104,
+            "fmt": "2/13 = 0.154 [0.043, 0.422]"
+          },
+          "n_systems": 19
+        },
+        "mattersim": {
+          "accuracy": {
+            "k": 19,
+            "n": 19,
+            "p": 1.0,
+            "lo": 0.8318207757218146,
+            "hi": 1.0,
+            "fmt": "19/19 = 1.000 [0.832, 1.000]"
+          },
+          "false_stable": {
+            "k": 0,
+            "n": 13,
+            "p": 0.0,
+            "lo": 0.0,
+            "hi": 0.22809537263809343,
+            "fmt": "0/13 = 0.000 [0.000, 0.228]"
+          },
+          "n_systems": 19
+        },
+        "sevennet0": {
+          "accuracy": {
+            "k": 19,
+            "n": 19,
+            "p": 1.0,
+            "lo": 0.8318207757218146,
+            "hi": 1.0,
+            "fmt": "19/19 = 1.000 [0.832, 1.000]"
+          },
+          "false_stable": {
+            "k": 0,
+            "n": 13,
+            "p": 0.0,
+            "lo": 0.0,
+            "hi": 0.22809537263809343,
+            "fmt": "0/13 = 0.000 [0.000, 0.228]"
+          },
+          "n_systems": 19
+        }
+      },
+      "finite_t": {
+        "chgnet": {
+          "accuracy": {
+            "k": 26,
+            "n": 30,
+            "p": 0.8666666666666667,
+            "lo": 0.7031867330228921,
+            "hi": 0.9469034451972108,
+            "fmt": "26/30 = 0.867 [0.703, 0.947]"
+          },
+          "false_stable": {
+            "k": 3,
+            "n": 16,
+            "p": 0.1875,
+            "lo": 0.06591599066150139,
+            "hi": 0.4300888098298569,
+            "fmt": "3/16 = 0.188 [0.066, 0.430]"
+          },
+          "n_systems": 15
+        },
+        "mace_mp0": {
+          "accuracy": {
+            "k": 25,
+            "n": 30,
+            "p": 0.8333333333333334,
+            "lo": 0.664356494780228,
+            "hi": 0.9266345763289564,
+            "fmt": "25/30 = 0.833 [0.664, 0.927]"
+          },
+          "false_stable": {
+            "k": 4,
+            "n": 16,
+            "p": 0.25,
+            "lo": 0.10182067483951532,
+            "hi": 0.49498316555357136,
+            "fmt": "4/16 = 0.250 [0.102, 0.495]"
+          },
+          "n_systems": 15
+        },
+        "mattersim": {
+          "accuracy": {
+            "k": 25,
+            "n": 30,
+            "p": 0.8333333333333334,
+            "lo": 0.664356494780228,
+            "hi": 0.9266345763289564,
+            "fmt": "25/30 = 0.833 [0.664, 0.927]"
+          },
+          "false_stable": {
+            "k": 4,
+            "n": 16,
+            "p": 0.25,
+            "lo": 0.10182067483951532,
+            "hi": 0.49498316555357136,
+            "fmt": "4/16 = 0.250 [0.102, 0.495]"
+          },
+          "n_systems": 15
+        },
+        "sevennet0": {
+          "accuracy": {
+            "k": 27,
+            "n": 30,
+            "p": 0.9,
+            "lo": 0.7437891740507678,
+            "hi": 0.9654001112802535,
+            "fmt": "27/30 = 0.900 [0.744, 0.965]"
+          },
+          "false_stable": {
+            "k": 2,
+            "n": 16,
+            "p": 0.125,
+            "lo": 0.03497748771084325,
+            "hi": 0.3602282728787867,
+            "fmt": "2/16 = 0.125 [0.035, 0.360]"
+          },
+          "n_systems": 15
+        }
+      },
+      "bcc_method_agreement": {
+        "n_paired": 36,
+        "sign_agreement": 0.833,
+        "pearson_freq": -0.254,
+        "spearman_freq": -0.003
+      },
+      "displacive_recall": {
+        "softmode": {
+          "k": 12,
+          "n": 24,
+          "p": 0.5,
+          "lo": 0.31427425806665943,
+          "hi": 0.6857257419333406,
+          "fmt": "12/24 = 0.500 [0.314, 0.686]",
+          "n_numerical_blowup": 0
+        },
+        "sscha": {
+          "k": 5,
+          "n": 23,
+          "p": 0.21739130434782608,
+          "lo": 0.09663978020337405,
+          "hi": 0.4190348303368928,
+          "fmt": "5/23 = 0.217 [0.097, 0.419]",
+          "n_numerical_blowup": 1
+        }
+      }
+    },
+    "note": "ORB-v2 is float32 and non-conservative, which is an architecture confound rather than a model property of interest. The manuscript reports the sign-agreement split (0.78 all / 0.83 excluding) but not the rank-correlation split; both are given here. Note the ex-ORB frequency rank correlation is approximately zero, not merely smaller."
+  },
+  "h2_clustered": {
+    "answers": [
+      "R1.6",
+      "R3.1",
+      "R3.3 (H2 McNemar clustering)",
+      "R3.5 (ORB split)"
+    ],
+    "definition": "Matched set of analysis.h2_paired_summary (non-bcc, non-borderline; 15 systems x 5 models, 15 x 4 without ORB-v2). b = harmonic call right and screen call at T wrong; c = the reverse. mcnemar_exact_p_UNIT_LEVEL treats the units as independent and is a companion only. clustered_by_system is stats.cluster_exact_paired(a = harmonic right, b = finite-T right, cluster = system): exact enumeration of the 2^k per-system sign flips, so clusters_favouring_a counts systems with more b than c units. A 'shared screen error' system is one the screen mis-calls at that T for >= 4 of the 5 models (the screen's own T* error rather than an MLIP-specific one); the set is defined on all five models and applied to both model sets.",
+    "100": {
+      "shared_screen_error_systems": {},
+      "all_models": {
+        "n_pairs": 75,
+        "n_systems": 15,
+        "b_harm_right_ft_wrong": 5,
+        "c_harm_wrong_ft_right": 3,
+        "mcnemar_exact_p_UNIT_LEVEL": 0.72656,
+        "clustered_by_system": {
+          "n_clusters": 15,
+          "per_cluster_net": [
+            0,
+            0,
+            -1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            -1,
+            -1,
+            3,
+            0,
+            1,
+            0
+          ],
+          "clusters_favouring_a": 3,
+          "clusters_favouring_b": 3,
+          "clusters_tied": 9,
+          "observed_net": 2,
+          "p_exact_clustered": 0.84375,
+          "finest_attainable_p": 6e-05,
+          "at_resolution_floor": false,
+          "finest_attainable_p_given_ties": 0.03125
+        },
+        "per_system_discordance": {
+          "batio3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "c_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "ceo2_cubic": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "cspbi3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "cssnbr3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "cssni3_cubic": {
+            "b": 1,
+            "c": 0,
+            "net": 1
+          },
+          "cu_fcc": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "hfo2_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "knbo3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "mgo_rocksalt": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "nacl_rocksalt": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "pbtio3_cubic": {
+            "b": 3,
+            "c": 0,
+            "net": 3
+          },
+          "si_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "srtio3_cubic": {
+            "b": 1,
+            "c": 0,
+            "net": 1
+          },
+          "zro2_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          }
+        },
+        "leave_one_system_out": {
+          "p_clustered_min": 0.6875,
+          "dropped_system_at_min": "ceo2_cubic",
+          "p_clustered_max": 1.0,
+          "drops_with_p_clustered_below_0.05": [],
+          "by_dropped_system": {
+            "batio3_cubic": {
+              "b": 5,
+              "c": 3,
+              "p_unit": 0.72656,
+              "p_clustered": 0.84375
+            },
+            "c_diamond": {
+              "b": 5,
+              "c": 3,
+              "p_unit": 0.72656,
+              "p_clustered": 0.84375
+            },
+            "ceo2_cubic": {
+              "b": 5,
+              "c": 2,
+              "p_unit": 0.45312,
+              "p_clustered": 0.6875
+            },
+            "cspbi3_cubic": {
+              "b": 5,
+              "c": 3,
+              "p_unit": 0.72656,
+              "p_clustered": 0.84375
+            },
+            "cssnbr3_cubic": {
+              "b": 5,
+              "c": 3,
+              "p_unit": 0.72656,
+              "p_clustered": 0.84375
+            },
+            "cssni3_cubic": {
+              "b": 4,
+              "c": 3,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "cu_fcc": {
+              "b": 5,
+              "c": 3,
+              "p_unit": 0.72656,
+              "p_clustered": 0.84375
+            },
+            "hfo2_cubic": {
+              "b": 5,
+              "c": 3,
+              "p_unit": 0.72656,
+              "p_clustered": 0.84375
+            },
+            "knbo3_cubic": {
+              "b": 5,
+              "c": 3,
+              "p_unit": 0.72656,
+              "p_clustered": 0.84375
+            },
+            "mgo_rocksalt": {
+              "b": 5,
+              "c": 2,
+              "p_unit": 0.45312,
+              "p_clustered": 0.6875
+            },
+            "nacl_rocksalt": {
+              "b": 5,
+              "c": 2,
+              "p_unit": 0.45312,
+              "p_clustered": 0.6875
+            },
+            "pbtio3_cubic": {
+              "b": 2,
+              "c": 3,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "si_diamond": {
+              "b": 5,
+              "c": 3,
+              "p_unit": 0.72656,
+              "p_clustered": 0.84375
+            },
+            "srtio3_cubic": {
+              "b": 4,
+              "c": 3,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "zro2_cubic": {
+              "b": 5,
+              "c": 3,
+              "p_unit": 0.72656,
+              "p_clustered": 0.84375
+            }
+          }
+        },
+        "discordant_units": [
+          {
+            "system": "ceo2_cubic",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "orb_v2",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "mgo_rocksalt",
+            "model": "orb_v2",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "nacl_rocksalt",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "orb_v2",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "srtio3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": false
+          }
+        ],
+        "shared_screen_error_split": {
+          "b_in_shared_systems": 0,
+          "c_in_shared_systems": 0,
+          "without_shared_systems": {
+            "n_pairs": 75,
+            "n_systems": 15,
+            "b": 5,
+            "c": 3,
+            "p_unit": 0.72656,
+            "p_clustered": 0.84375,
+            "finest_attainable_p_given_ties": 0.03125
+          }
+        }
+      },
+      "excl_orb_v2": {
+        "n_pairs": 60,
+        "n_systems": 15,
+        "b_harm_right_ft_wrong": 3,
+        "c_harm_wrong_ft_right": 2,
+        "mcnemar_exact_p_UNIT_LEVEL": 1.0,
+        "clustered_by_system": {
+          "n_clusters": 15,
+          "per_cluster_net": [
+            0,
+            0,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -1,
+            2,
+            0,
+            1,
+            0
+          ],
+          "clusters_favouring_a": 2,
+          "clusters_favouring_b": 2,
+          "clusters_tied": 11,
+          "observed_net": 1,
+          "p_exact_clustered": 1.0,
+          "finest_attainable_p": 6e-05,
+          "at_resolution_floor": false,
+          "finest_attainable_p_given_ties": 0.125
+        },
+        "per_system_discordance": {
+          "batio3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "c_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "ceo2_cubic": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "cspbi3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "cssnbr3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "cssni3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "cu_fcc": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "hfo2_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "knbo3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "mgo_rocksalt": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "nacl_rocksalt": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "pbtio3_cubic": {
+            "b": 2,
+            "c": 0,
+            "net": 2
+          },
+          "si_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "srtio3_cubic": {
+            "b": 1,
+            "c": 0,
+            "net": 1
+          },
+          "zro2_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          }
+        },
+        "leave_one_system_out": {
+          "p_clustered_min": 0.75,
+          "dropped_system_at_min": "ceo2_cubic",
+          "p_clustered_max": 1.0,
+          "drops_with_p_clustered_below_0.05": [],
+          "by_dropped_system": {
+            "batio3_cubic": {
+              "b": 3,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "c_diamond": {
+              "b": 3,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "ceo2_cubic": {
+              "b": 3,
+              "c": 1,
+              "p_unit": 0.625,
+              "p_clustered": 0.75
+            },
+            "cspbi3_cubic": {
+              "b": 3,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "cssnbr3_cubic": {
+              "b": 3,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "cssni3_cubic": {
+              "b": 3,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "cu_fcc": {
+              "b": 3,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "hfo2_cubic": {
+              "b": 3,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "knbo3_cubic": {
+              "b": 3,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "mgo_rocksalt": {
+              "b": 3,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "nacl_rocksalt": {
+              "b": 3,
+              "c": 1,
+              "p_unit": 0.625,
+              "p_clustered": 0.75
+            },
+            "pbtio3_cubic": {
+              "b": 1,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "si_diamond": {
+              "b": 3,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "srtio3_cubic": {
+              "b": 2,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            },
+            "zro2_cubic": {
+              "b": 3,
+              "c": 2,
+              "p_unit": 1.0,
+              "p_clustered": 1.0
+            }
+          }
+        },
+        "discordant_units": [
+          {
+            "system": "ceo2_cubic",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "nacl_rocksalt",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "srtio3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": false
+          }
+        ],
+        "shared_screen_error_split": {
+          "b_in_shared_systems": 0,
+          "c_in_shared_systems": 0,
+          "without_shared_systems": {
+            "n_pairs": 60,
+            "n_systems": 15,
+            "b": 3,
+            "c": 2,
+            "p_unit": 1.0,
+            "p_clustered": 1.0,
+            "finest_attainable_p_given_ties": 0.125
+          }
+        }
+      }
+    },
+    "300": {
+      "shared_screen_error_systems": {
+        "batio3_cubic": {
+          "n_models_wrong": 4,
+          "n_models": 5
+        },
+        "cssnbr3_cubic": {
+          "n_models_wrong": 5,
+          "n_models": 5
+        },
+        "knbo3_cubic": {
+          "n_models_wrong": 4,
+          "n_models": 5
+        }
+      },
+      "all_models": {
+        "n_pairs": 75,
+        "n_systems": 15,
+        "b_harm_right_ft_wrong": 17,
+        "c_harm_wrong_ft_right": 4,
+        "mcnemar_exact_p_UNIT_LEVEL": 0.0072,
+        "clustered_by_system": {
+          "n_clusters": 15,
+          "per_cluster_net": [
+            4,
+            0,
+            -1,
+            0,
+            5,
+            1,
+            0,
+            0,
+            4,
+            -1,
+            -1,
+            3,
+            0,
+            -1,
+            0
+          ],
+          "clusters_favouring_a": 5,
+          "clusters_favouring_b": 4,
+          "clusters_tied": 6,
+          "observed_net": 13,
+          "p_exact_clustered": 0.15234,
+          "finest_attainable_p": 6e-05,
+          "at_resolution_floor": false,
+          "finest_attainable_p_given_ties": 0.00391
+        },
+        "per_system_discordance": {
+          "batio3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "c_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "ceo2_cubic": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "cspbi3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "cssnbr3_cubic": {
+            "b": 5,
+            "c": 0,
+            "net": 5
+          },
+          "cssni3_cubic": {
+            "b": 1,
+            "c": 0,
+            "net": 1
+          },
+          "cu_fcc": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "hfo2_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "knbo3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "mgo_rocksalt": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "nacl_rocksalt": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "pbtio3_cubic": {
+            "b": 3,
+            "c": 0,
+            "net": 3
+          },
+          "si_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "srtio3_cubic": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "zro2_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          }
+        },
+        "leave_one_system_out": {
+          "p_clustered_min": 0.125,
+          "dropped_system_at_min": "ceo2_cubic",
+          "p_clustered_max": 0.30469,
+          "drops_with_p_clustered_below_0.05": [],
+          "by_dropped_system": {
+            "batio3_cubic": {
+              "b": 13,
+              "c": 4,
+              "p_unit": 0.04904,
+              "p_clustered": 0.29688
+            },
+            "c_diamond": {
+              "b": 17,
+              "c": 4,
+              "p_unit": 0.0072,
+              "p_clustered": 0.15234
+            },
+            "ceo2_cubic": {
+              "b": 17,
+              "c": 3,
+              "p_unit": 0.00258,
+              "p_clustered": 0.125
+            },
+            "cspbi3_cubic": {
+              "b": 17,
+              "c": 4,
+              "p_unit": 0.0072,
+              "p_clustered": 0.15234
+            },
+            "cssnbr3_cubic": {
+              "b": 12,
+              "c": 4,
+              "p_unit": 0.07681,
+              "p_clustered": 0.30469
+            },
+            "cssni3_cubic": {
+              "b": 16,
+              "c": 4,
+              "p_unit": 0.01182,
+              "p_clustered": 0.17969
+            },
+            "cu_fcc": {
+              "b": 17,
+              "c": 4,
+              "p_unit": 0.0072,
+              "p_clustered": 0.15234
+            },
+            "hfo2_cubic": {
+              "b": 17,
+              "c": 4,
+              "p_unit": 0.0072,
+              "p_clustered": 0.15234
+            },
+            "knbo3_cubic": {
+              "b": 13,
+              "c": 4,
+              "p_unit": 0.04904,
+              "p_clustered": 0.29688
+            },
+            "mgo_rocksalt": {
+              "b": 17,
+              "c": 3,
+              "p_unit": 0.00258,
+              "p_clustered": 0.125
+            },
+            "nacl_rocksalt": {
+              "b": 17,
+              "c": 3,
+              "p_unit": 0.00258,
+              "p_clustered": 0.125
+            },
+            "pbtio3_cubic": {
+              "b": 14,
+              "c": 4,
+              "p_unit": 0.03088,
+              "p_clustered": 0.25781
+            },
+            "si_diamond": {
+              "b": 17,
+              "c": 4,
+              "p_unit": 0.0072,
+              "p_clustered": 0.15234
+            },
+            "srtio3_cubic": {
+              "b": 17,
+              "c": 3,
+              "p_unit": 0.00258,
+              "p_clustered": 0.125
+            },
+            "zro2_cubic": {
+              "b": 17,
+              "c": 4,
+              "p_unit": 0.0072,
+              "p_clustered": 0.15234
+            }
+          }
+        },
+        "discordant_units": [
+          {
+            "system": "batio3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "ceo2_cubic",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "orb_v2",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "orb_v2",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "mgo_rocksalt",
+            "model": "orb_v2",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "nacl_rocksalt",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "orb_v2",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "srtio3_cubic",
+            "model": "orb_v2",
+            "type": "c",
+            "shared_screen_error": false
+          }
+        ],
+        "shared_screen_error_split": {
+          "b_in_shared_systems": 13,
+          "c_in_shared_systems": 0,
+          "without_shared_systems": {
+            "n_pairs": 60,
+            "n_systems": 12,
+            "b": 4,
+            "c": 4,
+            "p_unit": 1.0,
+            "p_clustered": 1.0,
+            "finest_attainable_p_given_ties": 0.03125
+          }
+        }
+      },
+      "excl_orb_v2": {
+        "n_pairs": 60,
+        "n_systems": 15,
+        "b_harm_right_ft_wrong": 14,
+        "c_harm_wrong_ft_right": 2,
+        "mcnemar_exact_p_UNIT_LEVEL": 0.00418,
+        "clustered_by_system": {
+          "n_clusters": 15,
+          "per_cluster_net": [
+            4,
+            0,
+            -1,
+            0,
+            4,
+            0,
+            0,
+            0,
+            4,
+            0,
+            -1,
+            2,
+            0,
+            0,
+            0
+          ],
+          "clusters_favouring_a": 4,
+          "clusters_favouring_b": 2,
+          "clusters_tied": 9,
+          "observed_net": 12,
+          "p_exact_clustered": 0.15625,
+          "finest_attainable_p": 6e-05,
+          "at_resolution_floor": false,
+          "finest_attainable_p_given_ties": 0.03125
+        },
+        "per_system_discordance": {
+          "batio3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "c_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "ceo2_cubic": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "cspbi3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "cssnbr3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "cssni3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "cu_fcc": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "hfo2_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "knbo3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "mgo_rocksalt": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "nacl_rocksalt": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "pbtio3_cubic": {
+            "b": 2,
+            "c": 0,
+            "net": 2
+          },
+          "si_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "srtio3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "zro2_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          }
+        },
+        "leave_one_system_out": {
+          "p_clustered_min": 0.125,
+          "dropped_system_at_min": "ceo2_cubic",
+          "p_clustered_max": 0.3125,
+          "drops_with_p_clustered_below_0.05": [],
+          "by_dropped_system": {
+            "batio3_cubic": {
+              "b": 10,
+              "c": 2,
+              "p_unit": 0.03857,
+              "p_clustered": 0.3125
+            },
+            "c_diamond": {
+              "b": 14,
+              "c": 2,
+              "p_unit": 0.00418,
+              "p_clustered": 0.15625
+            },
+            "ceo2_cubic": {
+              "b": 14,
+              "c": 1,
+              "p_unit": 0.00098,
+              "p_clustered": 0.125
+            },
+            "cspbi3_cubic": {
+              "b": 14,
+              "c": 2,
+              "p_unit": 0.00418,
+              "p_clustered": 0.15625
+            },
+            "cssnbr3_cubic": {
+              "b": 10,
+              "c": 2,
+              "p_unit": 0.03857,
+              "p_clustered": 0.3125
+            },
+            "cssni3_cubic": {
+              "b": 14,
+              "c": 2,
+              "p_unit": 0.00418,
+              "p_clustered": 0.15625
+            },
+            "cu_fcc": {
+              "b": 14,
+              "c": 2,
+              "p_unit": 0.00418,
+              "p_clustered": 0.15625
+            },
+            "hfo2_cubic": {
+              "b": 14,
+              "c": 2,
+              "p_unit": 0.00418,
+              "p_clustered": 0.15625
+            },
+            "knbo3_cubic": {
+              "b": 10,
+              "c": 2,
+              "p_unit": 0.03857,
+              "p_clustered": 0.3125
+            },
+            "mgo_rocksalt": {
+              "b": 14,
+              "c": 2,
+              "p_unit": 0.00418,
+              "p_clustered": 0.15625
+            },
+            "nacl_rocksalt": {
+              "b": 14,
+              "c": 1,
+              "p_unit": 0.00098,
+              "p_clustered": 0.125
+            },
+            "pbtio3_cubic": {
+              "b": 12,
+              "c": 2,
+              "p_unit": 0.01294,
+              "p_clustered": 0.25
+            },
+            "si_diamond": {
+              "b": 14,
+              "c": 2,
+              "p_unit": 0.00418,
+              "p_clustered": 0.15625
+            },
+            "srtio3_cubic": {
+              "b": 14,
+              "c": 2,
+              "p_unit": 0.00418,
+              "p_clustered": 0.15625
+            },
+            "zro2_cubic": {
+              "b": 14,
+              "c": 2,
+              "p_unit": 0.00418,
+              "p_clustered": 0.15625
+            }
+          }
+        },
+        "discordant_units": [
+          {
+            "system": "batio3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "ceo2_cubic",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "nacl_rocksalt",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": false
+          }
+        ],
+        "shared_screen_error_split": {
+          "b_in_shared_systems": 12,
+          "c_in_shared_systems": 0,
+          "without_shared_systems": {
+            "n_pairs": 48,
+            "n_systems": 12,
+            "b": 2,
+            "c": 2,
+            "p_unit": 1.0,
+            "p_clustered": 1.0,
+            "finest_attainable_p_given_ties": 0.25
+          }
+        }
+      }
+    },
+    "600": {
+      "shared_screen_error_systems": {
+        "cspbi3_cubic": {
+          "n_models_wrong": 5,
+          "n_models": 5
+        },
+        "cssnbr3_cubic": {
+          "n_models_wrong": 4,
+          "n_models": 5
+        },
+        "cssni3_cubic": {
+          "n_models_wrong": 4,
+          "n_models": 5
+        },
+        "knbo3_cubic": {
+          "n_models_wrong": 5,
+          "n_models": 5
+        },
+        "pbtio3_cubic": {
+          "n_models_wrong": 4,
+          "n_models": 5
+        }
+      },
+      "all_models": {
+        "n_pairs": 75,
+        "n_systems": 15,
+        "b_harm_right_ft_wrong": 23,
+        "c_harm_wrong_ft_right": 4,
+        "mcnemar_exact_p_UNIT_LEVEL": 0.00031,
+        "clustered_by_system": {
+          "n_clusters": 15,
+          "per_cluster_net": [
+            0,
+            0,
+            -1,
+            5,
+            4,
+            4,
+            0,
+            1,
+            5,
+            -1,
+            -1,
+            4,
+            0,
+            -1,
+            0
+          ],
+          "clusters_favouring_a": 6,
+          "clusters_favouring_b": 4,
+          "clusters_tied": 5,
+          "observed_net": 19,
+          "p_exact_clustered": 0.06641,
+          "finest_attainable_p": 6e-05,
+          "at_resolution_floor": false,
+          "finest_attainable_p_given_ties": 0.00195
+        },
+        "per_system_discordance": {
+          "batio3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "c_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "ceo2_cubic": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "cspbi3_cubic": {
+            "b": 5,
+            "c": 0,
+            "net": 5
+          },
+          "cssnbr3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "cssni3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "cu_fcc": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "hfo2_cubic": {
+            "b": 1,
+            "c": 0,
+            "net": 1
+          },
+          "knbo3_cubic": {
+            "b": 5,
+            "c": 0,
+            "net": 5
+          },
+          "mgo_rocksalt": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "nacl_rocksalt": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "pbtio3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "si_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "srtio3_cubic": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "zro2_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          }
+        },
+        "leave_one_system_out": {
+          "p_clustered_min": 0.05859,
+          "dropped_system_at_min": "ceo2_cubic",
+          "p_clustered_max": 0.13281,
+          "drops_with_p_clustered_below_0.05": [],
+          "by_dropped_system": {
+            "batio3_cubic": {
+              "b": 23,
+              "c": 4,
+              "p_unit": 0.00031,
+              "p_clustered": 0.06641
+            },
+            "c_diamond": {
+              "b": 23,
+              "c": 4,
+              "p_unit": 0.00031,
+              "p_clustered": 0.06641
+            },
+            "ceo2_cubic": {
+              "b": 23,
+              "c": 3,
+              "p_unit": 9e-05,
+              "p_clustered": 0.05859
+            },
+            "cspbi3_cubic": {
+              "b": 18,
+              "c": 4,
+              "p_unit": 0.00434,
+              "p_clustered": 0.13281
+            },
+            "cssnbr3_cubic": {
+              "b": 19,
+              "c": 4,
+              "p_unit": 0.0026,
+              "p_clustered": 0.12891
+            },
+            "cssni3_cubic": {
+              "b": 19,
+              "c": 4,
+              "p_unit": 0.0026,
+              "p_clustered": 0.12891
+            },
+            "cu_fcc": {
+              "b": 23,
+              "c": 4,
+              "p_unit": 0.00031,
+              "p_clustered": 0.06641
+            },
+            "hfo2_cubic": {
+              "b": 22,
+              "c": 4,
+              "p_unit": 0.00053,
+              "p_clustered": 0.07422
+            },
+            "knbo3_cubic": {
+              "b": 18,
+              "c": 4,
+              "p_unit": 0.00434,
+              "p_clustered": 0.13281
+            },
+            "mgo_rocksalt": {
+              "b": 23,
+              "c": 3,
+              "p_unit": 9e-05,
+              "p_clustered": 0.05859
+            },
+            "nacl_rocksalt": {
+              "b": 23,
+              "c": 3,
+              "p_unit": 9e-05,
+              "p_clustered": 0.05859
+            },
+            "pbtio3_cubic": {
+              "b": 19,
+              "c": 4,
+              "p_unit": 0.0026,
+              "p_clustered": 0.12891
+            },
+            "si_diamond": {
+              "b": 23,
+              "c": 4,
+              "p_unit": 0.00031,
+              "p_clustered": 0.06641
+            },
+            "srtio3_cubic": {
+              "b": 23,
+              "c": 3,
+              "p_unit": 9e-05,
+              "p_clustered": 0.05859
+            },
+            "zro2_cubic": {
+              "b": 23,
+              "c": 4,
+              "p_unit": 0.00031,
+              "p_clustered": 0.06641
+            }
+          }
+        },
+        "discordant_units": [
+          {
+            "system": "ceo2_cubic",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "orb_v2",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "orb_v2",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "mgo_rocksalt",
+            "model": "orb_v2",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "nacl_rocksalt",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "orb_v2",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "srtio3_cubic",
+            "model": "orb_v2",
+            "type": "c",
+            "shared_screen_error": false
+          }
+        ],
+        "shared_screen_error_split": {
+          "b_in_shared_systems": 22,
+          "c_in_shared_systems": 0,
+          "without_shared_systems": {
+            "n_pairs": 50,
+            "n_systems": 10,
+            "b": 1,
+            "c": 4,
+            "p_unit": 0.375,
+            "p_clustered": 0.375,
+            "finest_attainable_p_given_ties": 0.0625
+          }
+        }
+      },
+      "excl_orb_v2": {
+        "n_pairs": 60,
+        "n_systems": 15,
+        "b_harm_right_ft_wrong": 20,
+        "c_harm_wrong_ft_right": 2,
+        "mcnemar_exact_p_UNIT_LEVEL": 0.00012,
+        "clustered_by_system": {
+          "n_clusters": 15,
+          "per_cluster_net": [
+            0,
+            0,
+            -1,
+            4,
+            4,
+            4,
+            0,
+            1,
+            4,
+            0,
+            -1,
+            3,
+            0,
+            0,
+            0
+          ],
+          "clusters_favouring_a": 6,
+          "clusters_favouring_b": 2,
+          "clusters_tied": 7,
+          "observed_net": 18,
+          "p_exact_clustered": 0.05469,
+          "finest_attainable_p": 6e-05,
+          "at_resolution_floor": false,
+          "finest_attainable_p_given_ties": 0.00781
+        },
+        "per_system_discordance": {
+          "batio3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "c_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "ceo2_cubic": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "cspbi3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "cssnbr3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "cssni3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "cu_fcc": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "hfo2_cubic": {
+            "b": 1,
+            "c": 0,
+            "net": 1
+          },
+          "knbo3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "mgo_rocksalt": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "nacl_rocksalt": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "pbtio3_cubic": {
+            "b": 3,
+            "c": 0,
+            "net": 3
+          },
+          "si_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "srtio3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "zro2_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          }
+        },
+        "leave_one_system_out": {
+          "p_clustered_min": 0.04688,
+          "dropped_system_at_min": "ceo2_cubic",
+          "p_clustered_max": 0.10938,
+          "drops_with_p_clustered_below_0.05": [
+            "ceo2_cubic",
+            "nacl_rocksalt"
+          ],
+          "by_dropped_system": {
+            "batio3_cubic": {
+              "b": 20,
+              "c": 2,
+              "p_unit": 0.00012,
+              "p_clustered": 0.05469
+            },
+            "c_diamond": {
+              "b": 20,
+              "c": 2,
+              "p_unit": 0.00012,
+              "p_clustered": 0.05469
+            },
+            "ceo2_cubic": {
+              "b": 20,
+              "c": 1,
+              "p_unit": 2e-05,
+              "p_clustered": 0.04688
+            },
+            "cspbi3_cubic": {
+              "b": 16,
+              "c": 2,
+              "p_unit": 0.00131,
+              "p_clustered": 0.10938
+            },
+            "cssnbr3_cubic": {
+              "b": 16,
+              "c": 2,
+              "p_unit": 0.00131,
+              "p_clustered": 0.10938
+            },
+            "cssni3_cubic": {
+              "b": 16,
+              "c": 2,
+              "p_unit": 0.00131,
+              "p_clustered": 0.10938
+            },
+            "cu_fcc": {
+              "b": 20,
+              "c": 2,
+              "p_unit": 0.00012,
+              "p_clustered": 0.05469
+            },
+            "hfo2_cubic": {
+              "b": 19,
+              "c": 2,
+              "p_unit": 0.00022,
+              "p_clustered": 0.0625
+            },
+            "knbo3_cubic": {
+              "b": 16,
+              "c": 2,
+              "p_unit": 0.00131,
+              "p_clustered": 0.10938
+            },
+            "mgo_rocksalt": {
+              "b": 20,
+              "c": 2,
+              "p_unit": 0.00012,
+              "p_clustered": 0.05469
+            },
+            "nacl_rocksalt": {
+              "b": 20,
+              "c": 1,
+              "p_unit": 2e-05,
+              "p_clustered": 0.04688
+            },
+            "pbtio3_cubic": {
+              "b": 17,
+              "c": 2,
+              "p_unit": 0.00073,
+              "p_clustered": 0.10938
+            },
+            "si_diamond": {
+              "b": 20,
+              "c": 2,
+              "p_unit": 0.00012,
+              "p_clustered": 0.05469
+            },
+            "srtio3_cubic": {
+              "b": 20,
+              "c": 2,
+              "p_unit": 0.00012,
+              "p_clustered": 0.05469
+            },
+            "zro2_cubic": {
+              "b": 20,
+              "c": 2,
+              "p_unit": 0.00012,
+              "p_clustered": 0.05469
+            }
+          }
+        },
+        "discordant_units": [
+          {
+            "system": "ceo2_cubic",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "nacl_rocksalt",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          }
+        ],
+        "shared_screen_error_split": {
+          "b_in_shared_systems": 19,
+          "c_in_shared_systems": 0,
+          "without_shared_systems": {
+            "n_pairs": 40,
+            "n_systems": 10,
+            "b": 1,
+            "c": 2,
+            "p_unit": 1.0,
+            "p_clustered": 1.0,
+            "finest_attainable_p_given_ties": 0.25
+          }
+        }
+      }
+    },
+    "900": {
+      "shared_screen_error_systems": {
+        "cspbi3_cubic": {
+          "n_models_wrong": 5,
+          "n_models": 5
+        }
+      },
+      "all_models": {
+        "n_pairs": 75,
+        "n_systems": 15,
+        "b_harm_right_ft_wrong": 11,
+        "c_harm_wrong_ft_right": 4,
+        "mcnemar_exact_p_UNIT_LEVEL": 0.11847,
+        "clustered_by_system": {
+          "n_clusters": 15,
+          "per_cluster_net": [
+            0,
+            0,
+            -1,
+            5,
+            2,
+            3,
+            0,
+            1,
+            0,
+            -1,
+            -1,
+            0,
+            0,
+            -1,
+            0
+          ],
+          "clusters_favouring_a": 4,
+          "clusters_favouring_b": 4,
+          "clusters_tied": 7,
+          "observed_net": 7,
+          "p_exact_clustered": 0.41406,
+          "finest_attainable_p": 6e-05,
+          "at_resolution_floor": false,
+          "finest_attainable_p_given_ties": 0.00781
+        },
+        "per_system_discordance": {
+          "batio3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "c_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "ceo2_cubic": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "cspbi3_cubic": {
+            "b": 5,
+            "c": 0,
+            "net": 5
+          },
+          "cssnbr3_cubic": {
+            "b": 2,
+            "c": 0,
+            "net": 2
+          },
+          "cssni3_cubic": {
+            "b": 3,
+            "c": 0,
+            "net": 3
+          },
+          "cu_fcc": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "hfo2_cubic": {
+            "b": 1,
+            "c": 0,
+            "net": 1
+          },
+          "knbo3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "mgo_rocksalt": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "nacl_rocksalt": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "pbtio3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "si_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "srtio3_cubic": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "zro2_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          }
+        },
+        "leave_one_system_out": {
+          "p_clustered_min": 0.32812,
+          "dropped_system_at_min": "ceo2_cubic",
+          "p_clustered_max": 0.82812,
+          "drops_with_p_clustered_below_0.05": [],
+          "by_dropped_system": {
+            "batio3_cubic": {
+              "b": 11,
+              "c": 4,
+              "p_unit": 0.11847,
+              "p_clustered": 0.41406
+            },
+            "c_diamond": {
+              "b": 11,
+              "c": 4,
+              "p_unit": 0.11847,
+              "p_clustered": 0.41406
+            },
+            "ceo2_cubic": {
+              "b": 11,
+              "c": 3,
+              "p_unit": 0.05737,
+              "p_clustered": 0.32812
+            },
+            "cspbi3_cubic": {
+              "b": 6,
+              "c": 4,
+              "p_unit": 0.75391,
+              "p_clustered": 0.82812
+            },
+            "cssnbr3_cubic": {
+              "b": 9,
+              "c": 4,
+              "p_unit": 0.26685,
+              "p_clustered": 0.57812
+            },
+            "cssni3_cubic": {
+              "b": 8,
+              "c": 4,
+              "p_unit": 0.3877,
+              "p_clustered": 0.73438
+            },
+            "cu_fcc": {
+              "b": 11,
+              "c": 4,
+              "p_unit": 0.11847,
+              "p_clustered": 0.41406
+            },
+            "hfo2_cubic": {
+              "b": 10,
+              "c": 4,
+              "p_unit": 0.17957,
+              "p_clustered": 0.5
+            },
+            "knbo3_cubic": {
+              "b": 11,
+              "c": 4,
+              "p_unit": 0.11847,
+              "p_clustered": 0.41406
+            },
+            "mgo_rocksalt": {
+              "b": 11,
+              "c": 3,
+              "p_unit": 0.05737,
+              "p_clustered": 0.32812
+            },
+            "nacl_rocksalt": {
+              "b": 11,
+              "c": 3,
+              "p_unit": 0.05737,
+              "p_clustered": 0.32812
+            },
+            "pbtio3_cubic": {
+              "b": 11,
+              "c": 4,
+              "p_unit": 0.11847,
+              "p_clustered": 0.41406
+            },
+            "si_diamond": {
+              "b": 11,
+              "c": 4,
+              "p_unit": 0.11847,
+              "p_clustered": 0.41406
+            },
+            "srtio3_cubic": {
+              "b": 11,
+              "c": 3,
+              "p_unit": 0.05737,
+              "p_clustered": 0.32812
+            },
+            "zro2_cubic": {
+              "b": 11,
+              "c": 4,
+              "p_unit": 0.11847,
+              "p_clustered": 0.41406
+            }
+          }
+        },
+        "discordant_units": [
+          {
+            "system": "ceo2_cubic",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "orb_v2",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "mgo_rocksalt",
+            "model": "orb_v2",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "nacl_rocksalt",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "srtio3_cubic",
+            "model": "orb_v2",
+            "type": "c",
+            "shared_screen_error": false
+          }
+        ],
+        "shared_screen_error_split": {
+          "b_in_shared_systems": 5,
+          "c_in_shared_systems": 0,
+          "without_shared_systems": {
+            "n_pairs": 70,
+            "n_systems": 14,
+            "b": 6,
+            "c": 4,
+            "p_unit": 0.75391,
+            "p_clustered": 0.82812,
+            "finest_attainable_p_given_ties": 0.01562
+          }
+        }
+      },
+      "excl_orb_v2": {
+        "n_pairs": 60,
+        "n_systems": 15,
+        "b_harm_right_ft_wrong": 10,
+        "c_harm_wrong_ft_right": 2,
+        "mcnemar_exact_p_UNIT_LEVEL": 0.03857,
+        "clustered_by_system": {
+          "n_clusters": 15,
+          "per_cluster_net": [
+            0,
+            0,
+            -1,
+            4,
+            2,
+            3,
+            0,
+            1,
+            0,
+            0,
+            -1,
+            0,
+            0,
+            0,
+            0
+          ],
+          "clusters_favouring_a": 4,
+          "clusters_favouring_b": 2,
+          "clusters_tied": 9,
+          "observed_net": 8,
+          "p_exact_clustered": 0.25,
+          "finest_attainable_p": 6e-05,
+          "at_resolution_floor": false,
+          "finest_attainable_p_given_ties": 0.03125
+        },
+        "per_system_discordance": {
+          "batio3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "c_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "ceo2_cubic": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "cspbi3_cubic": {
+            "b": 4,
+            "c": 0,
+            "net": 4
+          },
+          "cssnbr3_cubic": {
+            "b": 2,
+            "c": 0,
+            "net": 2
+          },
+          "cssni3_cubic": {
+            "b": 3,
+            "c": 0,
+            "net": 3
+          },
+          "cu_fcc": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "hfo2_cubic": {
+            "b": 1,
+            "c": 0,
+            "net": 1
+          },
+          "knbo3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "mgo_rocksalt": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "nacl_rocksalt": {
+            "b": 0,
+            "c": 1,
+            "net": -1
+          },
+          "pbtio3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "si_diamond": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "srtio3_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          },
+          "zro2_cubic": {
+            "b": 0,
+            "c": 0,
+            "net": 0
+          }
+        },
+        "leave_one_system_out": {
+          "p_clustered_min": 0.1875,
+          "dropped_system_at_min": "ceo2_cubic",
+          "p_clustered_max": 0.5,
+          "drops_with_p_clustered_below_0.05": [],
+          "by_dropped_system": {
+            "batio3_cubic": {
+              "b": 10,
+              "c": 2,
+              "p_unit": 0.03857,
+              "p_clustered": 0.25
+            },
+            "c_diamond": {
+              "b": 10,
+              "c": 2,
+              "p_unit": 0.03857,
+              "p_clustered": 0.25
+            },
+            "ceo2_cubic": {
+              "b": 10,
+              "c": 1,
+              "p_unit": 0.01172,
+              "p_clustered": 0.1875
+            },
+            "cspbi3_cubic": {
+              "b": 6,
+              "c": 2,
+              "p_unit": 0.28906,
+              "p_clustered": 0.5
+            },
+            "cssnbr3_cubic": {
+              "b": 8,
+              "c": 2,
+              "p_unit": 0.10938,
+              "p_clustered": 0.4375
+            },
+            "cssni3_cubic": {
+              "b": 7,
+              "c": 2,
+              "p_unit": 0.17969,
+              "p_clustered": 0.5
+            },
+            "cu_fcc": {
+              "b": 10,
+              "c": 2,
+              "p_unit": 0.03857,
+              "p_clustered": 0.25
+            },
+            "hfo2_cubic": {
+              "b": 9,
+              "c": 2,
+              "p_unit": 0.06543,
+              "p_clustered": 0.3125
+            },
+            "knbo3_cubic": {
+              "b": 10,
+              "c": 2,
+              "p_unit": 0.03857,
+              "p_clustered": 0.25
+            },
+            "mgo_rocksalt": {
+              "b": 10,
+              "c": 2,
+              "p_unit": 0.03857,
+              "p_clustered": 0.25
+            },
+            "nacl_rocksalt": {
+              "b": 10,
+              "c": 1,
+              "p_unit": 0.01172,
+              "p_clustered": 0.1875
+            },
+            "pbtio3_cubic": {
+              "b": 10,
+              "c": 2,
+              "p_unit": 0.03857,
+              "p_clustered": 0.25
+            },
+            "si_diamond": {
+              "b": 10,
+              "c": 2,
+              "p_unit": 0.03857,
+              "p_clustered": 0.25
+            },
+            "srtio3_cubic": {
+              "b": 10,
+              "c": 2,
+              "p_unit": 0.03857,
+              "p_clustered": 0.25
+            },
+            "zro2_cubic": {
+              "b": 10,
+              "c": 2,
+              "p_unit": 0.03857,
+              "p_clustered": 0.25
+            }
+          }
+        },
+        "discordant_units": [
+          {
+            "system": "ceo2_cubic",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "mattersim",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "chgnet",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "sevennet0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "mace_mp0",
+            "type": "b",
+            "shared_screen_error": false
+          },
+          {
+            "system": "nacl_rocksalt",
+            "model": "chgnet",
+            "type": "c",
+            "shared_screen_error": false
+          }
+        ],
+        "shared_screen_error_split": {
+          "b_in_shared_systems": 4,
+          "c_in_shared_systems": 0,
+          "without_shared_systems": {
+            "n_pairs": 56,
+            "n_systems": 14,
+            "b": 6,
+            "c": 2,
+            "p_unit": 0.28906,
+            "p_clustered": 0.5,
+            "finest_attainable_p_given_ties": 0.0625
+          }
+        }
+      }
+    },
+    "note": "The unit-level McNemar p is not quotable as evidence: the 75 (60) pairs are 15 systems x 5 (4) models and cluster by system, which ESI Table S7 already states. The clustered p is the test. The shared-screen-error split is a decomposition, not an independent test: removing systems selected on finite-T error removes b-type units by construction, so it shows WHERE the asymmetry sits (in systems where the screen's T* is wrong for nearly every model), not that it is absent elsewhere."
+  },
+  "bcc_agreement": {
+    "answers": [
+      "R1.1 residue (bcc 'clean gold standard')",
+      "R3.5"
+    ],
+    "definition": {
+      "set": "analysis.method_agreement on ti/zr/hf_bcc: the (system, model, T) units where both the screen and SSCHA ran, i.e. T = 100/300/600 K.",
+      "curvature_sign": "min_eff_freq_thz >= 0 in both methods (analysis.method_agreement 'agree'). This is the statistic the manuscript calls 'call agreement'. For the screen it is the symmetric-point curvature, which \u00a72.4 says is not the call.",
+      "call": "pred_stable of the softmode row == pred_stable of the sscha row.",
+      "trivial": "pairs whose harmonic layer (canonical harmonic row, tolerance -0.1 THz) has NO instability for that (system, model): both methods then agree without any thermal stabilisation having been tested.",
+      "sscha_call_equals_curvature_sign_on_every_row": true
+    },
+    "all_models": {
+      "n_paired": 45,
+      "curvature_sign_agreement": {
+        "k": 35,
+        "n": 45,
+        "p": 0.7777777777777778,
+        "lo": 0.6373070781288782,
+        "hi": 0.8745531447323812,
+        "fmt": "35/45 = 0.778 [0.637, 0.875]"
+      },
+      "call_agreement": {
+        "k": 31,
+        "n": 45,
+        "p": 0.6888888888888889,
+        "lo": 0.5433519441059371,
+        "hi": 0.8047130074397193,
+        "fmt": "31/45 = 0.689 [0.543, 0.805]"
+      },
+      "trivial_split": {
+        "trivial_pairs": [
+          "hf_bcc/chgnet",
+          "hf_bcc/mace_mp0",
+          "zr_bcc/chgnet",
+          "zr_bcc/mace_mp0"
+        ],
+        "trivial": {
+          "curvature_sign": {
+            "k": 12,
+            "n": 12,
+            "p": 1.0,
+            "lo": 0.757505993048573,
+            "hi": 1.0,
+            "fmt": "12/12 = 1.000 [0.758, 1.000]"
+          },
+          "call": {
+            "k": 12,
+            "n": 12,
+            "p": 1.0,
+            "lo": 0.757505993048573,
+            "hi": 1.0,
+            "fmt": "12/12 = 1.000 [0.758, 1.000]"
+          }
+        },
+        "non_trivial": {
+          "curvature_sign": {
+            "k": 23,
+            "n": 33,
+            "p": 0.696969696969697,
+            "lo": 0.5266186484021114,
+            "hi": 0.8262446858400212,
+            "fmt": "23/33 = 0.697 [0.527, 0.826]"
+          },
+          "call": {
+            "k": 19,
+            "n": 33,
+            "p": 0.5757575757575758,
+            "lo": 0.4080726332460451,
+            "hi": 0.7276440337701597,
+            "fmt": "19/33 = 0.576 [0.408, 0.728]"
+          }
+        }
+      },
+      "per_model": {
+        "chgnet": {
+          "curvature_sign": {
+            "k": 9,
+            "n": 9,
+            "p": 1.0,
+            "lo": 0.7008549512424006,
+            "hi": 0.9999999999999999,
+            "fmt": "9/9 = 1.000 [0.701, 1.000]"
+          },
+          "call": {
+            "k": 7,
+            "n": 9,
+            "p": 0.7777777777777778,
+            "lo": 0.45258896886017774,
+            "hi": 0.936774892941156,
+            "fmt": "7/9 = 0.778 [0.453, 0.937]"
+          }
+        },
+        "mace_mp0": {
+          "curvature_sign": {
+            "k": 9,
+            "n": 9,
+            "p": 1.0,
+            "lo": 0.7008549512424006,
+            "hi": 0.9999999999999999,
+            "fmt": "9/9 = 1.000 [0.701, 1.000]"
+          },
+          "call": {
+            "k": 9,
+            "n": 9,
+            "p": 1.0,
+            "lo": 0.7008549512424006,
+            "hi": 0.9999999999999999,
+            "fmt": "9/9 = 1.000 [0.701, 1.000]"
+          }
+        },
+        "mattersim": {
+          "curvature_sign": {
+            "k": 3,
+            "n": 9,
+            "p": 0.3333333333333333,
+            "lo": 0.12058381828952264,
+            "hi": 0.6457978646296771,
+            "fmt": "3/9 = 0.333 [0.121, 0.646]"
+          },
+          "call": {
+            "k": 0,
+            "n": 9,
+            "p": 0.0,
+            "lo": 0.0,
+            "hi": 0.29914504875759934,
+            "fmt": "0/9 = 0.000 [0.000, 0.299]"
+          }
+        },
+        "orb_v2": {
+          "curvature_sign": {
+            "k": 5,
+            "n": 9,
+            "p": 0.5555555555555556,
+            "lo": 0.26665129332228826,
+            "hi": 0.8112214790379786,
+            "fmt": "5/9 = 0.556 [0.267, 0.811]"
+          },
+          "call": {
+            "k": 6,
+            "n": 9,
+            "p": 0.6666666666666666,
+            "lo": 0.35420213537032286,
+            "hi": 0.8794161817104773,
+            "fmt": "6/9 = 0.667 [0.354, 0.879]"
+          }
+        },
+        "sevennet0": {
+          "curvature_sign": {
+            "k": 9,
+            "n": 9,
+            "p": 1.0,
+            "lo": 0.7008549512424006,
+            "hi": 0.9999999999999999,
+            "fmt": "9/9 = 1.000 [0.701, 1.000]"
+          },
+          "call": {
+            "k": 9,
+            "n": 9,
+            "p": 1.0,
+            "lo": 0.7008549512424006,
+            "hi": 0.9999999999999999,
+            "fmt": "9/9 = 1.000 [0.701, 1.000]"
+          }
+        }
+      },
+      "units_where_scores_differ": [
+        {
+          "system": "hf_bcc",
+          "model": "mattersim",
+          "T": 600.0,
+          "screen_curvature_thz": 0.276,
+          "sscha_freq_thz": 1.683,
+          "screen_call_stable": false,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": true,
+          "call_agree": false
+        },
+        {
+          "system": "hf_bcc",
+          "model": "orb_v2",
+          "T": 100.0,
+          "screen_curvature_thz": -0.092,
+          "sscha_freq_thz": 0.19,
+          "screen_call_stable": true,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": false,
+          "call_agree": true
+        },
+        {
+          "system": "hf_bcc",
+          "model": "orb_v2",
+          "T": 300.0,
+          "screen_curvature_thz": -0.092,
+          "sscha_freq_thz": 0.093,
+          "screen_call_stable": true,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": false,
+          "call_agree": true
+        },
+        {
+          "system": "hf_bcc",
+          "model": "orb_v2",
+          "T": 600.0,
+          "screen_curvature_thz": -0.092,
+          "sscha_freq_thz": 0.08,
+          "screen_call_stable": true,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": false,
+          "call_agree": true
+        },
+        {
+          "system": "ti_bcc",
+          "model": "chgnet",
+          "T": 100.0,
+          "screen_curvature_thz": 0.163,
+          "sscha_freq_thz": 1.077,
+          "screen_call_stable": false,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": true,
+          "call_agree": false
+        },
+        {
+          "system": "ti_bcc",
+          "model": "chgnet",
+          "T": 300.0,
+          "screen_curvature_thz": 0.267,
+          "sscha_freq_thz": 1.137,
+          "screen_call_stable": false,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": true,
+          "call_agree": false
+        },
+        {
+          "system": "ti_bcc",
+          "model": "mattersim",
+          "T": 600.0,
+          "screen_curvature_thz": 0.33,
+          "sscha_freq_thz": 2.104,
+          "screen_call_stable": false,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": true,
+          "call_agree": false
+        },
+        {
+          "system": "ti_bcc",
+          "model": "orb_v2",
+          "T": 300.0,
+          "screen_curvature_thz": 0.646,
+          "sscha_freq_thz": 0.269,
+          "screen_call_stable": false,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": true,
+          "call_agree": false
+        },
+        {
+          "system": "ti_bcc",
+          "model": "orb_v2",
+          "T": 600.0,
+          "screen_curvature_thz": 0.883,
+          "sscha_freq_thz": 0.221,
+          "screen_call_stable": false,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": true,
+          "call_agree": false
+        },
+        {
+          "system": "zr_bcc",
+          "model": "mattersim",
+          "T": 600.0,
+          "screen_curvature_thz": 0.347,
+          "sscha_freq_thz": 1.962,
+          "screen_call_stable": false,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": true,
+          "call_agree": false
+        }
+      ],
+      "frequency_correlation_DESCRIPTIVE": {
+        "spearman": 0.113,
+        "pearson": 0.143,
+        "n": 45,
+        "note": "descriptive only: pairs cluster by system and model, and no test is attached"
+      }
+    },
+    "excl_orb_v2": {
+      "n_paired": 36,
+      "curvature_sign_agreement": {
+        "k": 30,
+        "n": 36,
+        "p": 0.8333333333333334,
+        "lo": 0.6810920567466231,
+        "hi": 0.9212955240967496,
+        "fmt": "30/36 = 0.833 [0.681, 0.921]"
+      },
+      "call_agreement": {
+        "k": 25,
+        "n": 36,
+        "p": 0.6944444444444444,
+        "lo": 0.5314372713607174,
+        "hi": 0.81995548413125,
+        "fmt": "25/36 = 0.694 [0.531, 0.820]"
+      },
+      "trivial_split": {
+        "trivial_pairs": [
+          "hf_bcc/chgnet",
+          "hf_bcc/mace_mp0",
+          "zr_bcc/chgnet",
+          "zr_bcc/mace_mp0"
+        ],
+        "trivial": {
+          "curvature_sign": {
+            "k": 12,
+            "n": 12,
+            "p": 1.0,
+            "lo": 0.757505993048573,
+            "hi": 1.0,
+            "fmt": "12/12 = 1.000 [0.758, 1.000]"
+          },
+          "call": {
+            "k": 12,
+            "n": 12,
+            "p": 1.0,
+            "lo": 0.757505993048573,
+            "hi": 1.0,
+            "fmt": "12/12 = 1.000 [0.758, 1.000]"
+          }
+        },
+        "non_trivial": {
+          "curvature_sign": {
+            "k": 18,
+            "n": 24,
+            "p": 0.75,
+            "lo": 0.5510055597811654,
+            "hi": 0.880006337785455,
+            "fmt": "18/24 = 0.750 [0.551, 0.880]"
+          },
+          "call": {
+            "k": 13,
+            "n": 24,
+            "p": 0.5416666666666666,
+            "lo": 0.3507486534523928,
+            "hi": 0.7210866628087106,
+            "fmt": "13/24 = 0.542 [0.351, 0.721]"
+          }
+        }
+      },
+      "per_model": {
+        "chgnet": {
+          "curvature_sign": {
+            "k": 9,
+            "n": 9,
+            "p": 1.0,
+            "lo": 0.7008549512424006,
+            "hi": 0.9999999999999999,
+            "fmt": "9/9 = 1.000 [0.701, 1.000]"
+          },
+          "call": {
+            "k": 7,
+            "n": 9,
+            "p": 0.7777777777777778,
+            "lo": 0.45258896886017774,
+            "hi": 0.936774892941156,
+            "fmt": "7/9 = 0.778 [0.453, 0.937]"
+          }
+        },
+        "mace_mp0": {
+          "curvature_sign": {
+            "k": 9,
+            "n": 9,
+            "p": 1.0,
+            "lo": 0.7008549512424006,
+            "hi": 0.9999999999999999,
+            "fmt": "9/9 = 1.000 [0.701, 1.000]"
+          },
+          "call": {
+            "k": 9,
+            "n": 9,
+            "p": 1.0,
+            "lo": 0.7008549512424006,
+            "hi": 0.9999999999999999,
+            "fmt": "9/9 = 1.000 [0.701, 1.000]"
+          }
+        },
+        "mattersim": {
+          "curvature_sign": {
+            "k": 3,
+            "n": 9,
+            "p": 0.3333333333333333,
+            "lo": 0.12058381828952264,
+            "hi": 0.6457978646296771,
+            "fmt": "3/9 = 0.333 [0.121, 0.646]"
+          },
+          "call": {
+            "k": 0,
+            "n": 9,
+            "p": 0.0,
+            "lo": 0.0,
+            "hi": 0.29914504875759934,
+            "fmt": "0/9 = 0.000 [0.000, 0.299]"
+          }
+        },
+        "sevennet0": {
+          "curvature_sign": {
+            "k": 9,
+            "n": 9,
+            "p": 1.0,
+            "lo": 0.7008549512424006,
+            "hi": 0.9999999999999999,
+            "fmt": "9/9 = 1.000 [0.701, 1.000]"
+          },
+          "call": {
+            "k": 9,
+            "n": 9,
+            "p": 1.0,
+            "lo": 0.7008549512424006,
+            "hi": 0.9999999999999999,
+            "fmt": "9/9 = 1.000 [0.701, 1.000]"
+          }
+        }
+      },
+      "units_where_scores_differ": [
+        {
+          "system": "hf_bcc",
+          "model": "mattersim",
+          "T": 600.0,
+          "screen_curvature_thz": 0.276,
+          "sscha_freq_thz": 1.683,
+          "screen_call_stable": false,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": true,
+          "call_agree": false
+        },
+        {
+          "system": "ti_bcc",
+          "model": "chgnet",
+          "T": 100.0,
+          "screen_curvature_thz": 0.163,
+          "sscha_freq_thz": 1.077,
+          "screen_call_stable": false,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": true,
+          "call_agree": false
+        },
+        {
+          "system": "ti_bcc",
+          "model": "chgnet",
+          "T": 300.0,
+          "screen_curvature_thz": 0.267,
+          "sscha_freq_thz": 1.137,
+          "screen_call_stable": false,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": true,
+          "call_agree": false
+        },
+        {
+          "system": "ti_bcc",
+          "model": "mattersim",
+          "T": 600.0,
+          "screen_curvature_thz": 0.33,
+          "sscha_freq_thz": 2.104,
+          "screen_call_stable": false,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": true,
+          "call_agree": false
+        },
+        {
+          "system": "zr_bcc",
+          "model": "mattersim",
+          "T": 600.0,
+          "screen_curvature_thz": 0.347,
+          "sscha_freq_thz": 1.962,
+          "screen_call_stable": false,
+          "sscha_call_stable": true,
+          "curvature_sign_agree": true,
+          "call_agree": false
+        }
+      ],
+      "frequency_correlation_DESCRIPTIVE": {
+        "spearman": -0.003,
+        "pearson": -0.254,
+        "n": 36,
+        "note": "descriptive only: pairs cluster by system and model, and no test is attached"
+      }
+    }
+  },
+  "orb_split_s3": {
+    "answers": [
+      "R3.5",
+      "R2.2 (guardrail robustness)"
+    ],
+    "guardrail": {
+      "all_models": {
+        "n_units": 60,
+        "n_systems": 15,
+        "balanced": true,
+        "split_vote_error": {
+          "k": 8,
+          "n": 14,
+          "p": 0.5714285714285714,
+          "lo": 0.3259064456308049,
+          "hi": 0.786192011082044,
+          "fmt": "8/14 = 0.571 [0.326, 0.786]"
+        },
+        "unanimous_error": {
+          "k": 4,
+          "n": 46,
+          "p": 0.08695652173913043,
+          "lo": 0.034335867870330924,
+          "hi": 0.20324664086033262,
+          "fmt": "4/46 = 0.087 [0.034, 0.203]"
+        },
+        "auc_vote_disagreement": {
+          "auc": 0.762,
+          "p_perm_clustered": 0.0035,
+          "n_perm": 10000,
+          "n_clusters": 15,
+          "n_units": 60,
+          "ci_lo": 0.59,
+          "ci_hi": 0.934,
+          "n_boot": 9998,
+          "p_perm_naive_unit_level": 0.0003
+        },
+        "auc_freq_std": {
+          "auc": 0.361,
+          "p_perm_clustered": 0.2748,
+          "n_perm": 10000,
+          "n_clusters": 15,
+          "n_units": 60,
+          "ci_lo": 0.046,
+          "ci_hi": 0.625,
+          "n_boot": 9998,
+          "p_perm_naive_unit_level": 0.1386
+        },
+        "consensus_error": {
+          "k": 12,
+          "n": 60,
+          "p": 0.2,
+          "lo": 0.11828505317826252,
+          "hi": 0.31781805816170194,
+          "fmt": "12/60 = 0.200 [0.118, 0.318]"
+        },
+        "h3_guardrail_summary": {
+          "n_units": 60,
+          "consensus_error_rate": 0.2,
+          "split_vote_error_rate": 0.571,
+          "unanimous_error_rate": 0.087,
+          "n_split": 14,
+          "n_unanimous": 46,
+          "auc_vote_disagreement": 0.762,
+          "auc_freq_std": 0.361
+        },
+        "ties": {
+          "rule": "analysis.h3_ensemble_guardrail: consensus_stable = stable_vote_frac >= 0.5, so a 2-2 split among four models is called STABLE",
+          "n_models_per_unit": [
+            5
+          ],
+          "n_tied_units": 0,
+          "n_tied_units_in_error": 0,
+          "tied_units": []
+        }
+      },
+      "excl_orb_v2": {
+        "n_units": 60,
+        "n_systems": 15,
+        "balanced": true,
+        "split_vote_error": {
+          "k": 4,
+          "n": 8,
+          "p": 0.5,
+          "lo": 0.21521606205876465,
+          "hi": 0.7847839379412354,
+          "fmt": "4/8 = 0.500 [0.215, 0.785]"
+        },
+        "unanimous_error": {
+          "k": 8,
+          "n": 52,
+          "p": 0.15384615384615385,
+          "lo": 0.08007685012593584,
+          "hi": 0.27524085187747827,
+          "fmt": "8/52 = 0.154 [0.080, 0.275]"
+        },
+        "auc_vote_disagreement": {
+          "auc": 0.628,
+          "p_perm_clustered": 0.0469,
+          "n_perm": 10000,
+          "n_clusters": 15,
+          "n_units": 60,
+          "ci_lo": 0.438,
+          "ci_hi": 0.839,
+          "n_boot": 9998,
+          "p_perm_naive_unit_level": 0.0214
+        },
+        "auc_freq_std": {
+          "auc": 0.299,
+          "p_perm_clustered": 0.103,
+          "n_perm": 10000,
+          "n_clusters": 15,
+          "n_units": 60,
+          "ci_lo": 0.076,
+          "ci_hi": 0.516,
+          "n_boot": 9998,
+          "p_perm_naive_unit_level": 0.0315
+        },
+        "consensus_error": {
+          "k": 12,
+          "n": 60,
+          "p": 0.2,
+          "lo": 0.11828505317826252,
+          "hi": 0.31781805816170194,
+          "fmt": "12/60 = 0.200 [0.118, 0.318]"
+        },
+        "h3_guardrail_summary": {
+          "n_units": 60,
+          "consensus_error_rate": 0.2,
+          "split_vote_error_rate": 0.5,
+          "unanimous_error_rate": 0.154,
+          "n_split": 8,
+          "n_unanimous": 52,
+          "auc_vote_disagreement": 0.628,
+          "auc_freq_std": 0.299
+        },
+        "ties": {
+          "rule": "analysis.h3_ensemble_guardrail: consensus_stable = stable_vote_frac >= 0.5, so a 2-2 split among four models is called STABLE",
+          "n_models_per_unit": [
+            4
+          ],
+          "n_tied_units": 3,
+          "n_tied_units_in_error": 2,
+          "tied_units": [
+            {
+              "system": "cssnbr3_cubic",
+              "T": 900.0,
+              "gt_stable": true,
+              "consensus_correct": true
+            },
+            {
+              "system": "pbtio3_cubic",
+              "T": 100.0,
+              "gt_stable": false,
+              "consensus_correct": false
+            },
+            {
+              "system": "pbtio3_cubic",
+              "T": 300.0,
+              "gt_stable": false,
+              "consensus_correct": false
+            }
+          ]
+        }
+      },
+      "note": "guardrail_clustered on each model set: clustered permutation p and cluster-bootstrap CI with n = 10000, seed 0; auc_freq_std is item (ii). The all_models entry reproduces the h3_guardrail block."
+    },
+    "family_recall": {
+      "all_models": {
+        "screen": {
+          "fe_oxide": {
+            "k": 16,
+            "n": 30,
+            "p": 0.5333333333333333,
+            "lo": 0.36142299607310463,
+            "hi": 0.6976761110378138,
+            "fmt": "16/30 = 0.533 [0.361, 0.698]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "batio3_cubic",
+              "knbo3_cubic",
+              "pbtio3_cubic"
+            ]
+          },
+          "halide": {
+            "k": 23,
+            "n": 25,
+            "p": 0.92,
+            "lo": 0.7503389103191594,
+            "hi": 0.9777795987356678,
+            "fmt": "23/25 = 0.920 [0.750, 0.978]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "cspbi3_cubic",
+              "cssnbr3_cubic",
+              "cssni3_cubic"
+            ]
+          },
+          "fluorite": {
+            "k": 20,
+            "n": 20,
+            "p": 1.0,
+            "lo": 0.83887484172924,
+            "hi": 1.0,
+            "fmt": "20/20 = 1.000 [0.839, 1.000]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "hfo2_cubic",
+              "zro2_cubic"
+            ]
+          },
+          "afd_srtio3": {
+            "k": 3,
+            "n": 5,
+            "p": 0.6,
+            "lo": 0.2307242810852,
+            "hi": 0.8823792258789283,
+            "fmt": "3/5 = 0.600 [0.231, 0.882]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "srtio3_cubic"
+            ]
+          }
+        },
+        "sscha": {
+          "fe_oxide": {
+            "k": 5,
+            "n": 27,
+            "p": 0.18518518518518517,
+            "lo": 0.08180707137686663,
+            "hi": 0.36698683634908447,
+            "fmt": "5/27 = 0.185 [0.082, 0.367]",
+            "n_numerical_blowup": 1,
+            "systems_present": [
+              "batio3_cubic",
+              "knbo3_cubic",
+              "pbtio3_cubic"
+            ]
+          },
+          "halide": {
+            "k": 7,
+            "n": 8,
+            "p": 0.875,
+            "lo": 0.5291118174965437,
+            "hi": 0.9775825085755041,
+            "fmt": "7/8 = 0.875 [0.529, 0.978]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "cssni3_cubic"
+            ]
+          },
+          "fluorite": {
+            "k": 1,
+            "n": 20,
+            "p": 0.05,
+            "lo": 0.008881448790731938,
+            "hi": 0.23613119365295207,
+            "fmt": "1/20 = 0.050 [0.009, 0.236]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "hfo2_cubic",
+              "zro2_cubic"
+            ]
+          },
+          "afd_srtio3": {
+            "k": 5,
+            "n": 5,
+            "p": 1.0,
+            "lo": 0.565517534820642,
+            "hi": 1.0,
+            "fmt": "5/5 = 1.000 [0.566, 1.000]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "srtio3_cubic"
+            ]
+          }
+        },
+        "controls_screen_false_unstable": {
+          "k": 0,
+          "n": 120,
+          "p": 0.0,
+          "lo": 0.0,
+          "hi": 0.031019166467167902,
+          "fmt": "0/120 = 0.000 [0.000, 0.031]",
+          "temperatures": "all four"
+        },
+        "sscha_reliability_by_family": [
+          {
+            "family": "bcc",
+            "n": 75,
+            "n_numerical_blowup": 0,
+            "freq_min_THz": 0.06,
+            "freq_max_THz": 2.1
+          },
+          {
+            "family": "fluorite",
+            "n": 40,
+            "n_numerical_blowup": 0,
+            "freq_min_THz": -24.76,
+            "freq_max_THz": 3.33
+          },
+          {
+            "family": "perovskite",
+            "n": 86,
+            "n_numerical_blowup": 8,
+            "freq_min_THz": -913.74,
+            "freq_max_THz": 3.72
+          }
+        ]
+      },
+      "excl_orb_v2": {
+        "screen": {
+          "fe_oxide": {
+            "k": 12,
+            "n": 24,
+            "p": 0.5,
+            "lo": 0.31427425806665943,
+            "hi": 0.6857257419333406,
+            "fmt": "12/24 = 0.500 [0.314, 0.686]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "batio3_cubic",
+              "knbo3_cubic",
+              "pbtio3_cubic"
+            ]
+          },
+          "halide": {
+            "k": 20,
+            "n": 20,
+            "p": 1.0,
+            "lo": 0.83887484172924,
+            "hi": 1.0,
+            "fmt": "20/20 = 1.000 [0.839, 1.000]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "cspbi3_cubic",
+              "cssnbr3_cubic",
+              "cssni3_cubic"
+            ]
+          },
+          "fluorite": {
+            "k": 16,
+            "n": 16,
+            "p": 1.0,
+            "lo": 0.8063923192138267,
+            "hi": 1.0,
+            "fmt": "16/16 = 1.000 [0.806, 1.000]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "hfo2_cubic",
+              "zro2_cubic"
+            ]
+          },
+          "afd_srtio3": {
+            "k": 3,
+            "n": 4,
+            "p": 0.75,
+            "lo": 0.3006418423283629,
+            "hi": 0.9544127392428686,
+            "fmt": "3/4 = 0.750 [0.301, 0.954]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "srtio3_cubic"
+            ]
+          }
+        },
+        "sscha": {
+          "fe_oxide": {
+            "k": 5,
+            "n": 23,
+            "p": 0.21739130434782608,
+            "lo": 0.09663978020337405,
+            "hi": 0.4190348303368928,
+            "fmt": "5/23 = 0.217 [0.097, 0.419]",
+            "n_numerical_blowup": 1,
+            "systems_present": [
+              "batio3_cubic",
+              "knbo3_cubic",
+              "pbtio3_cubic"
+            ]
+          },
+          "halide": {
+            "k": 7,
+            "n": 8,
+            "p": 0.875,
+            "lo": 0.5291118174965437,
+            "hi": 0.9775825085755041,
+            "fmt": "7/8 = 0.875 [0.529, 0.978]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "cssni3_cubic"
+            ]
+          },
+          "fluorite": {
+            "k": 0,
+            "n": 16,
+            "p": 0.0,
+            "lo": 0.0,
+            "hi": 0.1936076807861733,
+            "fmt": "0/16 = 0.000 [0.000, 0.194]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "hfo2_cubic",
+              "zro2_cubic"
+            ]
+          },
+          "afd_srtio3": {
+            "k": 4,
+            "n": 4,
+            "p": 1.0,
+            "lo": 0.5101091631424628,
+            "hi": 1.0,
+            "fmt": "4/4 = 1.000 [0.510, 1.000]",
+            "n_numerical_blowup": 0,
+            "systems_present": [
+              "srtio3_cubic"
+            ]
+          }
+        },
+        "controls_screen_false_unstable": {
+          "k": 0,
+          "n": 96,
+          "p": 0.0,
+          "lo": 0.0,
+          "hi": 0.03847558791732745,
+          "fmt": "0/96 = 0.000 [0.000, 0.038]",
+          "temperatures": "all four"
+        },
+        "sscha_reliability_by_family": [
+          {
+            "family": "bcc",
+            "n": 60,
+            "n_numerical_blowup": 0,
+            "freq_min_THz": 0.3,
+            "freq_max_THz": 2.1
+          },
+          {
+            "family": "fluorite",
+            "n": 32,
+            "n_numerical_blowup": 0,
+            "freq_min_THz": -4.55,
+            "freq_max_THz": 3.33
+          },
+          {
+            "family": "perovskite",
+            "n": 74,
+            "n_numerical_blowup": 5,
+            "freq_min_THz": -801.29,
+            "freq_max_THz": 3.72
+          }
+        ]
+      },
+      "note": "Recall of the unstable class at T <= 300 K on genuinely unstable units (same rules as analysis.displacive_recall, which covers FE only and is asserted equal here). analysis.sscha_reliability gives n, blow-ups and the frequency range per family but no recall. SSCHA was run on one halide (cssni3_cubic) and on no control; the controls' entry is the screen's false-unstable count over all four temperatures."
+    },
+    "sscha_blowups_and_failures": {
+      "definition": "blow-up: a returned SSCHA unit with |min_eff_freq_thz| > 50 THz (analysis.sscha_reliability / displacive_recall; manuscript \u00a73.3, ESI Table S3). failed: a unit of the attempted grid (results/sscha_units_v1.csv, 208 units) with no canonical ledger row -- it died at a cellconstructor symmetry or ensemble assertion (manuscript \u00a73.3; ESI \u00a7S2.3).",
+      "per_model": {
+        "chgnet": {
+          "n_grid": 43,
+          "n_returned": 43,
+          "n_failed": 0,
+          "failed_units": [],
+          "n_blowup": 1,
+          "blowup_units": [
+            {
+              "system": "srtio3_cubic",
+              "T": 900.0,
+              "min_eff_freq_thz": -60.5
+            }
+          ]
+        },
+        "mace_mp0": {
+          "n_grid": 42,
+          "n_returned": 42,
+          "n_failed": 0,
+          "failed_units": [],
+          "n_blowup": 0,
+          "blowup_units": []
+        },
+        "mattersim": {
+          "n_grid": 43,
+          "n_returned": 41,
+          "n_failed": 2,
+          "failed_units": [
+            "pbtio3_cubic@600K",
+            "pbtio3_cubic@900K"
+          ],
+          "n_blowup": 3,
+          "blowup_units": [
+            {
+              "system": "pbtio3_cubic",
+              "T": 300.0,
+              "min_eff_freq_thz": -801.3
+            },
+            {
+              "system": "cssni3_cubic",
+              "T": 600.0,
+              "min_eff_freq_thz": -63.7
+            },
+            {
+              "system": "cssni3_cubic",
+              "T": 900.0,
+              "min_eff_freq_thz": -108.6
+            }
+          ]
+        },
+        "orb_v2": {
+          "n_grid": 39,
+          "n_returned": 35,
+          "n_failed": 4,
+          "failed_units": [
+            "pbtio3_cubic@100K",
+            "pbtio3_cubic@300K",
+            "pbtio3_cubic@600K",
+            "pbtio3_cubic@900K"
+          ],
+          "n_blowup": 3,
+          "blowup_units": [
+            {
+              "system": "srtio3_cubic",
+              "T": 300.0,
+              "min_eff_freq_thz": -68.0
+            },
+            {
+              "system": "srtio3_cubic",
+              "T": 600.0,
+              "min_eff_freq_thz": -544.5
+            },
+            {
+              "system": "srtio3_cubic",
+              "T": 900.0,
+              "min_eff_freq_thz": -913.7
+            }
+          ]
+        },
+        "sevennet0": {
+          "n_grid": 41,
+          "n_returned": 40,
+          "n_failed": 1,
+          "failed_units": [
+            "cssni3_cubic@600K"
+          ],
+          "n_blowup": 1,
+          "blowup_units": [
+            {
+              "system": "pbtio3_cubic",
+              "T": 900.0,
+              "min_eff_freq_thz": -66.8
+            }
+          ]
+        }
+      },
+      "totals": {
+        "all_models": {
+          "n_grid": 208,
+          "n_returned": 201,
+          "n_failed": 7,
+          "n_blowup": 8
+        },
+        "excl_orb_v2": {
+          "n_grid": 169,
+          "n_returned": 166,
+          "n_failed": 3,
+          "n_blowup": 5
+        }
+      }
+    },
+    "orb_premises": {
+      "source_of_old_values": "paper/submissions/rsc-advances-2026-07/manuscript-as-reviewed.md",
+      "mgo_harmonic_min_freq_thz": {
+        "now": -1.065,
+        "as_reviewed": -2.8,
+        "pred_stable": false,
+        "gt_stable": true
+      },
+      "orb_finite_t_false_stable": {
+        "now": {
+          "k": 5,
+          "n": 16,
+          "p": 0.3125,
+          "lo": 0.14164643845620956,
+          "hi": 0.5559564418386054,
+          "fmt": "5/16 = 0.312 [0.142, 0.556]"
+        },
+        "as_reviewed": 0.562,
+        "set": "softmode, T <= 300 K, non-bcc, non-borderline"
+      },
+      "orb_softmode_bcc_min_eff_freq_thz": {
+        "by_system_and_T": {
+          "hf_bcc": {
+            "100": -0.092,
+            "300": -0.092,
+            "600": -0.092,
+            "900": -0.092
+          },
+          "ti_bcc": {
+            "100": -6.205,
+            "300": 0.646,
+            "600": 0.883,
+            "900": -8.887
+          },
+          "zr_bcc": {
+            "100": 0.127,
+            "300": 0.127,
+            "600": 0.127,
+            "900": 0.127
+          }
+        },
+        "sscha_paired_T": [
+          100.0,
+          300.0,
+          600.0
+        ],
+        "min_on_sscha_paired_T": {
+          "min_eff_freq_thz": -6.205,
+          "system": "ti_bcc",
+          "T": 100.0
+        },
+        "min_full_ladder": {
+          "min_eff_freq_thz": -8.887,
+          "system": "ti_bcc",
+          "T": 900.0
+        },
+        "hf_bcc_min": -0.092,
+        "as_reviewed": "Ti/Hf near -35 THz"
+      },
+      "sscha_blowups": {
+        "orb_v2": 3,
+        "all_models": 8,
+        "models_with_blowups": [
+          "chgnet",
+          "mattersim",
+          "orb_v2",
+          "sevennet0"
+        ],
+        "as_reviewed": "six numerical blow-ups, concentrated in the float32 ORB-v2 runs"
+      }
+    },
+    "harmonic_tolerance_sweep": {
+      "all_models": [
+        {
+          "tol_THz": 0.0,
+          "false_stable": 1,
+          "false_unstable": 29,
+          "n_calls": 95
+        },
+        {
+          "tol_THz": 0.05,
+          "false_stable": 5,
+          "false_unstable": 3,
+          "n_calls": 95
+        },
+        {
+          "tol_THz": 0.1,
+          "false_stable": 5,
+          "false_unstable": 3,
+          "n_calls": 95
+        },
+        {
+          "tol_THz": 0.2,
+          "false_stable": 6,
+          "false_unstable": 3,
+          "n_calls": 95
+        },
+        {
+          "tol_THz": 0.3,
+          "false_stable": 7,
+          "false_unstable": 1,
+          "n_calls": 95
+        },
+        {
+          "tol_THz": 0.5,
+          "false_stable": 14,
+          "false_unstable": 1,
+          "n_calls": 95
+        }
+      ],
+      "excl_orb_v2": [
+        {
+          "tol_THz": 0.0,
+          "false_stable": 0,
+          "false_unstable": 23,
+          "n_calls": 76
+        },
+        {
+          "tol_THz": 0.05,
+          "false_stable": 4,
+          "false_unstable": 2,
+          "n_calls": 76
+        },
+        {
+          "tol_THz": 0.1,
+          "false_stable": 4,
+          "false_unstable": 2,
+          "n_calls": 76
+        },
+        {
+          "tol_THz": 0.2,
+          "false_stable": 4,
+          "false_unstable": 2,
+          "n_calls": 76
+        },
+        {
+          "tol_THz": 0.3,
+          "false_stable": 5,
+          "false_unstable": 0,
+          "n_calls": 76
+        },
+        {
+          "tol_THz": 0.5,
+          "false_stable": 6,
+          "false_unstable": 0,
+          "n_calls": 76
+        }
+      ]
+    }
+  },
+  "sscha_high_t": {
+    "answers": [
+      "R1.2 (OOD hypothesis)"
+    ],
+    "definition": "Non-bcc SSCHA rows. false-unstable = SSCHA calls unstable (min_eff_freq_thz < 0) and the label is stable; blow-ups (|f| > 50 THz) are INCLUDED in the counts and tallied alongside. harmonic_min_freq_thz is the model's harmonic-layer minimum (T-independent); screen_deciding_mode_harm_thz is the harmonic frequency of the screen's deciding mode (ft_decide_harm_thz) on the softmode row at the same T.",
+    "all_models": {
+      "false_unstable_by_T": {
+        "100": {
+          "k": 0,
+          "n": 0,
+          "p": null,
+          "lo": null,
+          "hi": null,
+          "fmt": "0/0",
+          "n_units_at_T": 33,
+          "n_blowup_among_false_unstable": 0,
+          "by_system": {}
+        },
+        "300": {
+          "k": 5,
+          "n": 5,
+          "p": 1.0,
+          "lo": 0.565517534820642,
+          "hi": 1.0,
+          "fmt": "5/5 = 1.000 [0.566, 1.000]",
+          "n_units_at_T": 33,
+          "n_blowup_among_false_unstable": 1,
+          "by_system": {
+            "srtio3_cubic": 5
+          }
+        },
+        "600": {
+          "k": 10,
+          "n": 13,
+          "p": 0.7692307692307693,
+          "lo": 0.49743624031421085,
+          "hi": 0.918204712880662,
+          "fmt": "10/13 = 0.769 [0.497, 0.918]",
+          "n_units_at_T": 31,
+          "n_blowup_among_false_unstable": 2,
+          "by_system": {
+            "batio3_cubic": 2,
+            "cssni3_cubic": 3,
+            "srtio3_cubic": 5
+          }
+        },
+        "900": {
+          "k": 15,
+          "n": 19,
+          "p": 0.7894736842105263,
+          "lo": 0.566657215370657,
+          "hi": 0.9149232337314461,
+          "fmt": "15/19 = 0.789 [0.567, 0.915]",
+          "n_units_at_T": 29,
+          "n_blowup_among_false_unstable": 4,
+          "by_system": {
+            "batio3_cubic": 4,
+            "cssni3_cubic": 3,
+            "knbo3_cubic": 2,
+            "pbtio3_cubic": 2,
+            "srtio3_cubic": 4
+          }
+        }
+      },
+      "srtio3_above_tc": {
+        "transition_T_K": 105.0,
+        "n_grid_above_tc": 14,
+        "n_returned": 14,
+        "false_unstable": {
+          "k": 14,
+          "n": 14,
+          "p": 1.0,
+          "lo": 0.7846891969899427,
+          "hi": 0.9999999999999999,
+          "fmt": "14/14 = 1.000 [0.785, 1.000]"
+        },
+        "sscha_freq_range_thz": [
+          -913.736,
+          -3.392
+        ],
+        "units": [
+          {
+            "model": "chgnet",
+            "T": 300.0,
+            "sscha_min_eff_freq_thz": -20.543,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.449,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -0.825
+          },
+          {
+            "model": "mace_mp0",
+            "T": 300.0,
+            "sscha_min_eff_freq_thz": -3.392,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -2.365,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -2.089
+          },
+          {
+            "model": "mattersim",
+            "T": 300.0,
+            "sscha_min_eff_freq_thz": -14.924,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.358,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -1.861
+          },
+          {
+            "model": "orb_v2",
+            "T": 300.0,
+            "sscha_min_eff_freq_thz": -67.955,
+            "false_unstable": true,
+            "blow_up": true,
+            "harmonic_min_freq_thz": 0.0,
+            "screen_deciding_mode_q": "0.0000,0.5000,0.0000",
+            "screen_deciding_mode_harm_thz": 1.347
+          },
+          {
+            "model": "sevennet0",
+            "T": 300.0,
+            "sscha_min_eff_freq_thz": -7.859,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.244,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -1.952
+          },
+          {
+            "model": "chgnet",
+            "T": 600.0,
+            "sscha_min_eff_freq_thz": -36.638,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.449,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -0.825
+          },
+          {
+            "model": "mace_mp0",
+            "T": 600.0,
+            "sscha_min_eff_freq_thz": -20.229,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -2.365,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -2.089
+          },
+          {
+            "model": "mattersim",
+            "T": 600.0,
+            "sscha_min_eff_freq_thz": -22.175,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.358,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -1.861
+          },
+          {
+            "model": "orb_v2",
+            "T": 600.0,
+            "sscha_min_eff_freq_thz": -544.478,
+            "false_unstable": true,
+            "blow_up": true,
+            "harmonic_min_freq_thz": 0.0,
+            "screen_deciding_mode_q": "0.0000,0.5000,0.0000",
+            "screen_deciding_mode_harm_thz": 1.347
+          },
+          {
+            "model": "sevennet0",
+            "T": 600.0,
+            "sscha_min_eff_freq_thz": -30.518,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.244,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -1.952
+          },
+          {
+            "model": "chgnet",
+            "T": 900.0,
+            "sscha_min_eff_freq_thz": -60.508,
+            "false_unstable": true,
+            "blow_up": true,
+            "harmonic_min_freq_thz": -3.449,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -0.825
+          },
+          {
+            "model": "mace_mp0",
+            "T": 900.0,
+            "sscha_min_eff_freq_thz": -27.143,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -2.365,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -2.089
+          },
+          {
+            "model": "mattersim",
+            "T": 900.0,
+            "sscha_min_eff_freq_thz": -35.537,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.358,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -1.861
+          },
+          {
+            "model": "orb_v2",
+            "T": 900.0,
+            "sscha_min_eff_freq_thz": -913.736,
+            "false_unstable": true,
+            "blow_up": true,
+            "harmonic_min_freq_thz": 0.0,
+            "screen_deciding_mode_q": "0.0000,0.5000,0.0000",
+            "screen_deciding_mode_harm_thz": 1.347
+          }
+        ]
+      },
+      "stable_at_100K_turn_negative": {
+        "k": 14,
+        "n": 23,
+        "p": 0.6086956521739131,
+        "lo": 0.40785522376342215,
+        "hi": 0.778423772182629,
+        "fmt": "14/23 = 0.609 [0.408, 0.778]",
+        "n_stable_at_100K": 23,
+        "n_negative_by_600_900K": 14,
+        "n_of_those_false_unstable_at_high_T": 9,
+        "units": [
+          {
+            "system": "batio3_cubic",
+            "model": "chgnet",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.153,
+              "300": 2.177,
+              "600": -5.846,
+              "900": -10.556
+            },
+            "first_negative_T": 600.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -6.905,
+            "screen_deciding_mode_harm_thz": {
+              "100": -6.135,
+              "300": -4.908,
+              "600": -4.908,
+              "900": -4.908
+            }
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "mace_mp0",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.868,
+              "300": 2.825,
+              "600": 2.603,
+              "900": -7.597
+            },
+            "first_negative_T": 900.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -6.411,
+            "screen_deciding_mode_harm_thz": {
+              "100": -5.404,
+              "300": -5.404,
+              "600": -5.404,
+              "900": -5.404
+            }
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "mattersim",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.067,
+              "300": 2.95,
+              "600": 2.771,
+              "900": 2.399
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -7.082,
+            "screen_deciding_mode_harm_thz": {
+              "100": -7.082,
+              "300": -5.769,
+              "600": -5.769,
+              "900": -5.769
+            }
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "orb_v2",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.039,
+              "300": 2.62,
+              "600": -9.515,
+              "900": -16.847
+            },
+            "first_negative_T": 600.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -2.177,
+            "screen_deciding_mode_harm_thz": {
+              "100": -2.038,
+              "300": -2.038,
+              "600": -2.038,
+              "900": -2.038
+            }
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "sevennet0",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.842,
+              "300": 2.766,
+              "600": 2.453,
+              "900": -4.238
+            },
+            "first_negative_T": 900.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -7.473,
+            "screen_deciding_mode_harm_thz": {
+              "100": -6.584,
+              "300": -5.948,
+              "600": -5.948,
+              "900": -5.948
+            }
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "mace_mp0",
+            "sscha_min_eff_freq_thz": {
+              "100": 0.355,
+              "300": -1.0,
+              "600": -5.661,
+              "900": -8.879
+            },
+            "first_negative_T": 300.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -0.602,
+            "screen_deciding_mode_harm_thz": {
+              "100": -0.592,
+              "300": -0.592,
+              "600": -0.592,
+              "900": -0.602
+            }
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "chgnet",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.223,
+              "300": 2.128,
+              "600": 1.707,
+              "900": 1.561
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -10.595,
+            "screen_deciding_mode_harm_thz": {
+              "100": -10.593,
+              "300": -10.593,
+              "600": -10.593,
+              "900": -10.593
+            }
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "mace_mp0",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.387,
+              "300": 1.619,
+              "600": -2.259,
+              "900": -4.555
+            },
+            "first_negative_T": 600.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -3.788,
+            "screen_deciding_mode_harm_thz": {
+              "100": -3.788,
+              "300": -3.788,
+              "600": -3.788,
+              "900": -3.788
+            }
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "mattersim",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.594,
+              "300": 2.526,
+              "600": 2.413,
+              "900": 2.05
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -6.726,
+            "screen_deciding_mode_harm_thz": {
+              "100": -6.727,
+              "300": -6.727,
+              "600": -6.727,
+              "900": -6.727
+            }
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "orb_v2",
+            "sscha_min_eff_freq_thz": {
+              "100": 1.903,
+              "300": 1.238,
+              "600": -4.804,
+              "900": -9.954
+            },
+            "first_negative_T": 600.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -5.757,
+            "screen_deciding_mode_harm_thz": {
+              "100": -1.818,
+              "300": -1.818,
+              "600": -1.818,
+              "900": -5.694
+            }
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "sevennet0",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.618,
+              "300": 2.579,
+              "600": 2.47,
+              "900": 0.868
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -5.656,
+            "screen_deciding_mode_harm_thz": {
+              "100": -5.657,
+              "300": -5.657,
+              "600": -5.657,
+              "900": -5.657
+            }
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "chgnet",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.214,
+              "300": 2.347,
+              "600": -4.273,
+              "900": -16.893
+            },
+            "first_negative_T": 600.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -2.229,
+            "screen_deciding_mode_harm_thz": {
+              "100": -2.225,
+              "300": -2.225,
+              "600": -2.225,
+              "900": -2.225
+            }
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "mace_mp0",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.577,
+              "300": 3.589,
+              "600": 3.32,
+              "900": 2.786
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -6.236,
+            "screen_deciding_mode_harm_thz": {
+              "100": -4.226,
+              "300": -4.226,
+              "600": -4.226,
+              "900": -4.226
+            }
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "mattersim",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.716,
+              "300": 3.704,
+              "600": 3.502,
+              "900": 3.055
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -6.704,
+            "screen_deciding_mode_harm_thz": {
+              "100": -6.704,
+              "300": -4.386,
+              "600": -4.386,
+              "900": -4.386
+            }
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "orb_v2",
+            "sscha_min_eff_freq_thz": {
+              "100": 1.849,
+              "300": 1.022,
+              "600": -13.747,
+              "900": -23.638
+            },
+            "first_negative_T": 600.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -2.503,
+            "screen_deciding_mode_harm_thz": {
+              "100": -2.256,
+              "300": -2.231,
+              "600": -2.256,
+              "900": -2.256
+            }
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "sevennet0",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.604,
+              "300": 3.551,
+              "600": 3.391,
+              "900": 2.713
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -6.472,
+            "screen_deciding_mode_harm_thz": {
+              "100": -4.28,
+              "300": -4.28,
+              "600": -4.28,
+              "900": -4.28
+            }
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "chgnet",
+            "sscha_min_eff_freq_thz": {
+              "100": 0.487,
+              "300": -1.261,
+              "600": -11.155,
+              "900": -30.622
+            },
+            "first_negative_T": 300.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -8.395,
+            "screen_deciding_mode_harm_thz": {
+              "100": -1.16,
+              "300": -4.168,
+              "600": -4.168,
+              "900": -1.16
+            }
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "sevennet0",
+            "sscha_min_eff_freq_thz": {
+              "100": 0.087,
+              "300": -12.223,
+              "600": -37.788,
+              "900": -66.849
+            },
+            "first_negative_T": 300.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -5.57,
+            "screen_deciding_mode_harm_thz": {
+              "100": -2.516,
+              "300": -2.516,
+              "600": -0.673,
+              "900": -0.673
+            }
+          },
+          {
+            "system": "zro2_cubic",
+            "model": "chgnet",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.073,
+              "300": 2.912,
+              "600": 2.353,
+              "900": 1.227
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -5.973,
+            "screen_deciding_mode_harm_thz": {
+              "100": -5.963,
+              "300": -5.963,
+              "600": -5.963,
+              "900": -5.963
+            }
+          },
+          {
+            "system": "zro2_cubic",
+            "model": "mace_mp0",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.09,
+              "300": 2.879,
+              "600": 1.932,
+              "900": -2.688
+            },
+            "first_negative_T": 900.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -5.59,
+            "screen_deciding_mode_harm_thz": {
+              "100": -5.59,
+              "300": -5.59,
+              "600": -5.59,
+              "900": -5.59
+            }
+          },
+          {
+            "system": "zro2_cubic",
+            "model": "mattersim",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.303,
+              "300": 3.15,
+              "600": 3.018,
+              "900": 2.325
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -6.322,
+            "screen_deciding_mode_harm_thz": {
+              "100": -6.321,
+              "300": -6.321,
+              "600": -6.321,
+              "900": -6.321
+            }
+          },
+          {
+            "system": "zro2_cubic",
+            "model": "orb_v2",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.041,
+              "300": -1.872,
+              "600": -7.4,
+              "900": -24.757
+            },
+            "first_negative_T": 300.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -6.309,
+            "screen_deciding_mode_harm_thz": {
+              "100": -7.092,
+              "300": -7.092,
+              "600": -7.092,
+              "900": -7.092
+            }
+          },
+          {
+            "system": "zro2_cubic",
+            "model": "sevennet0",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.331,
+              "300": 3.196,
+              "600": 2.706,
+              "900": -1.265
+            },
+            "first_negative_T": 900.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -5.575,
+            "screen_deciding_mode_harm_thz": {
+              "100": -5.575,
+              "300": -5.575,
+              "600": -5.575,
+              "900": -5.575
+            }
+          }
+        ]
+      }
+    },
+    "excl_orb_v2": {
+      "false_unstable_by_T": {
+        "100": {
+          "k": 0,
+          "n": 0,
+          "p": null,
+          "lo": null,
+          "hi": null,
+          "fmt": "0/0",
+          "n_units_at_T": 28,
+          "n_blowup_among_false_unstable": 0,
+          "by_system": {}
+        },
+        "300": {
+          "k": 4,
+          "n": 4,
+          "p": 1.0,
+          "lo": 0.5101091631424628,
+          "hi": 1.0,
+          "fmt": "4/4 = 1.000 [0.510, 1.000]",
+          "n_units_at_T": 28,
+          "n_blowup_among_false_unstable": 0,
+          "by_system": {
+            "srtio3_cubic": 4
+          }
+        },
+        "600": {
+          "k": 8,
+          "n": 11,
+          "p": 0.7272727272727273,
+          "lo": 0.43435469860485837,
+          "hi": 0.9025394071781618,
+          "fmt": "8/11 = 0.727 [0.434, 0.903]",
+          "n_units_at_T": 26,
+          "n_blowup_among_false_unstable": 1,
+          "by_system": {
+            "batio3_cubic": 1,
+            "cssni3_cubic": 3,
+            "srtio3_cubic": 4
+          }
+        },
+        "900": {
+          "k": 12,
+          "n": 16,
+          "p": 0.75,
+          "lo": 0.5050168344464286,
+          "hi": 0.8981793251604847,
+          "fmt": "12/16 = 0.750 [0.505, 0.898]",
+          "n_units_at_T": 24,
+          "n_blowup_among_false_unstable": 3,
+          "by_system": {
+            "batio3_cubic": 3,
+            "cssni3_cubic": 3,
+            "knbo3_cubic": 1,
+            "pbtio3_cubic": 2,
+            "srtio3_cubic": 3
+          }
+        }
+      },
+      "srtio3_above_tc": {
+        "transition_T_K": 105.0,
+        "n_grid_above_tc": 11,
+        "n_returned": 11,
+        "false_unstable": {
+          "k": 11,
+          "n": 11,
+          "p": 1.0,
+          "lo": 0.7411670327226446,
+          "hi": 1.0,
+          "fmt": "11/11 = 1.000 [0.741, 1.000]"
+        },
+        "sscha_freq_range_thz": [
+          -60.508,
+          -3.392
+        ],
+        "units": [
+          {
+            "model": "chgnet",
+            "T": 300.0,
+            "sscha_min_eff_freq_thz": -20.543,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.449,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -0.825
+          },
+          {
+            "model": "mace_mp0",
+            "T": 300.0,
+            "sscha_min_eff_freq_thz": -3.392,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -2.365,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -2.089
+          },
+          {
+            "model": "mattersim",
+            "T": 300.0,
+            "sscha_min_eff_freq_thz": -14.924,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.358,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -1.861
+          },
+          {
+            "model": "sevennet0",
+            "T": 300.0,
+            "sscha_min_eff_freq_thz": -7.859,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.244,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -1.952
+          },
+          {
+            "model": "chgnet",
+            "T": 600.0,
+            "sscha_min_eff_freq_thz": -36.638,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.449,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -0.825
+          },
+          {
+            "model": "mace_mp0",
+            "T": 600.0,
+            "sscha_min_eff_freq_thz": -20.229,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -2.365,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -2.089
+          },
+          {
+            "model": "mattersim",
+            "T": 600.0,
+            "sscha_min_eff_freq_thz": -22.175,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.358,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -1.861
+          },
+          {
+            "model": "sevennet0",
+            "T": 600.0,
+            "sscha_min_eff_freq_thz": -30.518,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.244,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -1.952
+          },
+          {
+            "model": "chgnet",
+            "T": 900.0,
+            "sscha_min_eff_freq_thz": -60.508,
+            "false_unstable": true,
+            "blow_up": true,
+            "harmonic_min_freq_thz": -3.449,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -0.825
+          },
+          {
+            "model": "mace_mp0",
+            "T": 900.0,
+            "sscha_min_eff_freq_thz": -27.143,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -2.365,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -2.089
+          },
+          {
+            "model": "mattersim",
+            "T": 900.0,
+            "sscha_min_eff_freq_thz": -35.537,
+            "false_unstable": true,
+            "blow_up": false,
+            "harmonic_min_freq_thz": -3.358,
+            "screen_deciding_mode_q": "0.5000,0.5000,0.5000",
+            "screen_deciding_mode_harm_thz": -1.861
+          }
+        ]
+      },
+      "stable_at_100K_turn_negative": {
+        "k": 10,
+        "n": 19,
+        "p": 0.5263157894736842,
+        "lo": 0.3170780923077802,
+        "hi": 0.7267019485196837,
+        "fmt": "10/19 = 0.526 [0.317, 0.727]",
+        "n_stable_at_100K": 19,
+        "n_negative_by_600_900K": 10,
+        "n_of_those_false_unstable_at_high_T": 7,
+        "units": [
+          {
+            "system": "batio3_cubic",
+            "model": "chgnet",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.153,
+              "300": 2.177,
+              "600": -5.846,
+              "900": -10.556
+            },
+            "first_negative_T": 600.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -6.905,
+            "screen_deciding_mode_harm_thz": {
+              "100": -6.135,
+              "300": -4.908,
+              "600": -4.908,
+              "900": -4.908
+            }
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "mace_mp0",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.868,
+              "300": 2.825,
+              "600": 2.603,
+              "900": -7.597
+            },
+            "first_negative_T": 900.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -6.411,
+            "screen_deciding_mode_harm_thz": {
+              "100": -5.404,
+              "300": -5.404,
+              "600": -5.404,
+              "900": -5.404
+            }
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "mattersim",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.067,
+              "300": 2.95,
+              "600": 2.771,
+              "900": 2.399
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -7.082,
+            "screen_deciding_mode_harm_thz": {
+              "100": -7.082,
+              "300": -5.769,
+              "600": -5.769,
+              "900": -5.769
+            }
+          },
+          {
+            "system": "batio3_cubic",
+            "model": "sevennet0",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.842,
+              "300": 2.766,
+              "600": 2.453,
+              "900": -4.238
+            },
+            "first_negative_T": 900.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -7.473,
+            "screen_deciding_mode_harm_thz": {
+              "100": -6.584,
+              "300": -5.948,
+              "600": -5.948,
+              "900": -5.948
+            }
+          },
+          {
+            "system": "cssni3_cubic",
+            "model": "mace_mp0",
+            "sscha_min_eff_freq_thz": {
+              "100": 0.355,
+              "300": -1.0,
+              "600": -5.661,
+              "900": -8.879
+            },
+            "first_negative_T": 300.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -0.602,
+            "screen_deciding_mode_harm_thz": {
+              "100": -0.592,
+              "300": -0.592,
+              "600": -0.592,
+              "900": -0.602
+            }
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "chgnet",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.223,
+              "300": 2.128,
+              "600": 1.707,
+              "900": 1.561
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -10.595,
+            "screen_deciding_mode_harm_thz": {
+              "100": -10.593,
+              "300": -10.593,
+              "600": -10.593,
+              "900": -10.593
+            }
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "mace_mp0",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.387,
+              "300": 1.619,
+              "600": -2.259,
+              "900": -4.555
+            },
+            "first_negative_T": 600.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -3.788,
+            "screen_deciding_mode_harm_thz": {
+              "100": -3.788,
+              "300": -3.788,
+              "600": -3.788,
+              "900": -3.788
+            }
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "mattersim",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.594,
+              "300": 2.526,
+              "600": 2.413,
+              "900": 2.05
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -6.726,
+            "screen_deciding_mode_harm_thz": {
+              "100": -6.727,
+              "300": -6.727,
+              "600": -6.727,
+              "900": -6.727
+            }
+          },
+          {
+            "system": "hfo2_cubic",
+            "model": "sevennet0",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.618,
+              "300": 2.579,
+              "600": 2.47,
+              "900": 0.868
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -5.656,
+            "screen_deciding_mode_harm_thz": {
+              "100": -5.657,
+              "300": -5.657,
+              "600": -5.657,
+              "900": -5.657
+            }
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "chgnet",
+            "sscha_min_eff_freq_thz": {
+              "100": 2.214,
+              "300": 2.347,
+              "600": -4.273,
+              "900": -16.893
+            },
+            "first_negative_T": 600.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -2.229,
+            "screen_deciding_mode_harm_thz": {
+              "100": -2.225,
+              "300": -2.225,
+              "600": -2.225,
+              "900": -2.225
+            }
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "mace_mp0",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.577,
+              "300": 3.589,
+              "600": 3.32,
+              "900": 2.786
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -6.236,
+            "screen_deciding_mode_harm_thz": {
+              "100": -4.226,
+              "300": -4.226,
+              "600": -4.226,
+              "900": -4.226
+            }
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "mattersim",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.716,
+              "300": 3.704,
+              "600": 3.502,
+              "900": 3.055
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -6.704,
+            "screen_deciding_mode_harm_thz": {
+              "100": -6.704,
+              "300": -4.386,
+              "600": -4.386,
+              "900": -4.386
+            }
+          },
+          {
+            "system": "knbo3_cubic",
+            "model": "sevennet0",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.604,
+              "300": 3.551,
+              "600": 3.391,
+              "900": 2.713
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -6.472,
+            "screen_deciding_mode_harm_thz": {
+              "100": -4.28,
+              "300": -4.28,
+              "600": -4.28,
+              "900": -4.28
+            }
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "chgnet",
+            "sscha_min_eff_freq_thz": {
+              "100": 0.487,
+              "300": -1.261,
+              "600": -11.155,
+              "900": -30.622
+            },
+            "first_negative_T": 300.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -8.395,
+            "screen_deciding_mode_harm_thz": {
+              "100": -1.16,
+              "300": -4.168,
+              "600": -4.168,
+              "900": -1.16
+            }
+          },
+          {
+            "system": "pbtio3_cubic",
+            "model": "sevennet0",
+            "sscha_min_eff_freq_thz": {
+              "100": 0.087,
+              "300": -12.223,
+              "600": -37.788,
+              "900": -66.849
+            },
+            "first_negative_T": 300.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": true,
+            "harmonic_min_freq_thz": -5.57,
+            "screen_deciding_mode_harm_thz": {
+              "100": -2.516,
+              "300": -2.516,
+              "600": -0.673,
+              "900": -0.673
+            }
+          },
+          {
+            "system": "zro2_cubic",
+            "model": "chgnet",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.073,
+              "300": 2.912,
+              "600": 2.353,
+              "900": 1.227
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -5.973,
+            "screen_deciding_mode_harm_thz": {
+              "100": -5.963,
+              "300": -5.963,
+              "600": -5.963,
+              "900": -5.963
+            }
+          },
+          {
+            "system": "zro2_cubic",
+            "model": "mace_mp0",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.09,
+              "300": 2.879,
+              "600": 1.932,
+              "900": -2.688
+            },
+            "first_negative_T": 900.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -5.59,
+            "screen_deciding_mode_harm_thz": {
+              "100": -5.59,
+              "300": -5.59,
+              "600": -5.59,
+              "900": -5.59
+            }
+          },
+          {
+            "system": "zro2_cubic",
+            "model": "mattersim",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.303,
+              "300": 3.15,
+              "600": 3.018,
+              "900": 2.325
+            },
+            "first_negative_T": null,
+            "negative_by_600_900K": false,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -6.322,
+            "screen_deciding_mode_harm_thz": {
+              "100": -6.321,
+              "300": -6.321,
+              "600": -6.321,
+              "900": -6.321
+            }
+          },
+          {
+            "system": "zro2_cubic",
+            "model": "sevennet0",
+            "sscha_min_eff_freq_thz": {
+              "100": 3.331,
+              "300": 3.196,
+              "600": 2.706,
+              "900": -1.265
+            },
+            "first_negative_T": 900.0,
+            "negative_by_600_900K": true,
+            "high_T_negative_is_false_unstable": false,
+            "harmonic_min_freq_thz": -5.575,
+            "screen_deciding_mode_harm_thz": {
+              "100": -5.575,
+              "300": -5.575,
+              "600": -5.575,
+              "900": -5.575
+            }
+          }
+        ]
+      }
+    },
+    "note": "Growth of the SSCHA instability with temperature on the same PES is the signature Referee 1's out-of-distribution hypothesis (item 2) predicts. For the fluorites the label is 'unstable' at every T, so their high-T negatives are label-correct but the trend with T is physically the wrong direction; high_T_negative_is_false_unstable separates the two cases."
+  },
+  "criterion_blindness": {
+    "answers": [
+      "R1.1b (global vs local)",
+      "R1.2",
+      "R1.4 ('methodological trap')"
+    ],
+    "all_models": {
+      "n_sscha_false_stable_nonbcc": 57,
+      "screen_curvature_positive": {
+        "k": 52,
+        "n": 57,
+        "p": 0.9122807017543859,
+        "lo": 0.8105512289011539,
+        "hi": 0.9619483282466917,
+        "fmt": "52/57 = 0.912 [0.811, 0.962]"
+      },
+      "screen_call_unstable": {
+        "k": 46,
+        "n": 57,
+        "p": 0.8070175438596491,
+        "lo": 0.6865930974139526,
+        "hi": 0.8886725302493367,
+        "fmt": "46/57 = 0.807 [0.687, 0.889]"
+      },
+      "curvature_positive_and_call_unstable": {
+        "k": 41,
+        "n": 57,
+        "p": 0.7192982456140351,
+        "lo": 0.5916980131314522,
+        "hi": 0.8192060066280402,
+        "fmt": "41/57 = 0.719 [0.592, 0.819]"
+      },
+      "by_system": {
+        "batio3_cubic": {
+          "n": 10,
+          "screen_curv_pos": 10,
+          "screen_call_unstable": 6
+        },
+        "cssni3_cubic": {
+          "n": 1,
+          "screen_curv_pos": 0,
+          "screen_call_unstable": 1
+        },
+        "hfo2_cubic": {
+          "n": 16,
+          "screen_curv_pos": 13,
+          "screen_call_unstable": 16
+        },
+        "knbo3_cubic": {
+          "n": 13,
+          "screen_curv_pos": 13,
+          "screen_call_unstable": 6
+        },
+        "pbtio3_cubic": {
+          "n": 2,
+          "screen_curv_pos": 2,
+          "screen_call_unstable": 2
+        },
+        "zro2_cubic": {
+          "n": 15,
+          "screen_curv_pos": 14,
+          "screen_call_unstable": 15
+        }
+      },
+      "paired_nonbcc_T_le_300": {
+        "n": 66,
+        "sscha_sign_eq_screen_curvature_sign": 40,
+        "sscha_call_eq_screen_call": 21
+      }
+    },
+    "excl_orb_v2": {
+      "n_sscha_false_stable_nonbcc": 50,
+      "screen_curvature_positive": {
+        "k": 47,
+        "n": 50,
+        "p": 0.94,
+        "lo": 0.8378290830011957,
+        "hi": 0.9793850296674343,
+        "fmt": "47/50 = 0.940 [0.838, 0.979]"
+      },
+      "screen_call_unstable": {
+        "k": 39,
+        "n": 50,
+        "p": 0.78,
+        "lo": 0.6475845040707112,
+        "hi": 0.8724608403547808,
+        "fmt": "39/50 = 0.780 [0.648, 0.872]"
+      },
+      "curvature_positive_and_call_unstable": {
+        "k": 36,
+        "n": 50,
+        "p": 0.72,
+        "lo": 0.5833487629248485,
+        "hi": 0.8252582934094667,
+        "fmt": "36/50 = 0.720 [0.583, 0.825]"
+      },
+      "by_system": {
+        "batio3_cubic": {
+          "n": 8,
+          "screen_curv_pos": 8,
+          "screen_call_unstable": 4
+        },
+        "cssni3_cubic": {
+          "n": 1,
+          "screen_curv_pos": 0,
+          "screen_call_unstable": 1
+        },
+        "hfo2_cubic": {
+          "n": 14,
+          "screen_curv_pos": 12,
+          "screen_call_unstable": 14
+        },
+        "knbo3_cubic": {
+          "n": 11,
+          "screen_curv_pos": 11,
+          "screen_call_unstable": 4
+        },
+        "pbtio3_cubic": {
+          "n": 2,
+          "screen_curv_pos": 2,
+          "screen_call_unstable": 2
+        },
+        "zro2_cubic": {
+          "n": 14,
+          "screen_curv_pos": 14,
+          "screen_call_unstable": 14
+        }
+      },
+      "paired_nonbcc_T_le_300": {
+        "n": 56,
+        "sscha_sign_eq_screen_curvature_sign": 34,
+        "sscha_call_eq_screen_call": 20
+      }
+    },
+    "note": "Counts over non-bcc (system, model, T) units with both a softmode and an sscha row. Curvature > 0 means the screen's symmetric-point free-energy curvature is positive."
+  }
+}

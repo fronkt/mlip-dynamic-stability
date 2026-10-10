@@ -1,0 +1,43 @@
+{
+ "tool": "chgnet",
+ "tool_version": "0.4.2",
+ "frozen_on": "2026-10-03, before any training data exists",
+ "source": "CHGNet examples/fine_tuning.ipynb (CederGroupHub/chgnet): freeze the embeddings, basis expansions, atom_conv_layers[:-1], bond_conv_layers and angle_layers; StructureData with per-atom energies; get_train_val_test_loader(batch_size=8); Trainer(targets, optimizer='Adam', scheduler='CosLR', criterion='MSE', epochs=5, learning_rate=1e-2). Values below are the notebook's, unchanged, except targets (no stress / magmom labels exist here).",
+ "differences_from_the_notebook": {
+  "targets": "'ef' not 'efsm': tstress is off in the C3b job format and there are no magnetic-moment labels",
+  "split": "explicit 90/10 train/valid files from the dataset stage; no test loader (the held-out sets are never given to the trainer)",
+  "train_composition_model": "false: the per-system energy reference is applied in the dataset stage (see scripts/finetune/data.py); the notebook offers train_composition_model=True or AtomRef.fit() for QE-scale energies, which at lr 1e-2 cannot move a per-element reference by ~10^3 eV in 5 epochs",
+  "model_selection": "the trainer's own bestE checkpoint: lowest VALIDATION energy MAE"
+ },
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "frozen_layers": [
+  "atom_embedding",
+  "bond_embedding",
+  "angle_embedding",
+  "bond_basis_expansion",
+  "angle_basis_expansion",
+  "atom_conv_layers[:-1]",
+  "bond_conv_layers",
+  "angle_layers"
+ ],
+ "loader": {
+  "batch_size": 8,
+  "shuffle": true
+ },
+ "trainer": {
+  "targets": "ef",
+  "optimizer": "Adam",
+  "scheduler": "CosLR",
+  "criterion": "MSE",
+  "epochs": 30,
+  "learning_rate": 0.01,
+  "energy_loss_ratio": 1,
+  "force_loss_ratio": 1
+ },
+ "train_composition_model": false,
+ "epoch_budget_deviation": "2026-10-03, before any training data: budget raised from the documented 5 to 30 epochs (pre-registration Deviations D2). The documented value targets a different dataset size; at ~54 optimiser steps per epoch it would leave a refuted P1 indistinguishable from under-training. Selection stays on the validation split only (lowest validation loss); every other setting is the documented one."
+}

@@ -1,0 +1,43 @@
+{
+ "tool": "mace-torch",
+ "tool_version_box": "0.3.16",
+ "frozen_on": "2026-10-03, before any training data exists",
+ "source": "MACE docs, Fine-tuning Foundation Models, 'Naive Fine-tuning' command (https://mace-docs.readthedocs.io/en/latest/guide/finetuning.html): --foundation_model, --multiheads_finetuning=False, --energy_weight=10.0, --forces_weight=10.0, --E0s=estimated, --lr=0.001, --weight_decay=0.0, --scaling=rms_forces_scaling, --batch_size=2, --max_num_epochs=6, --ema, --ema_decay=0.999, --amsgrad, --clip_grad=1.0, --default_dtype=float64. Values below are that command's, unchanged. No hyperparameter search; the validation split is used only for the tool's own checkpoint selection (lowest validation loss).",
+ "why_naive_not_multihead": "The pre-registration says 'each tool's documented fine-tuning defaults for a small dataset'. The documented small-dataset command is the naive one. Multihead replay (the library default, --multiheads_finetuning=True) additionally needs the MPtrj replay set (--pt_train_file=mp, a download) and a two-head model whose calculator needs head selection; it is a different method from the one documented for small data.",
+ "added_to_the_documented_command": {
+  "valid_file/train_file": "explicit 90/10 split files (the doc uses --valid_fraction=0.05 --test_file); the held-out sets are never given to mace_run_train",
+  "foundation_model_elements": true,
+  "foundation_model_elements_why": "keeps all 89 elements of MACE-MP-0 in the fine-tuned model; without it the model holds only the 8 training elements and the S2 forgetting control (Si, Mg, Na, Cl, Cu, C, Ce, O) cannot be run at all",
+  "energy_key/forces_key": "REF_energy / REF_forces (the library defaults, stated)",
+  "save_cpu": true
+ },
+ "foundation_model": "medium",
+ "foundation_model_is": "mace_mp(model='medium'), the checkpoint of the paper (mlip_dynstab.calculators._mace_mp0 default)",
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "args": {
+  "foundation_model": "medium",
+  "multiheads_finetuning": false,
+  "energy_weight": 10.0,
+  "forces_weight": 10.0,
+  "E0s": "estimated",
+  "lr": 0.001,
+  "weight_decay": 0.0,
+  "scaling": "rms_forces_scaling",
+  "batch_size": 2,
+  "max_num_epochs": 30,
+  "ema": true,
+  "ema_decay": 0.999,
+  "amsgrad": true,
+  "clip_grad": 1.0,
+  "default_dtype": "float64",
+  "foundation_model_elements": true,
+  "energy_key": "REF_energy",
+  "forces_key": "REF_forces",
+  "save_cpu": true
+ },
+ "epoch_budget_deviation": "2026-10-03, before any training data: budget raised from the documented 6 to 30 epochs (pre-registration Deviations D2). The documented value targets a different dataset size; at ~54 optimiser steps per epoch it would leave a refuted P1 indistinguishable from under-training. Selection stays on the validation split only (lowest validation loss); every other setting is the documented one."
+}

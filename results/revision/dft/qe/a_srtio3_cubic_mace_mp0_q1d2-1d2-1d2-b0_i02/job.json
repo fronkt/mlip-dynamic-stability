@@ -1,0 +1,200 @@
+{
+ "job": "a_srtio3_cubic_mace_mp0_q1d2-1d2-1d2-b0_i02",
+ "system": "srtio3_cubic",
+ "structure_sha": "005d2299dc17a5b43593",
+ "n_atoms": 10,
+ "species": [
+  "O",
+  "Sr",
+  "Ti"
+ ],
+ "members": [
+  {
+   "study": "c3a",
+   "geom_file": "geom/srtio3_cubic_mace_mp0_q1d2-1d2-1d2-b0.extxyz",
+   "frame": 2,
+   "stem": "srtio3_cubic_mace_mp0_q1d2-1d2-1d2-b0",
+   "role": "decide",
+   "path_model": "mace_mp0",
+   "Q": 0.022222222222222223,
+   "reduction": {
+    "n_images": 4,
+    "map": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     0,
+     0,
+     1,
+     2,
+     3,
+     3,
+     2,
+     3,
+     2,
+     2,
+     3,
+     4,
+     5,
+     5,
+     4,
+     5,
+     4,
+     4,
+     5,
+     6,
+     7,
+     7,
+     6,
+     7,
+     6,
+     6,
+     7,
+     8,
+     9,
+     9,
+     8,
+     9,
+     8,
+     8,
+     9
+    ],
+    "reps": [
+     0,
+     1,
+     8,
+     9,
+     16,
+     17,
+     24,
+     25,
+     32,
+     33
+    ],
+    "lattice": [
+     [
+      3.942961658086909,
+      -2.213981571451272e-15,
+      3.942961658086897
+     ],
+     [
+      -4.873836141296426e-17,
+      -3.942961658086896,
+      3.9429616580868996
+     ],
+     [
+      3.942961658086909,
+      -3.9429616580868934,
+      2.823758541295702e-15
+     ]
+    ]
+   }
+  }
+ ],
+ "qe": {
+  "is_metal": false,
+  "smearing": "mv",
+  "degauss_Ry": 0.005,
+  "kspacing_inv_A": 0.25,
+  "kspacing_convention": "n_i = max(1, ceil(|b_i| / spacing)) with b = 2*pi*inv(cell).T, i.e. |b_i| includes 2*pi (the VASP KSPACING convention); Gamma-centred, unshifted",
+  "kmesh": [
+   6,
+   6,
+   6
+  ],
+  "nk_full": 216,
+  "nk_tr_upper": 112,
+  "nk_irr_spglib": 112,
+  "ecutwfc_Ry": 50.0,
+  "ecutrho_Ry": 400.0,
+  "conv_thr_Ry": 1e-09,
+  "mixing_beta": 0.4,
+  "disk_io": "none",
+  "functional": "PBE (from the SSSP PBE set)",
+  "pseudos": {
+   "Sr": {
+    "filename": "Sr_pbe_v1.uspp.F.UPF",
+    "ecutwfc": 30.0,
+    "ecutrho": 240.0,
+    "md5": "6b418c05fbe9db5448babca5e47b7a5b",
+    "family": "GBRV-1.2"
+   },
+   "Ti": {
+    "filename": "ti_pbe_v1.4.uspp.F.UPF",
+    "ecutwfc": 35.0,
+    "ecutrho": 280.0,
+    "md5": "88a00a6731bd790ddea75d31a80cb452",
+    "family": "GBRV-1.4"
+   },
+   "O": {
+    "filename": "O.pbe-n-kjpaw_psl.0.1.UPF",
+    "ecutwfc": 50.0,
+    "ecutrho": 400.0,
+    "md5": "0234752ac141de4415c5fc33072bef88",
+    "family": "031PAW"
+   }
+  },
+  "sssp_json": "SSSP_1.3.0_PBE_efficiency.json",
+  "sssp_sha256": "2c8642a70308ecd072a209a30c160bf51423560bb202116cb31fd5275eff814a"
+ },
+ "pw_in_sha256": "48fc40a87c36caea2c910a7cac764f5af6db272d65612a97d22b5dd1c23a00c3",
+ "provenance": {
+  "script": "scripts/dft_reference.py",
+  "stage": "qe-inputs",
+  "git_head": "5531546",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.5",
+   "torch": "2.6.0+cu124",
+   "mace-torch": "0.3.16",
+   "chgnet": null,
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": "1.6.1",
+   "cellconstructor": "1.6.2"
+  },
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T07:53:44Z",
+  "settings": {
+   "stage": "qe-inputs",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "srtio3_cubic",
+    "batio3_cubic",
+    "zr_bcc",
+    "zro2_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "force": false,
+   "sssp_dir": "/root/sssp",
+   "sssp_json": "/root/sssp/SSSP_1.3.0_PBE_efficiency.json",
+   "kspacing_insulator": 0.25,
+   "kspacing_metal": 0.15,
+   "degauss_insulator": 0.005,
+   "degauss_metal": 0.02,
+   "c0_core_s": 8.0,
+   "extra_max_atoms": 12,
+   "only_decide": false,
+   "no_reduce_cell": false
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  }
+ }
+}

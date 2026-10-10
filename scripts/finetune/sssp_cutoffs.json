@@ -1,0 +1,15 @@
+{
+ "_provenance": "Harvested 2026-10-03 from the qe.pseudos blocks of the existing C3a/C3b job.json files under results/revision/dft/qe/ (the jobs the box ran), because the SSSP json is not in the repo. SSSP 1.3.0 PBE efficiency, json sha256 2c8642a70308ecd072a209a30c160bf51423560bb202116cb31fd5275eff814a. Cutoffs in Ry. scripts/finetune_trial.py qe-inputs --sssp-json <box json> re-checks every element used here against the real file and aborts on any difference.",
+ "sssp_json": "SSSP_1.3.0_PBE_efficiency.json",
+ "sssp_sha256": "2c8642a70308ecd072a209a30c160bf51423560bb202116cb31fd5275eff814a",
+ "elements": {
+  "Ba": {"filename": "Ba.pbe-spn-kjpaw_psl.1.0.0.UPF", "ecutwfc": 30.0, "ecutrho": 240.0, "md5": "c432291d3e53af55f19d5e8866385beb", "family": "100PAW"},
+  "Br": {"filename": "br_pbe_v1.4.uspp.F.UPF", "ecutwfc": 30.0, "ecutrho": 240.0, "md5": "d3ffb7b29f6225aa16fe06858fb2a80b", "family": "GBRV-1.4"},
+  "Cs": {"filename": "Cs_pbe_v1.uspp.F.UPF", "ecutwfc": 30.0, "ecutrho": 240.0, "md5": "3476d69cb178dfad3ffaa59df4e07ca4", "family": "GBRV-1.2"},
+  "K": {"filename": "K.pbe-spn-kjpaw_psl.1.0.0.UPF", "ecutwfc": 60.0, "ecutrho": 480.0, "md5": "7d58810084cac21f60fbe77ea2b688fd", "family": "100PAW"},
+  "Nb": {"filename": "Nb.pbe-spn-kjpaw_psl.0.3.0.UPF", "ecutwfc": 40.0, "ecutrho": 320.0, "md5": "411d72ad547312f8017e2943ceca08cc", "family": "031PAW"},
+  "O": {"filename": "O.pbe-n-kjpaw_psl.0.1.UPF", "ecutwfc": 50.0, "ecutrho": 400.0, "md5": "0234752ac141de4415c5fc33072bef88", "family": "031PAW"},
+  "Sn": {"filename": "Sn_pbe_v1.uspp.F.UPF", "ecutwfc": 60.0, "ecutrho": 480.0, "md5": "4cf58ce39ec5d5d420df3dd08604eb00", "family": "GBRV-1.2"},
+  "Ti": {"filename": "ti_pbe_v1.4.uspp.F.UPF", "ecutwfc": 35.0, "ecutrho": 280.0, "md5": "88a00a6731bd790ddea75d31a80cb452", "family": "GBRV-1.4"}
+ }
+}

@@ -1,0 +1,6 @@
+utc_end	tag	rc	wall_s
+2026-10-10T04:32:43Z	srtio3_cubic_chgnet_100K_sc444	124	32403
+2026-10-10T04:33:01Z	srtio3_cubic_mace_mp0_100K_sc444	124	32400
+2026-10-10T04:33:22Z	srtio3_cubic_mattersim_100K_sc444	124	32401
+2026-10-10T04:33:42Z	srtio3_cubic_sevennet0_100K_sc444	124	32401
+2026-10-10T04:34:01Z	hfo2_cubic_mace_mp0_600K_sc444	124	32400

@@ -1,0 +1,214 @@
+{
+ "paths": {
+  "srtio3_cubic_orb_v2_q1d2-1d2-1d2-b0-refmattersim": {
+   "role": "ref",
+   "n_atoms": 40,
+   "check": {
+    "pass": null,
+    "note": "reference path: no cached map for this coordinate under this model",
+    "stable_model_check": {
+     "softest_regen_thz": 1.3564117404386393,
+     "softest_cache_thz": 1.3472910509276028,
+     "q_regen": [
+      0.0,
+      0.5,
+      0.0
+     ],
+     "q_cache": [
+      0.0,
+      0.5,
+      0.0
+     ],
+     "pass": true
+    }
+   },
+   "ref_pattern_stem": "srtio3_cubic_mattersim_q1d2-1d2-1d2-b0",
+   "lattice_scale": 0.9999651879100763,
+   "lattice_transform_offdiag_max": 2.2979584595692773e-06,
+   "this_model_freqs_at_q_thz": [
+    2.0607118079691586,
+    2.2243875564421947,
+    2.4257519004460777,
+    4.827168675742026,
+    4.873364289260829,
+    4.913678078866189,
+    6.076385554597327,
+    6.151139933930578,
+    6.335879657258486,
+    11.458588046936073,
+    11.553866394026164,
+    11.710894016010416,
+    14.70680936450327,
+    14.823949077021133,
+    23.045177405430916
+   ],
+   "ref_pattern_check": false,
+   "ref_pattern_standin": false
+  }
+ },
+ "system": "srtio3_cubic",
+ "model": "orb_v2",
+ "status": "done",
+ "cache_file": "results/cache/softmode_v3m24_srtio3_cubic_orb_v2_sc222.json",
+ "cache_sha256": "e16c014411cb8f061d6020437ade345d3c46518723400dd7bc316d0006817e14",
+ "fc_supercell": [
+  2,
+  2,
+  2
+ ],
+ "relaxed_prim_cell": [
+  [
+   3.9435794805179127,
+   2.317386726089799e-06,
+   9.127947556289206e-06
+  ],
+  [
+   2.3173717663992917e-06,
+   3.9439306355674493,
+   -6.88825643708269e-06
+  ],
+  [
+   9.127845350810719e-06,
+   -6.888373659649956e-06,
+   3.9432874930218897
+  ]
+ ],
+ "harmonically_stable_in_cache": true,
+ "deciding": {
+  "by_T": {
+   "100": {
+    "T": 100.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "300": {
+    "T": 300.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "600": {
+    "T": 600.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "900": {
+    "T": 900.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   }
+  },
+  "lowest_T": 100.0,
+  "idx_lowest": 0,
+  "idx_all": [
+   0
+  ],
+  "all_agree": true
+ },
+ "mode_list": {
+  "n_imag_total_regen": 0,
+  "n_imag_total_cache": 0,
+  "regen": [],
+  "cache": [
+   {
+    "q": [
+     0.0,
+     0.5,
+     0.0
+    ],
+    "band": -1,
+    "harm_thz": 1.3472910509276028
+   }
+  ],
+  "stable_check": {
+   "softest_regen_thz": 1.3564117404386393,
+   "softest_cache_thz": 1.3472910509276028,
+   "q_regen": [
+    0.0,
+    0.5,
+    0.0
+   ],
+   "q_cache": [
+    0.0,
+    0.5,
+    0.0
+   ],
+   "pass": true
+  }
+ },
+ "wall_s": 2.3,
+ "provenance": {
+  "script": "scripts/dft_reference.py",
+  "stage": "geom",
+  "git_head": "5531546",
+  "versions": {
+   "numpy": "2.5.2",
+   "scipy": "1.18.0",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.5",
+   "torch": "2.13.0",
+   "mace-torch": null,
+   "chgnet": null,
+   "orb-models": "0.7.0",
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": "1.6.1",
+   "cellconstructor": "1.6.2"
+  },
+  "python": "3.12.14",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T07:41:39Z",
+  "settings": {
+   "stage": "geom",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "srtio3_cubic",
+    "batio3_cubic",
+    "zr_bcc",
+    "zro2_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "model": "orb_v2",
+   "device": "cuda",
+   "force": false,
+   "no_recover": false,
+   "recover_max_atoms": 12,
+   "harm_tol": 0.02
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "model": "orb_v2",
+  "env_lock": {
+   "lock": "envs/lock-orb-2026-08-17.txt",
+   "mismatches": {}
+  },
+  "model_version": "orb-models=0.7.0;orb_v2",
+  "device": "cuda"
+ }
+}

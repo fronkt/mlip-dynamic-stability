@@ -1,0 +1,1187 @@
+{
+ "schema": "sscha_seed_study/v1",
+ "study": "C1/C1b/C5 SSCHA seed study (R1.4)",
+ "dry_run": false,
+ "unit": {
+  "system": "zr_bcc",
+  "model": "mace_mp0",
+  "T": 300.0,
+  "supercell": [
+   3,
+   3,
+   3
+  ]
+ },
+ "unit_tag": "zr_bcc_mace_mp0_300K_sc333",
+ "item": "C5",
+ "why": "finite size, 3x3x3 vs ledger 2x2x2",
+ "recipe": {
+  "n_configs": 256,
+  "max_pop": 8,
+  "n_hessian": 512,
+  "disp": 0.03,
+  "relax": true,
+  "fmax": 0.001,
+  "root_representation": "root2",
+  "min_step_dyn": 0.5,
+  "meaningful_factor": 0.0001,
+  "max_ka": 20,
+  "imag_tol_thz": -0.1
+ },
+ "recipe_source": "inspect.signature(finite_t.compute_finite_t_sscha)",
+ "settings": {
+  "n_boot": 30,
+  "n_splits_fallback": 4,
+  "save_configs": 16,
+  "ledger_tol_thz": 0.02,
+  "device": "cuda",
+  "bootstrap_unit": "antithetic pair",
+  "bootstrap_rng": "default_rng([20260926, seed])",
+  "configs_rng": "default_rng([20260927, seed])"
+ },
+ "provenance_created": {
+  "script": "scripts/sscha_seed_study.py",
+  "script_sha256": "56071e1de0c7c464596daba1e1b7dd49b098e448a4d7d8f68cb23f34ef8ea18e",
+  "finite_t_sha256": "ed801a9506a74f50158681956da2e7cf52dca493058734cf228f987e5b795e08",
+  "git_head": "5531546",
+  "git_dirty_production_code": [],
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T07:25:14Z",
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "packages": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "torch": "2.6.0+cu124",
+   "pandas": "3.0.5",
+   "pyarrow": "25.0.1",
+   "pymatgen": "2026.5.4",
+   "python-sscha": "1.6.1",
+   "CellConstructor": "1.6.2",
+   "julia": null,
+   "mace-torch": "0.3.16"
+  },
+  "env_lock": {
+   "lock_file": "envs/lock-mace-2026-08-17.txt",
+   "packages": {
+    "numpy": {
+     "pinned": "2.2.2",
+     "installed": "2.2.2",
+     "match": true
+    },
+    "scipy": {
+     "pinned": "1.17.1",
+     "installed": "1.17.1",
+     "match": true
+    },
+    "ase": {
+     "pinned": "3.29.0",
+     "installed": "3.29.0",
+     "match": true
+    },
+    "phonopy": {
+     "pinned": "4.4.0",
+     "installed": "4.4.0",
+     "match": true
+    },
+    "spglib": {
+     "pinned": "2.7.0",
+     "installed": "2.7.0",
+     "match": true
+    },
+    "torch": {
+     "pinned": "2.6.0+cu124",
+     "installed": "2.6.0+cu124",
+     "match": true
+    },
+    "pandas": {
+     "pinned": "3.0.5",
+     "installed": "3.0.5",
+     "match": true
+    },
+    "pyarrow": {
+     "pinned": "25.0.1",
+     "installed": "25.0.1",
+     "match": true
+    },
+    "pymatgen": {
+     "pinned": "2026.5.4",
+     "installed": "2026.5.4",
+     "match": true
+    },
+    "python-sscha": {
+     "pinned": "1.6.1",
+     "installed": "1.6.1",
+     "match": true
+    },
+    "CellConstructor": {
+     "pinned": "1.6.2",
+     "installed": "1.6.2",
+     "match": true
+    },
+    "mace-torch": {
+     "pinned": "0.3.16",
+     "installed": "0.3.16",
+     "match": true
+    }
+   },
+   "all_pinned_match": true
+  },
+  "omp_num_threads": "12",
+  "cpu": {
+   "os_cpu_count": 128,
+   "affinity": 128,
+   "cgroup_quota": 61.43999,
+   "usable": 61
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "cuda_device": "NVIDIA GeForce RTX 3090",
+  "julia_ext_available": false,
+  "julia_error": "",
+  "schamodules": {
+   "file": "/root/env-mace/lib/python3.11/site-packages/SCHAModules.cpython-311-x86_64-linux-gnu.so",
+   "ldd": [
+    "liblapack.so.3 => /lib/x86_64-linux-gnu/liblapack.so.3 (0x000073fe0ed45000)",
+    "libblas.so.3 => /lib/x86_64-linux-gnu/libblas.so.3 (0x000073fe0ec9f000)",
+    "libgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (0x000073fe0e9c4000)"
+   ]
+  },
+  "model_version": "mace-torch=0.3.16;ckpt=medium"
+ },
+ "seeds": {
+  "0": {
+   "seed": 0,
+   "status": "ok",
+   "utc_start": "2026-09-27T07:25:14Z",
+   "host": "db4a641a37b8",
+   "work_dir": "results/revision/sscha_seeds/work/zr_bcc_mace_mp0_300K_sc333_seed0",
+   "settings": {
+    "n_boot": 30,
+    "n_splits_fallback": 4,
+    "save_configs": 16,
+    "ledger_tol_thz": 0.02,
+    "device": "cuda",
+    "configs_are_c3b_input": false
+   },
+   "timings_s": {
+    "relax_and_harmonic_fc": 1.3420076370239258,
+    "sscha_relax": 23.036735773086548,
+    "hessian_ensemble": 29.480926275253296,
+    "hessian": 2.338475465774536,
+    "bootstrap": 74.32972717285156,
+    "total": 130.86762952804565
+   },
+   "julia_ext_available": false,
+   "relaxed_cellpar": [
+    3.1230853402974623,
+    3.1230853402974623,
+    3.1230853402974628,
+    109.47122063449069,
+    109.47122063449069,
+    109.47122063449069
+   ],
+   "harmonic_pre_fpd": {
+    "min_nonac_thz": 1.56744427359804,
+    "lowest6_thz": [
+     1.3402397357762708e-08,
+     2.039910297418269e-08,
+     3.3384831219554864e-08,
+     1.56744427359804,
+     1.56744427359804,
+     1.56744427359804
+    ],
+    "n_imag_nonac": 0,
+    "acoustic_max_abs_thz": 3.3384831219554864e-08,
+    "note": "phonopy full FCs at disp, on the supercell's commensurate q grid (not the 12^3 harmonic-layer mesh)"
+   },
+   "start_post_fpd": {
+    "min_nonac_thz": 1.56744427359804,
+    "lowest6_thz": [
+     0.0,
+     0.0,
+     0.0,
+     1.56744427359804,
+     1.56744427359804,
+     1.56744427359804
+    ],
+    "n_imag_nonac": 0,
+    "acoustic_max_abs_thz": 0.0
+   },
+   "dyn_meta": {
+    "nqirr": 4,
+    "nq": 27,
+    "nat_prim": 1,
+    "nat_supercell": 27
+   },
+   "stopping_criteria": {
+    "meaningful_factor": 0.0001,
+    "abs_conv_thr": 1e-08,
+    "kong_liu_ratio": 0.5,
+    "gradi_op": "all",
+    "minim_struct": true,
+    "max_ka": 20,
+    "max_pop": 8,
+    "n_configs_per_population": 256,
+    "root_representation": "root2",
+    "min_step_dyn": 0.5,
+    "precond_dyn": true,
+    "use_julia": false,
+    "semantics": {
+     "converged": "gc < gc_err*meaningful_factor (or < abs_conv_thr) AND the same for gw, gradi_op 'all' (SchaMinimizer.py:1622-1651)",
+     "population_end": "converged, or KL/N < kong_liu_ratio on a new line-search direction (SchaMinimizer.py:1654-1661), or max_ka",
+     "max_ka": "compared with the CUMULATIVE step history across populations (SchaMinimizer.py:1370; histories kept by Relax.py:386)",
+     "restore": "an unconverged population discards its last step (SchaMinimizer.py:1389-1397)"
+    }
+   },
+   "ensemble_dir": "results/revision/sscha_seeds/work/zr_bcc_mace_mp0_300K_sc333_seed0/hessian_ensemble",
+   "hessian": {
+    "min_nonac_thz": 1.54725682943981,
+    "lowest6_thz": [
+     -5.643873269846026e-09,
+     -4.6875701621926594e-09,
+     3.640267304396329e-09,
+     1.54725682943981,
+     1.54725682943981,
+     1.5472568294398104
+    ],
+    "n_imag_nonac": 0,
+    "acoustic_max_abs_thz": 5.643873269846026e-09,
+    "dynamically_stable": true
+   },
+   "final_aux": {
+    "min_nonac_thz": 1.5668854186248165,
+    "lowest6_thz": [
+     0.0,
+     0.0,
+     0.0,
+     1.5668854186248165,
+     1.5668854186248165,
+     1.566885418624817
+    ],
+    "n_imag_nonac": 0,
+    "acoustic_max_abs_thz": 0.0
+   },
+   "echo": {
+    "rel_change_final_aux_vs_start": 0.07921975184772086,
+    "rel_change_hessian_vs_final_aux": 0.02576777418173219,
+    "rel_change_hessian_vs_start": 0.05533480297075346,
+    "harmonic_along_hessian_softmode": {
+     "thz": 1.5674442735980403,
+     "degeneracy": 12,
+     "pols_orthonormality_err": 1.7763568394002505e-15
+    },
+    "start_along_hessian_softmode": {
+     "thz": 1.5674442735980398,
+     "degeneracy": 12,
+     "pols_orthonormality_err": 1.3322676295501878e-15
+    },
+    "final_aux_along_hessian_softmode": {
+     "thz": 1.5668854186248165,
+     "degeneracy": 12,
+     "pols_orthonormality_err": 1.7763568394002505e-15
+    }
+   },
+   "relax": {
+    "converged": true,
+    "n_populations": 1,
+    "n_populations_moving_dyn": 1,
+    "n_steps_kept_total": 20,
+    "n_steps_total": 20,
+    "n_force_evaluations": 768,
+    "populations": [
+     {
+      "pop": 1,
+      "n_steps": 20,
+      "n_steps_kept": 20,
+      "stop_reason": "converged",
+      "fe_first_Ry": -0.6338251989816398,
+      "fe_last_Ry": -0.6338257798703955,
+      "fe_err_last_Ry": 3.982736717934591e-06,
+      "gc_last": 3.328347002815403e-05,
+      "gc_err_last": 0.4330127018922193,
+      "kl_ratio_last": 0.8794775179238481,
+      "start_aux_min_nonac_thz": 1.56744427359804,
+      "end_aux_min_nonac_thz": 1.5668854186248162,
+      "rel_change_vs_prev_end": 0.07921975184772093,
+      "end_dyn_file": "results/revision/sscha_seeds/work/zr_bcc_mace_mp0_300K_sc333_seed0/dyn_pop1_1"
+     }
+    ],
+    "steps": [
+     {
+      "pop": 1,
+      "n_fe_cumulative": 2,
+      "fe_Ry": -0.6338251989816398,
+      "fe_err_Ry": 4.285399571022457e-06,
+      "gc": 0.07209494930973893,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 9.114672736012015e-21,
+      "kl_eff": 250.85162204452902,
+      "kl_ratio": 0.9798891486114415,
+      "aux_min_nonac_thz": 1.5673386751936556,
+      "line_step": 0.75,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 3,
+      "fe_Ry": -0.6338251989816398,
+      "fe_err_Ry": 4.285399571022457e-06,
+      "gc": 0.0445326271044205,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.107083185058883e-21,
+      "kl_eff": 250.85162204452902,
+      "kl_ratio": 0.9798891486114415,
+      "aux_min_nonac_thz": 1.5673386751936556,
+      "line_step": 0.75,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 4,
+      "fe_Ry": -0.6338260101206771,
+      "fe_err_Ry": 4.026655521627279e-06,
+      "gc": 0.0445326271044205,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.107083185058883e-21,
+      "kl_eff": 237.95237591839899,
+      "kl_ratio": 0.929501468431246,
+      "aux_min_nonac_thz": 1.5672247017028873,
+      "line_step": 1.125,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 5,
+      "fe_Ry": -0.6338260101206771,
+      "fe_err_Ry": 4.026655521627279e-06,
+      "gc": 0.01886172725084817,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.2376523769837e-21,
+      "kl_eff": 237.95237591839899,
+      "kl_ratio": 0.929501468431246,
+      "aux_min_nonac_thz": 1.5672247017028873,
+      "line_step": 1.125,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 6,
+      "fe_Ry": -0.6338257995146775,
+      "fe_err_Ry": 3.98495455806747e-06,
+      "gc": 0.01886172725084817,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.2376523769837e-21,
+      "kl_eff": 226.7927257255507,
+      "kl_ratio": 0.8859090848654324,
+      "aux_min_nonac_thz": 1.5671206093039753,
+      "line_step": 1.6875,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 7,
+      "fe_Ry": -0.6338257995146775,
+      "fe_err_Ry": 3.98495455806747e-06,
+      "gc": 0.0031601295957897446,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.209274258496627e-21,
+      "kl_eff": 226.7927257255507,
+      "kl_ratio": 0.8859090848654324,
+      "aux_min_nonac_thz": 1.5671206093039753,
+      "line_step": 1.6875,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 8,
+      "fe_Ry": -0.6338257414734078,
+      "fe_err_Ry": 3.984423638748355e-06,
+      "gc": 0.0031601295957897446,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.209274258496627e-21,
+      "kl_eff": 224.73047531182468,
+      "kl_ratio": 0.8778534191868151,
+      "aux_min_nonac_thz": 1.567034543413756,
+      "line_step": 2.53125,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 9,
+      "fe_Ry": -0.6338257502080943,
+      "fe_err_Ry": 3.984234581129754e-06,
+      "gc": 0.0007264851555367244,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.2912699248975186e-21,
+      "kl_eff": 224.99903816841848,
+      "kl_ratio": 0.8789024928453847,
+      "aux_min_nonac_thz": 1.5670454238235991,
+      "line_step": 2.2112505513984373,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 10,
+      "fe_Ry": -0.6338257575064298,
+      "fe_err_Ry": 3.984130407190872e-06,
+      "gc": 0.00036077630130792017,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.159316121422828e-21,
+      "kl_eff": 225.23180847852947,
+      "kl_ratio": 0.8798117518692558,
+      "aux_min_nonac_thz": 1.5670549287370847,
+      "line_step": 1.9317052843693405,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 11,
+      "fe_Ry": -0.6338257575064298,
+      "fe_err_Ry": 3.984130407190872e-06,
+      "gc": 0.0004020627081505454,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.121952923793328e-21,
+      "kl_eff": 225.23180847852947,
+      "kl_ratio": 0.8798117518692558,
+      "aux_min_nonac_thz": 1.5670549287370847,
+      "line_step": 1.9317052843693405,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 12,
+      "fe_Ry": -0.6338257720216016,
+      "fe_err_Ry": 3.983130435785141e-06,
+      "gc": 0.0004020627081505454,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.121952923793328e-21,
+      "kl_eff": 225.111400253363,
+      "kl_ratio": 0.8793414072396992,
+      "aux_min_nonac_thz": 1.566979369594554,
+      "line_step": 2.897557926554011,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 13,
+      "fe_Ry": -0.6338257702166792,
+      "fe_err_Ry": 3.983250898926096e-06,
+      "gc": 0.00013387071667845705,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 4.872032168466247e-21,
+      "kl_eff": 225.12682370669557,
+      "kl_ratio": 0.8794016551042796,
+      "aux_min_nonac_thz": 1.5669889217462363,
+      "line_step": 2.531250000119099,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 14,
+      "fe_Ry": -0.6338257702166792,
+      "fe_err_Ry": 3.983250898926096e-06,
+      "gc": 0.00012301577362234097,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.131494801115994e-21,
+      "kl_eff": 225.12682370669557,
+      "kl_ratio": 0.8794016551042796,
+      "aux_min_nonac_thz": 1.5669889217462363,
+      "line_step": 2.531250000119099,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 15,
+      "fe_Ry": -0.6338257770337379,
+      "fe_err_Ry": 3.982685011220933e-06,
+      "gc": 0.00012301577362234097,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.131494801115994e-21,
+      "kl_eff": 225.16834425951794,
+      "kl_ratio": 0.8795638447637419,
+      "aux_min_nonac_thz": 1.5669131800734935,
+      "line_step": 3.796875000178648,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 16,
+      "fe_Ry": -0.6338257761810099,
+      "fe_err_Ry": 3.982755607832756e-06,
+      "gc": 6.989175088839798e-05,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.386185521039469e-21,
+      "kl_eff": 225.16313649181745,
+      "kl_ratio": 0.8795435019211619,
+      "aux_min_nonac_thz": 1.5669227553005611,
+      "line_step": 3.3168758272537198,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 17,
+      "fe_Ry": -0.6338257754339307,
+      "fe_err_Ry": 3.9828174951228476e-06,
+      "gc": 5.558215131357614e-05,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 4.921222003148326e-21,
+      "kl_eff": 225.1585773219392,
+      "kl_ratio": 0.879525692663825,
+      "aux_min_nonac_thz": 1.5669311200318703,
+      "line_step": 2.8975579266903453,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 18,
+      "fe_Ry": -0.6338257747796564,
+      "fe_err_Ry": 3.9828717971272376e-06,
+      "gc": 4.746590252069617e-05,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.243902438164543e-21,
+      "kl_eff": 225.15458706668596,
+      "kl_ratio": 0.879510105729242,
+      "aux_min_nonac_thz": 1.5669384272977396,
+      "line_step": 2.531250000238198,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 19,
+      "fe_Ry": -0.6338257747796564,
+      "fe_err_Ry": 3.9828717971272376e-06,
+      "gc": 4.561911150012113e-05,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 4.930923960326861e-21,
+      "kl_eff": 225.15458706668596,
+      "kl_ratio": 0.879510105729242,
+      "aux_min_nonac_thz": 1.5669384272977396,
+      "line_step": 2.531250000238198,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 20,
+      "fe_Ry": -0.633825780606179,
+      "fe_err_Ry": 3.982717390523551e-06,
+      "gc": 4.561911150012113e-05,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 4.930923960326861e-21,
+      "kl_eff": 225.14503165219728,
+      "kl_ratio": 0.8794727798913956,
+      "aux_min_nonac_thz": 1.5668777475148674,
+      "line_step": 3.796875000357297,
+      "stop_converged": false,
+      "stop_kong_liu": false,
+      "stop_max_ka": false
+     },
+     {
+      "pop": 1,
+      "n_fe_cumulative": 21,
+      "fe_Ry": -0.6338257798703955,
+      "fe_err_Ry": 3.982736717934591e-06,
+      "gc": 3.328347002815403e-05,
+      "gc_err": 0.4330127018922193,
+      "gw": 0.0,
+      "gw_err": 5.4556344786249615e-21,
+      "kl_eff": 225.1462445885051,
+      "kl_ratio": 0.8794775179238481,
+      "aux_min_nonac_thz": 1.5668854186248167,
+      "line_step": 3.316875827409784,
+      "stop_converged": true,
+      "stop_kong_liu": false,
+      "stop_max_ka": true
+     }
+    ],
+    "hook_errors": [],
+    "units": {
+     "fe_Ry": "Ry per primitive cell (SchaMinimizer.get_free_energy)",
+     "gc": "norm of the preconditioned dyn gradient, python-sscha internal units",
+     "gw": "norm of the structure gradient, python-sscha internal units",
+     "kl_eff": "Kong-Liu effective sample size; kl_ratio = kl_eff / n_configs",
+     "alignment": "per step, fe/fe_err and kl are evaluated AFTER the step and gc/gw BEFORE it (minimization_step computes the gradient, then moves). The raw __fe__/__KL__ histories carry an extra leading entry from the first init() (SchaMinimizer.py:1150-1156), and one more after any population that ended in run()'s imaginary-frequency break, so index them by the steps' n_fe_cumulative, not by position."
+    },
+    "minimizer_raw_histories": {
+     "fe": [
+      -0.6338226081753303,
+      -0.6338251989816398,
+      -0.6338251989816398,
+      -0.6338260101206771,
+      -0.6338260101206771,
+      -0.6338257995146775,
+      -0.6338257995146775,
+      -0.6338257414734078,
+      -0.6338257502080943,
+      -0.6338257575064298,
+      -0.6338257575064298,
+      -0.6338257720216016,
+      -0.6338257702166792,
+      -0.6338257702166792,
+      -0.6338257770337379,
+      -0.6338257761810099,
+      -0.6338257754339307,
+      -0.6338257747796564,
+      -0.6338257747796564,
+      -0.633825780606179,
+      -0.6338257798703955
+     ],
+     "fe_err": [
+      4.819184021314172e-06,
+      4.285399571022457e-06,
+      4.285399571022457e-06,
+      4.026655521627279e-06,
+      4.026655521627279e-06,
+      3.98495455806747e-06,
+      3.98495455806747e-06,
+      3.984423638748355e-06,
+      3.984234581129754e-06,
+      3.984130407190872e-06,
+      3.984130407190872e-06,
+      3.983130435785141e-06,
+      3.983250898926096e-06,
+      3.983250898926096e-06,
+      3.982685011220933e-06,
+      3.982755607832756e-06,
+      3.9828174951228476e-06,
+      3.9828717971272376e-06,
+      3.9828717971272376e-06,
+      3.982717390523551e-06,
+      3.982736717934591e-06
+     ],
+     "gc": [
+      0.07209494930973893,
+      0.0445326271044205,
+      0.0445326271044205,
+      0.01886172725084817,
+      0.01886172725084817,
+      0.0031601295957897446,
+      0.0031601295957897446,
+      0.0007264851555367244,
+      0.00036077630130792017,
+      0.0004020627081505454,
+      0.0004020627081505454,
+      0.00013387071667845705,
+      0.00012301577362234097,
+      0.00012301577362234097,
+      6.989175088839798e-05,
+      5.558215131357614e-05,
+      4.746590252069617e-05,
+      4.561911150012113e-05,
+      4.561911150012113e-05,
+      3.328347002815403e-05
+     ],
+     "gc_err": [
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193,
+      0.4330127018922193
+     ],
+     "gw": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "gw_err": [
+      9.114672736012015e-21,
+      5.107083185058883e-21,
+      5.107083185058883e-21,
+      5.2376523769837e-21,
+      5.2376523769837e-21,
+      5.209274258496627e-21,
+      5.209274258496627e-21,
+      5.2912699248975186e-21,
+      5.159316121422828e-21,
+      5.121952923793328e-21,
+      5.121952923793328e-21,
+      4.872032168466247e-21,
+      5.131494801115994e-21,
+      5.131494801115994e-21,
+      5.386185521039469e-21,
+      4.921222003148326e-21,
+      5.243902438164543e-21,
+      4.930923960326861e-21,
+      4.930923960326861e-21,
+      5.4556344786249615e-21
+     ],
+     "KL": [
+      256.0,
+      250.85162204452902,
+      250.85162204452902,
+      237.95237591839899,
+      237.95237591839899,
+      226.7927257255507,
+      226.7927257255507,
+      224.73047531182468,
+      224.99903816841848,
+      225.23180847852947,
+      225.23180847852947,
+      225.111400253363,
+      225.12682370669557,
+      225.12682370669557,
+      225.16834425951794,
+      225.16313649181745,
+      225.1585773219392,
+      225.15458706668596,
+      225.15458706668596,
+      225.14503165219728,
+      225.1462445885051
+     ],
+     "good_kasteps": [
+      1,
+      3,
+      5,
+      9,
+      12,
+      17
+     ]
+    }
+   },
+   "bootstrap": {
+    "full_ensemble_min_nonac_thz": 1.54725682943981,
+    "n_configs": 512,
+    "antithetic_pairs_verified": true,
+    "identity_replicate": {
+     "min_nonac_thz": 1.5472568294398095,
+     "abs_diff_thz": 4.440892098500626e-16,
+     "tol_thz": 0.001,
+     "passed": true,
+     "wall_s": 2.38161301612854
+    },
+    "method": "bootstrap_antithetic_pairs",
+    "B": 30,
+    "values_thz": [
+     1.5481164940964594,
+     1.5468515722545002,
+     1.5436652805845967,
+     1.547129614065546,
+     1.5468585826464707,
+     1.5463712063787831,
+     1.5468372859921005,
+     1.5470924496184033,
+     1.546411246935422,
+     1.5459376991090708,
+     1.54484677394951,
+     1.5447656740102607,
+     1.5472599014825845,
+     1.5461480113948953,
+     1.5479086247168405,
+     1.5469379861426613,
+     1.546644957092915,
+     1.546270609847193,
+     1.547143369811511,
+     1.547839188848267,
+     1.5466303736316724,
+     1.5482727165753707,
+     1.543551067899052,
+     1.5491985072738497,
+     1.5474889638008205,
+     1.5474712267900517,
+     1.5495636313620915,
+     1.5491500168848458,
+     1.54922427222612,
+     1.548621087687043
+    ],
+    "n_ok": 30,
+    "mean_thz": 1.5470069464369636,
+    "std_thz": 0.0014934382022903333,
+    "p2_5_thz": 1.543633872096072,
+    "p97_5_thz": 1.5493175959885122,
+    "min_thz": 1.543551067899052,
+    "max_thz": 1.5495636313620915,
+    "frac_unstable": 0.0,
+    "wall_s_per_replicate": 2.3982093493143717
+   },
+   "configs": {
+    "path": "results/revision/sscha_seeds/configs_not_c3b/zr_bcc_mace_mp0_300K_sc333_seed0.extxyz",
+    "n_saved": 16,
+    "indices": [
+     0,
+     12,
+     23,
+     46,
+     121,
+     194,
+     196,
+     223,
+     261,
+     265,
+     285,
+     351,
+     379,
+     445,
+     455,
+     462
+    ],
+    "units": {
+     "positions": "Angstrom",
+     "energy": "eV",
+     "forces": "eV/Angstrom",
+     "rydberg_ev_used": 13.605691932782346
+    },
+    "unit_check": {
+     "index": 0,
+     "energy_saved_ev": -230.58658000939806,
+     "energy_reeval_ev": -230.58658000776506,
+     "abs_dE_ev": 1.6329977370332927e-09,
+     "max_abs_dF_ev_per_ang": 3.753365301895073e-08,
+     "tol_e_ev": 0.002,
+     "tol_f_ev_per_ang": 0.002,
+     "passed": true
+    },
+    "antithetic_pairs_verified": true,
+    "rng": "default_rng([20260927, seed])"
+   },
+   "wall_s": 130.86890983581543,
+   "utc_end": "2026-09-27T07:27:24Z",
+   "provenance": {
+    "git_head": "5531546",
+    "host": "db4a641a37b8",
+    "packages": {
+     "numpy": "2.2.2",
+     "scipy": "1.17.1",
+     "ase": "3.29.0",
+     "phonopy": "4.4.0",
+     "spglib": "2.7.0",
+     "torch": "2.6.0+cu124",
+     "pandas": "3.0.5",
+     "pyarrow": "25.0.1",
+     "pymatgen": "2026.5.4",
+     "python-sscha": "1.6.1",
+     "CellConstructor": "1.6.2",
+     "julia": null,
+     "mace-torch": "0.3.16"
+    },
+    "model_version": "mace-torch=0.3.16;ckpt=medium",
+    "device": "cuda",
+    "omp_num_threads": "12"
+   },
+   "ledger_comparison": {
+    "ledger_thz": null,
+    "this_thz": 1.54725682943981,
+    "abs_diff_thz": null,
+    "tol_thz": 0.02,
+    "reproduces_ledger": null,
+    "note": "no canonical sscha ledger row for this unit and supercell"
+   }
+  }
+ },
+ "v4": null,
+ "paths": {
+  "configs": "results/revision/sscha_seeds/configs_not_c3b",
+  "work": "results/revision/sscha_seeds/work",
+  "configs_are_c3b_input": false
+ },
+ "ledger": {
+  "source": "mlip_dynstab.analysis.load_canonical(), method == 'sscha'",
+  "found": false,
+  "n_rows": 0,
+  "other_supercells": [
+   {
+    "supercell": [
+     2,
+     2,
+     2
+    ],
+    "min_eff_freq_thz": 1.7971648303093835,
+    "uhash": "80d90630bc17d029"
+   }
+  ]
+ },
+ "provenance_last_run": {
+  "script": "scripts/sscha_seed_study.py",
+  "script_sha256": "56071e1de0c7c464596daba1e1b7dd49b098e448a4d7d8f68cb23f34ef8ea18e",
+  "finite_t_sha256": "ed801a9506a74f50158681956da2e7cf52dca493058734cf228f987e5b795e08",
+  "git_head": "5531546",
+  "git_dirty_production_code": [],
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T07:25:14Z",
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "packages": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "torch": "2.6.0+cu124",
+   "pandas": "3.0.5",
+   "pyarrow": "25.0.1",
+   "pymatgen": "2026.5.4",
+   "python-sscha": "1.6.1",
+   "CellConstructor": "1.6.2",
+   "julia": null,
+   "mace-torch": "0.3.16"
+  },
+  "env_lock": {
+   "lock_file": "envs/lock-mace-2026-08-17.txt",
+   "packages": {
+    "numpy": {
+     "pinned": "2.2.2",
+     "installed": "2.2.2",
+     "match": true
+    },
+    "scipy": {
+     "pinned": "1.17.1",
+     "installed": "1.17.1",
+     "match": true
+    },
+    "ase": {
+     "pinned": "3.29.0",
+     "installed": "3.29.0",
+     "match": true
+    },
+    "phonopy": {
+     "pinned": "4.4.0",
+     "installed": "4.4.0",
+     "match": true
+    },
+    "spglib": {
+     "pinned": "2.7.0",
+     "installed": "2.7.0",
+     "match": true
+    },
+    "torch": {
+     "pinned": "2.6.0+cu124",
+     "installed": "2.6.0+cu124",
+     "match": true
+    },
+    "pandas": {
+     "pinned": "3.0.5",
+     "installed": "3.0.5",
+     "match": true
+    },
+    "pyarrow": {
+     "pinned": "25.0.1",
+     "installed": "25.0.1",
+     "match": true
+    },
+    "pymatgen": {
+     "pinned": "2026.5.4",
+     "installed": "2026.5.4",
+     "match": true
+    },
+    "python-sscha": {
+     "pinned": "1.6.1",
+     "installed": "1.6.1",
+     "match": true
+    },
+    "CellConstructor": {
+     "pinned": "1.6.2",
+     "installed": "1.6.2",
+     "match": true
+    },
+    "mace-torch": {
+     "pinned": "0.3.16",
+     "installed": "0.3.16",
+     "match": true
+    }
+   },
+   "all_pinned_match": true
+  },
+  "omp_num_threads": "12",
+  "cpu": {
+   "os_cpu_count": 128,
+   "affinity": 128,
+   "cgroup_quota": 61.43999,
+   "usable": 61
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "cuda_device": "NVIDIA GeForce RTX 3090",
+  "julia_ext_available": false,
+  "julia_error": "",
+  "schamodules": {
+   "file": "/root/env-mace/lib/python3.11/site-packages/SCHAModules.cpython-311-x86_64-linux-gnu.so",
+   "ldd": [
+    "liblapack.so.3 => /lib/x86_64-linux-gnu/liblapack.so.3 (0x000073fe0ed45000)",
+    "libblas.so.3 => /lib/x86_64-linux-gnu/libblas.so.3 (0x000073fe0ec9f000)",
+    "libgfortran.so.5 => /lib/x86_64-linux-gnu/libgfortran.so.5 (0x000073fe0e9c4000)"
+   ]
+  },
+  "model_version": "mace-torch=0.3.16;ckpt=medium"
+ },
+ "calculator_fallback": false,
+ "summary": {
+  "seeds_ok": [
+   0
+  ],
+  "seeds_failed": [],
+  "seeds_running": [],
+  "hessian_min_nonac_thz": {
+   "n": 1,
+   "values": [
+    1.54725682943981
+   ],
+   "mean": 1.54725682943981,
+   "std": null,
+   "min": 1.54725682943981,
+   "max": 1.54725682943981,
+   "range": 0.0
+  },
+  "start_post_fpd_min_nonac_thz": {
+   "n": 1,
+   "values": [
+    1.56744427359804
+   ],
+   "mean": 1.56744427359804,
+   "std": null,
+   "min": 1.56744427359804,
+   "max": 1.56744427359804,
+   "range": 0.0
+  },
+  "final_aux_min_nonac_thz": {
+   "n": 1,
+   "values": [
+    1.5668854186248165
+   ],
+   "mean": 1.5668854186248165,
+   "std": null,
+   "min": 1.5668854186248165,
+   "max": 1.5668854186248165,
+   "range": 0.0
+  },
+  "harmonic_pre_fpd_min_nonac_thz": {
+   "n": 1,
+   "values": [
+    1.56744427359804
+   ],
+   "mean": 1.56744427359804,
+   "std": null,
+   "min": 1.56744427359804,
+   "max": 1.56744427359804,
+   "range": 0.0
+  },
+  "bootstrap_std_thz": [
+   0.0014934382022903333
+  ],
+  "seed_std_over_median_boot_std": null,
+  "calls_stable": [
+   true
+  ],
+  "all_seeds_same_call": true,
+  "n_populations": [
+   1
+  ],
+  "n_populations_moving_dyn": [
+   1
+  ],
+  "n_steps_kept_total": [
+   20
+  ],
+  "converged": [
+   true
+  ],
+  "reproduces_ledger": null,
+  "config_unit_checks_passed": [
+   true
+  ],
+  "bootstrap_method": [
+   "bootstrap_antithetic_pairs"
+  ],
+  "bootstrap_identity_passed": [
+   true
+  ],
+  "julia_ext_available": [
+   false
+  ],
+  "model_versions": [
+   "mace-torch=0.3.16;ckpt=medium"
+  ],
+  "v4_status": null,
+  "v4_min_nonac_thz": null,
+  "v4_false_roundtrip_ok": null
+ },
+ "last_written_utc": "2026-09-27T07:27:24Z"
+}

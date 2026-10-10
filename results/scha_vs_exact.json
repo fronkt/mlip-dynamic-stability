@@ -1,0 +1,39 @@
+{
+  "_generated_by": "scripts/scha_vs_exact.py",
+  "_what_this_is_not": "NOT a validation of SCHA accuracy. The exact isolated-mode criterion is the bimodality of the thermal density, which is temperature-independent because P -> exp(-V/kT) keeps a double well bimodal at any T. It cannot represent thermal stabilisation and is therefore not a finite-temperature reference.",
+  "_what_this_is": "a one-sided soundness check on the screen, plus a demonstration that the temperature dependence of the screen comes from the SCHA self-consistency rather than from the shape of the well",
+  "n_modes_tested": 228,
+  "n_solver_errors": 0,
+  "soundness_no_manufactured_condensations": {
+    "n_scha_condensed_but_exact_unimodal": 0,
+    "interpretation": "zero means every condensation the screen reports sits on a potential that genuinely has a displaced minimum"
+  },
+  "criterion_divergence": {
+    "n_exact_bimodal_but_scha_did_not_condense": 73,
+    "median_well_depth_meV_agree": 215.98052978515625,
+    "median_well_depth_meV_diverge": 27.87949034515691,
+    "interpretation": "divergence concentrates in shallow wells and grows with temperature, which is the expected signature of the exact criterion being temperature-blind rather than of SCHA error"
+  },
+  "temperature_dependence": {
+    "100": {
+      "n": 57,
+      "exact_bimodal_frac": 0.9649,
+      "scha_condensed_frac": 0.8596
+    },
+    "300": {
+      "n": 57,
+      "exact_bimodal_frac": 0.9649,
+      "scha_condensed_frac": 0.6667
+    },
+    "600": {
+      "n": 57,
+      "exact_bimodal_frac": 0.9649,
+      "scha_condensed_frac": 0.5614
+    },
+    "900": {
+      "n": 57,
+      "exact_bimodal_frac": 0.9649,
+      "scha_condensed_frac": 0.4912
+    }
+  }
+}

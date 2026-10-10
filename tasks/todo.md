@@ -1,169 +1,422 @@
-# mlip-dynamic-stability — phase checklist & resume state
+# RSC Advances major revision: phased plan (rewritten 2026-09-26)
 
-> Resume protocol: on a new session, read this file + `results/ledger.parquet`. The current
-> checkpoint is the lowest unchecked box. Per-unit work (system, model, T, method) is
-> idempotent — re-running skips tuples already in the ledger.
+**Manuscript** RA-ART-07-2026-006452. **Decision** major revision, 2026-09-11 (Assoc. Ed. Dr Lydia
+Rhyman). Referees: R1 major, R2 reject-leaning, R3 minor.
+**Committed date: 9 October 2026.** Frank emailed advances@rsc.org on 2026-09-26 07:04 UTC asking
+for time to that date. If it slips, send a follow-up before 9 Oct, not after.
+**Source of truth for what is open:** `tasks/audit-2026-09-26-rsc-revision.md` (18-agent audit,
+each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ...) refer to it.
+**Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
+false.
 
-## CURRENT STATUS (2026-06-22, pushed)
+## ▶ 2026-10-09 (late) — two new figures + length trim (Frank: "both figures plus the trim, but the revisions must stay fully emphasized")
 
-**Stage:** academic-pipeline Stages 2–4 COMPLETE (WRITE → REVIEW → REVISE). Next checkpoint =
-Stage 2.5 INTEGRITY pass, then deep-research DOI pass, then Stage 5 FINALIZE (DOCX/PDF).
+Why: body ~20.6k words / 53 Word pp, 6 figures, ~25 tables; the revision's three new results (PBE-lattice,
+E3 replicates, E5 lattice) have no figure. Rule for the trim: **nothing a response-letter "Changes." pointer
+names leaves the main text** unless the letter pointer is updated in the same commit; trim pre-revision
+methods detail and robustness tables first. Every moved block goes to the ESI verbatim, with a pointer left.
+- [x] F-A (7208006, results/figures/fig_lattice_flip; todo: MACE marker blue reads as "false-unstable", recolour or split legend) Lattice figure (BaTiO3/KNbO3 soft-mode call/frequency: PBE@PBE a, PBE@MACE a, base v fine-tuned
+      MLIPs at both lattices). Script function in `scripts/make_figures.py`, 600 dpi, numbered in citation order.
+- [x] F-B (7208006, fig_sscha_map; reproduces 27/77, 23/67, 7 unresolved, bcc 33/40) Converged-SSCHA results map (system x model x T; correct / false-stable / false-unstable;
+      E3-unresolved hatched; not-converged marked). Candidate to replace a Section 3.3 table.
+- [x] T1 Trim proposal (read-only; scratchpad/trim_proposal_2026-10-09.md: 21 moves, ~4.8k words, body -> ~14.3k): words per subsection, which blocks are revision-response content
+      (letter pointers), candidate moves to the ESI totalling 4–6k words. Frank sees it before edits.
+- [x] T2 (d01142a figures, ab8e576 manuscript+ESI, fbca187 letter) Trim applied: body prose 18,881 -> 15,939 words (-2,942), Word 53 -> 48 pp with two more figures; ESI 78 -> 84 pp. Moved verbatim to the ESI with pointers: derivation + constants + convention accuracies (S1.3), v1/v2 + amplitude + CHGNet tolerance (S1.2), cap + exact summary (S1.4), T* (new S1.5), stage-by-stage/v4 (S2.2), bcc production + fluorites + numerical failures (S2.3), bcc-Zr seed test + start-B failure taxonomy (S2.4, before S3), other screened modes (S5.1 end). Cut as repeats: Discussion H1/H2/SSCHA recaps (838 -> 455 w), Limitations PBE restatement, Conclusions, 3.2 small repeats, model-uncertainty AUC restatement. Kept on purpose: PBE lattice numbers in 3.2 (R1.1; also pinned), row 21 (6-epoch deviation is pinned by verify_claims and R2.1 honesty), "Why the default criterion" counts (all pinned). Figures: lattice = Fig. 3, map = Fig. 7, old 3-6 -> 4, 5, 6, 8; FIG_NUMBER + _check_numbering pass; MACE-MP-0 grey in Fig. 3. Letter: R1.1/R1.2/R1.4/R1.5/R2.1/R2.2/R3.3/R3.6/files pointers, R3.6 mapping sentence, "Other changes" bullet on the trim; PENDING-4x4x4 marker at R3.2 (text unchanged).
+- [x] T3 (ab8e576) Abstract 199 words, every verify_claims-pinned string kept, 23/73 SrTiO3 qualifier restored; drops the 19/19 harmonic line, 7-24 convention range and the fluorite sentence. rsc.org author page 403s to fetch, so the 200 figure is still third-party; verify_claims now checks <= 200. Frank: confirm in the portal.
+- [x] T4 verify_claims all pass (abstract check now <= 200); build_esi_tables --check up to date; renumber_refs --check (manuscript + ESI + letter) ok, refs 34-37 still cited in 2.4 (ESI copy now says "main-text refs 34 and 35 / 36 and 37"); figure first-citation order 1..8; drafts in scratchpad/draftbuild: manuscript 48 pp, marked manuscript 57 pp (496 revisions, 8 images), ESI 84 pp, marked ESI 87 pp; stale scan: letter, number_changes and ESI figure numbers updated, no "Fig." left on reviewed numbering outside the quoted referee text. NOTE for the 4x4x4 run: verify_claims asserts "no 4x4x4 SSCHA result exists" and will fail when results land.
+- [x] 4x4x4 SSCHA (R3.2) folded in 2026-10-10: HfO2/MACE-MP-0 600 K converged, -3.22 THz v -2.20 (call unchanged, no SD); SrTiO3 100 K x4 no call at the 9 h cap. Section 3.5 + Limitations (+84 words), ESI S2.4 new item, letter R3.2 rewritten, verify_claims checks the JSONs; all checks pass; drafts rebuilt (manuscript 48 pp, ESI 85 pp).
 
-**Process/progress:**
-- Data COMPLETE: ledger.parquet = harmonic (100) + softmode (400, 20 sys × 5 models × 4 T) +
-  SSCHA (211: bcc 75, fluorite 40, perovskite 93). Convergence/repro runs in
-  `results/convergence_study.parquet` (kept out of the production ledger).
-- Paper drafted: `paper/manuscript.md`, `paper/supplementary.md`, `paper/review.md` (referee
-  report = major revision; all data-grounded items addressed; compute items M5/m6 done).
-- 6 figures regenerate from the ledger via `scripts/make_figures.py`.
+## ▶ 2026-10-08 — fold everything in + re-check every referee ask (supersedes the "Next" lines below)
 
-**Headline findings (final framing):**
-1. H1 — harmonic model split: MatterSim/SevenNet acc 1.00; MACE/CHGNet/ORB carry 15%
-   false-stable from softening bcc Zr/Hf. (CHGNet's CeO2/NaCl false-unstables are marginal,
-   flip at ~0.25 THz tolerance.)
-2. H2 — harmonic accuracy is NECESSARY NOT SUFFICIENT for finite-T (the earlier "inversion
-   rho=-0.26" was a denominator artifact; matched set is weakly POSITIVE phi=0.11). Harmonic
-   leaders (MatterSim/SevenNet) are NOT the finite-T leaders (MACE/CHGNet best on displacive).
-3. SSCHA cautionary result (most novel): clean gold-standard for bcc (tracks softmode rho=0.78,
-   0 blowups) but systematically FALSE-STABLES displacive instabilities (FE perovskites recall
-   0.23 vs softmode 0.77; fluorites also false-stable though numerically clean). Root cause =
-   ForcePositiveDefinite + low-T narrow Gaussian + v4=False; v4=True impractical (>18min/unit).
-   Scoped to "SSCHA as deployed with MLIP force engine for a fixed reference."
-4. H3 guardrail — ensemble vote-split flags consensus error (AUC 0.75, 5.5x enrichment);
-   continuous freq-spread does not (AUC 0.52).
-- Robustness: SSCHA repro std 0.001 THz (<< margins); bcc call cell-robust; SrTiO3 R-point
-  needs even cells (2x2x2<->3x3x3 invalid for it; 4x4x4 = future work).
+Editor agreed to **9 Oct** (RSC, 09-28). The 14 Oct request is still an UNSENT Gmail draft (thread
+1a0dc7cfb8312bb1); Frank must send it on 10-08 or the revision is late.
+- [x] Converged grid results were never committed: committed f45e77e (178 units + grid_compare.json).
+- [x] E1 `dft_reference.py analyze --workers 1` (Windows: the process pool dies, use 1 worker): 1227/1227
+      jobs ok, C3a paths with PBE 93/139, flags 0. Outputs modified, not yet committed.
+- [x] E2 `dft_checks.py analyze-checks`: conv **NOT converged** (only CsSnBr3 k-mesh: depth −6.8% > 5%,
+      calls identical at all T, minimum at the edge of the Q range); xc: 15 PBE errors, **PBEsol fixes 9**
+      (8 of them CsSnBr3), 0 new; pbe-lattice phase A done (MLIP a within 0.1–0.8% of PBE), B/C pending.
+- [ ] Phase 1 (parallel, analysis only, no manuscript edits): E1+E2 fold note, E5 write-up vs prereg,
+      grid fold note (all PENDING-C1/C1b/C1c/C5/GRID markers), verbatim-report coverage matrix.
+- [ ] Phase 2: apply edits to manuscript/ESI/letter (one writer), new verify_claims assertions, Table S22.
+- [ ] Phase 3: adversarial re-audit against the verbatim reports; rebuild docx + marked changes.
+- [x] Phase 1 done (notes committed 67d9bdd). Grid: converged SSCHA keeps false-stables only on FE perovskites
+      (34/84; 21 of the old 57 survive, fluorite + high-T runaway were the unconverged recipe). E5: P2 refuted,
+      MACE ran 6 epochs not 30, fine-tuned models fix mis-calls only at their own (PBE-like) lattice.
+- [x] **Frank 10-08:** run ALL THREE (E3 replicates 65 units + MACE 30-epoch re-run on a GPU box; pbe-lattice
+      B/C on a QE box); ask the editor for **16 Oct** (draft rewritten in thread 1a0dc7cfb8312bb1, old draft
+      deleted; UNSENT, Frank sends); KEEP the title. Vast credit $12.63 at 10-08.
+- [x] Runners built (6348ee2 deviations E3 replace=False + E5 D4-D6, 976eede runners); fold applied (..65ddd08,
+      verify_claims 119/119). Remaining paper markers: PENDING-E3/E5/PL (+P4/P5 at packaging).
+- [ ] **Boxes LAUNCHED ~01:00 UTC 10-09** (both self-stop + watchdog): GPU **vast 54941182** (RTX 3090, EPYC 7742,
+      41 vCPU quota, $0.378/h, `ssh -p 29004 root@ssh4.vast.ai`, tmux gpu+watchdog, 20 h cap) = E3 130 jobs +
+      MACE 30 epochs; QE **vast 54941222** (EPYC 7D12, 61.4 vCPU quota, $0.228/h, `ssh -p 39884 root@ssh4.vast.ai`,
+      tmux qe+watchdog, 6 h cap) = pbe-lattice B/C. Pull + merge commands: scripts/box/as_run/README.md. Destroy after pull.
+- [x] **QE box DONE 02:52 UTC 10-09** (B 9/9, C 50/50, 0 failed); self-stopped unpulled, restarted 05:20, pulled,
+      59/59 merged, analyze-checks, commit b2c3f60 pushed, box DESTROYED. Read-out: PBE at the PBE lattice calls
+      BaTiO3 300 K and KNbO3 300 K stable (wrong); PBE at MACE's lattice (+0.26-0.31 %) gets both right (KNbO3 600 K and CsSnBr3 300/600 K stay wrong at both lattices) -> the
+      lattice, not only the PES, drives these false-stables (fits the E5 lattice confound). Fold into PENDING-PL.
+- [x] **GPU box DONE 10:34 UTC 10-09**; self-stopped unpulled 11:34, GPU re-rented (un-startable) -> relay
+      55031405 (Quebec; first relay 55017451 had a broken rsync daemon "setgroups failed"; relay needs
+      `mkdir -p /workspace` before `vastai copy`). Archive md5 ec428a54..., merged, commit 847ab04 pushed, GPU box
+      + relay DESTROYED, credit $7.67. Read-out: E3 51/65 with all 3 ok, same call 43/51, 8 unresolved, 14
+      incomplete (13 B failed + 1 missing). Every unresolved unit is a start-B value of -26 to -6230 THz
+      (blow-up) except ti_bcc_orb_v2_600K (seed10 -3.73 vs A +2.53); seed10 agrees with A everywhere else.
+      E5 MACE 30 ep: P1 supported (median 0.994), P2 3 supported / 2 refuted (BaTiO3 300, KNbO3 300 stay wrong
+      0/3), CsSnBr3 900 K newly wrong 0/3, P3 supported. Ties to PL: PBE itself at the PBE lattice calls
+      BaTiO3/KNbO3 300 K stable, so a PBE-faithful fine-tune inherits those errors.
+- [x] Fold E3 + E5(MACE30) + PL into manuscript / ESI / letter (resolve PENDING-E3/E5/PL): done 10-09, note
+      tasks/fold-E3E5PL-2026-10-09.md, verify_claims 206/206. Headlines moved: SSCHA false-stables 34/84 -> 27/77
+      (7 unresolved), FE recall 15/26 v 4/26 -> 14/22 v 4/22, paired 13 v 2 -> 12 v 2 (p 0.5), bcc 33/41 -> 33/40;
+      PBE at its own lattice makes the BaTiO3/KNbO3 300 K error (8-of-17 claim weakened); fine-tune estimate withdrawn.
+- [x] Final adversarial audit (4 blockers / 9 major / 17 minor, 0 wrong numbers) -> all fixed or justified,
+      tasks/audit-fixes-2026-10-09.md, 463a5ca; Section-sign pass done; verify_claims 215/215; abstract 247 words.
+- [x] Draft builds OK (0041c22): clean manuscript 53 pp + ESI 78 pp; marked changes 538 + 112 revisions vs 76d3a84.
+- [ ] **Release sequence, blocked on Frank's AI-use wording (DRAFT-FOR-FRANK):** remove marker -> merge
+      rsc-figure-fixes to main -> tag -> Zenodo new version under concept 10.5281/zenodo.20805799 -> fill PENDING-P5
+      -> final build_docx --pdf + build_marked_changes --pdf (no --allow-pending) -> drop PENDING-B1 in letter.
+- [ ] Portal at upload (Frank): ORCID link + transparent-review choice (PENDING-P4).
+- [ ] Optional cheap PBE runs if wanted: X-mode profile (audit M1), PBE forces on converged BaTiO3/KNbO3 100 K
+      ensembles (M6). Currently answered by qualified wording.
+- [ ] (superseded) GPU box at 05:20 UTC: E3 68/130 ended, 20 start-B failures (18 complex-dyn assertion, mostly
+      BaTiO3/KNbO3/PbTiO3 MACE+SevenNet; 1.0 THz retries also failing). Pre-registered path (retry once, report
+      as-is) -> no intervention. Seed-10 leg running clean. E5 P3 done; P1/P2 CHGNet pending.
+- [ ] Adversarial audit of the fold running -> tasks/audit-2026-10-08-fold.md.
 
-**NEXT STEPS (priority order):**
-1. Stage 2.5 INTEGRITY — read-through verifying every manuscript number vs the ledger.
-2. Deep-research DOI pass (referee m8) — per-system anharmonic-stabilization citations (the
-   evidentiary backbone of the ground-truth labels) are still placeholders.
-3. Stage 5 FINALIZE — render manuscript+SI to DOCX/PDF; Stage 6 process summary.
-4. Optional/future: 4x4x4 SrTiO3 SSCHA even-cell convergence; α-AgI symmetry-breaking probe.
+## ▶ 2026-10-04 — credit ran out ~19:20 UTC; both boxes were halted mid-queue (supersedes the box notes below)
 
-## P0 — Stage 1 research brief
-- [x] Novelty check vs npj-2025 + PhononBench (finite-T gap confirmed)
-- [x] docs/research_brief.md: lock wedge, curated set, metric defs, references
-- [ ] User confirmation of brief (MANDATORY Stage-1 checkpoint)  ← AWAITING USER
+- **What happened:** vast credit hit zero ~19:20 UTC 10-04; both instances went `exited` and every queue
+  died. Frank's $10 top-up (20:21 UTC) auto-restarted both containers with nothing running (tmux gone).
+  Box 1 had been idle since 13:25 UTC (CsSnBr3 ft_ 82/82 done; grid TOPUP_DONE 04:41) with no auto-stop,
+  ~6 h of paid idle. Lesson in tasks/lessons.md.
+- [x] **Box 1 (54043018) STOPPED 20:27 UTC, DESTROYED ~21:00 UTC (Frank: "destroy box 1 and rent a fresh gpu
+  when training is ready").** Full archive: `mlip-rsc-revision-raw/box1_final_2026-10-04.tar.gz` (525 MB,
+  20,193/20,193 files, gzip OK).
+- [x] **E5 RUN DONE 22:16 UTC (rc=0), pulled 22:24, box self-stopped, then DESTROYED (Frank, 10-04).** Raw:
+  `mlip-rsc-revision-raw/ft_gpu_results_2026-10-04.tar.gz` (498 MB, gzip OK). In git: dataset/, eval/ (32 runs,
+  missing []), p2cache/, sscha_converged_grid/, summary.json, logs/, models/ minus weights (WEIGHTS.sha256
+  verified against the archive; weights gitignored, 157 MB MACE checkpoints). Raw verdict labels, NOT yet
+  analysed: P1 MACE supported / CHGNet unresolved; P2 "corrected" at 300 K refuted for BaTiO3 + KNbO3 (both
+  models), "persist" supported for KNbO3 600 K + CsSnBr3 300 K, several CHGNet cells unresolved; P3 supported;
+  S2 MACE 6/6 controls unchanged. Next: write up E5 against the pre-registration (incl. unresolved cells).
+- [x] **E5 fine-tuning GPU box: vast 54202873** (RTX 3090, EPYC 7742 25.6 vCPU, 50 GB, $0.28/h, Saskatchewan,
+  label mlip-ft-2026-10-04), rented ~21:04 UTC so the env build overlaps box 2's last 8 ft_knbo3 jobs. Runner
+  `scripts/box/as_run/ft_gpu_2026-10-04.sh` (tmux `ft` + `watchdog`, log /root/logs/ft_runner.log): bootstrap
+  env-mace + env-chgnet -> waits for /root/ft_ready -> git pull, needs 246/246 ft_ -> runs the committed
+  `results/revision/finetune/train/box_sequence.sh` verbatim (log /root/logs/ft_sequence.log) -> RUN_DONE ->
+  45 min grace (touch /root/pulled to end it) -> self-stop; watchdog stops it if the runner dies or at 9 h.
+  Laptop side: when box 2 logs QE_FT_EXIT, pull ft_knbo3*, merge, commit+push, `touch /root/ft_ready` on the
+  GPU box. After RUN_DONE pull results/revision/finetune/{dataset,models,eval,p2cache,sscha_converged_grid,
+  summary.json} + /root/logs, then destroy it.
+- [x] Merged into the repo: 82 ft_cssnbr3 + 194 ax_ (box 1) and 82 ft_batio3 + 74 ft_knbo3 + 69 ax_ (box 2)
+  pw.out/pw.in.ran, each checked JOB DONE + pw.in.ran == pw.in == repo pw.in (0 mismatches). Local now:
+  **ft_ 238/246, ax_ 263/533.** Also the box-only SSCHA files: sscha_seeds/batio3_..._100K (C1b `v4` block),
+  sscha_converged/srtio3_..._{600,900}K_AB.json.
+- [x] **Grid: two units were stale locally.** srtio3_cubic_orb_v2_{600,900}K had been pulled mid-run
+  (status `running`); the box had the finished files (status ok, not converged, max_pop; Hessian −33,506 /
+  −10,459 THz = ORB blow-ups). Replaced (partials kept in mlip-rsc-revision-raw/local_partial_grid_2026-10-04/),
+  re-ran `--preset grid --summarize` + `grid_compare.py`: **converged-only numbers unchanged**; the all_ok
+  variants gain the two blow-ups (e.g. production_matched srtio3 above Tc false-unstable 12/12 -> 14/14).
+  No manuscript text used the old grid_compare.json.
+- [x] **Box 2 DONE + DESTROYED 10-05.** Queue finished 09:54 UTC (SELF_STOP "queue finished"; ax2 270 ok,
+  checks 321/321 ok, 0 failed). Restart was refused all day ("resources_unavailable", the GPU was re-rented),
+  so the disk came off via a relay: `vastai copy 54068206:<path>/ <relay>:/workspace/...` works with the source
+  STOPPED; the copied dir is invisible in the running relay (`d?????????`) until the relay is stopped and
+  started. Raw: `mlip-rsc-revision-raw/box2_final_2026-10-05.tar.gz` (34 MB, 7,545 files = relay count).
+  Merged + pushed 25d0527: **ax_ 533/533** (now tracked) and **dft_checks 323/323** (JOB DONE, SCF converged,
+  pw.in.ran == pw.in). Relays 54371240 (host CDI GPU error, never booted) and 54372222 destroyed; no instances
+  left, credit $12.91. **Next: `dft_reference.py analyze` (E1), `analyze-checks` (E2); pbe-lattice phases B
+  (FD supercells) + C (profiles) were never queued and need a QE box.**
+- [x] **Box 2 (54068206) RESUMED 20:30 UTC** via `scripts/box/as_run/resume_box2_2026-10-04.sh` (tmux
+  `resume` + `watchdog`, log /root/logs/resume.log): ft_knbo3 (8 left) -> ax_ (270 left, ~4-5 h) -> E2 checks
+  (321 jobs) -> **the box stops itself** when the queue ends, and the watchdog stops it after 30 min with no
+  pw.x. ETA ~06:00-08:00 UTC 10-05, ~$4-5 at $0.40/h (credit $9.92 at 20:22 UTC). Afterwards: pull
+  qe/ft_knbo3*, ax_*, dft_checks/qe back (merge_qe-style: JOB DONE + pw.in.ran check), then
+  `dft_reference.py analyze` (E1), analyze-checks (E2). **02:36 UTC 10-05: ft_ + ax_ (339/339) done, checks
+  66/321 (0 failed, started 01:50), ETA ~05:30-07:00 UTC; credit $16.05.**
+- [x] (Done 25d0527: rule removed, all 533 ax_ tracked.) `.gitignore:50` still ignores `results/revision/dft/qe/ax_*/` ("unselected C3a inputs (never run)"), which
+  predates E1. The 263 merged ax_ outputs are therefore NOT in git (they are in both raw archives and on both
+  box disks). Un-ignore ax_ pw.in/pw.in.ran/pw.out/job.json when E1 is analysed, as for a_/b_/ft_.
 
-## P1 — Project + env scaffold  [DONE except GPU smoke-test]
-- [x] Repo structure
-- [x] Model-agnostic calculator loader (lazy imports)
-- [x] Curated systems registry (configs/curated_systems.yaml) — 20 systems, verified
-- [x] Ledger (hashed parquet) — hash + idempotent append verified locally
-- [x] Harmonic + finite-T harness skeletons (py_compile clean)
-- [x] Per-model env setup notes (cu128)
-- [x] Local git init + initial commit (9c2599f)
-- [ ] Smoke-test each MLIP calculator on one structure (needs GPU box)
-- [x] GitHub remote + push (fronkt/mlip-dynamic-stability @ 9c2599f)
+## ▶ 2026-10-03 session (resumed; supersedes "Next session" items 1, and starts 2)
 
-## P2 — Layer 1 harmonic harness + validation  [MACE done]
-- [x] Phonopy finite-displacement pipeline end-to-end (Gamma-centered mesh)
-- [x] Harness validity: Si stable (+0.4 THz), SrTiO3 imaginary (-1.83 THz), all 6 controls correct
-- [x] MACE-MP-0 harmonic grid, 20 systems: acc 0.85, false-stable rate 0.154
-      KEY FINDING: false-stable on bcc Zr & Hf (MACE misses beta-Zr/Hf instability,
-      catches beta-Ti); false-unstable on KTaO3 (borderline quantum-paraelectric label).
-- [x] Other models harmonic grid — ALL 5 DONE (mace, chgnet, orb_v2, sevennet0, mattersim),
-      20 systems each, 0 errors. Per-model venv via `uv venv --system-site-packages` reusing
-      /venv/main torch 2.12+cu130; torch constraint file prevents downgrade.
-      HEADLINE (KTaO3 excluded, 19 systems): MatterSim & SevenNet acc=1.00 (0 false-stable);
-      MACE 0.895, ORB 0.842, CHGNet 0.789 — all three carry 15.4% false-stable rate from
-      softening bcc Zr/Hf soft modes to ~0. ORB also uniquely misses SrTiO3 (float32, reads
-      -0.0) and falsely calls MgO unstable (-2.8). MatterSim reproduces every soft mode large.
-- [ ] Optional: JARVIS reference cross-check (npj-style rates on shared materials)
-- CHECKPOINT: 5-model harmonic landed + pushed (32e67b7); KTaO3 integrity fix (2cd4cb6)
+- [x] 1. C3a/C3b analysed (`dft_reference.py analyze`, 448/448, 0 flags), adversarially verified, folded into
+  manuscript (§2.6 new, §3.2, §3.3, §4, abstract), ESI §S5 + Tables S19/S20, letter (R1.1, R1.2, R1.6, R2),
+  pinned in verify_claims (65/65). Claims ledger §10. **Headline: the shared BaTiO3/KNbO3 300 K mis-calls are
+  MLIP softening (wells 0.32–0.76 of PBE), NOT the screen; CsSnBr3 + KNbO3 600 K persist on PBE.** Commits
+  c1e69cd, cde10e7, 3481d57, 7583b0a.
+- [x] Corresponding e-mail -> cai485@purdue.edu in manuscript + cover letter (Frank). Portal record must match.
+- [ ] 2. GRID RUNNING on vast 54043018 (RTX 3090, 61 vCPU quota, $0.27/h, ssh -p 20473 root@201.188.77.20),
+  started ~17:52 UTC, 14 workers in tmux `grid` (3 mace/chgnet/sevennet/mattersim, 2 orb), ETA ~4-5 h.
+  Repo on box at c42b6e4 (ledger_lookup empty-row fix). Workers MUST be launched as `bash grid_run.sh ...; echo`
+  (a bare exec makes `timeout` the session leader -> setpgid EPERM -> instant silent exit).
+  When done: `--preset grid --summarize`, rsync results/revision/sscha_converged_grid back (+ work/ to raw
+  archive), destroy the box, then items 3-4.
+  Also on the box (same tmux session): window `v4` = C1b include_v4 on BaTiO3/MACE 100 K seed 0 (cap 4 h,
+  24 threads, log /root/logs/v4.log, result lands in results/revision/sscha_seeds/batio3_..._sc222.json `v4`);
+  window `sto_hiT` = converged (`--converge`, start A) SrTiO3/MACE 600 + 900 K (cap 2 h each, log
+  /root/logs/sto_hiT.log, JSONs in results/revision/sscha_converged/) — the grid stops at T <= 300 K for
+  non-bcc, and these decide whether the high-T runaway survives a converged relaxation (letter R1.2 marker).
+  rsync BOTH dirs back. Post-grid tooling: scripts/grid_compare.py + Table S22 (built 10-03, dry-run tested).
+  **Grid EXTENDED 10-03 (commit 96e40bf): + non-bcc 600/900 K set (7 systems x 2 T x 5 models; 178 units in
+  all)** so all 57 false-stables and Table S17 are converged. Runs from scripts/sscha_seed_study_grid2.py on
+  the box via window `topup` (scripts/box/grid2_topup.sh keeps 3/3/3/3/2 workers across both copies; logs
+  grid2_*.log, topup.log; TOPUP_DONE when every model's queue is empty). After landing:
+  `--preset grid --summarize` -> `python scripts/grid_compare.py` -> `build_esi_tables.py` (S22).
 
-## DECISION NEEDED (finite-T core)
-- one-shot TDEP (hiPhive) under-detects soft modes -> needs SSCHA or symmetry-broken sampling.
-- Options for next session: (A) implement SSCHA finite-T, (B) rattled-start MD symmetry-
-  breaking probe, (C) ship harmonic cross-model paper first, finite-T as follow-up.
+## ▶ 2026-10-03 evening — scope extension (Frank: "best rigor and publication odds; can move past Oct 9")
 
-## NOTE — ground-truth label review
-- [x] Reclassified KTaO3 as borderline=true in registry; analysis excludes borderline from
-      headline rates (reported as sensitivity probe). 4/5 MLIPs call it imaginary, confirming
-      the "stable" label was the questionable one. CeO2/NaCl KEPT as scored controls — they
-      are genuinely stable and only CHGNet marginally trips them (-0.24, just past -0.1 tol).
+Target date moved to **14 Oct** — Gmail DRAFT reply to advances@rsc.org in the extension thread
+(1a0dc7cfb8312bb1), NOT sent; Frank sends. Results landed: **C1b v4 finished: include_v4 +2.8784 vs
+bubble +2.8783 THz on BaTiO3 (no change)**; **SrTiO3/MACE 600 K converged +2.44 THz = STABLE (production
+-20.2): the high-T runaway was the unconverged recipe.** Letter R3.2 sentence "SSCHA never calls SrTiO3
+stable at any temperature" is now FALSE (C1c 100 K +1.13) — fix after the grid.
 
-## P3 — Layer 2 finite-T core  (needs GPU)  ← METHOD = 1D QUANTUM SCHA  [VERIFIED]
-- [x] First attempt: hand-rolled TDEP-lite — FAILED (ill-conditioned, -32..-40 THz). Purged.
-- [x] Second attempt: one-shot hiPhive TDEP-from-MD — under-detects (SrTiO3 +0.8 flat). Kept as
-      documented dead-end (compute_finite_t_hiphive).
-- [x] Third attempt: rattled-start MD order parameter — FAILED gate (shallow 3.5meV well melts).
-- [x] METHOD = `softmode` (compute_finite_t_softmode): relax -> phonopy harmonic FCs -> softest
-      COMMENSURATE mode via phonopy modulation (mask Gamma acoustic) -> static E(Q) double well
-      -> bounded quartic/sextic fit -> single-mode QUANTUM SCHA free-energy minimisation over the
-      order-parameter centroid Q0 (brentq self-consistent sigma). Stable iff cubic (Q0~0) is the
-      free-energy global min. E(Q) map is T-independent -> cached json; each T is a CPU solve.
-- [x] Wired into cli.py (method "softmode") + run_grid.py default (non-superionic).
-- [x] VERIFY on SrTiO3 PASSED (mace_mp0, 2x2x2): harm -2.089 THz; Q0 condensed ~0.14 below Tc,
-      melts to 0 at 150 K; eff_freq hardens -2.6 -> +1.8 THz through Tc~100-150 K (expt 105 K).
-- [x] Curated set × 5 models × T-ladder (100/300/600/900); 400 softmode ledger rows, 0 errors.
-- [x] SOUNDNESS FIX: softmode q-search restricted to FC-commensurate q (den-6-on-2x2x2 was
-      interpolating spurious flat-well modes); bcc uses 6x6x6 FCs.
-- [x] MULTI-MODE SSCHA added (user direction) for rigorous bcc: python-sscha+cellconstructor,
-      ASE-phonons bridge, free-energy Hessian. Validated PbTiO3 (-0.65 THz imaginary). bcc-Zr
-      dynamic-stabilization curve, 5 models x 5 T (25 rows): ALL stabilize bcc-Zr by <=50 K,
-      margin tracks harmonic depth (mattersim/orb closest to boundary ~0.4 THz @50K, mace
-      firmly stable ~1.8). KEY PHYSICS: bcc->hcp is martensitic, so dynamic-stabilization T
-      differs from thermodynamic Tc -> bcc gt label (Tc) is the wrong comparison for dynamic
-      stability; SSCHA dynamic-stabilization curve is the right bcc deliverable.
-- [x] CHECKPOINT: finite-T core complete (softmode primary + SSCHA bcc cross-check).
-- [x] SSCHA extended to bcc Ti/Hf (75 rows total, 0 blowups). 3-panel fig_sscha_bcc.
-- [x] SSCHA minimizer max_ka cap (fixes 40-atom perovskite step-collapse/timeout; 63c5cc1).
-- [x] CROSS-VALIDATION + REFRAME (e241213): SSCHA = bcc gold-standard (tracks softmode rho=0.78);
-      FE-perovskite SSCHA fails (false-stable, displacive recall 0.23 vs softmode 0.77; +numerical
-      blowups). Root cause diagnosed (ForcePositiveDefinite + low-T narrow Gaussian + v4=False;
-      v4=True impractical >18min/unit). User-confirmed REFRAME (option A). analysis: sscha_reliability,
-      displacive_recall, family-aware method_agreement. figs: method_agreement (bcc), displacive_recall.
-- [x] Full SSCHA grid incl. cubic FLUORITES (zro2/hfo2): numerically clean (0 blowups) but still
-      false-stable at low T -> confirms cautionary result is methodological, not numerical.
-- [x] max_ka cap fix for perovskite minimizer step-collapse; SSCHA seed param added.
+- **BOX 2 (CPU, Frank OK 10-03): vast 54068206, EPYC 7763, 122.9-core quota, $0.39/h, `ssh -p 36065
+  root@211.21.106.81`, QE 7.5 + SSSP at /root/qe, /root/sssp (SSSP_CHECK ok), repo clone at f61f1d0, tmux `qe`.**
+  Runs the PBE work (ax_ now; ft_ and cv_/xs_/pl_ when their inputs are built). DESTROY when its queue is empty.
+- **Box 2 queue order (22:35 UTC 10-03), unattended:** ft_ (246 jobs, ~1180 core-h, log qe_ft.log) ->
+  remaining ax_ (log qe_ax2.log) -> cv_/xs_/pl_vcrelax checks (log qe_checks.log), via /root/after_ft.sh.
+  ax_ was stopped mid-run to put the fine-tuning data first (critical path); ax_ jobs cost ~2 core-h each
+  on CsSnBr3/Zr, ~8x the cost model. Smoke: PBEsol on PBE pseudos RUNS ("XC functional enforced from
+  input"); the failure was QE d_matrix 14 on CHGNet BaTiO3 -> check inputs now inherit nosym (bb1578b).
+  vc-relax ran ok for BaTiO3 and KNbO3 (check the parser on them). pl phase B/C still to do after A.
+  When box-1's grid ends: give box 1 the PBEsol/conv checks or part of ax_ (generate inputs there too).
+- **OOM 22:48 UTC 10-03:** ft_ at `-r 8 -n 15` (8 pools) = ~34 GB/job x 15 on a 126 GB box -> 49 jobs
+  killed (rc 137/139). Relaunched `-r 16 -n 7 -k 1` (~8 GB actual per job, 57 GB used). Failed jobs rerun
+  automatically (pw.out.failed). after_ft.sh checks also use -r 16 -n 7 -k 1. ft_ ETA ~11:00 UTC Sun.
+- **ft_ split (23:50 UTC 10-03):** box 2 is ONE 64-core EPYC exposed as 128 SMT threads and is
+  memory-bandwidth-bound; CsSnBr3 40-atom jobs need ~7 core-h and ~20-34 GB. So: **CsSnBr3 ft_ (82) on box 1**
+  (window ft_csb, `-r 8 -n 5 -k 4`, log /root/logs/qe_ft_csb.log; raise -n to 7 once the grid ends) and
+  **BaTiO3/KNbO3 ft_ (164) on box 2** (window ft, `-r 8 -n 7 -k 4`, ~5.9 GB/job, log qe_ft.log; after_ft.sh
+  then runs ax_ + checks there). ETA all ft_ ~Sun 12:00-13:30 UTC; box 2 should help with leftover CsSnBr3
+  once its oxides finish. Credit $14.44 at 23:44 UTC, burn ~$0.66/h -> TOP-UP NEEDED (Frank).
+- [ ] E1 Full PBE coverage: 533 ax_ jobs — 194 finished on box 1, then its queue was stopped; the other 339
+      run on box 2 (window ax, 15x8 ranks, log /root/logs/qe_ax.log). rsync qe/ax_* back from BOTH boxes.
+      (gotcha: `pkill -f qe_queue.sh` over ssh kills the ssh command itself; use `pkill -f "[q]e_queue.sh"`)
+      -> then `dft_reference.py analyze` -> update §S5/Table S19 (PBE now covers every mode).
+- [ ] E2 DFT convergence (cv_), PBEsol (xs_), PBE-lattice/eigenvector (pl_) stages — subagent building.
+- [ ] E3 Converged repeats — PRE-REGISTERED tasks/preregistration-repeats-2026-10-03.md (d816906); start B +
+      --conv-seed 10 on the selected units after the grid.
+- [ ] E4 Reproducibility: CI workflow, scripts/reproduce.sh, results/MANIFEST.sha256, Holm-adjusted p's,
+      H2 power analysis — subagent building.
+- [ ] E5 Fine-tuning trial (R2.1) — PRE-REGISTERED tasks/preregistration-finetune-2026-10-03.md (033b3d8):
+      MACE-MP-0 + CHGNet, 3 replicates, 3 systems (CsSnBr3 = negative control), held-out = all C3a/C3b PBE.
+      Tooling subagent building scripts/finetune_trial.py; ~300 core-h PBE (ft_ jobs) + ~2 GPU-h.
+- [ ] E6 System expansion: NOT in this revision; report the power analysis (n needed) as future work.
 
-## P4 — Analysis & figures  [DONE]
-- [x] Confusion matrices + false-stable rates (per_model_table, low_t_false_stable ±bcc)
-- [x] Harmonic-vs-finite-T decomposition H2 (h2_paired_summary: phi/McNemar, matched denominator)
-- [x] Ensemble-disagreement calibration H3 (h3_guardrail_summary: AUC 0.75 vote-split)
-- [x] Extras: sscha_reliability, displacive_recall, harmonic_tolerance_sweep, method_agreement
-- [x] 6 figures: sscha_bcc, softmode_heat, method_agreement, displacive_recall,
-      ensemble_guardrail, tolerance_sweep
+## ▶ RESUME HERE — paused 2026-09-27 at Frank's request ("pause after the runs are done, save everything")
 
-## P5–P7 — Write / review / finalize (academic-pipeline stages 2–6)
-- [x] Stage 2 WRITE — manuscript.md + supplementary.md
-- [x] Stage 3 REVIEW — review.md (internal referee report, major revision)
-- [x] Stage 4 REVISE — all data-grounded items + compute items (M5/m6) addressed
-- [x] Stage 2.5 / 4.5 INTEGRITY — full number-vs-ledger read-through DONE (2026-06-22). Verified
-      ~30 quantitative claims against ledger.parquet + convergence_study.parquet; ~26 exact. Fixed:
-      (1) §3.1 ORB false-stable MISATTRIBUTION — ORB's 2 false-stables are Hf(-0.09)+SrTiO3(-0.0),
-      NOT "Zr/Hf"; it correctly catches Zr(-0.43). (2) §3.3 method-agreement GARBLE — "Spearman
-      rho=0.78 rising to 0.78 excl-ORB" conflated two stats: full-set Spearman=0.78/sign-agree=0.64;
-      excl-ORB the SIGN AGREEMENT rises to 0.78 while Spearman DROPS to 0.63. (3) §3.2 Tc prose
-      vs registry: BaTiO3 403->393, KNbO3 676->708. (4) seed-repro (+1.798±0.001) is print-to-log
-      only, not in any parquet -> softened "all results regenerate from ledger" in manuscript +
-      supplementary. Minor: ZrO2 softmode "-7 to -8"->"-6.4 to -8"; HfO2 "exactly"->"same SSCHA
-      pattern"; PbTiO3 T* added ORB outlier note. Stale "Stage 2 / [PENDING]" header refreshed.
-- [x] Deep-research DOI pass (referee m8) DONE (2026-06-22). 18 web-verified references built into
-      manuscript "References": methods [1-5], 5 model papers [6-10], per-system finite-T ground-truth
-      backbone [11-18] (SrTiO3 Tadano PRB92; BaTiO3/KNbO3/PbTiO3 Zhong-Vanderbilt-Rabe PRL73;
-      CsPbI3 Marronnier ACS Nano12; CsSnI3/Br Chem Mater 2023; bcc Ti/Zr/Hf Petry+Heiming PRB43;
-      ZrO2/HfO2 Parlinski PRL78 + CGD 2023; AgI Wood-Marzari PRB76; KTaO3 Ranalli AdvQT6). Controls
-      via DFPT DB [3]. Inline cites added in intro/2.1/2.2/2.4/2.5. NO recalled DOIs - every DOI
-      confirmed via WebSearch. Also fixed PhononBench count 1.3e5->1.1e5 (actual 108,843). research_
-      brief.md sec 8 + curated_systems pointer closed out.  ← NEW INTEGRITY FIX folded in
-- [x] Figure 1 conceptual overview schematic (4cf542a) — excalidraw-diagram skill, src in
-      paper/fig1_src/; embedded as lead figure + referenced from intro.
-- [~] Stage 5 FINALIZE — DOCX DONE (manuscript.docx + supplementary.docx via pandoc, figures
-      embedded). PDF-via-Word COM hangs against the user's open Word session; DOCX is the
-      deliverable (all target journals accept Word). PDF optional later.
-- [x] Journal targeting (academic-paper-reviewer): target = Digital Discovery (RSC); prestige
-      reach = npj Comput Mater. Requirements/formatting notes captured in chat + memory.
-- [x] Fig 1 schematic REMOVED (user rejected as unprofessional); data figs renumbered Fig. 1–6.
-- [x] Digital Discovery formatting DONE (faef42e): RSC superscript citations + RSC reference list,
-      author/affiliation block (placeholder), Conflicts, Data availability + Zenodo, ESI; DOCX
-      regenerated; .zenodo.json added.
-- [x] Author set (sole: Frank Cai, Purdue, ORCID 0009-0003-0041-1459) in manuscript + .zenodo.json.
-- [x] Zenodo archive live (v1.0.0): https://doi.org/10.5281/zenodo.20805824, inserted into Data
-      availability. Figures inline Fig. 1–6. SUBMISSION-READY for Digital Discovery.
-- [ ] Optional: Stage 6 process summary; submit to Digital Discovery; 4×4×4 SrTiO3 SSCHA convergence.
+**Done and pushed (branch `rsc-figure-fixes`):** Phase 2 stats; Phase 3 text (manuscript, ESI S1–S18, figures,
+TOC, README, DAS); response letter rewritten + 3 referee-simulation critiques + fact-check; packaging tools
+(`build_docx.py`, `build_marked_changes.py`, `renumber_refs.py`); C2, C4, C1, C1c, C5 results; Fig. 2 replaced.
+Everything that feeds the paper is in `tasks/revision-claims-2026-09-27.md` (§9 = later corrections).
 
-## Lessons
-See tasks/lessons.md.
+**Compute results (all committed under `results/revision/`):**
+- C2 force spread (R2.2): pre-registered primary AUC 0.681, CI [0.416, 0.908] → NOT shown; committees 0.72–0.73;
+  no-overlap check 0.314 → the signal is extrapolation on overlapping configs. Folded into §3.4/§4/§5 + Table S18.
+- C4 displacement sweep, all five models: MACE/MatterSim/SevenNet no flips; CHGNet controls only; ORB-v2 test systems.
+- C1 (production SSCHA recipe, 4 seeds): NONE converged; `max_ka=20` is a CUMULATIVE cap in python-sscha 1.6.1,
+  and the library passes a placeholder gradient error (Ensemble.py:2657). BaTiO3 Hessian +2.87 ≈ its
+  ForcePositiveDefinite start +2.88. SrTiO3 600 K seeds −15.8…−20.3. MACE Zr 2×2×2 +1.80 → 3×3×3 +1.55.
+- **C1c converged SSCHA (real error, per-population cap, two starts):**
+  BaTiO3/MACE 100 K +2.03 (A) / +1.85 (B at 1.0 THz) → STILL stable vs unstable label;
+  SrTiO3/MACE 100 K +1.13 / +1.02 → stable vs label (T_c 105 K; production had −0.49);
+  ZrO2/MACE 100 K −22.4 / −26.0 → UNSTABLE, correct (production +3.09 was the non-convergence);
+  MatterSim Zr 2×2×2: 50 K +0.41/+0.41, 300 K +0.92/+0.93; **3×3×3 300 K −0.92/−0.95** (bcc 2×2×2 stability is a
+  finite-size effect). BaTiO3 start B at 0.3 THz fails (complex-dyn assertion) — the 1.0 THz retry is in `_b1/`.
+- **C3a PBE along the screen paths (6 systems incl. KNbO3, CsSnBr3): 380/380 pw.x jobs JOB DONE. C3b PBE on
+  SSCHA configs + rattled baseline: 68/68 JOB DONE.** Queue logs: 377 + 68 ok, 0 SCF-not-converged; the 3 C3a
+  failures (QE d_matrix error 14 on the CHGNet-relaxed, slightly off-cubic BaTiO3 cell:
+  `a_batio3_cubic_chgnet_q0-0-0-b0_i00`, `..._q1d2-1d2-0-b0_i00`, `..._i01`) were rerun with `nosym=.true.`
+  (pw.in edited by hand; original in `pw.in.orig_sym`, reason in `NOSYM_NOTE.txt`, failed output in
+  `pw.out.failed`) → ok. job.json does not record nosym; **do not run `qe-inputs --force`** on these three or
+  analyze will mark their outputs `stale_output`. NOT YET ANALYZED. Everything committed (5549086, 222465e):
+  `results/revision/dft/{geom,geom_c3b,mlip,qe,logs}`; `.gitattributes` keeps that tree byte-exact because
+  analyze hashes the geometry files and byte-compares pw.in with pw.in.ran (verified: committed blob sha =
+  working copy = the `geom_sha256` MLIP-eval recorded on the box). Not in git: the 533 unselected `ax_*` C3a
+  inputs (never run) and pw.err (gfortran IEEE notes only) — both in the raw archive.
+- **Box 52872517 DESTROYED 2026-09-27 ~22:32 UTC** after all runs finished (vast credit left $17.80). Nothing
+  runs anywhere. Raw archives in `C:\Users\frank\mlip-rsc-revision-raw\` (local only, not yet on Zenodo):
+  `box_final_2026-09-27.tar.gz` (64 MB, 6,093 files, verified count + gzip: full `results/revision/dft`,
+  C1c `sscha_converged{,_b1}` incl. `work/` ensembles, box `logs/`, `aside/`, c1c/c3b driver scripts);
+  `sscha_work_2026-09-27.tar.gz` (C1 seeds); `dft_c3a_2026-09-27.tar.gz` (superseded by box_final). The C1c
+  `work/` ensembles are also extracted into the repo tree (gitignored). A new box needs `setup_rsc_box.sh` +
+  the as-run notes in `scripts/box/as_run/README.md` (SSSP API URL).
+- **Found by the letter integrator:** the screen's symmetric-point curvature is positive BY CONSTRUCTION (= trial
+  stiffness), so "52/57" was circular; the informative count is the screen CALL (46/57). Fixed everywhere; lesson
+  in `tasks/lessons.md`. H2's 17 v 4 depends on the frozen-cell convention (7 v 4 to 24 v 4).
+
+**Next session, in order:**
+1. `python scripts/dft_reference.py analyze` on the committed C3a/C3b outputs (runs locally, no box) → R1.1 (does the PBE-backed screen reproduce
+   the MLIP calls on BaTiO3/KNbO3/CsSnBr3? decides whether the H2 counterexamples are screen error or model error) and
+   R1.2 (MLIP force error on SSCHA-sampled vs near-equilibrium configs). Adversarially verify before writing.
+2. Decide the converged-SSCHA GRID (`--preset grid`, ~105 units, start A, ~5–7 GPU-h, ~$4): needed if §3.3 keeps a
+   screen-vs-SSCHA comparison; the paper's SSCHA numbers are otherwise unconverged. **Code ready, NOT run**
+   (`--preset grid`, reviewed; 113 units = 58 displacive T<=300 K + 10 SrTiO3 + 45 bcc 3x3x3 at 100/300/600 K;
+   start A; `scripts/box/grid_run.sh` runs a COPY `scripts/sscha_seed_study_grid.py`; est. ~40 serial GPU-h =
+   ~4-5 h wall with 14 workers (3 per env, 2 for ORB; check GPU memory on a 24 GB card), worst case much longer at
+   the 7200 s unit cap; all five envs on the old box had SSCHA, a rebuilt box must too). NOT covered by the grid:
+   non-bcc 600/900 K and bcc 50/200 K, which §3.3's false-unstable counts, the 57-unit ladder and Fig. 3 use —
+   decide whether to extend or to scope the claims to what is re-measured. Copy the 4 overlapping C1c startA
+   JSONs only if their recipe matches (the summary flags `other_recipe`).
+3. **Title (Frank):** the second clause "nor a default SSCHA cross-check" now rests on: converged SSCHA still calls
+   BaTiO3/SrTiO3 stable at 100 K but gets ZrO2 right; the production "default" failure was partly our step cap.
+   Bring Frank a concrete proposal with the grid numbers.
+4. Phase 4 fold-in: all PENDING markers (manuscript 23, ESI 16, letter 23); rebuild Figs. 3, 4, 5 from converged SSCHA
+   (Fig. 4's x-axis is the positive-by-construction curvature — redesign or drop).
+5. Phase 6 package: `renumber_refs.py --letter`, `build_docx.py --pdf`, `build_marked_changes.py --pdf`, CRediT
+   (done), AI-use (Frank's choice: `paper/response/ai_use_statement_DRAFT.md`), DAS, merge to main + tag, Zenodo
+   (include `C:\Users\frank\mlip-rsc-revision-raw\` archives).
+6. Phase 7 fresh adversarial re-audit; Phase 8 Frank uploads by 9 Oct.
+
+**Frank's open decisions:** title (after the grid), AI-use wording, gmail vs cai485@purdue.edu.
+
+## Decisions (Frank, 2026-09-26)
+
+- [x] **Title approved:** "Neither harmonic benchmarks nor a default SSCHA cross-check certifies a
+  foundation machine-learning interatomic potential for finite-temperature dynamic stability".
+  The title is an existence claim (harmonically correct models that are wrong at finite T exist),
+  so it survives the clustering result below. The *significance* wording under it does not.
+- [x] **Rent a machine** for the compute arm (Phase 1). vast.ai credit was $11.63 on 09-26; Frank
+  to top up if the run needs more.
+- [x] **Transparent peer review: opt in** ("sure, or your call"). Precondition: the R1.3 decline
+  paragraph is rewritten neutrally before upload (Phase 5).
+- [x] Corresponding e-mail: **cai485@purdue.edu** (Frank, 2026-10-03) — Purdue RSC read-and-publish covers the APC; Purdue affiliation + portal record must match.
+- [x] **Converged-SSCHA grid: RUN IT** (Frank, 2026-10-03), `--preset grid`, start A, on vast.ai credit.
+- [x] AI-use statement: **Frank writes it himself** (2026-10-03) — insert nothing; at packaging, remind him the Acknowledgements need it before upload.
+
+---
+
+## Phase 0 — Setup (09-26)
+
+- [x] 0.1 Archive the old plan; write this one.
+- [x] 0.2 Commit the audit file and this plan on `rsc-figure-fixes` (6717c4b).
+
+## Phase 1 — Compute on the rented box (critical path, 09-26 → ~09-29)
+
+One box: GPU for the MLIPs and SSCHA, ≥30 real cores (read `cpu.max`, not `nproc`) for DFT.
+Nothing writes to `results/ledger.parquet` except C4 (which uses method `harmonic_dispsweep`).
+Every study writes its own JSON/parquet under `results/revision/` and records the env lock.
+
+- [ ] **C1 SSCHA seeds + diagnostics (R1.4).** `scripts/sscha_seed_study.py`. Four seeds each on
+  batio3/MACE/100 K (the Table S2 false-stable), zro2/MACE/100 K (fluorite false-stable),
+  zr_bcc/MatterSim/50 K (a bcc unit that HAS a harmonic instability; the old study used MACE Zr,
+  which has none), srtio3/MACE/600 K (high-T false-unstable runaway). Per run, persist: number of
+  populations, per-population gradient and free-energy history, converged flag, lowest frequency
+  after ForcePositiveDefinite (the start), final Hessian lowest-6, and a bootstrap-over-configs
+  spread of the lowest Hessian eigenvalue (the Hessian uncertainty R1.4 asks for). Save a subsample
+  of the final ensemble (positions + MLIP forces/energies) for C3b.
+- [ ] **C1b include_v4=True** on batio3/MACE/100 K with a hard time cap (try the julia backend). If it
+  finishes, it is the only direct test of "the truncation is what goes wrong"; report either way.
+- [x] **C2 Force-level ensemble uncertainty (R2.2).** DONE 09-27 (5ad84cd): pre-registered primary AUC 0.681, CI [0.416, 0.908] → NOT SHOWN; committees 0.72-0.73 (CI just above 0.5) but the no-overlap check (g) gives 0.314 on 43 units → the signal is extrapolation onto overlapping configurations, not wrong calls. `scripts/force_spread.py`. Quantum
+  phonon-rattled configurations at each ladder T from ensemble-mean harmonic FCs (|ω| for imaginary
+  modes); evaluate all five models plus two within-architecture committees (MACE-MP-0
+  small/medium/large, MatterSim 1M/5M). Scores: cross-model force RMS deviation per (system, T) for
+  the consensus test, and per-model deviation from the ensemble mean for the per-unit test. Clustered
+  AUC, with and without ORB-v2.
+- [x] **C3a PBE along the soft-mode coordinates (R1.1).** RUN 09-27: 380/380 JOB DONE (3 via nosym rerun); analysis pending. `scripts/dft_reference.py` + QE (conda-forge),
+  SSSP pseudopotentials. SrTiO3 R tilt, BaTiO3 Γ/deciding mode (each model's pattern), bcc-Zr N
+  point, ZrO2 X point. All five MLIPs re-evaluated on the identical geometries. Outputs: E(Q) curves,
+  well depths, and the single-mode screen's call re-solved on the PBE-fitted potential.
+- [x] **C3b PBE forces on SSCHA-sampled configurations (R1.2).** RUN 09-27: 68/68 JOB DONE; analysis pending. 12–16 configurations per C1 unit.
+  MLIP-vs-PBE force and energy error on thermally sampled configurations, against a near-equilibrium
+  baseline. This is the out-of-distribution test R1.2 asks for.
+- [x] **C4 Displacement sweep, remaining four models.** DONE 09-27 (a27e1e3): MACE/MatterSim/SevenNet no flips; CHGNet controls only; ORB-v2 flips test systems. `scripts/run_disp_sweep.py --device cuda`.
+- [ ] **C5 bcc finite-size, re-measured.** zr_bcc SSCHA 2×2×2 vs 3×3×3 at 100 and 300 K for
+  MatterSim and MACE-MP-0 in the current envs (the deposited 3×3×3 rows are June v1).
+- [x] C6 Pull everything back; destroy the box the moment it is idle. DONE 09-27 ~22:32 UTC (see RESUME block).
+
+## Phase 2 — Zero-compute statistics and sensitivity (parallel with Phase 1)
+
+- [x] **S1 H2 clustered.** (e81c904) System-clustered exact paired test at every ladder T, with and without
+  ORB-v2, per-system discordance counts, and a leave-one-system-out check. Into
+  `stats_hardening.py` / `.json` and `verify_claims.py`. (R1.6, R3.1, R3.3-H2)
+- [x] **S2 bcc call agreement** on `pred_stable` (31/45, ex-ORB 25/36), with the 12 trivially
+  agreeing MACE/CHGNet pairs split out (23/33) and MatterSim's 3/9. Curvature-sign agreement kept,
+  labelled as such. (R1.1 residue, R3.5)
+- [x] **S3 ORB-v2 split everywhere (R3.5):** four-model guardrail (AUC 0.628, CI spanning 0.5, tie
+  rule stated), H2 ladder, family recalls, controls, tolerance sweep, SSCHA blow-ups and failures per
+  model.
+- [x] **S4 SSCHA high-T false-unstables** table (0/5/10/15 by T; SrTiO3 all above-Tc units; the 14/23
+  sign reversals). (R1.2)
+- [x] **S5 Screen sensitivity (R1.5).** `scripts/screen_sensitivity.py` → `results/screen_sensitivity.json`
+  and one ESI table: fit-window multiplier and floor, sampling-range truncation, frozen-cell
+  normalisation convention (minimal / common FC cell / per f.u. / doubled), with mode flips, unit
+  flips, FE recall and the SrTiO3 gate as columns. Plus unbracketed wells and scan-edge Q0 counts.
+- [x] **S6 Literature (verified before use):** `tasks/refs-2026-09-26.md` fine-tuning refs for R2.1; ACR 59, 103 and AEM
+  10.1002/aenm.71046 on their merits for R1.3; published PBE values to cross-check C3a.
+
+## Phase 3 — Manuscript and ESI text (after Phase 2, ~09-28 → 10-01)
+
+DONE 09-27 (4decd1b) from `tasks/revision-claims-2026-09-27.md`; T1–T11 all applied and adversarially
+reviewed (manuscript, ESI Tables S14–S17, figures 600 dpi RGB + upload/Fig1–6.tif, TOC 8×4 cm + 235-char blurb,
+README, DAS). Added: S7 local-vs-global criterion (`criterion_blindness`, da7cf29): SSCHA false-stables
+reproduced by the screen's own curvature on 52/57. PENDING markers remain for C1/C1b/C2/C3a/C3b/C5/P5.
+
+- [ ] T1 H2 reworded everywhere: large and one-directional in unit counts, not significant at
+  system level (clustered p 0.15 at 300 K, 0.07 at 600 K); the screen-T* confound stated.
+- [ ] T2 bcc: call vs curvature agreement relabelled in §3.3, Fig. 4, §S1.3, §S4; "clean gold standard"
+  and "tracks" removed; the MACE-Zr robustness tests described as what they are until C5 lands.
+- [ ] T3 §3.3 mechanism: "consistent with the truncation predicted in ref 22"; Table S2 described
+  correctly; the v4 contradiction (583-593 vs 600-605) resolved; OOD hypothesis stated.
+- [ ] T4 High-T SSCHA false-unstables reported and discussed (§3.3/§4), including SrTiO3.
+- [ ] T5 R1.5: ESI derivation fixes (cell normalisation, Q definition, threshold 0.0075 Å, root
+  fallback, parity assumption), coupling premise ("hundreds of meV" is false), sensitivity table.
+- [ ] T6 R1.4 text: §2.5 initialiser (phonopy FCs, 0.03 Å), real stopping criteria, sample sizes.
+- [ ] T7 ESI §S2.4 rewritten to match §3.5 (R3.2); §S4 tolerance outcome; stale numbers (Zr −0.47,
+  hf_bcc flip direction, the −2×10⁶ attribution, float64 attribution, factor ≈12, "absent at 100 K",
+  "ORB weakest", "the reordering").
+- [ ] T8 R2.1 fine-tuning paragraph cited, and it says which findings fine-tuning could and could not
+  change; scope in abstract and Conclusions.
+- [ ] T9 R1.3 wording fixes (GAP, GNoME, Matbench), refs renumbered in citation order, style.
+- [ ] T10 Figures: Fig. 2 recaptioned (screen curvature, not harmonic) + colorbar fixed; Fig. 4
+  caption and −35 THz annotation; model names in legends; numbered 600-dpi RGB TIFFs.
+- [ ] T11 Abstract ≤ 250 words; every rate with k/n and an interval.
+
+## Phase 4 — Fold compute results (~09-30 → 10-02)
+
+- [ ] F1 C1/C1b → §3.3, §3.5, §S2.4, Table S11 (+ new seed table). Report whichever way it falls.
+- [ ] F2 C2 → §3.4, §4, Table S9. C3a/C3b → new §3.x paragraph + ESI section + table.
+- [ ] F3 C4 → Table S13 complete; C5 → §3.5 finite-size sentence.
+- [ ] F4 `verify_claims.py` assertions for every new number; `build_esi_tables.py --check` green.
+
+## Phase 5 — Response letter (~10-02 → 10-03)
+
+- [ ] L1 Rewrite on the final numbers: every audit letter-slip fixed; the moved numbers disclosed
+  (H2 clustering, bcc label, ex-ORB guardrail, R3's ORB premises); no [PENDING], no internal
+  checklist, no DRAFT banner.
+- [x] L2 R1.3 paragraph rewritten neutrally (transparent review), ACR/AEM considered on merits. (checked 10-03; ref count -> 46)
+
+## Phase 6 — Package (~10-03 → 10-05)
+
+- [ ] P1 Clean manuscript.docx + supplementary.docx from the .md (figures embedded at 600 dpi).
+- [ ] P2 Marked-changes manuscript against `manuscript-as-reviewed.md` (and ESI).
+- [ ] P3 TOC graphic regenerated from the ledger (no ranking claim) + blurb ≤ 250 characters.
+- [ ] P4 CRediT roles; AI-use statement; affiliation; corresponding e-mail per Frank.
+- [ ] P5 DAS names the new scripts/outputs; merge `rsc-figure-fixes` → `main`; tag; new Zenodo version.
+- [ ] P6 Short cover note to Dr Rhyman; response letter exported to .docx/.pdf; stale PDF/cover
+  letter quarantined.
+
+## Phase 7 — Verification before done (~10-05 → 10-06)
+
+- [ ] V1 Fresh adversarial re-audit of the final package against the verbatim reports.
+- [ ] V2 Every number in manuscript + ESI + letter traced to the ledger or a deposited JSON.
+- [ ] V3 Built .docx files re-scanned for stale phrases and the old title.
+
+## Phase 8 — Frank (~10-06 → 10-09)
+
+- [ ] Read-through; confirm AI-use wording and e-mail; upload; opt in to transparent review; link
+  ORCID. If anything slips past 9 Oct, e-mail the editor before 9 Oct.
+
+---
+
+## Standing traps for this repo
+
+- `disp` is not in the unit hash; sweep rows must use method `harmonic_dispsweep`.
+- The matched set's `str.contains("bcc")` also drops `agi_bcc` (n = 15). Documented; do not "fix".
+- `h3_ensemble_guardrail` defaults to `method="tdep"`, for which no rows exist.
+- Regenerate through `analysis.canonical()`, never raw `load_ledger()`.
+- Unit-level p-values on the clustered sets are not quotable as evidence (R3.3); every new test
+  clusters by system.
+- ACCESS CHE260157 is STS-only: never for this paper.

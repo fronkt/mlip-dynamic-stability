@@ -1,0 +1,38 @@
+name: verify
+
+# CPU-only re-analysis checks: the paper's numbers against the deposited ledger, the ESI generated
+# tables (the results/ manifest check joins at deposition). No GPU, no MLIP package, no network beyond pip.
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: envs/ci-requirements.txt
+
+      - name: Install the minimal pinned requirements
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r envs/ci-requirements.txt
+
+      - name: Assert the paper's numbers against the ledger
+        run: python scripts/verify_claims.py
+
+      - name: ESI generated tables are up to date
+        run: python scripts/build_esi_tables.py --check
+
+      # The results/ manifest check (python scripts/make_manifest.py --check --strict) is added back
+      # at deposition (tasks/todo.md P5): while the revision is still producing results it would fail
+      # on every push that adds one.

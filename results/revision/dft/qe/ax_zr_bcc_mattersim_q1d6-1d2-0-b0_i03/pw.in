@@ -1,0 +1,41 @@
+&CONTROL
+  ! job ax_zr_bcc_mattersim_q1d6-1d2-0-b0_i03, written by scripts/dft_reference.py
+  ! pseudo_dir is taken from $ESPRESSO_PSEUDO (exported by scripts/box/qe_queue.sh)
+  calculation = 'scf'
+  prefix = 'pwscf'
+  outdir = './scratch'
+  disk_io = 'none'
+  tprnfor = .true.
+  tstress = .false.
+  verbosity = 'low'
+/
+&SYSTEM
+  ibrav = 0
+  nat = 6
+  ntyp = 1
+  ecutwfc = 30.0
+  ecutrho = 240.0
+  occupations = 'smearing'
+  smearing = 'mv'
+  degauss = 0.02
+/
+&ELECTRONS
+  conv_thr = 6.000d-10
+  mixing_beta = 0.4
+  electron_maxstep = 200
+/
+ATOMIC_SPECIES
+Zr 91.2240 Zr_pbe_v1.uspp.F.UPF
+CELL_PARAMETERS angstrom
+  1.7924521773 1.7924521294 -1.7924521043
+  5.3773565831 -1.7924521087 1.7924521760
+  1.7924521208 -5.3773564442 -5.3773564254
+ATOMIC_POSITIONS angstrom
+Zr 0.0250000000 0.0079721700 -0.0202426200
+Zr 7.1448087113 -3.5928764435 -3.5646616036
+Zr 5.3273565513 -1.8083964735 -1.7519668536
+Zr 5.3523565021 -5.3853286077 -5.3571137690
+Zr 3.6099043321 -3.5769321177 -3.6051468790
+Zr 1.8424521621 -1.7765078077 -1.8329373690
+K_POINTS automatic
+14 8 6 0 0 0

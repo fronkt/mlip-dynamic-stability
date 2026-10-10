@@ -1,0 +1,10 @@
+# sha256 of the 9 pbe-lattice phase-B pw.in, generated 2026-10-08 locally (python 3.12, numpy 2.3.5, ase 3.28.0, phonopy 3.5.1, spglib 2.7.0) from the committed phase-A outputs (pl_*_vcrelax) with SSSP_1.3.0_PBE_efficiency.json sha256 2c8642a7...814a. Check from results/revision/dft_checks/qe: grep -v '^#' <this> | sha256sum -c
+4ffa76cda69653f7ce708b3861a24b478ae2e47642f481ff7328090c54a5bbcf  pl_batio3_cubic_fd01/pw.in
+f90341104116d5f6b3694e95638402ac3fd4bb980edd01ba6ba0d55100874228  pl_batio3_cubic_fd02/pw.in
+04e6365bc6a65596fb0b7578c813d3aeb399f32b46d428d1dbc67fcebe05ef74  pl_batio3_cubic_fd03/pw.in
+d360da65e9ff56e22c79d78aac85b36051af2bf87642d046d9fd7f5dc128bc7c  pl_cssnbr3_cubic_fd01/pw.in
+efd084b78df394c764a7de825d9929ed8789f02bbf6f60ced66015200d7534b9  pl_cssnbr3_cubic_fd02/pw.in
+fba07ef5e86d282d60a43a8429c01c50c2bb626f4f01adc7e510b6578e3b21df  pl_cssnbr3_cubic_fd03/pw.in
+1bc04a3266891f2ea9913b05ae3462e4764ac057e9e0f542a6472b0ccf52f36f  pl_knbo3_cubic_fd01/pw.in
+37754b0c81e4815decb2428753e637d4ff5bdd324dec1f2b54a723e36022a149  pl_knbo3_cubic_fd02/pw.in
+a048fda0a8127d225caecabddc075aff26162a6f977086817d0342027360b7f8  pl_knbo3_cubic_fd03/pw.in

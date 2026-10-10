@@ -198,3 +198,85 @@
   softens broadly: SrTiO3 reads -0.0 (uniquely missed) and it falsely calls MgO unstable
   (-2.8). Rule: report per-system min_freq across models, not just binary rates — the
   "softening toward zero" is the physics, and float32-only direct models (ORB) need a caveat.
+
+---
+
+## 2026-09-11 — RSC revision session
+
+**Fixing a criticism in one place while committing it in another.** Referee 3's sharpest point
+was that the guardrail AUC treated system-clustered units as independent. I fixed that in §3.4,
+then two sections away introduced a NEW paired screen-vs-SSCHA test that made exactly the same
+error, and wrote "every test below resamples whole systems" one section after the test that
+didn't. Clustered properly it was p = 0.125, not 2e-7. **Rule: when a referee names a
+methodological defect, grep the whole paper for the pattern, not just the passage they cite —
+including anything added in the same revision.**
+
+**Verify what a diagnostic measures before writing prose around it.** Twice this session a
+plausible-looking analysis measured nothing:
+- "Max acoustic residual" computed as the three smallest-|ω| of the recorded lowest-six. On a
+  deeply unstable spectrum the acoustic zeros are not in that window at all, so it was reading
+  optical modes. Replaced with "are the three zeros resolvable at all", which is interpretable.
+- The exact-1D solver looked like a free validation of SCHA accuracy. It calls 96.5% of modes
+  condensed at EVERY temperature, because P → exp(−V/kT) keeps a double well bimodal forever.
+  An isolated 1D mode cannot thermally stabilise, so it is not a finite-T reference. Reframed.
+
+**Denominators before comparisons.** The §3.2 table put a 19-system harmonic column beside a
+15-system finite-T column, and the paper's flagship illustration lived entirely in the gap. On
+matched systems the effect vanished. **Rule: any two columns compared in a sentence must be
+scored on the same units, and the caption must say so.**
+
+**Adding a swept parameter to a hashed ledger has two failure modes, not one.** Leaving `disp`
+out of the hash means re-runs are silently skipped; putting it in changes every deposited hash.
+The resolution is to exclude the production value and retag departures to their own method name
+— otherwise the sweep rows share `method_version` with production, pass `canonical()`, and
+inflate every harmonic denominator in the paper.
+
+**Heredoc escape trap, hit twice.** `
+` inside Python written through a bash heredoc lands as a
+real newline and breaks the string. Use Write/Edit for any Python containing escapes; `ast.parse`
+before running.
+
+---
+
+## 2026-09-27 — RSC revision, compute + rewrite session
+
+**An observable that is positive by construction is not evidence.** I promoted "the screen's own
+symmetric-point curvature is positive on 52/57 SSCHA false-stables" to the §3.3 mechanism, the claims
+ledger and verify_claims. For one mode with an even potential that curvature equals the SCHA trial
+stiffness MΩ², so it is positive whenever a bound Gaussian exists; the negatives are solver fallbacks.
+The August audit (audit-2026-08-16.md:146-152) had already written this down; a letter-integrator agent
+caught it. **Rule: before an agreement/count becomes evidence, ask what it would be under the null, and
+whether the quantity can take the other value at all. Re-read the project's own audits for the identity.**
+
+**Check convergence before interpreting a stochastic solver's number.** The production SSCHA never
+converged: `max_ka` is a CUMULATIVE step cap in python-sscha 1.6.1 (SchaMinimizer.py:1370), so after
+population 1 each population takes one discarded step, and the Hessian sits at the ForcePositiveDefinite
+start (BaTiO3: start +2.88, final +2.87 THz). The library also passes a placeholder gradient error
+(Ensemble.py:2657 returns ones), so `meaningful_factor` is an absolute threshold. The 2026-06-22 lesson
+above already said "don't trust a converged SSCHA freq without checking the aux dyn moved off the
+ForcePositiveDefinite start" — and the paper headlined it anyway for three months. **Rule: every
+reported stochastic-solver value carries its convergence flag and its distance from the start; a
+headline without them is not a result.**
+
+**Seed agreement is not convergence.** Four seeds agreeing to 0.007 THz looked like robustness; they
+agreed because all four stopped at the same deterministic start. Report start-dependence (two different
+starts), not just seed spread.
+
+---
+
+## 2026-10-04 — rented boxes idled, then died on credit (Frank: "You were supposed to stop it automatically")
+
+**A shutdown that depends on a future session noticing is not a shutdown.** The plan said "destroy the
+box" when the grid ended and "DESTROY when its queue is empty" for box 2, but both were manual steps for a
+session that no longer existed. Box 1 finished at 13:25 UTC and billed idle for ~6 h; then the credit ran
+out ~19:20 UTC and killed box 2's queue mid-job (8 KNbO3 fine-tuning jobs lost, ax_ + checks never
+started). The two failures share one root: nothing on the box itself enforced the end state. **Rule:
+every queue launched on a rented box ends with a self-stop (PUT state=stopped with the container's own
+`CONTAINER_API_KEY`; see scripts/box/as_run/resume_box2_2026-10-04.sh), plus an independent idle
+watchdog (no worker process for 30 min -> self-stop). Stop, not destroy: the disk survives for the pull.
+Size the queue against the credit balance at launch and say the run-out time out loud.**
+
+**A pull taken while the box is still writing is a snapshot, not the result.** The grid's two ORB-v2
+SrTiO3 600/900 K units were copied back as `running` partials and the analysis was built on them; the box
+finished them 10-50 min later. **Rule: pull only after the queue's end marker (TOPUP_DONE / QUEUE end),
+and check that no unit in the summary is `running` before building on it.**

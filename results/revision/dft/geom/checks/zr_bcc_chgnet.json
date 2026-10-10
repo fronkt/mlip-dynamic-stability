@@ -1,0 +1,202 @@
+{
+ "paths": {
+  "zr_bcc_chgnet_q1d3-2d3-0-b0-refmattersim": {
+   "role": "ref",
+   "n_atoms": 9,
+   "check": {
+    "pass": null,
+    "note": "reference path: no cached map for this coordinate under this model",
+    "stable_model_check": {
+     "softest_regen_thz": 0.6651073251475921,
+     "softest_cache_thz": 0.664846034490169,
+     "q_regen": [
+      0.16666666666666666,
+      0.0,
+      0.0
+     ],
+     "q_cache": [
+      0.0,
+      0.8333333333333334,
+      0.16666666666666666
+     ],
+     "pass": true
+    }
+   },
+   "ref_pattern_stem": "zr_bcc_mattersim_q1d3-2d3-0-b0",
+   "lattice_scale": 0.999021204313813,
+   "lattice_transform_offdiag_max": 1.1335540953627577e-08,
+   "this_model_freqs_at_q_thz": [
+    1.1313852215473787,
+    1.7819981822497541,
+    3.0774727394055015
+   ],
+   "ref_pattern_check": true,
+   "ref_pattern_standin": false
+  }
+ },
+ "system": "zr_bcc",
+ "model": "chgnet",
+ "status": "done",
+ "cache_file": "results/cache/softmode_v3m24_zr_bcc_chgnet_sc666.json",
+ "cache_sha256": "2e15bd12bc38c4459ddf83278a7092f93389af830a176c024f0c320ba8eef528",
+ "fc_supercell": [
+  6,
+  6,
+  6
+ ],
+ "relaxed_prim_cell": [
+  [
+   -1.790697731817596,
+   1.7906977018535926,
+   1.7906977229577723
+  ],
+  [
+   1.7906977270151696,
+   -1.7906976874409584,
+   1.79069770374271
+  ],
+  [
+   1.7906977231956942,
+   1.7906976788190556,
+   -1.7906977085451377
+  ]
+ ],
+ "harmonically_stable_in_cache": true,
+ "deciding": {
+  "by_T": {
+   "100": {
+    "T": 100.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "300": {
+    "T": 300.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "600": {
+    "T": 600.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "900": {
+    "T": 900.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   }
+  },
+  "lowest_T": 100.0,
+  "idx_lowest": 0,
+  "idx_all": [
+   0
+  ],
+  "all_agree": true
+ },
+ "mode_list": {
+  "n_imag_total_regen": 0,
+  "n_imag_total_cache": 0,
+  "regen": [],
+  "cache": [
+   {
+    "q": [
+     0.0,
+     0.8333333333333334,
+     0.16666666666666666
+    ],
+    "band": -1,
+    "harm_thz": 0.664846034490169
+   }
+  ],
+  "stable_check": {
+   "softest_regen_thz": 0.6651073251475921,
+   "softest_cache_thz": 0.664846034490169,
+   "q_regen": [
+    0.16666666666666666,
+    0.0,
+    0.0
+   ],
+   "q_cache": [
+    0.0,
+    0.8333333333333334,
+    0.16666666666666666
+   ],
+   "pass": true
+  }
+ },
+ "wall_s": 3.9,
+ "provenance": {
+  "script": "scripts/dft_reference.py",
+  "stage": "geom",
+  "git_head": "5531546",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.5",
+   "torch": "2.6.0+cu124",
+   "mace-torch": null,
+   "chgnet": "0.4.2",
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": "1.6.1",
+   "cellconstructor": "1.6.2"
+  },
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T07:12:29Z",
+  "settings": {
+   "stage": "geom",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "srtio3_cubic",
+    "batio3_cubic",
+    "zr_bcc",
+    "zro2_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "model": "chgnet",
+   "device": "cuda",
+   "force": false,
+   "no_recover": false,
+   "recover_max_atoms": 12,
+   "harm_tol": 0.02
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "model": "chgnet",
+  "env_lock": {
+   "lock": "envs/lock-chgnet-2026-08-17.txt",
+   "mismatches": {}
+  },
+  "model_version": "chgnet=0.4.2",
+  "device": "cuda"
+ }
+}

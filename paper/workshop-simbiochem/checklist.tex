@@ -1,0 +1,45 @@
+\section*{SIMBIOCHEM Submission Checklist}
+
+%%% BEGIN INSTRUCTIONS %%%
+For SIMBIOCHEM II this checklist is \textbf{highly encouraged but not enforced}. Omitting it, or answering \answerNo{}/\answerNA{}, is \emph{not} grounds for desk rejection. Its purpose is to encourage responsible research and transparency --- in particular the \textbf{disclosure of AI/LLM use} and adherence to \textbf{research-integrity} norms. The checklist does not count towards the page limit and should follow the references and any appendices.
+
+For each item you choose to answer, use \answerYes{}, \answerNo{}, or \answerNA{}, followed by a short (1--2 sentence) justification. You may delete this instruction block but please keep the section heading.
+%%% END INSTRUCTIONS %%%
+
+
+\begin{enumerate}
+
+\item {\bf Claims}
+    \item[] Question: Do the main claims in the abstract and introduction accurately reflect the paper's contributions and scope?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: The abstract and introduction state exactly the three pre-registered findings reported in Section~3 (the harmonic-level model divide, the finite-temperature accuracy gap, and the SSCHA default-truncation false-stabilisation) and the ensemble guardrail result, with no broader claim made.
+
+\item {\bf Limitations}
+    \item[] Question: Does the paper discuss the limitations of the work?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: Section~4 states the approximate/qualitative ground-truth labels, the 2$\times$2$\times$2 SSCHA cell size, the ORB-v2 float32 outlier status, and the single-mode screen's inability to capture mode--mode coupling; Appendix~C tabulates every declared approximation with its expected bias.
+
+\item {\bf AI / LLM disclosure} \emph{(important)}
+    \item[] Question: Does the paper disclose any use of AI/LLMs in the research or writing (e.g., ideation, code generation, data processing, drafting), in line with the NeurIPS LLM policy?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: An AI coding/writing assistant (Claude) was used throughout the underlying research repository, under the author's direction, to implement the benchmark harness and analysis code and to draft and audit manuscript text, and was used to condense this workshop submission from the full-length manuscript under review elsewhere. The author reviewed, verified against the results ledger, and takes full responsibility for all reported results and text.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item Briefly describe the scope of any AI/LLM assistance. The authors remain fully responsible for the correctness, originality, and integrity of all content.
+    \end{itemize}
+
+\item {\bf Research integrity \& originality}
+    \item[] Question: Do you confirm that this is an original submission --- not a duplicate or lightly tweaked resubmission, nor one of multiple versions of the same work submitted to this workshop --- and that you comply with research-integrity guidelines?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: This is the only submission of this work to this workshop. A full-length version is concurrently under review at a journal, which the SIMBIOCHEM CFP explicitly permits (``currently under review elsewhere''); no tweaked duplicate has been or will be submitted here.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item SIMBIOCHEM runs mechanisms to detect the same paper being submitted multiple times with tweaks. Such attempts are reported to OpenReview and NeurIPS as misconduct and are desk-rejected.
+    \end{itemize}
+
+\item {\bf Reproducibility} \emph{(optional)}
+    \item[] Question: Where applicable, does the paper provide enough information (data, code, settings) to reproduce the main results?
+    \item[] Answer: \answerYes{}
+    \item[] Justification: All results derive from an append-only, per-unit-hashed ledger regenerable from the pinned per-model environments and cached intermediate free-energy maps described in Appendix~A; code and data will be released at a persistent archive upon acceptance (withheld pre-acceptance for double-blind review).
+
+\end{enumerate}

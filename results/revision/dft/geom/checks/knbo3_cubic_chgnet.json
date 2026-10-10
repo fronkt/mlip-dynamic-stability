@@ -1,0 +1,274 @@
+{
+ "paths": {
+  "knbo3_cubic_chgnet_q0-0-0-b0": {
+   "role": "decide",
+   "n_atoms": 5,
+   "check": {
+    "pass": true,
+    "max_abs_diff_meV": 0.095367431640625,
+    "tol_meV": 1.0,
+    "max_abs_diff_window_meV": 0.019073486328125,
+    "pass_window": true,
+    "diff_meV": [
+     0.0,
+     0.00762939453125,
+     0.0,
+     0.003814697265625,
+     0.00762939453125,
+     0.019073486328125,
+     0.019073486328125,
+     0.095367431640625,
+     0.064849853515625,
+     0.0095367431640625
+    ],
+    "depth_regen_meV": 30.31158447265625,
+    "depth_cache_meV": 30.3192138671875,
+    "recovery": {
+     "bands": [
+      0,
+      1,
+      2
+     ],
+     "subspace_dim": 3,
+     "coeffs": [
+      -0.2137349642537509,
+      -0.957533610875764,
+      -0.19351162522874113
+     ],
+     "max_abs_resid_meV": 0.095367431640625,
+     "n_candidates_meff": 48,
+     "n_single_points": 276,
+     "m_eff_found": 144.99082158928317,
+     "phonopy_pattern_check": {
+      "pass": false,
+      "max_abs_diff_meV": 1329.4105529785156,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 43.67828369140625,
+      "pass_window": false,
+      "diff_meV": [
+       0.0,
+       0.019073486328125,
+       1.178741455078125,
+       6.12640380859375,
+       6.359100341796875,
+       43.67828369140625,
+       240.65399169921875,
+       696.1326599121094,
+       1329.4105529785156,
+       741.5828704833984
+      ],
+      "depth_regen_meV": 23.960113525390625,
+      "depth_cache_meV": 30.3192138671875
+     },
+     "recovered_check": {
+      "pass": true,
+      "max_abs_diff_meV": 0.095367431640625,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 0.019073486328125,
+      "pass_window": true,
+      "diff_meV": [
+       0.0,
+       0.00762939453125,
+       0.0,
+       0.003814697265625,
+       0.00762939453125,
+       0.019073486328125,
+       0.019073486328125,
+       0.095367431640625,
+       0.064849853515625,
+       0.0095367431640625
+      ],
+      "depth_regen_meV": 30.31158447265625,
+      "depth_cache_meV": 30.3192138671875
+     },
+     "adopted": true
+    },
+    "m_eff_regen": 144.99082158928317,
+    "m_eff_cache": 144.97499902931187,
+    "m_eff_rel_diff": 0.0001091399212087505,
+    "harm_regen_thz": -2.227503572393719,
+    "harm_cache_thz": -2.224757092288115,
+    "harm_drift": false,
+    "dim_regen": [
+     1,
+     1,
+     1
+    ],
+    "dim_cache": [
+     1,
+     1,
+     1
+    ],
+    "dim_match": true
+   },
+   "decide_T": [
+    100.0,
+    300.0,
+    600.0,
+    900.0
+   ],
+   "decide_lowest_T": true,
+   "cache_index": 0
+  }
+ },
+ "system": "knbo3_cubic",
+ "model": "chgnet",
+ "status": "done",
+ "cache_file": "results/cache/softmode_v3m24_knbo3_cubic_chgnet_sc222.json",
+ "cache_sha256": "8b90bf421adc67909df1fc3885773c497aa8904db4551fb3cd6bf122f502f576",
+ "fc_supercell": [
+  2,
+  2,
+  2
+ ],
+ "relaxed_prim_cell": [
+  [
+   4.057435042413947,
+   8.702003871903474e-09,
+   -1.5690108422462893e-07
+  ],
+  [
+   8.702009209782852e-09,
+   4.057435293396912,
+   -5.78147970715904e-08
+  ],
+  [
+   -1.569010867530831e-07,
+   -5.781479528924158e-08,
+   4.0574351894382925
+  ]
+ ],
+ "harmonically_stable_in_cache": false,
+ "deciding": {
+  "by_T": {
+   "100": {
+    "T": 100.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": false,
+    "stable_cache_solve": false,
+    "agree": true
+   },
+   "300": {
+    "T": 300.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "600": {
+    "T": 600.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "900": {
+    "T": 900.0,
+    "idx": 0,
+    "idx_cache_solve": 0,
+    "idx_ledger": 0,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   }
+  },
+  "lowest_T": 100.0,
+  "idx_lowest": 0,
+  "idx_all": [
+   0
+  ],
+  "all_agree": true
+ },
+ "mode_list": {
+  "n_imag_total_regen": 1,
+  "n_imag_total_cache": 1,
+  "regen": [
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "band": 0,
+    "harm_thz": -2.227503572393719
+   }
+  ],
+  "cache": [
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "band": 0,
+    "harm_thz": -2.224757092288115
+   }
+  ]
+ },
+ "wall_s": 23.9,
+ "provenance": {
+  "script": "scripts/dft_reference.py",
+  "stage": "geom",
+  "git_head": "5531546",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.5",
+   "torch": "2.6.0+cu124",
+   "mace-torch": null,
+   "chgnet": "0.4.2",
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": "1.6.1",
+   "cellconstructor": "1.6.2"
+  },
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T07:12:29Z",
+  "settings": {
+   "stage": "geom",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "srtio3_cubic",
+    "batio3_cubic",
+    "zr_bcc",
+    "zro2_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "model": "chgnet",
+   "device": "cuda",
+   "force": false,
+   "no_recover": false,
+   "recover_max_atoms": 12,
+   "harm_tol": 0.02
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "model": "chgnet",
+  "env_lock": {
+   "lock": "envs/lock-chgnet-2026-08-17.txt",
+   "mismatches": {}
+  },
+  "model_version": "chgnet=0.4.2",
+  "device": "cuda"
+ }
+}

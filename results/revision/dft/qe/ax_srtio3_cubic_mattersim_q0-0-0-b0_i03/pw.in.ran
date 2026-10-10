@@ -1,0 +1,42 @@
+&CONTROL
+  ! job ax_srtio3_cubic_mattersim_q0-0-0-b0_i03, written by scripts/dft_reference.py
+  ! pseudo_dir is taken from $ESPRESSO_PSEUDO (exported by scripts/box/qe_queue.sh)
+  calculation = 'scf'
+  prefix = 'pwscf'
+  outdir = './scratch'
+  disk_io = 'none'
+  tprnfor = .true.
+  tstress = .false.
+  verbosity = 'low'
+/
+&SYSTEM
+  ibrav = 0
+  nat = 5
+  ntyp = 3
+  ecutwfc = 50.0
+  ecutrho = 400.0
+  occupations = 'smearing'
+  smearing = 'mv'
+  degauss = 0.005
+/
+&ELECTRONS
+  conv_thr = 5.000d-10
+  mixing_beta = 0.4
+  electron_maxstep = 200
+/
+ATOMIC_SPECIES
+Sr 87.6200 Sr_pbe_v1.uspp.F.UPF
+Ti 47.8670 ti_pbe_v1.4.uspp.F.UPF
+O 15.9990 O.pbe-n-kjpaw_psl.0.1.UPF
+CELL_PARAMETERS angstrom
+  3.9437364620 0.0000000025 0.0000000654
+  0.0000000025 3.9437364592 -0.0000000137
+  0.0000000654 -0.0000000137 3.9437365307
+ATOMIC_POSITIONS angstrom
+Sr 0.0074968400 3.9528418800 -0.0067618700
+Ti 1.9973808100 2.0028562600 1.9488562700
+O -0.0411648300 1.9255794000 2.0062428400
+O 1.9337585600 -0.0499997800 2.0062428500
+O 1.9337586100 1.9255794200 3.9808671000
+K_POINTS automatic
+7 7 7 0 0 0

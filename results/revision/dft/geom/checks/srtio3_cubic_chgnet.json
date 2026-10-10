@@ -1,0 +1,523 @@
+{
+ "paths": {
+  "srtio3_cubic_chgnet_q0-0-0-b0": {
+   "role": "mode",
+   "n_atoms": 5,
+   "check": {
+    "pass": true,
+    "max_abs_diff_meV": 0.0457763671875,
+    "tol_meV": 1.0,
+    "max_abs_diff_window_meV": 0.0,
+    "pass_window": true,
+    "diff_meV": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.02288818359375,
+     0.02288818359375,
+     0.03814697265625,
+     0.0457763671875,
+     0.011444091796875
+    ],
+    "depth_regen_meV": 0.148773193359375,
+    "depth_cache_meV": 0.148773193359375,
+    "recovery": {
+     "bands": [
+      0,
+      1,
+      2
+     ],
+     "subspace_dim": 3,
+     "coeffs": [
+      0.9445382567248743,
+      0.20422054423522046,
+      0.25717980265838464
+     ],
+     "max_abs_resid_meV": 0.0457763671875,
+     "n_candidates_meff": 48,
+     "n_single_points": 375,
+     "m_eff_found": 117.08450877045682,
+     "phonopy_pattern_check": {
+      "pass": false,
+      "max_abs_diff_meV": 1712.5396728515625,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 15.857696533203125,
+      "pass_window": false,
+      "diff_meV": [
+       0.0,
+       0.03814697265625,
+       0.270843505859375,
+       1.57928466796875,
+       15.857696533203125,
+       95.90911865234375,
+       358.4442138671875,
+       918.7965393066406,
+       1712.5396728515625,
+       980.9684753417969
+      ],
+      "depth_regen_meV": 0.110626220703125,
+      "depth_cache_meV": 0.148773193359375
+     },
+     "recovered_check": {
+      "pass": true,
+      "max_abs_diff_meV": 0.0457763671875,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 0.0,
+      "pass_window": true,
+      "diff_meV": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.02288818359375,
+       0.02288818359375,
+       0.03814697265625,
+       0.0457763671875,
+       0.011444091796875
+      ],
+      "depth_regen_meV": 0.148773193359375,
+      "depth_cache_meV": 0.148773193359375
+     },
+     "adopted": true
+    },
+    "m_eff_regen": 117.08450877045682,
+    "m_eff_cache": 117.0734136916805,
+    "m_eff_rel_diff": 9.477026787261081e-05,
+    "harm_regen_thz": -3.4510230480443793,
+    "harm_cache_thz": -3.4528389260364833,
+    "harm_drift": false,
+    "dim_regen": [
+     1,
+     1,
+     1
+    ],
+    "dim_cache": [
+     1,
+     1,
+     1
+    ],
+    "dim_match": true
+   },
+   "decide_T": [],
+   "decide_lowest_T": false,
+   "cache_index": 0
+  },
+  "srtio3_cubic_chgnet_q0-0-1d2-b0": {
+   "role": "mode",
+   "n_atoms": 10,
+   "check": {
+    "pass": false,
+    "max_abs_diff_meV": 2.7008056640625,
+    "tol_meV": 1.0,
+    "max_abs_diff_window_meV": 0.030517578125,
+    "pass_window": true,
+    "diff_meV": [
+     0.0,
+     0.0152587890625,
+     0.0152587890625,
+     0.030517578125,
+     0.05340576171875,
+     0.11444091796875,
+     0.06866455078125,
+     1.04522705078125,
+     2.7008056640625,
+     2.1209716796875
+    ],
+    "depth_regen_meV": 0.152587890625,
+    "depth_cache_meV": 0.1373291015625,
+    "recovery": {
+     "bands": [
+      0,
+      1
+     ],
+     "subspace_dim": 4,
+     "coeffs": [
+      -0.9535706022033419,
+      0.3008718314825143,
+      0.013387803531508835,
+      -0.00011979363553567676
+     ],
+     "max_abs_resid_meV": 2.7008056640625,
+     "n_candidates_meff": 48,
+     "n_single_points": 3156,
+     "m_eff_found": 231.96690983810018,
+     "phonopy_pattern_check": {
+      "pass": false,
+      "max_abs_diff_meV": 2480.28564453125,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 5.706787109375,
+      "pass_window": false,
+      "diff_meV": [
+       0.0,
+       0.0152587890625,
+       1.15966796875,
+       5.706787109375,
+       39.215087890625,
+       176.58233642578125,
+       592.2088623046875,
+       1441.5512084960938,
+       2480.28564453125,
+       1027.862548828125
+      ],
+      "depth_regen_meV": 0.1220703125,
+      "depth_cache_meV": 0.1373291015625
+     },
+     "recovered_check": {
+      "pass": false,
+      "max_abs_diff_meV": 2.7008056640625,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 0.030517578125,
+      "pass_window": true,
+      "diff_meV": [
+       0.0,
+       0.0152587890625,
+       0.0152587890625,
+       0.030517578125,
+       0.05340576171875,
+       0.11444091796875,
+       0.06866455078125,
+       1.04522705078125,
+       2.7008056640625,
+       2.1209716796875
+      ],
+      "depth_regen_meV": 0.152587890625,
+      "depth_cache_meV": 0.1373291015625
+     },
+     "adopted": true
+    },
+    "m_eff_regen": 231.96690983810018,
+    "m_eff_cache": 231.5293013619652,
+    "m_eff_rel_diff": 0.0018900781609963073,
+    "harm_regen_thz": -1.5416737861252088,
+    "harm_cache_thz": -1.5441038630521242,
+    "harm_drift": false,
+    "dim_regen": [
+     1,
+     1,
+     2
+    ],
+    "dim_cache": [
+     1,
+     1,
+     2
+    ],
+    "dim_match": true
+   },
+   "decide_T": [],
+   "decide_lowest_T": false,
+   "cache_index": 1
+  },
+  "srtio3_cubic_chgnet_q1d2-1d2-1d2-b0": {
+   "role": "decide",
+   "n_atoms": 40,
+   "check": {
+    "pass": false,
+    "max_abs_diff_meV": 6.622314453125,
+    "tol_meV": 1.0,
+    "max_abs_diff_window_meV": 4.180908203125,
+    "pass_window": false,
+    "diff_meV": [
+     0.0,
+     0.030517578125,
+     0.1220703125,
+     0.30517578125,
+     0.579833984375,
+     1.89208984375,
+     4.180908203125,
+     6.622314453125,
+     4.0283203125,
+     2.13623046875
+    ],
+    "depth_regen_meV": 5.79833984375,
+    "depth_cache_meV": 7.6904296875,
+    "recovery": {
+     "bands": [
+      0,
+      1,
+      2
+     ],
+     "subspace_dim": 6,
+     "coeffs": [
+      -0.9542917369490287,
+      -0.29359827507042235,
+      0.009237924711879893,
+      0.01699817354800716,
+      -0.039816666454988735,
+      -0.03417147321875598
+     ],
+     "max_abs_resid_meV": 6.622314453125,
+     "n_candidates_meff": 48,
+     "n_single_points": 2985,
+     "m_eff_found": 295.6057446044714,
+     "phonopy_pattern_check": {
+      "pass": false,
+      "max_abs_diff_meV": 331.1767578125,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 5.18798828125,
+      "pass_window": false,
+      "diff_meV": [
+       0.0,
+       0.030517578125,
+       0.030517578125,
+       0.06103515625,
+       1.617431640625,
+       0.6103515625,
+       5.18798828125,
+       37.933349609375,
+       132.720947265625,
+       331.1767578125
+      ],
+      "depth_regen_meV": 7.080078125,
+      "depth_cache_meV": 7.6904296875
+     },
+     "recovered_check": {
+      "pass": false,
+      "max_abs_diff_meV": 6.622314453125,
+      "tol_meV": 1.0,
+      "max_abs_diff_window_meV": 4.180908203125,
+      "pass_window": false,
+      "diff_meV": [
+       0.0,
+       0.030517578125,
+       0.1220703125,
+       0.30517578125,
+       0.579833984375,
+       1.89208984375,
+       4.180908203125,
+       6.622314453125,
+       4.0283203125,
+       2.13623046875
+      ],
+      "depth_regen_meV": 5.79833984375,
+      "depth_cache_meV": 7.6904296875
+     },
+     "adopted": true
+    },
+    "m_eff_regen": 295.6057446044714,
+    "m_eff_cache": 298.181703658361,
+    "m_eff_rel_diff": 0.008638890388932115,
+    "harm_regen_thz": -0.8346149856067141,
+    "harm_cache_thz": -0.8249638344395235,
+    "harm_drift": false,
+    "dim_regen": [
+     2,
+     2,
+     2
+    ],
+    "dim_cache": [
+     2,
+     2,
+     2
+    ],
+    "dim_match": true
+   },
+   "decide_T": [
+    100.0,
+    300.0,
+    600.0,
+    900.0
+   ],
+   "decide_lowest_T": true,
+   "cache_index": 2
+  }
+ },
+ "system": "srtio3_cubic",
+ "model": "chgnet",
+ "status": "done",
+ "cache_file": "results/cache/softmode_v3m24_srtio3_cubic_chgnet_sc222.json",
+ "cache_sha256": "28fb01bc0c9cb143afa94d8db27beb3b0a5f68dc005ec38ceb30bdc874aa23c8",
+ "fc_supercell": [
+  2,
+  2,
+  2
+ ],
+ "relaxed_prim_cell": [
+  [
+   3.9439614128825506,
+   -1.3159525851925554e-07,
+   -1.0840032262701691e-07
+  ],
+  [
+   -1.3159525225340152e-07,
+   3.943961607694536,
+   -1.7724915527172115e-08
+  ],
+  [
+   -1.084003110653664e-07,
+   -1.7724903563183968e-08,
+   3.9439618235107012
+  ]
+ ],
+ "harmonically_stable_in_cache": false,
+ "deciding": {
+  "by_T": {
+   "100": {
+    "T": 100.0,
+    "idx": 2,
+    "idx_cache_solve": 2,
+    "idx_ledger": 2,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "300": {
+    "T": 300.0,
+    "idx": 2,
+    "idx_cache_solve": 2,
+    "idx_ledger": 2,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "600": {
+    "T": 600.0,
+    "idx": 2,
+    "idx_cache_solve": 2,
+    "idx_ledger": 2,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   },
+   "900": {
+    "T": 900.0,
+    "idx": 2,
+    "idx_cache_solve": 2,
+    "idx_ledger": 2,
+    "pred_stable_ledger": true,
+    "stable_cache_solve": true,
+    "agree": true
+   }
+  },
+  "lowest_T": 100.0,
+  "idx_lowest": 2,
+  "idx_all": [
+   2
+  ],
+  "all_agree": true
+ },
+ "mode_list": {
+  "n_imag_total_regen": 3,
+  "n_imag_total_cache": 3,
+  "regen": [
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "band": 0,
+    "harm_thz": -3.4510230480443793
+   },
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.5
+    ],
+    "band": 0,
+    "harm_thz": -1.5416737861252088
+   },
+   {
+    "q": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "band": 0,
+    "harm_thz": -0.8346149856067141
+   }
+  ],
+  "cache": [
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "band": 0,
+    "harm_thz": -3.4528389260364833
+   },
+   {
+    "q": [
+     0.0,
+     0.0,
+     0.5
+    ],
+    "band": 0,
+    "harm_thz": -1.5441038630521242
+   },
+   {
+    "q": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "band": 0,
+    "harm_thz": -0.8249638344395235
+   }
+  ]
+ },
+ "wall_s": 566.5,
+ "provenance": {
+  "script": "scripts/dft_reference.py",
+  "stage": "geom",
+  "git_head": "5531546",
+  "versions": {
+   "numpy": "2.2.2",
+   "scipy": "1.17.1",
+   "ase": "3.29.0",
+   "phonopy": "4.4.0",
+   "spglib": "2.7.0",
+   "pandas": "3.0.5",
+   "torch": "2.6.0+cu124",
+   "mace-torch": null,
+   "chgnet": "0.4.2",
+   "orb-models": null,
+   "sevenn": null,
+   "mattersim": null,
+   "python-sscha": "1.6.1",
+   "cellconstructor": "1.6.2"
+  },
+  "python": "3.11.11",
+  "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.35",
+  "host": "db4a641a37b8",
+  "utc": "2026-09-27T07:12:29Z",
+  "settings": {
+   "stage": "geom",
+   "out_root": "/root/mlip-dynamic-stability/results/revision/dft",
+   "systems": [
+    "srtio3_cubic",
+    "batio3_cubic",
+    "zr_bcc",
+    "zro2_cubic",
+    "knbo3_cubic",
+    "cssnbr3_cubic"
+   ],
+   "model": "chgnet",
+   "device": "cuda",
+   "force": false,
+   "no_recover": false,
+   "recover_max_atoms": 12,
+   "harm_tol": 0.02
+  },
+  "screen_settings": {
+   "q_max_A": 0.45,
+   "n_pts": 10,
+   "relax_fmax": 0.001,
+   "fc_disp_A": 0.01,
+   "max_modes": 24,
+   "imag_tol_thz": -0.1,
+   "eqmap_version": 3
+  },
+  "model": "chgnet",
+  "env_lock": {
+   "lock": "envs/lock-chgnet-2026-08-17.txt",
+   "mismatches": {}
+  },
+  "model_version": "chgnet=0.4.2",
+  "device": "cuda"
+ }
+}

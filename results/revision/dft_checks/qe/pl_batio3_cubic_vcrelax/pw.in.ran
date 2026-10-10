@@ -1,0 +1,53 @@
+&CONTROL
+  ! job pl_batio3_cubic_vcrelax, written by scripts/dft_checks.py
+  ! pseudo_dir is taken from $ESPRESSO_PSEUDO (exported by scripts/box/qe_queue.sh)
+  calculation = 'vc-relax'
+  prefix = 'pwscf'
+  outdir = './scratch'
+  disk_io = 'low'
+  tprnfor = .true.
+  tstress = .true.
+  verbosity = 'low'
+  etot_conv_thr = 1.0d-6
+  forc_conv_thr = 1.0d-4
+  nstep = 150
+/
+&SYSTEM
+  ibrav = 0
+  nat = 5
+  ntyp = 3
+  ecutwfc = 50.0
+  ecutrho = 400.0
+  occupations = 'smearing'
+  smearing = 'mv'
+  degauss = 0.005
+/
+&ELECTRONS
+  conv_thr = 5.000d-10
+  mixing_beta = 0.4
+  electron_maxstep = 200
+/
+&IONS
+  ion_dynamics = 'bfgs'
+/
+&CELL
+  cell_dynamics = 'bfgs'
+  press = 0.0
+  press_conv_thr = 0.1
+/
+ATOMIC_SPECIES
+Ba 137.3270 Ba.pbe-spn-kjpaw_psl.1.0.0.UPF
+Ti 47.8670 ti_pbe_v1.4.uspp.F.UPF
+O 15.9990 O.pbe-n-kjpaw_psl.0.1.UPF
+CELL_PARAMETERS angstrom
+  4.0000000000 0.0000000000 0.0000000000
+  0.0000000000 4.0000000000 0.0000000000
+  0.0000000000 0.0000000000 4.0000000000
+ATOMIC_POSITIONS angstrom
+Ba 0.0000000000 0.0000000000 0.0000000000
+Ti 2.0000000000 2.0000000000 2.0000000000
+O 0.0000000000 2.0000000000 2.0000000000
+O 2.0000000000 0.0000000000 2.0000000000
+O 2.0000000000 2.0000000000 0.0000000000
+K_POINTS automatic
+7 7 7 0 0 0

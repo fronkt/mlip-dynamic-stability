@@ -1,0 +1,4 @@
+Error: No module named 'julia'
+  warnings.warn("Julia extension not available.\nError: {}".format(e))
+[wall cap] relaxation stopped in population 14 after 28817 s
+Population =  15
