@@ -280,3 +280,14 @@ Size the queue against the credit balance at launch and say the run-out time out
 SrTiO3 600/900 K units were copied back as `running` partials and the analysis was built on them; the box
 finished them 10-50 min later. **Rule: pull only after the queue's end marker (TOPUP_DONE / QUEUE end),
 and check that no unit in the summary is `running` before building on it.**
+
+**A memory line that says "UNSENT" goes stale the moment Frank sends it himself.** On 10-10 I reminded
+Frank about the 16 Oct extension request eight times; he had sent it ~10-08. **Rule: before any "please
+send X" reminder, search Gmail Sent for it; trust Sent over a note.**
+
+**In ScholarOne, never script-click a dashboard link or use Back.** A JS `.click()` on the draft's
+Continue link sent the tab to /undefined; Back then served a stale page ("Bad or missing security
+token") and reloading the dashboard ended the session, so Frank had to log in again. **Rule: use the
+page's own buttons via element refs; to leave a broken page, ask Frank rather than navigating. Each
+file removal opens an HTML "Remove File?" modal; same-name files cannot be uploaded until the old one is
+removed; the Main Article slot only appears after the old Main Article is removed and the page saved.**
