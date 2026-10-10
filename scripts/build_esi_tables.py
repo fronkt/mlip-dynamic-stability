@@ -1787,9 +1787,12 @@ def table_s21_sscha_seeds() -> str:
 
 # ------------------------- revision table S22 (converged-recipe SSCHA grid, plan item C1c) ----
 
-def _sha256(p: Path) -> str:
+def _sha256(p: Path, text: bool = False) -> str:
+    """sha256 of a file; text=True hashes it as git stores it (CRLF -> LF), so a Windows
+    autocrlf checkout of the same commit gives the same digest."""
     import hashlib
-    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+    data = Path(p).read_bytes()
+    return hashlib.sha256(data.replace(b"\r\n", b"\n") if text else data).hexdigest()
 
 
 def _rel(p: Path) -> str:
@@ -1833,7 +1836,7 @@ def table_s22_converged_grid(compare_path: Path = GRID_COMPARE, summary_path: Pa
                          "SSCHA values); rerun scripts/grid_compare.py on the real grid")
     if not summary_path.exists():
         raise SystemExit(f"Table S22: {_rel(compare_path)} exists but {_rel(summary_path)} does not")
-    if _sha256(summary_path) != m["summary_csv"]["sha256"]:
+    if _sha256(summary_path, text=True) != m["summary_csv"]["sha256"]:
         raise SystemExit(f"Table S22: {_rel(summary_path)} changed since scripts/grid_compare.py "
                          "read it; rerun scripts/grid_compare.py")
     if _sha256(LEDGER) != m["ledger"]["sha256"]:

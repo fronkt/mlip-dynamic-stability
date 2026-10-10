@@ -119,8 +119,11 @@ def rel(p) -> str:
         return p.as_posix()
 
 
-def sha256(p) -> str:
-    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def sha256(p, text: bool = False) -> str:
+    """text=True hashes the file as git stores it (CRLF -> LF), so the digest does not depend on
+    a Windows autocrlf checkout."""
+    data = Path(p).read_bytes()
+    return hashlib.sha256(data.replace(b"\r\n", b"\n") if text else data).hexdigest()
 
 
 def tobool(v):
@@ -871,7 +874,7 @@ def compare(summary: Path, c1c_dir: Path, out_is_default: bool) -> dict:
         "_generated_by": "scripts/grid_compare.py",
         "meta": {
             "dry_run": dry,
-            "summary_csv": {"path": rel(summary), "sha256": sha256(summary),
+            "summary_csv": {"path": rel(summary), "sha256": sha256(summary, text=True),
                             "n_rows": int(len(rows_all)), "n_start_A_rows": int(len(rows))},
             "ledger": {"path": rel(LEDGER), "sha256": sha256(LEDGER)},
             "c1c_extra_units": extra_info, "c1c_dir": rel(c1c_dir),

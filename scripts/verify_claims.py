@@ -1002,8 +1002,9 @@ def main() -> int:
     gcj = json.load(open("results/revision/grid_compare.json", encoding="utf-8"))
     gsum = pd.read_csv("results/revision/sscha_converged_grid/summary.csv")
     gsum = gsum[gsum.start == "A"]
-    check(hashlib.sha256(open("results/revision/sscha_converged_grid/summary.csv", "rb").read())
-          .hexdigest() == gcj["meta"]["summary_csv"]["sha256"]
+    # hashed as git stores it (LF), so a Windows autocrlf checkout of the same commit passes too
+    check(hashlib.sha256(open("results/revision/sscha_converged_grid/summary.csv", "rb").read()
+                         .replace(b"\r\n", b"\n")).hexdigest() == gcj["meta"]["summary_csv"]["sha256"]
           and gcj["meta"]["grid_vs_ledger"]["all_ok"]
           and gcj["meta"]["production_reproduces_stats_hardening"]["all_ok"],
           "[S22] grid_compare.json was built from the summary.csv on disk; both self-checks pass")
