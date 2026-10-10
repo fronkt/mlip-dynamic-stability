@@ -48,3 +48,27 @@ deviation.
 ## Deviations
 
 (none yet)
+
+## Outcome (2026-10-10, appended after the run; the sections above are unchanged)
+
+Box: vast.ai 55081379 (RTX 3090, 30.7-vCPU cgroup quota, 94 GB), 2026-10-09 19:33 → 2026-10-10 04:34 UTC;
+all five processes ran in parallel and all five reached the outer 9 h cap (`timeout` rc 124,
+`jobs.tsv`), so every JSON still reads `status: running`. The box self-stopped at 05:34 UTC; its GPU
+was re-rented, so the disk was recovered with `vastai copy` to a relay (no unit was re-run).
+Results: `results/revision/sscha_converged_sc444/` (raw logs + work dirs: `mlip-rsc-revision-raw/`,
+hashes in `logs/RAW_ARCHIVES.sha256`).
+
+| unit | relaxation | 4×4×4 lowest Hessian freq. | 2×2×2 (grid) | reported as |
+|---|---|---|---|---|
+| hfo2_cubic_mace_mp0_600K | converged, 7 populations (8822 s); fresh-gradient check consistent with a minimum | −3.22 THz (unstable) | −2.20 ± 0.15 THz (unstable) | converged; call unchanged; killed during the bootstrap, so no 4×4×4 SD |
+| srtio3_cubic_chgnet_100K | converged, 5 populations (17334 s) | none (killed in the Hessian) | +1.06 | killed at cap; no 4×4×4 call |
+| srtio3_cubic_mace_mp0_100K | not converged (unit wall cap in population 14) | none | +1.12 | not converged; no call |
+| srtio3_cubic_mattersim_100K | not converged (population 14) | none | +1.20 | not converged; no call |
+| srtio3_cubic_sevennet0_100K | not converged (population 10) | none | +1.09 | not converged; no call |
+
+The auxiliary-dyn frequencies at the end of the relaxations (+0.87 to +1.21 THz for SrTiO₃) are
+positive by construction (start A) and are not stability calls; they are not used as such.
+
+Per the rules above: the fluorite 2×2×2 call is unchanged at 4×4×4 for the one unit tested (start A
+only, no SD). SrTiO₃ has no 4×4×4 call, so the narrowed SrTiO₃ wording of the submitted revision
+stays, now with "attempted; did not complete within 9 h per unit" in place of "not run".

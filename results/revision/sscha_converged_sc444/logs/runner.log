@@ -1,0 +1,67 @@
+RUN start Fri Oct  9 19:28:47 UTC 2026
+WATCHDOG start Fri Oct  9 19:28:47 UTC 2026
+APT_DONE rc=0
+downloading uv 0.12.24 x86_64-unknown-linux-gnu
+installing to /root/.local/bin
+  uv
+  uvx
+everything's installed!
+
+To add $HOME/.local/bin to your PATH, either restart your shell or run:
+
+    source $HOME/.local/bin/env (sh, bash, zsh)
+    source $HOME/.local/bin/env.fish (fish)
+Downloading cpython-3.12.15-linux-x86_64-gnu (download) (32.7MiB)
+Downloading cpython-3.11.17-linux-x86_64-gnu (download) (29.4MiB)
+ Downloaded cpython-3.12.15-linux-x86_64-gnu (download)
+ Downloaded cpython-3.11.17-linux-x86_64-gnu (download)
+Installed 2 versions in 1.68s
+ + cpython-3.11.17-linux-x86_64-gnu (python3.11)
+ + cpython-3.12.15-linux-x86_64-gnu (python3.12)
+Cloning into 'mlip-dynamic-stability'...
+Updating files:  78% (6922/8822)Updating files:  79% (6970/8822)Updating files:  80% (7058/8822)Updating files:  81% (7146/8822)Updating files:  82% (7235/8822)Updating files:  83% (7323/8822)Updating files:  84% (7411/8822)Updating files:  85% (7499/8822)Updating files:  86% (7587/8822)Updating files:  87% (7676/8822)Updating files:  88% (7764/8822)Updating files:  89% (7852/8822)Updating files:  90% (7940/8822)Updating files:  91% (8029/8822)Updating files:  92% (8117/8822)Updating files:  93% (8205/8822)Updating files:  94% (8293/8822)Updating files:  95% (8381/8822)Updating files:  96% (8470/8822)Updating files:  97% (8558/8822)Updating files:  97% (8612/8822)Updating files:  98% (8646/8822)Updating files:  99% (8734/8822)Updating files: 100% (8822/8822)Updating files: 100% (8822/8822), done.
+Already up to date.
+f47cc2a Pre-register and script the 4x4x4 converged SSCHA (SrTiO3 100 K x4 models + HfO2 MACE 600 K) for Referee 3.2, before any run
+ENVCHECK 2.6.0+cu124 True 2.2.2 3.29.0 4.4.0
+SSCHA_OK
+ENV_DONE chgnet rc=0 Fri Oct  9 19:31:35 UTC 2026
+ENVCHECK 2.6.0+cu124 True 2.2.2 3.29.0 4.4.0
+SSCHA_OK
+ENV_DONE mace rc=0 Fri Oct  9 19:31:34 UTC 2026
+ENVCHECK 2.13.0+cu130 True 2.5.2 3.29.0 4.4.0
+SSCHA_OK
+ENV_DONE mattersim rc=0 Fri Oct  9 19:31:46 UTC 2026
+ENVCHECK 2.6.0+cu124 True 2.2.2 3.29.0 4.4.0
+SSCHA_OK
+ENV_DONE sevennet rc=0 Fri Oct  9 19:31:44 UTC 2026
+SMOKE mace_mp0 ckpt=None version=mace-torch=0.3.16;ckpt=medium E=-85.35822 |F|max=0.4588 dtype=float64 t=11.1s
+SMOKE chgnet ckpt=None version=chgnet=0.4.2 E=-84.87431 |F|max=0.5148 dtype=float32 t=4.8s
+SMOKE sevennet0 ckpt=None version=sevenn=0.13.0;ckpt=7net-0 E=-86.30162 |F|max=0.5138 dtype=float32 t=12.2s
+SMOKE mattersim ckpt=None version=mattersim=1.2.5;ckpt=mattersim-v1.0.0-5m E=-86.35992 |F|max=0.7089 dtype=float32 t=16.3s
+BOOTSTRAP_DONE Fri Oct  9 19:32:40 UTC 2026
+NVIDIA GeForce RTX 3090, 24576 MiB, 24126 MiB
+               total        used        free      shared  buff/cache   available
+Mem:              94           2          12           0          79          90
+RECIPE_OK (sc444 == grid)
+SETUP_DONE Fri Oct  9 19:32:40 UTC 2026
+START srtio3_cubic_chgnet_100K_sc444 pid 4640 threads 6 Fri Oct  9 19:32:40 UTC 2026
+START srtio3_cubic_mace_mp0_100K_sc444 pid 4701 threads 6 Fri Oct  9 19:33:01 UTC 2026
+START srtio3_cubic_mattersim_100K_sc444 pid 4776 threads 6 Fri Oct  9 19:33:21 UTC 2026
+START srtio3_cubic_sevennet0_100K_sc444 pid 4850 threads 6 Fri Oct  9 19:33:41 UTC 2026
+START hfo2_cubic_mace_mp0_600K_sc444 pid 4916 threads 6 Fri Oct  9 19:34:01 UTC 2026
+ALL_UNITS_DONE Sat Oct 10 04:34:01 UTC 2026
+utc_end	tag	rc	wall_s
+2026-10-10T04:32:43Z	srtio3_cubic_chgnet_100K_sc444	124	32403
+2026-10-10T04:33:01Z	srtio3_cubic_mace_mp0_100K_sc444	124	32400
+2026-10-10T04:33:22Z	srtio3_cubic_mattersim_100K_sc444	124	32401
+2026-10-10T04:33:42Z	srtio3_cubic_sevennet0_100K_sc444	124	32401
+2026-10-10T04:34:01Z	hfo2_cubic_mace_mp0_600K_sc444	124	32400
+hfo2_cubic_mace_mp0_600K_sc444_startA.json running {}
+srtio3_cubic_chgnet_100K_sc444_startA.json running {}
+srtio3_cubic_mace_mp0_100K_sc444_startA.json running {}
+srtio3_cubic_mattersim_100K_sc444_startA.json running {}
+srtio3_cubic_sevennet0_100K_sc444_startA.json running {}
+QUEUE_DONE Sat Oct 10 04:34:01 UTC 2026
+GRACE_END pulled=no Sat Oct 10 05:34:02 UTC 2026
+SELF_STOP (runner exited) Sat Oct 10 05:34:02 UTC 2026 instance=55081379
+{"success": true} http=200
