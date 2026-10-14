@@ -9,6 +9,18 @@ each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ..
 **Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
 false.
 
+## ▶ 2026-10-14 — RSC returned the Highlighted Manuscript: "without track changes, showing only the highlighted edits"
+
+Publishing Assistant (email to cai485@purdue.edu, 14 Oct) asked for the Highlighted Manuscript without
+tracked changes. `scripts/tracked_to_highlighted.py` converts the UPLOADED tracked files (not a rebuild):
+insertions / moved-to / inserted cells -> yellow highlight, then accept all; deletions leave no mark.
+Check: Word Compare (formatting ignored) vs the uploaded clean file = 0 differences for both; negative
+control (release build without Frank's AI-use wording) = 9 differences, so the check bites.
+- [x] manuscript: 507 revisions -> 285 highlighted spans, 48 pp, 0 tracked markup left, 0 comments.
+- [x] SI: 111 revisions -> 67 highlighted spans, 85 pp (same objection would hit the SI marked file).
+- [ ] Frank: swap both files in ScholarOne (or reply with them attached if it was not sent back). Files in
+      session b7c99df0 scratchpad `upload/` as `*_highlighted_changes.docx` (+ .pdf previews).
+
 ## ▶ 2026-10-10 — R1 SUBMITTED by Frank (awaiting editor)
 
 Revision of RA-ART-07-2026-006452 submitted in ScholarOne by Frank on 2026-10-10. Package: Main Article
