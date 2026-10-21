@@ -19,18 +19,28 @@ lattice sensitivity, systematic volume bias per model, constant V vs constant P;
 workflow lesson + gradient-norm history across populations (BaTiO₃ or bcc-Zr); C4 tone down the ensemble
 "guardrail", explain why force spread fails, recommend AL/committee design for anharmonic regions.
 **Frank 10-21:** box run APPROVED; AI-use statement unchanged (author's submitted wording).
-- [ ] P0 fix "+2.03 THz converged" (six-unit run) vs grid +1.98 (Tables S22/S24): ms + ESI + letter.
-- [ ] P1 `scripts/curv_blind_summary.py` (142/147 screen-unstable units curvature-blind, 607/702 evaluations).
-- [ ] P1 `scripts/lattice_sensitivity.py` (lattices vs PBE, inter-model spread, d ln depth/d ln a, κ₂/κ₄ split).
-- [ ] P1 `scripts/spread_mechanism.py` (spread by pair-ratio bin, clean/overlap split, shared-error fraction).
-- [ ] P1 outside numbers: MP PBE lattices (mp-2998, mp-7375), experimental cubic a + thermal expansion.
-- [ ] P2 Vast credit check -> prereg -> box: fixed-centroid F(Q₀) scan, displaced-start relaxation,
-      include_v4 at the converged matrix (BaTiO₃/MACE/100 K), 5-model lattice sweep. Self-stop + watchdog.
-- [ ] P3 manuscript/ESI: C1 §2.4/§3.3, C2 §3.2/§2.5/Limitations, C3 §2.5 + gradient-history figure +
-      validation flowchart, C4 §3.4 retitle + "guardrail" sweep + recommendation; new refs (Crossref-verified).
-- [ ] P3 manuscript.md must carry the SUBMITTED AI-use wording so the docx build does not revert it.
-- [ ] P4 letter (untracked), physics brief for Frank (local), adversarial audit, docx + highlighted copies,
-      release v2.2.0 + Zenodo, push.
+- [x] P0 "+2.03" pointer fixed (e257a47): grid +1.98 ± 0.06 where Table S22 is cited; six-unit study -> S2.4.
+- [x] P1 curv_blind_summary (3b988ec): 142/147, 607/702 — NOTE positive by construction (F''(0)=MΩ²), so it
+      is "every screen instability comes from the global search", NOT evidence about multi-mode SSCHA.
+- [x] P1 lattice_sensitivity + spread_mechanism (830ca00); external_lattices.json (MP PBE: mp-2998 4.03558,
+      mp-935811 4.05747 [mp-7375 is R3m], mp-5229 3.94513; MLIPs within 0.06 % of MP; our QE 0.29/0.75 % below).
+- [x] C3 text (39628f3): §3.5 opens with the minimiser mechanics + Table 5 + checks; ESI Fig. S1; §2.5 pointer.
+- [x] C4 text (85b962d): §3.4 retitled, guardrail removed everywhere, spread-mechanism paragraph, training sets
+      in §2.2, committee recommendation in Discussion (refs 49-52).
+- [x] C2 text draft (82a8928, 3aeb371): §3.2 three paragraphs (refs 53-63), §2.5 constant volume.
+      <!-- PENDING-QE in §3.2 until the box QE check lands -->
+- [x] Prereg + deviations D1-D8 (38bfe0d, c918c60) BEFORE any run.
+- [~] P2 BOX vast **57115732** (RTX 3090, Ryzen 5950X, 30.7-core quota, $0.249/h, `ssh -p 34104 root@ssh1.vast.ai`),
+      started 2026-10-21 21:50 UTC on cd555cb, tmux gpu + watchdog, hard cap 8 h (stops by ~05:50 UTC), expected
+      ~04:20 UTC. Runs: gate, smoke, 6 SSCHA arms, v4 (16 thr), lattice sweep x5 models, QE vc-relax x6.
+      Pull ONLY after /root/QUEUE_DONE (commands in the launcher header). Two RTX 5090s on the account
+      (57109225, 57110079) are ANOTHER session's — never touch. Credit $3.60 at launch is shared with them.
+- [ ] After pull: C1 text (§3.3 four-reason paragraph + centroid result + converged v4), C2 PENDING-QE +
+      lattice-sweep figure/table, verify_claims, renumber_refs (with --letter on the R2 letter), physics brief C1.
+- [ ] P4 adversarial audit; docx + highlighted marked copies (vs the SUBMITTED R1 docx); release v2.2.0 + Zenodo;
+      letter files list; Frank submits (~Nov 5).
+- AI-use statement: unchanged (author's submitted wording); manuscript.md must carry the submitted text before
+  the docx build.
 
 ## ▶ 2026-10-14 — RSC returned the Highlighted Manuscript: "without track changes, showing only the highlighted edits"
 
