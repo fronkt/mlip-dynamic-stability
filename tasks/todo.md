@@ -9,6 +9,29 @@ each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ..
 **Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
 false.
 
+## ▶ 2026-10-21 — R2: decision on R1 = major revision (one referee, the original R1), "publishable after second revision"
+
+Plan: ~/.claude/plans/woolly-tumbling-eich.md (local). Verbatim report stays in Gmail (repo is public); the R2
+letter draft stays UNTRACKED until Frank submits. Target: submit ~Nov 5 (Purdue RSC OA deal ends 12-31, applies
+at acceptance). Comments (paraphrased): C1 why the bubble SSCHA Hessian at the symmetric point misses deep
+wells (positive-definite Φ, no centroid search, Φ⁽⁴⁾ vs geometry); C2 physical mechanism for the sub-%
+lattice sensitivity, systematic volume bias per model, constant V vs constant P; C3 the step-cap flaw as a
+workflow lesson + gradient-norm history across populations (BaTiO₃ or bcc-Zr); C4 tone down the ensemble
+"guardrail", explain why force spread fails, recommend AL/committee design for anharmonic regions.
+**Frank 10-21:** box run APPROVED; AI-use statement unchanged (author's submitted wording).
+- [ ] P0 fix "+2.03 THz converged" (six-unit run) vs grid +1.98 (Tables S22/S24): ms + ESI + letter.
+- [ ] P1 `scripts/curv_blind_summary.py` (142/147 screen-unstable units curvature-blind, 607/702 evaluations).
+- [ ] P1 `scripts/lattice_sensitivity.py` (lattices vs PBE, inter-model spread, d ln depth/d ln a, κ₂/κ₄ split).
+- [ ] P1 `scripts/spread_mechanism.py` (spread by pair-ratio bin, clean/overlap split, shared-error fraction).
+- [ ] P1 outside numbers: MP PBE lattices (mp-2998, mp-7375), experimental cubic a + thermal expansion.
+- [ ] P2 Vast credit check -> prereg -> box: fixed-centroid F(Q₀) scan, displaced-start relaxation,
+      include_v4 at the converged matrix (BaTiO₃/MACE/100 K), 5-model lattice sweep. Self-stop + watchdog.
+- [ ] P3 manuscript/ESI: C1 §2.4/§3.3, C2 §3.2/§2.5/Limitations, C3 §2.5 + gradient-history figure +
+      validation flowchart, C4 §3.4 retitle + "guardrail" sweep + recommendation; new refs (Crossref-verified).
+- [ ] P3 manuscript.md must carry the SUBMITTED AI-use wording so the docx build does not revert it.
+- [ ] P4 letter (untracked), physics brief for Frank (local), adversarial audit, docx + highlighted copies,
+      release v2.2.0 + Zenodo, push.
+
 ## ▶ 2026-10-14 — RSC returned the Highlighted Manuscript: "without track changes, showing only the highlighted edits"
 
 Publishing Assistant (email to cai485@purdue.edu, 14 Oct) asked for the Highlighted Manuscript without
