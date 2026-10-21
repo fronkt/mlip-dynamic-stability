@@ -783,7 +783,7 @@ were already false-stable with the production recipe; the other 9 (PbTiO₃ 4, S
 are new under convergence. That the symmetric point stays a local minimum is not
 itself evidence: for a single mode the screen's symmetric-point curvature equals its
 self-consistent trial stiffness and is positive by construction (Section 2.4). Cubic BaTiO₃ with
-MACE-MP-0 at 100 K is a typical case: screen call unstable, converged SSCHA +2.03 THz (production
+MACE-MP-0 at 100 K is a typical case: screen call unstable, converged SSCHA +1.98 ± 0.06 THz (production
 +2.87 THz). Where the screen gets
 these units right, it does so because it minimises over the centroid instead of reading a
 curvature; a fixed-reference Hessian has no such step, and relaxing the SSCHA centroid from a
@@ -970,7 +970,7 @@ the seed range), and no call changes across seeds. Seed agreement here measures 
 relaxation that stopped near its start, not convergence: with the converged recipe two of the
 four calls change (ZrO₂ at 100 K becomes unstable, −22.4 THz; SrTiO₃ at 600 K stable, +2.44 THz),
 and the start dependence of the converged recipe was measured on six units from two starts (ESI
-Table S22). All six keep their call. The two starts differ by 0.03 THz or less on the three bcc-Zr
+Section S2.4). All six keep their call. The two starts differ by 0.03 THz or less on the three bcc-Zr
 units, by 0.18 THz on BaTiO₃ (+2.03 against +1.85 THz, the second start at 1.0 THz after one at
 0.3 THz failed) and by 3.6 THz on ZrO₂ (−22.4 against −26.0 THz); SrTiO₃ with MACE-MP-0 at 100 K
 (+1.13 against +1.02 THz) is flagged start-dependent because that difference exceeds its

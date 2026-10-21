@@ -620,13 +620,13 @@ recipe). The screen's own
 symmetric-point curvature cannot add to that, because for a single mode it is positive by
 construction (Section S1.3), and neither shows that SSCHA's positive Hessian has this origin rather than
 a relaxation that stopped near its start (Section S2.1); the converged recipe settles that for this
-unit, which stays stable at +2.03 THz after a converged relaxation (Table S22). Adding
+unit, which stays stable at +1.98 THz after a converged relaxation (Table S22). Adding
 the fourth-order term changes the estimate of the curvature but not the question it answers. It
 could flip the sign only where the bubble-level value overstates a curvature that is in fact
 negative. Evaluated on the same seed-0 ensemble, the fourth-order Hessian gives +2.8784 THz
 against +2.8783 THz at bubble level (9,850 s against 11 s, 24 threads): it does not flip the sign
 on this unit. The ensemble is the production one, at an unconverged auxiliary matrix; the
-converged value for this unit is +2.03 THz at bubble level (Table S22), and the fourth-order term
+converged value for this unit is +1.98 THz at bubble level (Table S22), and the fourth-order term
 was not evaluated there.
 Whether an MLIP error on the thermally sampled configurations contributes as well is a separate
 question, which PBE forces on those configurations address (Section S5, Table S20): for BaTiO₃ and
@@ -642,7 +642,7 @@ of the production recipe, the Hessian with the fourth-order term (`include_v4 = 
 2.7 h against 11 s without it and gives +2.878 THz, against +2.878 THz at bubble level on the same
 ensemble: on this unit the fourth-order term does not change the curvature, and the call stays
 stable. That ensemble sits at an unconverged auxiliary matrix; the fourth-order term was not
-evaluated at the converged one (+2.03 THz at bubble level).
+evaluated at the converged one (+1.98 THz at bubble level, Table S22).
 
 ### S2.3 Numerical outcome by family (complete grid)
 
@@ -778,7 +778,7 @@ print to the run log rather than to a ledger).
   comes from the unconverged relaxation alone. None of the 16 seeds converged (Section S2.1). Seed
   agreement is not convergence: the converged recipe changes two of these four calls (ZrO₂ at
   100 K, −22.4 THz; SrTiO₃ at 600 K, +2.44 THz) and moves the other two (BaTiO₃ +2.03 THz;
-  bcc-Zr/MatterSim at 50 K +0.41 THz), Table S22. The converged recipe's own start dependence was
+  bcc-Zr/MatterSim at 50 K +0.41 THz; the six-unit converged study below). The converged recipe's own start dependence was
   measured on six units from two starts: all six keep their call, and SrTiO₃/MACE-MP-0 at 100 K
   (+1.13 against +1.02 THz) is flagged start-dependent because the difference exceeds its
   bootstrap error.

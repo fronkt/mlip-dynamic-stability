@@ -1135,6 +1135,11 @@ def main() -> int:
                    ab("zr_bcc_mattersim_300K_sc333"))
     st6 = ab("srtio3_cubic_mace_mp0_600K_sc222")
     r2 = lambda x: round(x, 2)  # noqa: E731
+    gba = json.load(open("results/revision/sscha_converged_grid/batio3_cubic_mace_mp0_100K_sc222_startA.json",
+                         encoding="utf-8"))["run"]
+    check(gba["relax"]["steps"][-1]["stop_converged"] and r2(gba["hessian"]["min_nonac_thz"]) == 1.98
+          and r2(gba["bootstrap"]["std_thz"]) == 0.06,
+          "[3.3/S2.2] grid BaTiO3/MACE 100 K start A (Table S22): +1.98 +/- 0.06 THz, converged")
     check(r2(ba["A"]["hessian_min_thz"]) == 2.03 and ba["B"]["status"] == "failed"
           and ba1["B"]["converged"] and r2(ba1["B"]["hessian_min_thz"]) == 1.85
           and abs(ba1["B"]["start_min_thz"] - 1.0) < 1e-6,
