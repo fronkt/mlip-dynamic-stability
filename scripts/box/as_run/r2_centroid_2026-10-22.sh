@@ -56,7 +56,7 @@ PY=/root/env-mace/bin/python
 CS=scripts/sscha_centroid_scan.py
 PRICE_PER_HR=${PRICE_PER_HR:-}
 CREDIT_USD=${CREDIT_USD:-}
-EXPECTED_H=5.5                  # setup ~0.8 h + gate/smoke ~0.4 h + v4 path (Q0=0 ensemble ~0.9 h, v4 ~2.8 h)
+EXPECTED_H=6.5                  # setup ~0.8 h + gate/smoke ~0.4 h + v4 path (Q0=0 ensemble ~0.9 h, v4 ~4.1 h at 16 threads)
 CAP_H=8                         # watchdog hard cap (credit was $4.27 on 2026-10-21; keep the worst case under it)
 CAP_S=$(( CAP_H * 3600 ))
 QUEUE_CAP_S=$(( 6 * 3600 ))     # global queue cap, from setup_done
@@ -65,10 +65,10 @@ GRACE_MIN=60
 MAX_GPU_ARMS=3
 ARM_CAP=2.5h                    # outer cap per SSCHA arm (relax cap + Hessian ensemble + bootstrap)
 ARM_RELAX_CAP_S=6600            # --unit-timeout: the relaxation's own wall cap inside ARM_CAP
-V4_CAP_S=$(( 4 * 3600 ))        # outer cap of the v4 process; the child gets this minus 900 s
+V4_CAP_S=$(( 5 * 3600 ))        # outer cap of the v4 process; the child gets this minus 900 s (16 threads: ~4.1 h)
 LAT_CAP_S=$(( 90 * 60 ))        # per lattice-sweep model
 LAT_THR=2
-QE_THR=8                        # pw.x MPI ranks for the R2 lattice check (scripts/qe_lattice_check.py)
+QE_THR=4                        # pw.x MPI ranks for the R2 lattice check (scripts/qe_lattice_check.py)
 QE_CAP_S=$(( 150 * 60 ))        # whole QE chain (install + 6 vc-relax)
 M_GATE_FAIL=${M_GATE_FAIL:-run} # run | skip: the M arms if ONLY the M-band gate fails (prereg: not interpreted)
 ARMS=("m_scan 0" "free 0.075" "gamma 0" "m_scan 0.075" "m_scan 0.04" "m_scan 0.1")
@@ -187,7 +187,7 @@ qe_chain() {    # R2 comment 2: is our PBE lattice converged? QE 7.5 + SSSP 1.3 
     for d in results/revision/r2_qe_lattice/qe/r2l_*/; do
       [ -f "$d/pw.out" ] && grep -q "JOB DONE" "$d/pw.out" && { echo "QE_SKIP $d (done)"; continue; }
       t0=$(date +%s)
-      ( cd "$d" && mpirun --allow-run-as-root --bind-to none -np '"$QE_THR"' pw.x -nk 4 -in pw.in \
+      ( cd "$d" && mpirun --allow-run-as-root --bind-to none -np '"$QE_THR"' pw.x -nk 2 -in pw.in \
           > pw.out 2> pw.err < /dev/null )
       echo "QE_JOB $d rc=$? $(( $(date +%s) - t0 )) s $(date -u)"
       rm -rf "$d/scratch"
@@ -280,7 +280,7 @@ case "${1:-}" in
     if [ "$CORES" -ge 44 ]; then ARM_THR=4; else ARM_THR=2; fi
     V4_THR=$(( CORES - MAX_GPU_ARMS * ARM_THR - LAT_THR - QE_THR - 2 )); [ "$V4_THR" -lt 8 ] && V4_THR=8
     echo "CORES $CORES (cgroup quota): $MAX_GPU_ARMS arms x $ARM_THR threads, v4 $V4_THR, lattice $LAT_THR, QE $QE_THR"
-    [ "$CORES" -ge 32 ] || fail "need >= 32 cores for arms + v4 + QE (have $CORES)"
+    [ "$CORES" -ge 24 ] || fail "need >= 24 cores for arms + v4 + QE (have $CORES)"
     qe_chain > /root/logs/qe_chain.log 2>&1 &
     QE_PID=$!
     echo "QE chain pid $QE_PID $(date -u)"
