@@ -220,7 +220,7 @@ lattice_chain() {  # one model env after another; skipped cleanly if the script 
     env OMP_NUM_THREADS=$LAT_THR MKL_NUM_THREADS=$LAT_THR OPENBLAS_NUM_THREADS=$LAT_THR \
       TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
       timeout --kill-after=120 "${cap}s" "/root/env-$e/bin/python" -u scripts/lattice_sweep.py \
-      --model "$m" --out "$LAT/$m.json" "${dev[@]}" > "/root/logs/lattice_$m.log" 2>&1 < /dev/null
+      --model "$m" --out "$LAT/$m.json" --precision production "${dev[@]}" > "/root/logs/lattice_$m.log" 2>&1 < /dev/null
     rc=$?
     job_row "lattice_$m" "$rc" "$t0"
     echo "LATTICE $m rc=$rc $(( $(date +%s) - t0 )) s $(date -u)"
