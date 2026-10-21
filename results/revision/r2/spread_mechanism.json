@@ -1,0 +1,5715 @@
+{
+  "_provenance": {
+    "script": "scripts/spread_mechanism.py",
+    "script_git_blob_lf": "c24884ed093892cfe6dcc904c14ab52b3dda6e3a",
+    "git_head": "39628f3",
+    "git_dirty": true,
+    "utc": "2026-10-21T20:46:37+00:00",
+    "python": "3.12.10",
+    "packages": {
+      "numpy": "2.3.5",
+      "pandas": "2.3.3",
+      "ase": "3.28.0"
+    },
+    "settings": {
+      "n_boot": 10000,
+      "n_perm": 10000,
+      "seed": 0,
+      "min_pair_ratio": 0.75,
+      "pos_tol_A": 0.001,
+      "models": [
+        "mace_mp0",
+        "chgnet",
+        "orb_v2",
+        "sevennet0",
+        "mattersim"
+      ]
+    }
+  },
+  "status": "POST-HOC, descriptive; explains force_spread.py's pre-registered result and does not replace it",
+  "hypothesis_tested": "Committee spread across the five foundation MLIPs is an extrapolation detector that fires when interatomic distances fall into the overlap region, while in the moderately anharmonic region that decides stability calls the models share a common error that their variance cannot see.",
+  "checks": {
+    "config_spread_reproduces_force_spread": {
+      "unit_median_vs_force_spread__spread_max_abs_diff": 0.0,
+      "unit_median_vs_units_consensus_csv_max_abs_diff": 2.220446049250313e-16,
+      "unit_min_pair_ratio_vs_csv_max_abs_diff": 1.1102230246251565e-16,
+      "n_configs_nonfinite_any_model": 0,
+      "passed": true
+    },
+    "pbe_forces_reproduce_c3b_configs_csv": {
+      "force_rmse_max_abs_diff": 2.220446049250313e-16,
+      "rms_f_pbe_max_abs_diff": 2.220446049250313e-16,
+      "n_rows": 320,
+      "passed": true
+    },
+    "inputs_all_match_HEAD": true
+  },
+  "config_level": {
+    "n_configs": 960,
+    "n_overlap_free": 763,
+    "n_overlap": 197,
+    "overlap_rule": "pair-resolved contact ratio < 0.75 (force_spread variant (g))",
+    "spread_by_pair_ratio_bin": [
+      {
+        "bin": "r >= 0.85",
+        "lo_inclusive": 0.85,
+        "hi_exclusive": null,
+        "n_systems": 14,
+        "systems": [
+          "batio3_cubic",
+          "c_diamond",
+          "ceo2_cubic",
+          "cspbi3_cubic",
+          "cssni3_cubic",
+          "cu_fcc",
+          "hfo2_cubic",
+          "knbo3_cubic",
+          "mgo_rocksalt",
+          "nacl_rocksalt",
+          "pbtio3_cubic",
+          "si_diamond",
+          "srtio3_cubic",
+          "zro2_cubic"
+        ],
+        "spread_eV_A": {
+          "n": 553,
+          "median": 0.059,
+          "q25": 0.0407,
+          "q75": 0.0927,
+          "iqr": 0.052,
+          "min": 0.0127,
+          "max": 0.3646
+        },
+        "u_rms_A_median": 0.1177,
+        "recon_median": 0.058
+      },
+      {
+        "bin": "0.75 <= r < 0.85",
+        "lo_inclusive": 0.75,
+        "hi_exclusive": 0.85,
+        "n_systems": 14,
+        "systems": [
+          "batio3_cubic",
+          "c_diamond",
+          "ceo2_cubic",
+          "cspbi3_cubic",
+          "cssnbr3_cubic",
+          "cssni3_cubic",
+          "cu_fcc",
+          "hfo2_cubic",
+          "knbo3_cubic",
+          "mgo_rocksalt",
+          "nacl_rocksalt",
+          "pbtio3_cubic",
+          "srtio3_cubic",
+          "zro2_cubic"
+        ],
+        "spread_eV_A": {
+          "n": 210,
+          "median": 0.0629,
+          "q25": 0.0463,
+          "q75": 0.0768,
+          "iqr": 0.0305,
+          "min": 0.0266,
+          "max": 0.27
+        },
+        "u_rms_A_median": 0.2399,
+        "recon_median": 0.063
+      },
+      {
+        "bin": "0.65 <= r < 0.75",
+        "lo_inclusive": 0.65,
+        "hi_exclusive": 0.75,
+        "n_systems": 7,
+        "systems": [
+          "batio3_cubic",
+          "cspbi3_cubic",
+          "cssnbr3_cubic",
+          "cssni3_cubic",
+          "nacl_rocksalt",
+          "pbtio3_cubic",
+          "srtio3_cubic"
+        ],
+        "spread_eV_A": {
+          "n": 82,
+          "median": 0.1047,
+          "q25": 0.0811,
+          "q75": 0.1326,
+          "iqr": 0.0515,
+          "min": 0.063,
+          "max": 0.2372
+        },
+        "u_rms_A_median": 0.4901,
+        "recon_median": 0.105
+      },
+      {
+        "bin": "0.50 <= r < 0.65",
+        "lo_inclusive": 0.5,
+        "hi_exclusive": 0.65,
+        "n_systems": 5,
+        "systems": [
+          "batio3_cubic",
+          "cspbi3_cubic",
+          "cssnbr3_cubic",
+          "cssni3_cubic",
+          "pbtio3_cubic"
+        ],
+        "spread_eV_A": {
+          "n": 81,
+          "median": 0.2918,
+          "q25": 0.1983,
+          "q75": 0.4036,
+          "iqr": 0.2053,
+          "min": 0.1001,
+          "max": 0.8895
+        },
+        "u_rms_A_median": 0.7549,
+        "recon_median": 0.29
+      },
+      {
+        "bin": "r < 0.50",
+        "lo_inclusive": null,
+        "hi_exclusive": 0.5,
+        "n_systems": 4,
+        "systems": [
+          "cspbi3_cubic",
+          "cssnbr3_cubic",
+          "cssni3_cubic",
+          "pbtio3_cubic"
+        ],
+        "spread_eV_A": {
+          "n": 34,
+          "median": 2.1075,
+          "q25": 1.3263,
+          "q75": 3.3725,
+          "iqr": 2.0461,
+          "min": 0.5261,
+          "max": 75.9792
+        },
+        "u_rms_A_median": 0.9259,
+        "recon_median": 2.11
+      }
+    ],
+    "overlap_free_vs_overlap_spread_eV_A": {
+      "overlap_free": {
+        "n": 763,
+        "median": 0.0604,
+        "q25": 0.0423,
+        "q75": 0.0856,
+        "iqr": 0.0433,
+        "min": 0.0127,
+        "max": 0.3646
+      },
+      "overlap": {
+        "n": 197,
+        "median": 0.1973,
+        "q25": 0.1098,
+        "q75": 0.4357,
+        "iqr": 0.3259,
+        "min": 0.063,
+        "max": 75.9792
+      }
+    },
+    "rho_spread_vs_u_rms__overlap_free_pooled": {
+      "rho": -0.064,
+      "n": 763,
+      "n_systems": 15,
+      "ci_lo": -0.423,
+      "ci_hi": 0.425,
+      "n_boot": 10000,
+      "n_clusters": 15,
+      "recon": -0.06,
+      "note": "pooled over 15 systems, so it mixes between-system spread levels (C diamond and Si sit at 0.1-0.27 eV/A at small amplitude) with the within-system amplitude dependence; the per-system rhos separate them"
+    },
+    "rho_spread_vs_u_rms__overlap_free_within_system": {
+      "per_system": {
+        "batio3_cubic": {
+          "n": 55,
+          "rho_spread_vs_u_rms": 0.941,
+          "median_spread_eV_A": 0.0502
+        },
+        "c_diamond": {
+          "n": 64,
+          "rho_spread_vs_u_rms": 0.495,
+          "median_spread_eV_A": 0.2548
+        },
+        "ceo2_cubic": {
+          "n": 64,
+          "rho_spread_vs_u_rms": 0.922,
+          "median_spread_eV_A": 0.0537
+        },
+        "cspbi3_cubic": {
+          "n": 19,
+          "rho_spread_vs_u_rms": 0.674,
+          "median_spread_eV_A": 0.0381
+        },
+        "cssnbr3_cubic": {
+          "n": 17,
+          "rho_spread_vs_u_rms": 0.534,
+          "median_spread_eV_A": 0.0448
+        },
+        "cssni3_cubic": {
+          "n": 16,
+          "rho_spread_vs_u_rms": 0.456,
+          "median_spread_eV_A": 0.0444
+        },
+        "cu_fcc": {
+          "n": 64,
+          "rho_spread_vs_u_rms": 0.827,
+          "median_spread_eV_A": 0.0441
+        },
+        "hfo2_cubic": {
+          "n": 64,
+          "rho_spread_vs_u_rms": 0.875,
+          "median_spread_eV_A": 0.0804
+        },
+        "knbo3_cubic": {
+          "n": 64,
+          "rho_spread_vs_u_rms": 0.937,
+          "median_spread_eV_A": 0.0443
+        },
+        "mgo_rocksalt": {
+          "n": 64,
+          "rho_spread_vs_u_rms": 0.9,
+          "median_spread_eV_A": 0.0614
+        },
+        "nacl_rocksalt": {
+          "n": 59,
+          "rho_spread_vs_u_rms": 0.9,
+          "median_spread_eV_A": 0.0312
+        },
+        "pbtio3_cubic": {
+          "n": 26,
+          "rho_spread_vs_u_rms": 0.867,
+          "median_spread_eV_A": 0.0576
+        },
+        "si_diamond": {
+          "n": 64,
+          "rho_spread_vs_u_rms": 0.858,
+          "median_spread_eV_A": 0.1416
+        },
+        "srtio3_cubic": {
+          "n": 59,
+          "rho_spread_vs_u_rms": 0.934,
+          "median_spread_eV_A": 0.0462
+        },
+        "zro2_cubic": {
+          "n": 64,
+          "rho_spread_vs_u_rms": 0.794,
+          "median_spread_eV_A": 0.0733
+        }
+      },
+      "median_rho": 0.867,
+      "n_systems_rho_positive": 15,
+      "n_systems": 15
+    },
+    "rho_spread_vs_u_rms__all_configs_pooled": {
+      "rho": 0.332,
+      "n": 960,
+      "n_systems": 15,
+      "ci_lo": -0.05,
+      "ci_hi": 0.705,
+      "n_boot": 10000,
+      "n_clusters": 15
+    },
+    "rho_spread_vs_pair_ratio__all_configs_pooled": {
+      "rho": -0.372,
+      "n": 960,
+      "n_systems": 15,
+      "ci_lo": -0.785,
+      "ci_hi": 0.002,
+      "n_boot": 10000,
+      "n_clusters": 15
+    },
+    "rho_spread_vs_pair_ratio__all_configs_within_system": {
+      "per_system": {
+        "batio3_cubic": -0.907,
+        "c_diamond": -0.564,
+        "ceo2_cubic": -0.88,
+        "cspbi3_cubic": -0.969,
+        "cssnbr3_cubic": -0.982,
+        "cssni3_cubic": -0.968,
+        "cu_fcc": -0.924,
+        "hfo2_cubic": -0.766,
+        "knbo3_cubic": -0.932,
+        "mgo_rocksalt": -0.81,
+        "nacl_rocksalt": -0.96,
+        "pbtio3_cubic": -0.968,
+        "si_diamond": -0.82,
+        "srtio3_cubic": -0.936,
+        "zro2_cubic": -0.723
+      },
+      "median_rho": -0.924,
+      "n_systems_rho_negative": 15,
+      "n_systems": 15
+    }
+  },
+  "unit_level": {
+    "label": "consensus_wrong (force_spread.py / analysis.h3_ensemble_guardrail)",
+    "score": "S_5model: median over the 16 configurations of the per-configuration spread, five production models",
+    "subsets": {
+      "all": {
+        "n_units": 60,
+        "n_wrong": 12,
+        "n_systems": 15,
+        "spearman_spread_vs_wrong": {
+          "rho": 0.25,
+          "n": 60,
+          "n_systems": 15,
+          "ci_lo": -0.106,
+          "ci_hi": 0.532,
+          "n_boot": 9998,
+          "n_clusters": 15
+        },
+        "recon_rho": 0.25,
+        "auc_spread_for_wrong": {
+          "auc": 0.681,
+          "p_perm_clustered": 0.1039,
+          "n_perm": 10000,
+          "n_clusters": 15,
+          "n_units": 60,
+          "ci_lo": 0.416,
+          "ci_hi": 0.908,
+          "n_boot": 9998,
+          "recon": null
+        },
+        "median_spread_wrong": 0.1345,
+        "median_spread_right": 0.0688,
+        "auc_normalised_spread_Snorm_5model": 0.578,
+        "within_system_pair_auc": {
+          "auc": 0.591,
+          "n_pairs": 22
+        },
+        "errors": [
+          {
+            "system": "batio3_cubic",
+            "T": 300.0,
+            "kind": "false-stable",
+            "S_5model_eV_A": 0.043,
+            "spread_percentile_in_subset": 19.2,
+            "min_pair_ratio": 0.823,
+            "min_pair_ratio_pair": "O-Ti",
+            "rms_disp_A": 0.0732,
+            "vote_disagreement": 0.2,
+            "per_model_call": {
+              "mace_mp0": "stable",
+              "chgnet": "stable",
+              "orb_v2": "unstable",
+              "sevennet0": "stable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 4,
+            "unanimous": false,
+            "dissenting_models": [
+              "orb_v2"
+            ],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "T": 600.0,
+            "kind": "false-unstable",
+            "S_5model_eV_A": 0.281,
+            "spread_percentile_in_subset": 92.5,
+            "min_pair_ratio": 0.476,
+            "min_pair_ratio_pair": "I-Cs",
+            "rms_disp_A": 0.4423,
+            "vote_disagreement": 0.0,
+            "per_model_call": {
+              "mace_mp0": "unstable",
+              "chgnet": "unstable",
+              "orb_v2": "unstable",
+              "sevennet0": "unstable",
+              "mattersim": "unstable"
+            },
+            "n_models_agreeing_with_consensus": 5,
+            "unanimous": true,
+            "dissenting_models": [],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "T": 900.0,
+            "kind": "false-unstable",
+            "S_5model_eV_A": 0.4955,
+            "spread_percentile_in_subset": 95.8,
+            "min_pair_ratio": 0.384,
+            "min_pair_ratio_pair": "I-Cs",
+            "rms_disp_A": 0.5421,
+            "vote_disagreement": 0.0,
+            "per_model_call": {
+              "mace_mp0": "unstable",
+              "chgnet": "unstable",
+              "orb_v2": "unstable",
+              "sevennet0": "unstable",
+              "mattersim": "unstable"
+            },
+            "n_models_agreeing_with_consensus": 5,
+            "unanimous": true,
+            "dissenting_models": [],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "T": 300.0,
+            "kind": "false-unstable",
+            "S_5model_eV_A": 0.0896,
+            "spread_percentile_in_subset": 69.2,
+            "min_pair_ratio": 0.639,
+            "min_pair_ratio_pair": "Br-Cs",
+            "rms_disp_A": 0.3104,
+            "vote_disagreement": 0.0,
+            "per_model_call": {
+              "mace_mp0": "unstable",
+              "chgnet": "unstable",
+              "orb_v2": "unstable",
+              "sevennet0": "unstable",
+              "mattersim": "unstable"
+            },
+            "n_models_agreeing_with_consensus": 5,
+            "unanimous": true,
+            "dissenting_models": [],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "T": 600.0,
+            "kind": "false-unstable",
+            "S_5model_eV_A": 0.3587,
+            "spread_percentile_in_subset": 94.2,
+            "min_pair_ratio": 0.408,
+            "min_pair_ratio_pair": "Br-Cs",
+            "rms_disp_A": 0.4424,
+            "vote_disagreement": 0.2,
+            "per_model_call": {
+              "mace_mp0": "unstable",
+              "chgnet": "unstable",
+              "orb_v2": "stable",
+              "sevennet0": "unstable",
+              "mattersim": "unstable"
+            },
+            "n_models_agreeing_with_consensus": 4,
+            "unanimous": false,
+            "dissenting_models": [
+              "orb_v2"
+            ],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "T": 600.0,
+            "kind": "false-unstable",
+            "S_5model_eV_A": 0.1794,
+            "spread_percentile_in_subset": 79.2,
+            "min_pair_ratio": 0.517,
+            "min_pair_ratio_pair": "I-Cs",
+            "rms_disp_A": 0.4434,
+            "vote_disagreement": 0.2,
+            "per_model_call": {
+              "mace_mp0": "unstable",
+              "chgnet": "unstable",
+              "orb_v2": "stable",
+              "sevennet0": "unstable",
+              "mattersim": "unstable"
+            },
+            "n_models_agreeing_with_consensus": 4,
+            "unanimous": false,
+            "dissenting_models": [
+              "orb_v2"
+            ],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "T": 900.0,
+            "kind": "false-unstable",
+            "S_5model_eV_A": 1.9008,
+            "spread_percentile_in_subset": 99.2,
+            "min_pair_ratio": 0.314,
+            "min_pair_ratio_pair": "I-Cs",
+            "rms_disp_A": 0.551,
+            "vote_disagreement": 0.4,
+            "per_model_call": {
+              "mace_mp0": "unstable",
+              "chgnet": "unstable",
+              "orb_v2": "stable",
+              "sevennet0": "unstable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 3,
+            "unanimous": false,
+            "dissenting_models": [
+              "orb_v2",
+              "mattersim"
+            ],
+            "unanimous_ex_orb": false
+          },
+          {
+            "system": "knbo3_cubic",
+            "T": 300.0,
+            "kind": "false-stable",
+            "S_5model_eV_A": 0.0415,
+            "spread_percentile_in_subset": 15.8,
+            "min_pair_ratio": 0.848,
+            "min_pair_ratio_pair": "O-K",
+            "rms_disp_A": 0.0863,
+            "vote_disagreement": 0.2,
+            "per_model_call": {
+              "mace_mp0": "stable",
+              "chgnet": "stable",
+              "orb_v2": "unstable",
+              "sevennet0": "stable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 4,
+            "unanimous": false,
+            "dissenting_models": [
+              "orb_v2"
+            ],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "T": 600.0,
+            "kind": "false-stable",
+            "S_5model_eV_A": 0.0532,
+            "spread_percentile_in_subset": 32.5,
+            "min_pair_ratio": 0.795,
+            "min_pair_ratio_pair": "O-Nb",
+            "rms_disp_A": 0.115,
+            "vote_disagreement": 0.0,
+            "per_model_call": {
+              "mace_mp0": "stable",
+              "chgnet": "stable",
+              "orb_v2": "stable",
+              "sevennet0": "stable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 5,
+            "unanimous": true,
+            "dissenting_models": [],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "pbtio3_cubic",
+            "T": 100.0,
+            "kind": "false-stable",
+            "S_5model_eV_A": 0.0493,
+            "spread_percentile_in_subset": 27.5,
+            "min_pair_ratio": 0.79,
+            "min_pair_ratio_pair": "O-Pb",
+            "rms_disp_A": 0.0902,
+            "vote_disagreement": 0.4,
+            "per_model_call": {
+              "mace_mp0": "stable",
+              "chgnet": "unstable",
+              "orb_v2": "stable",
+              "sevennet0": "unstable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 3,
+            "unanimous": false,
+            "dissenting_models": [
+              "chgnet",
+              "sevennet0"
+            ],
+            "unanimous_ex_orb": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "T": 300.0,
+            "kind": "false-stable",
+            "S_5model_eV_A": 0.0881,
+            "spread_percentile_in_subset": 65.8,
+            "min_pair_ratio": 0.665,
+            "min_pair_ratio_pair": "O-Pb",
+            "rms_disp_A": 0.1448,
+            "vote_disagreement": 0.4,
+            "per_model_call": {
+              "mace_mp0": "stable",
+              "chgnet": "unstable",
+              "orb_v2": "stable",
+              "sevennet0": "unstable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 3,
+            "unanimous": false,
+            "dissenting_models": [
+              "chgnet",
+              "sevennet0"
+            ],
+            "unanimous_ex_orb": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "T": 600.0,
+            "kind": "false-stable",
+            "S_5model_eV_A": 0.2063,
+            "spread_percentile_in_subset": 82.5,
+            "min_pair_ratio": 0.556,
+            "min_pair_ratio_pair": "O-Pb",
+            "rms_disp_A": 0.208,
+            "vote_disagreement": 0.2,
+            "per_model_call": {
+              "mace_mp0": "stable",
+              "chgnet": "unstable",
+              "orb_v2": "stable",
+              "sevennet0": "stable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 4,
+            "unanimous": false,
+            "dissenting_models": [
+              "chgnet"
+            ],
+            "unanimous_ex_orb": false
+          }
+        ],
+        "n_errors_unanimous": 4,
+        "n_errors_unanimous_ex_orb": 8,
+        "reproduces_force_spread_primary": true
+      },
+      "clean": {
+        "n_units": 43,
+        "n_wrong": 4,
+        "n_systems": 15,
+        "spearman_spread_vs_wrong": {
+          "rho": -0.187,
+          "n": 43,
+          "n_systems": 15,
+          "ci_lo": -0.357,
+          "ci_hi": 0.031,
+          "n_boot": 9651,
+          "n_clusters": 15
+        },
+        "recon_rho": -0.19,
+        "auc_spread_for_wrong": {
+          "auc": 0.314,
+          "p_perm_clustered": null,
+          "perm_note": "cluster_permutation_auc needs equal-sized blocks, got sizes [1, 2, 3, 4]. Use the bootstrap, or aggregate to one row per cluster.",
+          "ci_lo": 0.146,
+          "ci_hi": 0.529,
+          "n_boot": 9651,
+          "n_clusters": 15,
+          "recon": 0.314
+        },
+        "median_spread_wrong": 0.0461,
+        "median_spread_right": 0.0585,
+        "auc_normalised_spread_Snorm_5model": 0.167,
+        "within_system_pair_auc": {
+          "auc": 0.6,
+          "n_pairs": 5
+        },
+        "errors": [
+          {
+            "system": "batio3_cubic",
+            "T": 300.0,
+            "kind": "false-stable",
+            "S_5model_eV_A": 0.043,
+            "spread_percentile_in_subset": 26.7,
+            "min_pair_ratio": 0.823,
+            "min_pair_ratio_pair": "O-Ti",
+            "rms_disp_A": 0.0732,
+            "vote_disagreement": 0.2,
+            "per_model_call": {
+              "mace_mp0": "stable",
+              "chgnet": "stable",
+              "orb_v2": "unstable",
+              "sevennet0": "stable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 4,
+            "unanimous": false,
+            "dissenting_models": [
+              "orb_v2"
+            ],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "T": 300.0,
+            "kind": "false-stable",
+            "S_5model_eV_A": 0.0415,
+            "spread_percentile_in_subset": 22.1,
+            "min_pair_ratio": 0.848,
+            "min_pair_ratio_pair": "O-K",
+            "rms_disp_A": 0.0863,
+            "vote_disagreement": 0.2,
+            "per_model_call": {
+              "mace_mp0": "stable",
+              "chgnet": "stable",
+              "orb_v2": "unstable",
+              "sevennet0": "stable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 4,
+            "unanimous": false,
+            "dissenting_models": [
+              "orb_v2"
+            ],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "knbo3_cubic",
+            "T": 600.0,
+            "kind": "false-stable",
+            "S_5model_eV_A": 0.0532,
+            "spread_percentile_in_subset": 45.3,
+            "min_pair_ratio": 0.795,
+            "min_pair_ratio_pair": "O-Nb",
+            "rms_disp_A": 0.115,
+            "vote_disagreement": 0.0,
+            "per_model_call": {
+              "mace_mp0": "stable",
+              "chgnet": "stable",
+              "orb_v2": "stable",
+              "sevennet0": "stable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 5,
+            "unanimous": true,
+            "dissenting_models": [],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "pbtio3_cubic",
+            "T": 100.0,
+            "kind": "false-stable",
+            "S_5model_eV_A": 0.0493,
+            "spread_percentile_in_subset": 38.4,
+            "min_pair_ratio": 0.79,
+            "min_pair_ratio_pair": "O-Pb",
+            "rms_disp_A": 0.0902,
+            "vote_disagreement": 0.4,
+            "per_model_call": {
+              "mace_mp0": "stable",
+              "chgnet": "unstable",
+              "orb_v2": "stable",
+              "sevennet0": "unstable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 3,
+            "unanimous": false,
+            "dissenting_models": [
+              "chgnet",
+              "sevennet0"
+            ],
+            "unanimous_ex_orb": false
+          }
+        ],
+        "n_errors_unanimous": 1,
+        "n_errors_unanimous_ex_orb": 3,
+        "highest_spread_units": [
+          {
+            "system": "c_diamond",
+            "T": 900.0,
+            "S_5model_eV_A": 0.2726,
+            "consensus_wrong": false
+          },
+          {
+            "system": "c_diamond",
+            "T": 600.0,
+            "S_5model_eV_A": 0.2637,
+            "consensus_wrong": false
+          },
+          {
+            "system": "c_diamond",
+            "T": 300.0,
+            "S_5model_eV_A": 0.2411,
+            "consensus_wrong": false
+          },
+          {
+            "system": "c_diamond",
+            "T": 100.0,
+            "S_5model_eV_A": 0.2367,
+            "consensus_wrong": false
+          },
+          {
+            "system": "si_diamond",
+            "T": 900.0,
+            "S_5model_eV_A": 0.1817,
+            "consensus_wrong": false
+          },
+          {
+            "system": "si_diamond",
+            "T": 600.0,
+            "S_5model_eV_A": 0.1484,
+            "consensus_wrong": false
+          },
+          {
+            "system": "si_diamond",
+            "T": 300.0,
+            "S_5model_eV_A": 0.1239,
+            "consensus_wrong": false
+          },
+          {
+            "system": "si_diamond",
+            "T": 100.0,
+            "S_5model_eV_A": 0.1059,
+            "consensus_wrong": false
+          }
+        ],
+        "reproduces_force_spread_variant_g": true
+      },
+      "overlap": {
+        "n_units": 17,
+        "n_wrong": 8,
+        "n_systems": 7,
+        "spearman_spread_vs_wrong": {
+          "rho": 0.553,
+          "n": 17,
+          "n_systems": 7,
+          "ci_lo": -0.025,
+          "ci_hi": 0.866,
+          "n_boot": 9975,
+          "n_clusters": 7
+        },
+        "recon_rho": 0.55,
+        "auc_spread_for_wrong": {
+          "auc": 0.819,
+          "p_perm_clustered": null,
+          "perm_note": "cluster_permutation_auc needs equal-sized blocks, got sizes [1, 2, 3]. Use the bootstrap, or aggregate to one row per cluster.",
+          "ci_lo": 0.486,
+          "ci_hi": 1.0,
+          "n_boot": 9975,
+          "n_clusters": 7,
+          "recon": 0.819
+        },
+        "median_spread_wrong": 0.2437,
+        "median_spread_right": 0.0828,
+        "auc_normalised_spread_Snorm_5model": 0.681,
+        "within_system_pair_auc": {
+          "auc": 0.5,
+          "n_pairs": 8
+        },
+        "errors": [
+          {
+            "system": "cspbi3_cubic",
+            "T": 600.0,
+            "kind": "false-unstable",
+            "S_5model_eV_A": 0.281,
+            "spread_percentile_in_subset": 73.5,
+            "min_pair_ratio": 0.476,
+            "min_pair_ratio_pair": "I-Cs",
+            "rms_disp_A": 0.4423,
+            "vote_disagreement": 0.0,
+            "per_model_call": {
+              "mace_mp0": "unstable",
+              "chgnet": "unstable",
+              "orb_v2": "unstable",
+              "sevennet0": "unstable",
+              "mattersim": "unstable"
+            },
+            "n_models_agreeing_with_consensus": 5,
+            "unanimous": true,
+            "dissenting_models": [],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "cspbi3_cubic",
+            "T": 900.0,
+            "kind": "false-unstable",
+            "S_5model_eV_A": 0.4955,
+            "spread_percentile_in_subset": 85.3,
+            "min_pair_ratio": 0.384,
+            "min_pair_ratio_pair": "I-Cs",
+            "rms_disp_A": 0.5421,
+            "vote_disagreement": 0.0,
+            "per_model_call": {
+              "mace_mp0": "unstable",
+              "chgnet": "unstable",
+              "orb_v2": "unstable",
+              "sevennet0": "unstable",
+              "mattersim": "unstable"
+            },
+            "n_models_agreeing_with_consensus": 5,
+            "unanimous": true,
+            "dissenting_models": [],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "T": 300.0,
+            "kind": "false-unstable",
+            "S_5model_eV_A": 0.0896,
+            "spread_percentile_in_subset": 44.1,
+            "min_pair_ratio": 0.639,
+            "min_pair_ratio_pair": "Br-Cs",
+            "rms_disp_A": 0.3104,
+            "vote_disagreement": 0.0,
+            "per_model_call": {
+              "mace_mp0": "unstable",
+              "chgnet": "unstable",
+              "orb_v2": "unstable",
+              "sevennet0": "unstable",
+              "mattersim": "unstable"
+            },
+            "n_models_agreeing_with_consensus": 5,
+            "unanimous": true,
+            "dissenting_models": [],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "cssnbr3_cubic",
+            "T": 600.0,
+            "kind": "false-unstable",
+            "S_5model_eV_A": 0.3587,
+            "spread_percentile_in_subset": 79.4,
+            "min_pair_ratio": 0.408,
+            "min_pair_ratio_pair": "Br-Cs",
+            "rms_disp_A": 0.4424,
+            "vote_disagreement": 0.2,
+            "per_model_call": {
+              "mace_mp0": "unstable",
+              "chgnet": "unstable",
+              "orb_v2": "stable",
+              "sevennet0": "unstable",
+              "mattersim": "unstable"
+            },
+            "n_models_agreeing_with_consensus": 4,
+            "unanimous": false,
+            "dissenting_models": [
+              "orb_v2"
+            ],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "T": 600.0,
+            "kind": "false-unstable",
+            "S_5model_eV_A": 0.1794,
+            "spread_percentile_in_subset": 55.9,
+            "min_pair_ratio": 0.517,
+            "min_pair_ratio_pair": "I-Cs",
+            "rms_disp_A": 0.4434,
+            "vote_disagreement": 0.2,
+            "per_model_call": {
+              "mace_mp0": "unstable",
+              "chgnet": "unstable",
+              "orb_v2": "stable",
+              "sevennet0": "unstable",
+              "mattersim": "unstable"
+            },
+            "n_models_agreeing_with_consensus": 4,
+            "unanimous": false,
+            "dissenting_models": [
+              "orb_v2"
+            ],
+            "unanimous_ex_orb": true
+          },
+          {
+            "system": "cssni3_cubic",
+            "T": 900.0,
+            "kind": "false-unstable",
+            "S_5model_eV_A": 1.9008,
+            "spread_percentile_in_subset": 97.1,
+            "min_pair_ratio": 0.314,
+            "min_pair_ratio_pair": "I-Cs",
+            "rms_disp_A": 0.551,
+            "vote_disagreement": 0.4,
+            "per_model_call": {
+              "mace_mp0": "unstable",
+              "chgnet": "unstable",
+              "orb_v2": "stable",
+              "sevennet0": "unstable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 3,
+            "unanimous": false,
+            "dissenting_models": [
+              "orb_v2",
+              "mattersim"
+            ],
+            "unanimous_ex_orb": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "T": 300.0,
+            "kind": "false-stable",
+            "S_5model_eV_A": 0.0881,
+            "spread_percentile_in_subset": 38.2,
+            "min_pair_ratio": 0.665,
+            "min_pair_ratio_pair": "O-Pb",
+            "rms_disp_A": 0.1448,
+            "vote_disagreement": 0.4,
+            "per_model_call": {
+              "mace_mp0": "stable",
+              "chgnet": "unstable",
+              "orb_v2": "stable",
+              "sevennet0": "unstable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 3,
+            "unanimous": false,
+            "dissenting_models": [
+              "chgnet",
+              "sevennet0"
+            ],
+            "unanimous_ex_orb": false
+          },
+          {
+            "system": "pbtio3_cubic",
+            "T": 600.0,
+            "kind": "false-stable",
+            "S_5model_eV_A": 0.2063,
+            "spread_percentile_in_subset": 61.8,
+            "min_pair_ratio": 0.556,
+            "min_pair_ratio_pair": "O-Pb",
+            "rms_disp_A": 0.208,
+            "vote_disagreement": 0.2,
+            "per_model_call": {
+              "mace_mp0": "stable",
+              "chgnet": "unstable",
+              "orb_v2": "stable",
+              "sevennet0": "stable",
+              "mattersim": "stable"
+            },
+            "n_models_agreeing_with_consensus": 4,
+            "unanimous": false,
+            "dissenting_models": [
+              "chgnet"
+            ],
+            "unanimous_ex_orb": false
+          }
+        ],
+        "n_errors_unanimous": 3,
+        "n_errors_unanimous_ex_orb": 5
+      }
+    }
+  },
+  "pbe_set": {
+    "n_configs": 64,
+    "n_models": 5,
+    "uninformative_committee_reference": {
+      "shared_fraction": 0.2,
+      "error_over_spread": 0.5,
+      "assumption": "independent, equal-variance, zero-mean model errors"
+    },
+    "definitions": {
+      "spread": "sqrt(mean over atoms, components of the population variance across models) = force_spread's per-configuration statistic",
+      "ens_mean_rmse": "RMS over atoms, components of (Fbar - F_PBE)",
+      "mean_model_rmse": "mean over models of each model's force RMSE vs PBE",
+      "shared_fraction": "|Fbar - F_PBE|^2 / mean_m |F_m - F_PBE|^2 (per component)",
+      "error_over_spread": "ens_mean_rmse / spread; pooled = sqrt(sum shared / sum spread_var)",
+      "overlap": "pair-resolved contact ratio < 0.75 against the unit's undisplaced reference supercell (_ref.extxyz frame 0)"
+    },
+    "per_ensemble": [
+      {
+        "system": "batio3_cubic",
+        "set": "baseline",
+        "owner_model": "mace_mp0",
+        "geom_file": "geom_c3b/batio3_cubic_mace_mp0_ref.extxyz",
+        "n_configs": 4,
+        "kind": "baseline (rattled about the undisplaced ideal supercell)",
+        "rattle_stdev_A": 0.02,
+        "rattle_seeds": [
+          20260926,
+          20260927,
+          20260928,
+          20260929
+        ],
+        "n_overlap": 0,
+        "u_rms_A_median": 0.0333,
+        "min_pair_ratio": 0.963,
+        "rms_f_pbe_median": 0.2662,
+        "shared_fraction_pooled": 0.32,
+        "spread_rms_eV_A": 0.0192,
+        "ens_mean_rmse_eV_A": 0.0132,
+        "error_over_spread_pooled": 0.686,
+        "shared_fraction_per_config_median": 0.3234,
+        "mean_pairwise_error_cosine_median": 0.205,
+        "mean_model_rmse_median_eV_A": 0.0208,
+        "shared_fraction_pooled_ex_orb": 0.4774
+      },
+      {
+        "system": "batio3_cubic",
+        "set": "sscha",
+        "owner_model": "mace_mp0",
+        "geom_file": "geom_c3b/batio3_cubic_mace_mp0_T100.extxyz",
+        "n_configs": 12,
+        "kind": "SSCHA-sampled (owner model's C1 ensemble at T)",
+        "T": 100.0,
+        "src_files": [
+          "batio3_cubic_mace_mp0_100K_sc222_seed0.extxyz",
+          "batio3_cubic_mace_mp0_100K_sc222_seed1.extxyz",
+          "batio3_cubic_mace_mp0_100K_sc222_seed2.extxyz",
+          "batio3_cubic_mace_mp0_100K_sc222_seed3.extxyz"
+        ],
+        "n_overlap": 0,
+        "u_rms_A_median": 0.0917,
+        "min_pair_ratio": 0.891,
+        "rms_f_pbe_median": 0.4806,
+        "shared_fraction_pooled": 0.5037,
+        "spread_rms_eV_A": 0.0327,
+        "ens_mean_rmse_eV_A": 0.0329,
+        "error_over_spread_pooled": 1.007,
+        "shared_fraction_per_config_median": 0.4963,
+        "mean_pairwise_error_cosine_median": 0.417,
+        "mean_model_rmse_median_eV_A": 0.0442,
+        "shared_fraction_pooled_ex_orb": 0.6276,
+        "rattle_seeds": null
+      },
+      {
+        "system": "srtio3_cubic",
+        "set": "baseline",
+        "owner_model": "mace_mp0",
+        "geom_file": "geom_c3b/srtio3_cubic_mace_mp0_ref.extxyz",
+        "n_configs": 4,
+        "kind": "baseline (rattled about the undisplaced ideal supercell)",
+        "rattle_stdev_A": 0.02,
+        "rattle_seeds": [
+          20260926,
+          20260927,
+          20260928,
+          20260929
+        ],
+        "n_overlap": 0,
+        "u_rms_A_median": 0.0333,
+        "min_pair_ratio": 0.962,
+        "rms_f_pbe_median": 0.308,
+        "shared_fraction_pooled": 0.4642,
+        "spread_rms_eV_A": 0.0183,
+        "ens_mean_rmse_eV_A": 0.017,
+        "error_over_spread_pooled": 0.931,
+        "shared_fraction_per_config_median": 0.4681,
+        "mean_pairwise_error_cosine_median": 0.376,
+        "mean_model_rmse_median_eV_A": 0.0224,
+        "shared_fraction_pooled_ex_orb": 0.5811
+      },
+      {
+        "system": "srtio3_cubic",
+        "set": "sscha",
+        "owner_model": "mace_mp0",
+        "geom_file": "geom_c3b/srtio3_cubic_mace_mp0_T600.extxyz",
+        "n_configs": 12,
+        "kind": "SSCHA-sampled (owner model's C1 ensemble at T)",
+        "T": 600.0,
+        "src_files": [
+          "srtio3_cubic_mace_mp0_600K_sc222_seed0.extxyz",
+          "srtio3_cubic_mace_mp0_600K_sc222_seed1.extxyz",
+          "srtio3_cubic_mace_mp0_600K_sc222_seed2.extxyz",
+          "srtio3_cubic_mace_mp0_600K_sc222_seed3.extxyz"
+        ],
+        "n_overlap": 7,
+        "u_rms_A_median": 0.3176,
+        "min_pair_ratio": 0.675,
+        "rms_f_pbe_median": 2.1444,
+        "shared_fraction_pooled": 0.9411,
+        "spread_rms_eV_A": 0.1206,
+        "ens_mean_rmse_eV_A": 0.4821,
+        "error_over_spread_pooled": 3.997,
+        "shared_fraction_per_config_median": 0.8775,
+        "mean_pairwise_error_cosine_median": 0.872,
+        "mean_model_rmse_median_eV_A": 0.2474,
+        "shared_fraction_pooled_ex_orb": 0.9373,
+        "rattle_seeds": null
+      },
+      {
+        "system": "zr_bcc",
+        "set": "baseline",
+        "owner_model": "mattersim",
+        "geom_file": "geom_c3b/zr_bcc_mattersim_ref.extxyz",
+        "n_configs": 4,
+        "kind": "baseline (rattled about the undisplaced ideal supercell)",
+        "rattle_stdev_A": 0.02,
+        "rattle_seeds": [
+          20260926,
+          20260927,
+          20260928,
+          20260929
+        ],
+        "n_overlap": 0,
+        "u_rms_A_median": 0.0283,
+        "min_pair_ratio": 0.98,
+        "rms_f_pbe_median": 0.0651,
+        "shared_fraction_pooled": 0.4237,
+        "spread_rms_eV_A": 0.0309,
+        "ens_mean_rmse_eV_A": 0.0265,
+        "error_over_spread_pooled": 0.857,
+        "shared_fraction_per_config_median": 0.3415,
+        "mean_pairwise_error_cosine_median": 0.187,
+        "mean_model_rmse_median_eV_A": 0.0369,
+        "shared_fraction_pooled_ex_orb": 0.5061
+      },
+      {
+        "system": "zr_bcc",
+        "set": "sscha",
+        "owner_model": "mattersim",
+        "geom_file": "geom_c3b/zr_bcc_mattersim_T50.extxyz",
+        "n_configs": 12,
+        "kind": "SSCHA-sampled (owner model's C1 ensemble at T)",
+        "T": 50.0,
+        "src_files": [
+          "zr_bcc_mattersim_50K_sc222_seed0.extxyz",
+          "zr_bcc_mattersim_50K_sc222_seed1.extxyz",
+          "zr_bcc_mattersim_50K_sc222_seed2.extxyz",
+          "zr_bcc_mattersim_50K_sc222_seed3.extxyz"
+        ],
+        "n_overlap": 0,
+        "u_rms_A_median": 0.0936,
+        "min_pair_ratio": 0.931,
+        "rms_f_pbe_median": 0.2256,
+        "shared_fraction_pooled": 0.4541,
+        "spread_rms_eV_A": 0.0878,
+        "ens_mean_rmse_eV_A": 0.08,
+        "error_over_spread_pooled": 0.912,
+        "shared_fraction_per_config_median": 0.4869,
+        "mean_pairwise_error_cosine_median": 0.283,
+        "mean_model_rmse_median_eV_A": 0.1144,
+        "shared_fraction_pooled_ex_orb": 0.5752,
+        "rattle_seeds": null
+      },
+      {
+        "system": "zro2_cubic",
+        "set": "baseline",
+        "owner_model": "mace_mp0",
+        "geom_file": "geom_c3b/zro2_cubic_mace_mp0_ref.extxyz",
+        "n_configs": 4,
+        "kind": "baseline (rattled about the undisplaced ideal supercell)",
+        "rattle_stdev_A": 0.02,
+        "rattle_seeds": [
+          20260926,
+          20260927,
+          20260928,
+          20260929
+        ],
+        "n_overlap": 0,
+        "u_rms_A_median": 0.033,
+        "min_pair_ratio": 0.966,
+        "rms_f_pbe_median": 0.3098,
+        "shared_fraction_pooled": 0.3586,
+        "spread_rms_eV_A": 0.0379,
+        "ens_mean_rmse_eV_A": 0.0284,
+        "error_over_spread_pooled": 0.748,
+        "shared_fraction_per_config_median": 0.3608,
+        "mean_pairwise_error_cosine_median": 0.187,
+        "mean_model_rmse_median_eV_A": 0.0428,
+        "shared_fraction_pooled_ex_orb": 0.3739
+      },
+      {
+        "system": "zro2_cubic",
+        "set": "sscha",
+        "owner_model": "mace_mp0",
+        "geom_file": "geom_c3b/zro2_cubic_mace_mp0_T100.extxyz",
+        "n_configs": 12,
+        "kind": "SSCHA-sampled (owner model's C1 ensemble at T)",
+        "T": 100.0,
+        "src_files": [
+          "zro2_cubic_mace_mp0_100K_sc222_seed0.extxyz",
+          "zro2_cubic_mace_mp0_100K_sc222_seed1.extxyz",
+          "zro2_cubic_mace_mp0_100K_sc222_seed2.extxyz",
+          "zro2_cubic_mace_mp0_100K_sc222_seed3.extxyz"
+        ],
+        "n_overlap": 0,
+        "u_rms_A_median": 0.0867,
+        "min_pair_ratio": 0.878,
+        "rms_f_pbe_median": 0.5543,
+        "shared_fraction_pooled": 0.5865,
+        "spread_rms_eV_A": 0.0527,
+        "ens_mean_rmse_eV_A": 0.0627,
+        "error_over_spread_pooled": 1.191,
+        "shared_fraction_per_config_median": 0.6046,
+        "mean_pairwise_error_cosine_median": 0.522,
+        "mean_model_rmse_median_eV_A": 0.0771,
+        "shared_fraction_pooled_ex_orb": 0.6185,
+        "rattle_seeds": null
+      }
+    ],
+    "pooled_by_set": {
+      "baseline": {
+        "shared_fraction_pooled": 0.3888,
+        "spread_rms_eV_A": 0.0278,
+        "ens_mean_rmse_eV_A": 0.0222,
+        "error_over_spread_pooled": 0.798
+      },
+      "sscha": {
+        "shared_fraction_pooled": 0.9033,
+        "spread_rms_eV_A": 0.0808,
+        "ens_mean_rmse_eV_A": 0.2469,
+        "error_over_spread_pooled": 3.057
+      }
+    },
+    "spearman_spread_vs_ens_mean_rmse": {
+      "pooled": {
+        "rho": 0.918,
+        "n": 64,
+        "n_systems": 4,
+        "ci_lo": 0.733,
+        "ci_hi": 0.963,
+        "n_boot": 10000,
+        "n_clusters": 4,
+        "recon": 0.918,
+        "note": "4 systems, so the clustered interval is coarse"
+      },
+      "pooled_overlap_free": {
+        "rho": 0.894,
+        "n": 57,
+        "n_systems": 4,
+        "ci_lo": 0.59,
+        "ci_hi": 0.923,
+        "n_boot": 10000,
+        "n_clusters": 4,
+        "recon": 0.894
+      },
+      "pooled_vs_mean_model_rmse": 0.949,
+      "within_system": {
+        "batio3_cubic": {
+          "ens_mean_rmse": {
+            "rho": 0.674,
+            "p_perm": 0.006,
+            "n": 16,
+            "n_perm": 10000
+          },
+          "mean_model_rmse": 0.803,
+          "sscha_only_ens_mean_rmse": 0.231,
+          "recon": 0.23
+        },
+        "srtio3_cubic": {
+          "ens_mean_rmse": {
+            "rho": 0.947,
+            "p_perm": 0.0001,
+            "n": 16,
+            "n_perm": 10000
+          },
+          "mean_model_rmse": 0.947,
+          "sscha_only_ens_mean_rmse": 0.874,
+          "recon": 0.87
+        },
+        "zr_bcc": {
+          "ens_mean_rmse": {
+            "rho": 0.659,
+            "p_perm": 0.0063,
+            "n": 16,
+            "n_perm": 10000
+          },
+          "mean_model_rmse": 0.929,
+          "sscha_only_ens_mean_rmse": 0.189,
+          "recon": 0.19
+        },
+        "zro2_cubic": {
+          "ens_mean_rmse": {
+            "rho": 0.797,
+            "p_perm": 0.0003,
+            "n": 16,
+            "n_perm": 10000
+          },
+          "mean_model_rmse": 0.906,
+          "sscha_only_ens_mean_rmse": 0.622,
+          "recon": 0.62
+        }
+      }
+    },
+    "error_over_spread": {
+      "overlap_free": {
+        "n": 57,
+        "systems_sets": [
+          "batio3_cubic/baseline",
+          "batio3_cubic/sscha",
+          "srtio3_cubic/baseline",
+          "srtio3_cubic/sscha",
+          "zr_bcc/baseline",
+          "zr_bcc/sscha",
+          "zro2_cubic/baseline",
+          "zro2_cubic/sscha"
+        ],
+        "per_config_median": 0.99,
+        "per_config_q25_q75": [
+          0.809,
+          1.178
+        ],
+        "pooled": 1.41,
+        "shared_fraction_pooled": 0.6655,
+        "spread_median_eV_A": 0.0424,
+        "ens_mean_rmse_median_eV_A": 0.048
+      },
+      "overlap": {
+        "n": 7,
+        "systems_sets": [
+          "srtio3_cubic/sscha"
+        ],
+        "per_config_median": 2.72,
+        "per_config_q25_q75": [
+          2.237,
+          4.149
+        ],
+        "pooled": 4.146,
+        "shared_fraction_pooled": 0.945,
+        "spread_median_eV_A": 0.112,
+        "ens_mean_rmse_median_eV_A": 0.322
+      },
+      "recon": {
+        "nonoverlap": 0.99,
+        "overlap": 2.72
+      }
+    },
+    "configs": [
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 0,
+        "job": "b_batio3_cubic_mace_mp0_base0",
+        "n_atoms": 40,
+        "u_rms_A": 0.03098,
+        "min_dist_A": 1.95111,
+        "pair_ratio": 0.96732,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.27292,
+        "total_mse": 0.00052,
+        "shared_mse": 0.00015,
+        "spread_var": 0.00037,
+        "spread": 0.01913,
+        "ens_mean_rmse": 0.01221,
+        "mean_model_rmse": 0.02062,
+        "shared_fraction": 0.28947,
+        "mean_pairwise_error_cosine": 0.1714,
+        "overlap": false,
+        "ratio_err_spread": 0.63828,
+        "per_model_rmse": {
+          "mace_mp0": 0.02826,
+          "chgnet": 0.03477,
+          "orb_v2": 0.01801,
+          "sevennet0": 0.01182,
+          "mattersim": 0.01023
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 1,
+        "job": "b_batio3_cubic_mace_mp0_base1",
+        "n_atoms": 40,
+        "u_rms_A": 0.03302,
+        "min_dist_A": 1.94223,
+        "pair_ratio": 0.96292,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.25259,
+        "total_mse": 0.00054,
+        "shared_mse": 0.00019,
+        "spread_var": 0.00036,
+        "spread": 0.01887,
+        "ens_mean_rmse": 0.01367,
+        "mean_model_rmse": 0.02101,
+        "shared_fraction": 0.34404,
+        "mean_pairwise_error_cosine": 0.24506,
+        "overlap": false,
+        "ratio_err_spread": 0.72421,
+        "per_model_rmse": {
+          "mace_mp0": 0.02571,
+          "chgnet": 0.03833,
+          "orb_v2": 0.01761,
+          "sevennet0": 0.01213,
+          "mattersim": 0.01127
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 2,
+        "job": "b_batio3_cubic_mace_mp0_base2",
+        "n_atoms": 40,
+        "u_rms_A": 0.03602,
+        "min_dist_A": 1.95869,
+        "pair_ratio": 0.97031,
+        "pair": "O-Ba",
+        "rms_f_pbe": 0.29592,
+        "total_mse": 0.00067,
+        "shared_mse": 0.00021,
+        "spread_var": 0.00045,
+        "spread": 0.0213,
+        "ens_mean_rmse": 0.01456,
+        "mean_model_rmse": 0.02349,
+        "shared_fraction": 0.31851,
+        "mean_pairwise_error_cosine": 0.19611,
+        "overlap": false,
+        "ratio_err_spread": 0.68364,
+        "per_model_rmse": {
+          "mace_mp0": 0.0297,
+          "chgnet": 0.04059,
+          "orb_v2": 0.02196,
+          "sevennet0": 0.01317,
+          "mattersim": 0.01203
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 3,
+        "job": "b_batio3_cubic_mace_mp0_base3",
+        "n_atoms": 40,
+        "u_rms_A": 0.03368,
+        "min_dist_A": 1.94867,
+        "pair_ratio": 0.96611,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.25956,
+        "total_mse": 0.00044,
+        "shared_mse": 0.00014,
+        "spread_var": 0.0003,
+        "spread": 0.0172,
+        "ens_mean_rmse": 0.01203,
+        "mean_model_rmse": 0.01931,
+        "shared_fraction": 0.32838,
+        "mean_pairwise_error_cosine": 0.21298,
+        "overlap": false,
+        "ratio_err_spread": 0.69924,
+        "per_model_rmse": {
+          "mace_mp0": 0.02458,
+          "chgnet": 0.03199,
+          "orb_v2": 0.01858,
+          "sevennet0": 0.0101,
+          "mattersim": 0.01131
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 0,
+        "job": "b_srtio3_cubic_mace_mp0_base0",
+        "n_atoms": 40,
+        "u_rms_A": 0.03098,
+        "min_dist_A": 1.90558,
+        "pair_ratio": 0.96657,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.31906,
+        "total_mse": 0.00062,
+        "shared_mse": 0.00029,
+        "spread_var": 0.00033,
+        "spread": 0.01823,
+        "ens_mean_rmse": 0.01696,
+        "mean_model_rmse": 0.02255,
+        "shared_fraction": 0.46401,
+        "mean_pairwise_error_cosine": 0.37236,
+        "overlap": false,
+        "ratio_err_spread": 0.93043,
+        "per_model_rmse": {
+          "mace_mp0": 0.03696,
+          "chgnet": 0.03342,
+          "orb_v2": 0.01721,
+          "sevennet0": 0.01399,
+          "mattersim": 0.01119
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 1,
+        "job": "b_srtio3_cubic_mace_mp0_base1",
+        "n_atoms": 40,
+        "u_rms_A": 0.03302,
+        "min_dist_A": 1.8967,
+        "pair_ratio": 0.96207,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.29538,
+        "total_mse": 0.00057,
+        "shared_mse": 0.00027,
+        "spread_var": 0.0003,
+        "spread": 0.01733,
+        "ens_mean_rmse": 0.01639,
+        "mean_model_rmse": 0.0223,
+        "shared_fraction": 0.47226,
+        "mean_pairwise_error_cosine": 0.37926,
+        "overlap": false,
+        "ratio_err_spread": 0.94598,
+        "per_model_rmse": {
+          "mace_mp0": 0.03068,
+          "chgnet": 0.03398,
+          "orb_v2": 0.01876,
+          "sevennet0": 0.01544,
+          "mattersim": 0.01263
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 2,
+        "job": "b_srtio3_cubic_mace_mp0_base2",
+        "n_atoms": 40,
+        "u_rms_A": 0.03602,
+        "min_dist_A": 1.91318,
+        "pair_ratio": 0.96963,
+        "pair": "O-Sr",
+        "rms_f_pbe": 0.33115,
+        "total_mse": 0.00081,
+        "shared_mse": 0.00036,
+        "spread_var": 0.00044,
+        "spread": 0.02109,
+        "ens_mean_rmse": 0.01902,
+        "mean_model_rmse": 0.02601,
+        "shared_fraction": 0.44858,
+        "mean_pairwise_error_cosine": 0.34893,
+        "overlap": false,
+        "ratio_err_spread": 0.90194,
+        "per_model_rmse": {
+          "mace_mp0": 0.04098,
+          "chgnet": 0.03825,
+          "orb_v2": 0.02083,
+          "sevennet0": 0.01666,
+          "mattersim": 0.01334
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 3,
+        "job": "b_srtio3_cubic_mace_mp0_base3",
+        "n_atoms": 40,
+        "u_rms_A": 0.03368,
+        "min_dist_A": 1.90313,
+        "pair_ratio": 0.96533,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.29687,
+        "total_mse": 0.0005,
+        "shared_mse": 0.00024,
+        "spread_var": 0.00026,
+        "spread": 0.01614,
+        "ens_mean_rmse": 0.01552,
+        "mean_model_rmse": 0.02117,
+        "shared_fraction": 0.48043,
+        "mean_pairwise_error_cosine": 0.41113,
+        "overlap": false,
+        "ratio_err_spread": 0.96159,
+        "per_model_rmse": {
+          "mace_mp0": 0.03147,
+          "chgnet": 0.02744,
+          "orb_v2": 0.02015,
+          "sevennet0": 0.01379,
+          "mattersim": 0.01298
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 0,
+        "job": "b_zr_bcc_mattersim_base0",
+        "n_atoms": 8,
+        "u_rms_A": 0.02845,
+        "min_dist_A": 3.06568,
+        "pair_ratio": 0.98746,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.06552,
+        "total_mse": 0.00144,
+        "shared_mse": 0.00049,
+        "spread_var": 0.00096,
+        "spread": 0.03092,
+        "ens_mean_rmse": 0.02206,
+        "mean_model_rmse": 0.03638,
+        "shared_fraction": 0.33736,
+        "mean_pairwise_error_cosine": 0.18672,
+        "overlap": false,
+        "ratio_err_spread": 0.71352,
+        "per_model_rmse": {
+          "mace_mp0": 0.04984,
+          "chgnet": 0.03817,
+          "orb_v2": 0.01646,
+          "sevennet0": 0.03768,
+          "mattersim": 0.03976
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 1,
+        "job": "b_zr_bcc_mattersim_base1",
+        "n_atoms": 8,
+        "u_rms_A": 0.02854,
+        "min_dist_A": 3.06004,
+        "pair_ratio": 0.98564,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.09524,
+        "total_mse": 0.00256,
+        "shared_mse": 0.00148,
+        "spread_var": 0.00107,
+        "spread": 0.03272,
+        "ens_mean_rmse": 0.03853,
+        "mean_model_rmse": 0.04764,
+        "shared_fraction": 0.58107,
+        "mean_pairwise_error_cosine": 0.4755,
+        "overlap": false,
+        "ratio_err_spread": 1.17773,
+        "per_model_rmse": {
+          "mace_mp0": 0.04697,
+          "chgnet": 0.06646,
+          "orb_v2": 0.01631,
+          "sevennet0": 0.05282,
+          "mattersim": 0.05565
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 2,
+        "job": "b_zr_bcc_mattersim_base2",
+        "n_atoms": 8,
+        "u_rms_A": 0.02819,
+        "min_dist_A": 3.04108,
+        "pair_ratio": 0.97953,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.06464,
+        "total_mse": 0.00154,
+        "shared_mse": 0.00053,
+        "spread_var": 0.00101,
+        "spread": 0.03171,
+        "ens_mean_rmse": 0.02304,
+        "mean_model_rmse": 0.03737,
+        "shared_fraction": 0.34556,
+        "mean_pairwise_error_cosine": 0.1872,
+        "overlap": false,
+        "ratio_err_spread": 0.72666,
+        "per_model_rmse": {
+          "mace_mp0": 0.05312,
+          "chgnet": 0.03796,
+          "orb_v2": 0.01644,
+          "sevennet0": 0.04101,
+          "mattersim": 0.0383
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 3,
+        "job": "b_zr_bcc_mattersim_base3",
+        "n_atoms": 8,
+        "u_rms_A": 0.02523,
+        "min_dist_A": 3.05879,
+        "pair_ratio": 0.98524,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.05813,
+        "total_mse": 0.00111,
+        "shared_mse": 0.00031,
+        "spread_var": 0.00079,
+        "spread": 0.02819,
+        "ens_mean_rmse": 0.01764,
+        "mean_model_rmse": 0.03182,
+        "shared_fraction": 0.28146,
+        "mean_pairwise_error_cosine": 0.15075,
+        "overlap": false,
+        "ratio_err_spread": 0.62587,
+        "per_model_rmse": {
+          "mace_mp0": 0.04456,
+          "chgnet": 0.03084,
+          "orb_v2": 0.01486,
+          "sevennet0": 0.03292,
+          "mattersim": 0.03591
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 0,
+        "job": "b_zro2_cubic_mace_mp0_base0",
+        "n_atoms": 24,
+        "u_rms_A": 0.03127,
+        "min_dist_A": 2.15317,
+        "pair_ratio": 0.96552,
+        "pair": "O-Zr",
+        "rms_f_pbe": 0.29861,
+        "total_mse": 0.00207,
+        "shared_mse": 0.00071,
+        "spread_var": 0.00135,
+        "spread": 0.03678,
+        "ens_mean_rmse": 0.02672,
+        "mean_model_rmse": 0.04158,
+        "shared_fraction": 0.3455,
+        "mean_pairwise_error_cosine": 0.17494,
+        "overlap": false,
+        "ratio_err_spread": 0.72656,
+        "per_model_rmse": {
+          "mace_mp0": 0.07015,
+          "chgnet": 0.05684,
+          "orb_v2": 0.02736,
+          "sevennet0": 0.02635,
+          "mattersim": 0.02722
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 1,
+        "job": "b_zro2_cubic_mace_mp0_base1",
+        "n_atoms": 24,
+        "u_rms_A": 0.03257,
+        "min_dist_A": 2.15922,
+        "pair_ratio": 0.96823,
+        "pair": "O-Zr",
+        "rms_f_pbe": 0.29985,
+        "total_mse": 0.00206,
+        "shared_mse": 0.00077,
+        "spread_var": 0.00128,
+        "spread": 0.03584,
+        "ens_mean_rmse": 0.02783,
+        "mean_model_rmse": 0.04246,
+        "shared_fraction": 0.37604,
+        "mean_pairwise_error_cosine": 0.19971,
+        "overlap": false,
+        "ratio_err_spread": 0.77631,
+        "per_model_rmse": {
+          "mace_mp0": 0.06457,
+          "chgnet": 0.05922,
+          "orb_v2": 0.03151,
+          "sevennet0": 0.02782,
+          "mattersim": 0.02918
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 2,
+        "job": "b_zro2_cubic_mace_mp0_base2",
+        "n_atoms": 24,
+        "u_rms_A": 0.03633,
+        "min_dist_A": 2.17801,
+        "pair_ratio": 0.97174,
+        "pair": "O-O",
+        "rms_f_pbe": 0.34785,
+        "total_mse": 0.00222,
+        "shared_mse": 0.0009,
+        "spread_var": 0.00132,
+        "spread": 0.03635,
+        "ens_mean_rmse": 0.03002,
+        "mean_model_rmse": 0.04323,
+        "shared_fraction": 0.40551,
+        "mean_pairwise_error_cosine": 0.22818,
+        "overlap": false,
+        "ratio_err_spread": 0.82591,
+        "per_model_rmse": {
+          "mace_mp0": 0.0729,
+          "chgnet": 0.05796,
+          "orb_v2": 0.0312,
+          "sevennet0": 0.02697,
+          "mattersim": 0.02714
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "baseline",
+        "T": null,
+        "seed": -1,
+        "index": 3,
+        "job": "b_zro2_cubic_mace_mp0_base3",
+        "n_atoms": 24,
+        "u_rms_A": 0.03344,
+        "min_dist_A": 2.16108,
+        "pair_ratio": 0.96906,
+        "pair": "O-Zr",
+        "rms_f_pbe": 0.31974,
+        "total_mse": 0.00262,
+        "shared_mse": 0.00083,
+        "spread_var": 0.00179,
+        "spread": 0.04235,
+        "ens_mean_rmse": 0.02874,
+        "mean_model_rmse": 0.04633,
+        "shared_fraction": 0.31528,
+        "mean_pairwise_error_cosine": 0.1165,
+        "overlap": false,
+        "ratio_err_spread": 0.67856,
+        "per_model_rmse": {
+          "mace_mp0": 0.07704,
+          "chgnet": 0.06845,
+          "orb_v2": 0.02744,
+          "sevennet0": 0.02944,
+          "mattersim": 0.0293
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 0,
+        "index": 0,
+        "job": "b_batio3_cubic_mace_mp0_T100_s0_n0000",
+        "n_atoms": 40,
+        "u_rms_A": 0.09509,
+        "min_dist_A": 1.8518,
+        "pair_ratio": 0.91808,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.60218,
+        "total_mse": 0.00259,
+        "shared_mse": 0.00133,
+        "spread_var": 0.00127,
+        "spread": 0.03558,
+        "ens_mean_rmse": 0.03645,
+        "mean_model_rmse": 0.04878,
+        "shared_fraction": 0.51199,
+        "mean_pairwise_error_cosine": 0.44733,
+        "overlap": false,
+        "ratio_err_spread": 1.02427,
+        "per_model_rmse": {
+          "mace_mp0": 0.06045,
+          "chgnet": 0.07148,
+          "orb_v2": 0.03749,
+          "sevennet0": 0.04111,
+          "mattersim": 0.03336
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 1,
+        "index": 22,
+        "job": "b_batio3_cubic_mace_mp0_T100_s1_n0022",
+        "n_atoms": 40,
+        "u_rms_A": 0.08785,
+        "min_dist_A": 1.88233,
+        "pair_ratio": 0.8972,
+        "pair": "O-Ba",
+        "rms_f_pbe": 0.41856,
+        "total_mse": 0.00178,
+        "shared_mse": 0.00084,
+        "spread_var": 0.00095,
+        "spread": 0.03076,
+        "ens_mean_rmse": 0.0289,
+        "mean_model_rmse": 0.0402,
+        "shared_fraction": 0.46887,
+        "mean_pairwise_error_cosine": 0.38547,
+        "overlap": false,
+        "ratio_err_spread": 0.93957,
+        "per_model_rmse": {
+          "mace_mp0": 0.04691,
+          "chgnet": 0.06252,
+          "orb_v2": 0.03087,
+          "sevennet0": 0.03054,
+          "mattersim": 0.03015
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 2,
+        "index": 72,
+        "job": "b_batio3_cubic_mace_mp0_T100_s2_n0072",
+        "n_atoms": 40,
+        "u_rms_A": 0.09296,
+        "min_dist_A": 1.8981,
+        "pair_ratio": 0.91763,
+        "pair": "O-Ba",
+        "rms_f_pbe": 0.4453,
+        "total_mse": 0.00193,
+        "shared_mse": 0.00101,
+        "spread_var": 0.00092,
+        "spread": 0.03032,
+        "ens_mean_rmse": 0.03186,
+        "mean_model_rmse": 0.04276,
+        "shared_fraction": 0.52466,
+        "mean_pairwise_error_cosine": 0.46252,
+        "overlap": false,
+        "ratio_err_spread": 1.05061,
+        "per_model_rmse": {
+          "mace_mp0": 0.04422,
+          "chgnet": 0.06117,
+          "orb_v2": 0.04194,
+          "sevennet0": 0.03499,
+          "mattersim": 0.03147
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 3,
+        "index": 4,
+        "job": "b_batio3_cubic_mace_mp0_T100_s3_n0004",
+        "n_atoms": 40,
+        "u_rms_A": 0.08849,
+        "min_dist_A": 1.89292,
+        "pair_ratio": 0.92932,
+        "pair": "O-Ba",
+        "rms_f_pbe": 0.47558,
+        "total_mse": 0.00211,
+        "shared_mse": 0.00105,
+        "spread_var": 0.00106,
+        "spread": 0.03252,
+        "ens_mean_rmse": 0.03238,
+        "mean_model_rmse": 0.04424,
+        "shared_fraction": 0.49789,
+        "mean_pairwise_error_cosine": 0.42322,
+        "overlap": false,
+        "ratio_err_spread": 0.9958,
+        "per_model_rmse": {
+          "mace_mp0": 0.04841,
+          "chgnet": 0.06584,
+          "orb_v2": 0.0393,
+          "sevennet0": 0.03692,
+          "mattersim": 0.03071
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 0,
+        "index": 261,
+        "job": "b_batio3_cubic_mace_mp0_T100_s0_n0261",
+        "n_atoms": 40,
+        "u_rms_A": 0.08954,
+        "min_dist_A": 1.88421,
+        "pair_ratio": 0.93145,
+        "pair": "O-O",
+        "rms_f_pbe": 0.48042,
+        "total_mse": 0.00175,
+        "shared_mse": 0.00076,
+        "spread_var": 0.00099,
+        "spread": 0.03147,
+        "ens_mean_rmse": 0.02763,
+        "mean_model_rmse": 0.03951,
+        "shared_fraction": 0.43529,
+        "mean_pairwise_error_cosine": 0.34328,
+        "overlap": false,
+        "ratio_err_spread": 0.87796,
+        "per_model_rmse": {
+          "mace_mp0": 0.04579,
+          "chgnet": 0.06383,
+          "orb_v2": 0.03255,
+          "sevennet0": 0.02892,
+          "mattersim": 0.02646
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 1,
+        "index": 224,
+        "job": "b_batio3_cubic_mace_mp0_T100_s1_n0224",
+        "n_atoms": 40,
+        "u_rms_A": 0.09529,
+        "min_dist_A": 1.79781,
+        "pair_ratio": 0.89132,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.54636,
+        "total_mse": 0.00242,
+        "shared_mse": 0.00129,
+        "spread_var": 0.00112,
+        "spread": 0.03352,
+        "ens_mean_rmse": 0.03597,
+        "mean_model_rmse": 0.04779,
+        "shared_fraction": 0.53526,
+        "mean_pairwise_error_cosine": 0.46197,
+        "overlap": false,
+        "ratio_err_spread": 1.07319,
+        "per_model_rmse": {
+          "mace_mp0": 0.05593,
+          "chgnet": 0.06624,
+          "orb_v2": 0.04216,
+          "sevennet0": 0.03911,
+          "mattersim": 0.03552
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 2,
+        "index": 288,
+        "job": "b_batio3_cubic_mace_mp0_T100_s2_n0288",
+        "n_atoms": 40,
+        "u_rms_A": 0.09416,
+        "min_dist_A": 1.83353,
+        "pair_ratio": 0.90903,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.52161,
+        "total_mse": 0.00187,
+        "shared_mse": 0.00091,
+        "spread_var": 0.00096,
+        "spread": 0.03091,
+        "ens_mean_rmse": 0.03024,
+        "mean_model_rmse": 0.04161,
+        "shared_fraction": 0.4891,
+        "mean_pairwise_error_cosine": 0.37657,
+        "overlap": false,
+        "ratio_err_spread": 0.97843,
+        "per_model_rmse": {
+          "mace_mp0": 0.05541,
+          "chgnet": 0.0561,
+          "orb_v2": 0.03019,
+          "sevennet0": 0.03629,
+          "mattersim": 0.03006
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 3,
+        "index": 362,
+        "job": "b_batio3_cubic_mace_mp0_T100_s3_n0362",
+        "n_atoms": 40,
+        "u_rms_A": 0.08631,
+        "min_dist_A": 1.86239,
+        "pair_ratio": 0.92334,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.55591,
+        "total_mse": 0.00229,
+        "shared_mse": 0.00085,
+        "spread_var": 0.00143,
+        "spread": 0.03786,
+        "ens_mean_rmse": 0.02921,
+        "mean_model_rmse": 0.04411,
+        "shared_fraction": 0.3731,
+        "mean_pairwise_error_cosine": 0.26202,
+        "overlap": false,
+        "ratio_err_spread": 0.77146,
+        "per_model_rmse": {
+          "mace_mp0": 0.05669,
+          "chgnet": 0.07423,
+          "orb_v2": 0.03203,
+          "sevennet0": 0.03227,
+          "mattersim": 0.02534
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 0,
+        "index": 462,
+        "job": "b_batio3_cubic_mace_mp0_T100_s0_n0462",
+        "n_atoms": 40,
+        "u_rms_A": 0.09582,
+        "min_dist_A": 1.90615,
+        "pair_ratio": 0.93785,
+        "pair": "O-O",
+        "rms_f_pbe": 0.48069,
+        "total_mse": 0.00212,
+        "shared_mse": 0.00105,
+        "spread_var": 0.00107,
+        "spread": 0.03269,
+        "ens_mean_rmse": 0.03235,
+        "mean_model_rmse": 0.04426,
+        "shared_fraction": 0.49476,
+        "mean_pairwise_error_cosine": 0.4107,
+        "overlap": false,
+        "ratio_err_spread": 0.98957,
+        "per_model_rmse": {
+          "mace_mp0": 0.04753,
+          "chgnet": 0.06691,
+          "orb_v2": 0.03948,
+          "sevennet0": 0.03602,
+          "mattersim": 0.03134
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 1,
+        "index": 486,
+        "job": "b_batio3_cubic_mace_mp0_T100_s1_n0486",
+        "n_atoms": 40,
+        "u_rms_A": 0.09038,
+        "min_dist_A": 1.88264,
+        "pair_ratio": 0.93337,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.44701,
+        "total_mse": 0.00207,
+        "shared_mse": 0.00103,
+        "spread_var": 0.00105,
+        "spread": 0.03239,
+        "ens_mean_rmse": 0.03202,
+        "mean_model_rmse": 0.044,
+        "shared_fraction": 0.49428,
+        "mean_pairwise_error_cosine": 0.40865,
+        "overlap": false,
+        "ratio_err_spread": 0.98863,
+        "per_model_rmse": {
+          "mace_mp0": 0.048,
+          "chgnet": 0.06482,
+          "orb_v2": 0.03787,
+          "sevennet0": 0.0385,
+          "mattersim": 0.0308
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 2,
+        "index": 501,
+        "job": "b_batio3_cubic_mace_mp0_T100_s2_n0501",
+        "n_atoms": 40,
+        "u_rms_A": 0.09374,
+        "min_dist_A": 1.81362,
+        "pair_ratio": 0.89916,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.48986,
+        "total_mse": 0.00268,
+        "shared_mse": 0.00156,
+        "spread_var": 0.00112,
+        "spread": 0.03346,
+        "ens_mean_rmse": 0.03953,
+        "mean_model_rmse": 0.05062,
+        "shared_fraction": 0.58255,
+        "mean_pairwise_error_cosine": 0.5165,
+        "overlap": false,
+        "ratio_err_spread": 1.1813,
+        "per_model_rmse": {
+          "mace_mp0": 0.05706,
+          "chgnet": 0.0686,
+          "orb_v2": 0.04059,
+          "sevennet0": 0.0474,
+          "mattersim": 0.03944
+        }
+      },
+      {
+        "system": "batio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 3,
+        "index": 471,
+        "job": "b_batio3_cubic_mace_mp0_T100_s3_n0471",
+        "n_atoms": 40,
+        "u_rms_A": 0.08305,
+        "min_dist_A": 1.83981,
+        "pair_ratio": 0.91214,
+        "pair": "O-Ti",
+        "rms_f_pbe": 0.45438,
+        "total_mse": 0.00225,
+        "shared_mse": 0.00134,
+        "spread_var": 0.00091,
+        "spread": 0.03011,
+        "ens_mean_rmse": 0.03663,
+        "mean_model_rmse": 0.04545,
+        "shared_fraction": 0.59671,
+        "mean_pairwise_error_cosine": 0.56525,
+        "overlap": false,
+        "ratio_err_spread": 1.21639,
+        "per_model_rmse": {
+          "mace_mp0": 0.05082,
+          "chgnet": 0.06949,
+          "orb_v2": 0.03856,
+          "sevennet0": 0.03544,
+          "mattersim": 0.03295
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 600.0,
+        "seed": 0,
+        "index": 0,
+        "job": "b_srtio3_cubic_mace_mp0_T600_s0_n0000",
+        "n_atoms": 40,
+        "u_rms_A": 0.29229,
+        "min_dist_A": 1.73795,
+        "pair_ratio": 0.74461,
+        "pair": "O-Sr",
+        "rms_f_pbe": 1.15451,
+        "total_mse": 0.00836,
+        "shared_mse": 0.00487,
+        "spread_var": 0.00349,
+        "spread": 0.05906,
+        "ens_mean_rmse": 0.06977,
+        "mean_model_rmse": 0.08962,
+        "shared_fraction": 0.58257,
+        "mean_pairwise_error_cosine": 0.51272,
+        "overlap": true,
+        "ratio_err_spread": 1.18136,
+        "per_model_rmse": {
+          "mace_mp0": 0.08602,
+          "chgnet": 0.11995,
+          "orb_v2": 0.08187,
+          "sevennet0": 0.09515,
+          "mattersim": 0.06509
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 600.0,
+        "seed": 1,
+        "index": 22,
+        "job": "b_srtio3_cubic_mace_mp0_T600_s1_n0022",
+        "n_atoms": 40,
+        "u_rms_A": 0.40315,
+        "min_dist_A": 1.39501,
+        "pair_ratio": 0.70759,
+        "pair": "O-Ti",
+        "rms_f_pbe": 4.0179,
+        "total_mse": 0.58308,
+        "shared_mse": 0.55372,
+        "spread_var": 0.02936,
+        "spread": 0.17134,
+        "ens_mean_rmse": 0.74412,
+        "mean_model_rmse": 0.75246,
+        "shared_fraction": 0.94965,
+        "mean_pairwise_error_cosine": 0.97256,
+        "overlap": true,
+        "ratio_err_spread": 4.34305,
+        "per_model_rmse": {
+          "mace_mp0": 0.77613,
+          "chgnet": 0.87699,
+          "orb_v2": 0.70555,
+          "sevennet0": 0.87647,
+          "mattersim": 0.52717
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 600.0,
+        "seed": 2,
+        "index": 72,
+        "job": "b_srtio3_cubic_mace_mp0_T600_s2_n0072",
+        "n_atoms": 40,
+        "u_rms_A": 0.28731,
+        "min_dist_A": 1.50487,
+        "pair_ratio": 0.75193,
+        "pair": "O-Sr",
+        "rms_f_pbe": 2.54093,
+        "total_mse": 0.09784,
+        "shared_mse": 0.0925,
+        "spread_var": 0.00534,
+        "spread": 0.07308,
+        "ens_mean_rmse": 0.30414,
+        "mean_model_rmse": 0.31111,
+        "shared_fraction": 0.94541,
+        "mean_pairwise_error_cosine": 0.94377,
+        "overlap": false,
+        "ratio_err_spread": 4.16159,
+        "per_model_rmse": {
+          "mace_mp0": 0.35334,
+          "chgnet": 0.32356,
+          "orb_v2": 0.2876,
+          "sevennet0": 0.32947,
+          "mattersim": 0.26157
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 600.0,
+        "seed": 3,
+        "index": 4,
+        "job": "b_srtio3_cubic_mace_mp0_T600_s3_n0004",
+        "n_atoms": 40,
+        "u_rms_A": 0.41756,
+        "min_dist_A": 1.33345,
+        "pair_ratio": 0.67637,
+        "pair": "O-Ti",
+        "rms_f_pbe": 5.2658,
+        "total_mse": 1.69389,
+        "shared_mse": 1.62219,
+        "spread_var": 0.0717,
+        "spread": 0.26777,
+        "ens_mean_rmse": 1.27365,
+        "mean_model_rmse": 1.28053,
+        "shared_fraction": 0.95767,
+        "mean_pairwise_error_cosine": 0.98683,
+        "overlap": true,
+        "ratio_err_spread": 4.7566,
+        "per_model_rmse": {
+          "mace_mp0": 1.3576,
+          "chgnet": 1.57687,
+          "orb_v2": 1.32512,
+          "sevennet0": 1.28072,
+          "mattersim": 0.86236
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 600.0,
+        "seed": 0,
+        "index": 261,
+        "job": "b_srtio3_cubic_mace_mp0_T600_s0_n0261",
+        "n_atoms": 40,
+        "u_rms_A": 0.38545,
+        "min_dist_A": 1.5093,
+        "pair_ratio": 0.67499,
+        "pair": "O-Sr",
+        "rms_f_pbe": 3.13207,
+        "total_mse": 0.11863,
+        "shared_mse": 0.10368,
+        "spread_var": 0.01495,
+        "spread": 0.12227,
+        "ens_mean_rmse": 0.322,
+        "mean_model_rmse": 0.34063,
+        "shared_fraction": 0.87398,
+        "mean_pairwise_error_cosine": 0.87229,
+        "overlap": true,
+        "ratio_err_spread": 2.63354,
+        "per_model_rmse": {
+          "mace_mp0": 0.42571,
+          "chgnet": 0.35578,
+          "orb_v2": 0.31057,
+          "sevennet0": 0.33876,
+          "mattersim": 0.27231
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 600.0,
+        "seed": 1,
+        "index": 224,
+        "job": "b_srtio3_cubic_mace_mp0_T600_s1_n0224",
+        "n_atoms": 40,
+        "u_rms_A": 0.3422,
+        "min_dist_A": 1.44658,
+        "pair_ratio": 0.72085,
+        "pair": "O-Sr",
+        "rms_f_pbe": 3.29623,
+        "total_mse": 0.20878,
+        "shared_mse": 0.19623,
+        "spread_var": 0.01255,
+        "spread": 0.11201,
+        "ens_mean_rmse": 0.44298,
+        "mean_model_rmse": 0.45168,
+        "shared_fraction": 0.93991,
+        "mean_pairwise_error_cosine": 0.95,
+        "overlap": true,
+        "ratio_err_spread": 3.95499,
+        "per_model_rmse": {
+          "mace_mp0": 0.55312,
+          "chgnet": 0.38812,
+          "orb_v2": 0.47135,
+          "sevennet0": 0.48383,
+          "mattersim": 0.36199
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 600.0,
+        "seed": 2,
+        "index": 288,
+        "job": "b_srtio3_cubic_mace_mp0_T600_s2_n0288",
+        "n_atoms": 40,
+        "u_rms_A": 0.43441,
+        "min_dist_A": 1.51564,
+        "pair_ratio": 0.71575,
+        "pair": "O-Sr",
+        "rms_f_pbe": 2.31848,
+        "total_mse": 0.08991,
+        "shared_mse": 0.07921,
+        "spread_var": 0.0107,
+        "spread": 0.10346,
+        "ens_mean_rmse": 0.28144,
+        "mean_model_rmse": 0.29494,
+        "shared_fraction": 0.88094,
+        "mean_pairwise_error_cosine": 0.89031,
+        "overlap": true,
+        "ratio_err_spread": 2.7201,
+        "per_model_rmse": {
+          "mace_mp0": 0.32676,
+          "chgnet": 0.31494,
+          "orb_v2": 0.25508,
+          "sevennet0": 0.36488,
+          "mattersim": 0.21304
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 600.0,
+        "seed": 3,
+        "index": 362,
+        "job": "b_srtio3_cubic_mace_mp0_T600_s3_n0362",
+        "n_atoms": 40,
+        "u_rms_A": 0.27023,
+        "min_dist_A": 1.59324,
+        "pair_ratio": 0.80814,
+        "pair": "O-Ti",
+        "rms_f_pbe": 1.78921,
+        "total_mse": 0.02683,
+        "shared_mse": 0.02209,
+        "spread_var": 0.00474,
+        "spread": 0.06885,
+        "ens_mean_rmse": 0.14864,
+        "mean_model_rmse": 0.16212,
+        "shared_fraction": 0.82332,
+        "mean_pairwise_error_cosine": 0.79396,
+        "overlap": false,
+        "ratio_err_spread": 2.15871,
+        "per_model_rmse": {
+          "mace_mp0": 0.20091,
+          "chgnet": 0.14977,
+          "orb_v2": 0.14517,
+          "sevennet0": 0.17692,
+          "mattersim": 0.13782
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 600.0,
+        "seed": 0,
+        "index": 462,
+        "job": "b_srtio3_cubic_mace_mp0_T600_s0_n0462",
+        "n_atoms": 40,
+        "u_rms_A": 0.27319,
+        "min_dist_A": 1.61575,
+        "pair_ratio": 0.81956,
+        "pair": "O-Ti",
+        "rms_f_pbe": 1.93343,
+        "total_mse": 0.03537,
+        "shared_mse": 0.02923,
+        "spread_var": 0.00614,
+        "spread": 0.07833,
+        "ens_mean_rmse": 0.17098,
+        "mean_model_rmse": 0.18637,
+        "shared_fraction": 0.82653,
+        "mean_pairwise_error_cosine": 0.80508,
+        "overlap": false,
+        "ratio_err_spread": 2.18282,
+        "per_model_rmse": {
+          "mace_mp0": 0.21786,
+          "chgnet": 0.20181,
+          "orb_v2": 0.17011,
+          "sevennet0": 0.19574,
+          "mattersim": 0.14633
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 600.0,
+        "seed": 1,
+        "index": 486,
+        "job": "b_srtio3_cubic_mace_mp0_T600_s1_n0486",
+        "n_atoms": 40,
+        "u_rms_A": 0.28402,
+        "min_dist_A": 1.60396,
+        "pair_ratio": 0.76805,
+        "pair": "O-Sr",
+        "rms_f_pbe": 1.45209,
+        "total_mse": 0.02692,
+        "shared_mse": 0.02338,
+        "spread_var": 0.00354,
+        "spread": 0.05951,
+        "ens_mean_rmse": 0.15291,
+        "mean_model_rmse": 0.16299,
+        "shared_fraction": 0.86846,
+        "mean_pairwise_error_cosine": 0.84947,
+        "overlap": false,
+        "ratio_err_spread": 2.56949,
+        "per_model_rmse": {
+          "mace_mp0": 0.17731,
+          "chgnet": 0.17197,
+          "orb_v2": 0.15164,
+          "sevennet0": 0.18246,
+          "mattersim": 0.13157
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 600.0,
+        "seed": 2,
+        "index": 501,
+        "job": "b_srtio3_cubic_mace_mp0_T600_s2_n0501",
+        "n_atoms": 40,
+        "u_rms_A": 0.36564,
+        "min_dist_A": 1.61696,
+        "pair_ratio": 0.719,
+        "pair": "O-Sr",
+        "rms_f_pbe": 1.96906,
+        "total_mse": 0.03383,
+        "shared_mse": 0.02611,
+        "spread_var": 0.00772,
+        "spread": 0.08785,
+        "ens_mean_rmse": 0.1616,
+        "mean_model_rmse": 0.18144,
+        "shared_fraction": 0.77189,
+        "mean_pairwise_error_cosine": 0.73358,
+        "overlap": true,
+        "ratio_err_spread": 1.83951,
+        "per_model_rmse": {
+          "mace_mp0": 0.22748,
+          "chgnet": 0.15679,
+          "orb_v2": 0.16561,
+          "sevennet0": 0.20661,
+          "mattersim": 0.1507
+        }
+      },
+      {
+        "system": "srtio3_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 600.0,
+        "seed": 3,
+        "index": 471,
+        "job": "b_srtio3_cubic_mace_mp0_T600_s3_n0471",
+        "n_atoms": 40,
+        "u_rms_A": 0.29297,
+        "min_dist_A": 1.50933,
+        "pair_ratio": 0.76558,
+        "pair": "O-Ti",
+        "rms_f_pbe": 1.97028,
+        "total_mse": 0.04037,
+        "shared_mse": 0.03601,
+        "spread_var": 0.00436,
+        "spread": 0.06605,
+        "ens_mean_rmse": 0.18975,
+        "mean_model_rmse": 0.19981,
+        "shared_fraction": 0.89195,
+        "mean_pairwise_error_cosine": 0.87084,
+        "overlap": false,
+        "ratio_err_spread": 2.87308,
+        "per_model_rmse": {
+          "mace_mp0": 0.23006,
+          "chgnet": 0.17165,
+          "orb_v2": 0.20766,
+          "sevennet0": 0.20918,
+          "mattersim": 0.18047
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "sscha",
+        "T": 50.0,
+        "seed": 0,
+        "index": 0,
+        "job": "b_zr_bcc_mattersim_T50_s0_n0000",
+        "n_atoms": 8,
+        "u_rms_A": 0.08754,
+        "min_dist_A": 2.96094,
+        "pair_ratio": 0.95372,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.19879,
+        "total_mse": 0.00969,
+        "shared_mse": 0.00306,
+        "spread_var": 0.00663,
+        "spread": 0.0814,
+        "ens_mean_rmse": 0.05535,
+        "mean_model_rmse": 0.09276,
+        "shared_fraction": 0.31621,
+        "mean_pairwise_error_cosine": 0.12656,
+        "overlap": false,
+        "ratio_err_spread": 0.68003,
+        "per_model_rmse": {
+          "mace_mp0": 0.12773,
+          "chgnet": 0.10317,
+          "orb_v2": 0.03097,
+          "sevennet0": 0.10944,
+          "mattersim": 0.09248
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "sscha",
+        "T": 50.0,
+        "seed": 1,
+        "index": 22,
+        "job": "b_zr_bcc_mattersim_T50_s1_n0022",
+        "n_atoms": 8,
+        "u_rms_A": 0.0662,
+        "min_dist_A": 2.9805,
+        "pair_ratio": 0.96002,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.20133,
+        "total_mse": 0.00946,
+        "shared_mse": 0.00484,
+        "spread_var": 0.00462,
+        "spread": 0.06796,
+        "ens_mean_rmse": 0.06957,
+        "mean_model_rmse": 0.09023,
+        "shared_fraction": 0.51168,
+        "mean_pairwise_error_cosine": 0.34278,
+        "overlap": false,
+        "ratio_err_spread": 1.02363,
+        "per_model_rmse": {
+          "mace_mp0": 0.09076,
+          "chgnet": 0.1313,
+          "orb_v2": 0.02276,
+          "sevennet0": 0.10035,
+          "mattersim": 0.10597
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "sscha",
+        "T": 50.0,
+        "seed": 2,
+        "index": 72,
+        "job": "b_zr_bcc_mattersim_T50_s2_n0072",
+        "n_atoms": 8,
+        "u_rms_A": 0.11261,
+        "min_dist_A": 2.95231,
+        "pair_ratio": 0.95094,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.23026,
+        "total_mse": 0.01636,
+        "shared_mse": 0.00805,
+        "spread_var": 0.00831,
+        "spread": 0.09115,
+        "ens_mean_rmse": 0.08971,
+        "mean_model_rmse": 0.11942,
+        "shared_fraction": 0.49206,
+        "mean_pairwise_error_cosine": 0.28678,
+        "overlap": false,
+        "ratio_err_spread": 0.98424,
+        "per_model_rmse": {
+          "mace_mp0": 0.166,
+          "chgnet": 0.15317,
+          "orb_v2": 0.03676,
+          "sevennet0": 0.13346,
+          "mattersim": 0.10769
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "sscha",
+        "T": 50.0,
+        "seed": 3,
+        "index": 4,
+        "job": "b_zr_bcc_mattersim_T50_s3_n0004",
+        "n_atoms": 8,
+        "u_rms_A": 0.10365,
+        "min_dist_A": 2.94993,
+        "pair_ratio": 0.95017,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.26393,
+        "total_mse": 0.01682,
+        "shared_mse": 0.00666,
+        "spread_var": 0.01017,
+        "spread": 0.10083,
+        "ens_mean_rmse": 0.08159,
+        "mean_model_rmse": 0.12284,
+        "shared_fraction": 0.3957,
+        "mean_pairwise_error_cosine": 0.22511,
+        "overlap": false,
+        "ratio_err_spread": 0.80921,
+        "per_model_rmse": {
+          "mace_mp0": 0.16814,
+          "chgnet": 0.14637,
+          "orb_v2": 0.05295,
+          "sevennet0": 0.14765,
+          "mattersim": 0.09907
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "sscha",
+        "T": 50.0,
+        "seed": 0,
+        "index": 261,
+        "job": "b_zr_bcc_mattersim_T50_s0_n0261",
+        "n_atoms": 8,
+        "u_rms_A": 0.08677,
+        "min_dist_A": 2.98455,
+        "pair_ratio": 0.96133,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.17432,
+        "total_mse": 0.01105,
+        "shared_mse": 0.00583,
+        "spread_var": 0.00522,
+        "spread": 0.07227,
+        "ens_mean_rmse": 0.07632,
+        "mean_model_rmse": 0.09755,
+        "shared_fraction": 0.52727,
+        "mean_pairwise_error_cosine": 0.36914,
+        "overlap": false,
+        "ratio_err_spread": 1.05612,
+        "per_model_rmse": {
+          "mace_mp0": 0.13611,
+          "chgnet": 0.12913,
+          "orb_v2": 0.02641,
+          "sevennet0": 0.10568,
+          "mattersim": 0.0904
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "sscha",
+        "T": 50.0,
+        "seed": 1,
+        "index": 224,
+        "job": "b_zr_bcc_mattersim_T50_s1_n0224",
+        "n_atoms": 8,
+        "u_rms_A": 0.08924,
+        "min_dist_A": 2.98043,
+        "pair_ratio": 0.96,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.22091,
+        "total_mse": 0.01484,
+        "shared_mse": 0.00804,
+        "spread_var": 0.0068,
+        "spread": 0.08249,
+        "ens_mean_rmse": 0.08964,
+        "mean_model_rmse": 0.11269,
+        "shared_fraction": 0.5415,
+        "mean_pairwise_error_cosine": 0.31173,
+        "overlap": false,
+        "ratio_err_spread": 1.08676,
+        "per_model_rmse": {
+          "mace_mp0": 0.13959,
+          "chgnet": 0.1532,
+          "orb_v2": 0.02434,
+          "sevennet0": 0.13575,
+          "mattersim": 0.11057
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "sscha",
+        "T": 50.0,
+        "seed": 2,
+        "index": 288,
+        "job": "b_zr_bcc_mattersim_T50_s2_n0288",
+        "n_atoms": 8,
+        "u_rms_A": 0.10962,
+        "min_dist_A": 2.89021,
+        "pair_ratio": 0.93094,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.26162,
+        "total_mse": 0.01506,
+        "shared_mse": 0.00503,
+        "spread_var": 0.01003,
+        "spread": 0.10015,
+        "ens_mean_rmse": 0.07095,
+        "mean_model_rmse": 0.1162,
+        "shared_fraction": 0.33415,
+        "mean_pairwise_error_cosine": 0.13916,
+        "overlap": false,
+        "ratio_err_spread": 0.70841,
+        "per_model_rmse": {
+          "mace_mp0": 0.1629,
+          "chgnet": 0.13837,
+          "orb_v2": 0.05027,
+          "sevennet0": 0.13447,
+          "mattersim": 0.09502
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "sscha",
+        "T": 50.0,
+        "seed": 3,
+        "index": 362,
+        "job": "b_zr_bcc_mattersim_T50_s3_n0362",
+        "n_atoms": 8,
+        "u_rms_A": 0.11646,
+        "min_dist_A": 2.90412,
+        "pair_ratio": 0.93542,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.27303,
+        "total_mse": 0.01684,
+        "shared_mse": 0.00518,
+        "spread_var": 0.01166,
+        "spread": 0.10797,
+        "ens_mean_rmse": 0.07197,
+        "mean_model_rmse": 0.12033,
+        "shared_fraction": 0.30764,
+        "mean_pairwise_error_cosine": 0.13816,
+        "overlap": false,
+        "ratio_err_spread": 0.66659,
+        "per_model_rmse": {
+          "mace_mp0": 0.18374,
+          "chgnet": 0.1219,
+          "orb_v2": 0.05125,
+          "sevennet0": 0.16108,
+          "mattersim": 0.08367
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "sscha",
+        "T": 50.0,
+        "seed": 0,
+        "index": 462,
+        "job": "b_zr_bcc_mattersim_T50_s0_n0462",
+        "n_atoms": 8,
+        "u_rms_A": 0.08058,
+        "min_dist_A": 2.99986,
+        "pair_ratio": 0.96626,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.18099,
+        "total_mse": 0.01105,
+        "shared_mse": 0.00532,
+        "spread_var": 0.00573,
+        "spread": 0.07568,
+        "ens_mean_rmse": 0.07295,
+        "mean_model_rmse": 0.09783,
+        "shared_fraction": 0.48165,
+        "mean_pairwise_error_cosine": 0.27968,
+        "overlap": false,
+        "ratio_err_spread": 0.96396,
+        "per_model_rmse": {
+          "mace_mp0": 0.13606,
+          "chgnet": 0.12021,
+          "orb_v2": 0.02698,
+          "sevennet0": 0.11634,
+          "mattersim": 0.08955
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "sscha",
+        "T": 50.0,
+        "seed": 1,
+        "index": 486,
+        "job": "b_zr_bcc_mattersim_T50_s1_n0486",
+        "n_atoms": 8,
+        "u_rms_A": 0.09448,
+        "min_dist_A": 2.98387,
+        "pair_ratio": 0.96111,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.24207,
+        "total_mse": 0.01782,
+        "shared_mse": 0.01032,
+        "spread_var": 0.0075,
+        "spread": 0.08659,
+        "ens_mean_rmse": 0.1016,
+        "mean_model_rmse": 0.12248,
+        "shared_fraction": 0.57924,
+        "mean_pairwise_error_cosine": 0.43061,
+        "overlap": false,
+        "ratio_err_spread": 1.1733,
+        "per_model_rmse": {
+          "mace_mp0": 0.15256,
+          "chgnet": 0.17326,
+          "orb_v2": 0.02244,
+          "sevennet0": 0.14653,
+          "mattersim": 0.1176
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "sscha",
+        "T": 50.0,
+        "seed": 2,
+        "index": 501,
+        "job": "b_zr_bcc_mattersim_T50_s2_n0501",
+        "n_atoms": 8,
+        "u_rms_A": 0.09281,
+        "min_dist_A": 2.90318,
+        "pair_ratio": 0.93512,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.26642,
+        "total_mse": 0.0168,
+        "shared_mse": 0.00757,
+        "spread_var": 0.00923,
+        "spread": 0.0961,
+        "ens_mean_rmse": 0.08698,
+        "mean_model_rmse": 0.12181,
+        "shared_fraction": 0.45034,
+        "mean_pairwise_error_cosine": 0.24629,
+        "overlap": false,
+        "ratio_err_spread": 0.90516,
+        "per_model_rmse": {
+          "mace_mp0": 0.14849,
+          "chgnet": 0.16099,
+          "orb_v2": 0.04067,
+          "sevennet0": 0.15025,
+          "mattersim": 0.10865
+        }
+      },
+      {
+        "system": "zr_bcc",
+        "owner_model": "mattersim",
+        "set": "sscha",
+        "T": 50.0,
+        "seed": 3,
+        "index": 471,
+        "job": "b_zr_bcc_mattersim_T50_s3_n0471",
+        "n_atoms": 8,
+        "u_rms_A": 0.10012,
+        "min_dist_A": 2.96915,
+        "pair_ratio": 0.95636,
+        "pair": "Zr-Zr",
+        "rms_f_pbe": 0.21267,
+        "total_mse": 0.0135,
+        "shared_mse": 0.00698,
+        "spread_var": 0.00651,
+        "spread": 0.08069,
+        "ens_mean_rmse": 0.08357,
+        "mean_model_rmse": 0.10821,
+        "shared_fraction": 0.51752,
+        "mean_pairwise_error_cosine": 0.36815,
+        "overlap": false,
+        "ratio_err_spread": 1.03567,
+        "per_model_rmse": {
+          "mace_mp0": 0.14434,
+          "chgnet": 0.14688,
+          "orb_v2": 0.03053,
+          "sevennet0": 0.11635,
+          "mattersim": 0.10296
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 0,
+        "index": 0,
+        "job": "b_zro2_cubic_mace_mp0_T100_s0_n0000",
+        "n_atoms": 24,
+        "u_rms_A": 0.10522,
+        "min_dist_A": 1.95788,
+        "pair_ratio": 0.87794,
+        "pair": "O-Zr",
+        "rms_f_pbe": 0.7105,
+        "total_mse": 0.0128,
+        "shared_mse": 0.00843,
+        "spread_var": 0.00437,
+        "spread": 0.06611,
+        "ens_mean_rmse": 0.09179,
+        "mean_model_rmse": 0.11255,
+        "shared_fraction": 0.65846,
+        "mean_pairwise_error_cosine": 0.58646,
+        "overlap": false,
+        "ratio_err_spread": 1.38848,
+        "per_model_rmse": {
+          "mace_mp0": 0.12969,
+          "chgnet": 0.12143,
+          "orb_v2": 0.10823,
+          "sevennet0": 0.10455,
+          "mattersim": 0.09888
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 1,
+        "index": 22,
+        "job": "b_zro2_cubic_mace_mp0_T100_s1_n0022",
+        "n_atoms": 24,
+        "u_rms_A": 0.08516,
+        "min_dist_A": 2.11614,
+        "pair_ratio": 0.94033,
+        "pair": "O-O",
+        "rms_f_pbe": 0.49512,
+        "total_mse": 0.00509,
+        "shared_mse": 0.00285,
+        "spread_var": 0.00224,
+        "spread": 0.0473,
+        "ens_mean_rmse": 0.05337,
+        "mean_model_rmse": 0.0688,
+        "shared_fraction": 0.56009,
+        "mean_pairwise_error_cosine": 0.47616,
+        "overlap": false,
+        "ratio_err_spread": 1.12835,
+        "per_model_rmse": {
+          "mace_mp0": 0.09407,
+          "chgnet": 0.08876,
+          "orb_v2": 0.0561,
+          "sevennet0": 0.05671,
+          "mattersim": 0.04834
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 2,
+        "index": 72,
+        "job": "b_zro2_cubic_mace_mp0_T100_s2_n0072",
+        "n_atoms": 24,
+        "u_rms_A": 0.08138,
+        "min_dist_A": 2.09641,
+        "pair_ratio": 0.94006,
+        "pair": "O-Zr",
+        "rms_f_pbe": 0.44531,
+        "total_mse": 0.00485,
+        "shared_mse": 0.00302,
+        "spread_var": 0.00183,
+        "spread": 0.04282,
+        "ens_mean_rmse": 0.05497,
+        "mean_model_rmse": 0.06883,
+        "shared_fraction": 0.62229,
+        "mean_pairwise_error_cosine": 0.54308,
+        "overlap": false,
+        "ratio_err_spread": 1.28355,
+        "per_model_rmse": {
+          "mace_mp0": 0.0856,
+          "chgnet": 0.07747,
+          "orb_v2": 0.05807,
+          "sevennet0": 0.05918,
+          "mattersim": 0.06381
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 3,
+        "index": 4,
+        "job": "b_zro2_cubic_mace_mp0_T100_s3_n0004",
+        "n_atoms": 24,
+        "u_rms_A": 0.08676,
+        "min_dist_A": 2.08904,
+        "pair_ratio": 0.93676,
+        "pair": "O-Zr",
+        "rms_f_pbe": 0.5931,
+        "total_mse": 0.00787,
+        "shared_mse": 0.00396,
+        "spread_var": 0.0039,
+        "spread": 0.06247,
+        "ens_mean_rmse": 0.06295,
+        "mean_model_rmse": 0.08708,
+        "shared_fraction": 0.50383,
+        "mean_pairwise_error_cosine": 0.38951,
+        "overlap": false,
+        "ratio_err_spread": 1.0077,
+        "per_model_rmse": {
+          "mace_mp0": 0.11046,
+          "chgnet": 0.10159,
+          "orb_v2": 0.08534,
+          "sevennet0": 0.06848,
+          "mattersim": 0.06951
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 0,
+        "index": 261,
+        "job": "b_zro2_cubic_mace_mp0_T100_s0_n0261",
+        "n_atoms": 24,
+        "u_rms_A": 0.08984,
+        "min_dist_A": 2.07671,
+        "pair_ratio": 0.93123,
+        "pair": "O-Zr",
+        "rms_f_pbe": 0.56218,
+        "total_mse": 0.0075,
+        "shared_mse": 0.00416,
+        "spread_var": 0.00334,
+        "spread": 0.05779,
+        "ens_mean_rmse": 0.06447,
+        "mean_model_rmse": 0.08487,
+        "shared_fraction": 0.55442,
+        "mean_pairwise_error_cosine": 0.46881,
+        "overlap": false,
+        "ratio_err_spread": 1.11548,
+        "per_model_rmse": {
+          "mace_mp0": 0.10349,
+          "chgnet": 0.10624,
+          "orb_v2": 0.07786,
+          "sevennet0": 0.07418,
+          "mattersim": 0.0626
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 1,
+        "index": 224,
+        "job": "b_zro2_cubic_mace_mp0_T100_s1_n0224",
+        "n_atoms": 24,
+        "u_rms_A": 0.07223,
+        "min_dist_A": 2.10859,
+        "pair_ratio": 0.94553,
+        "pair": "O-Zr",
+        "rms_f_pbe": 0.39234,
+        "total_mse": 0.00356,
+        "shared_mse": 0.0023,
+        "spread_var": 0.00126,
+        "spread": 0.03545,
+        "ens_mean_rmse": 0.04796,
+        "mean_model_rmse": 0.05942,
+        "shared_fraction": 0.64673,
+        "mean_pairwise_error_cosine": 0.57124,
+        "overlap": false,
+        "ratio_err_spread": 1.35304,
+        "per_model_rmse": {
+          "mace_mp0": 0.065,
+          "chgnet": 0.06304,
+          "orb_v2": 0.06195,
+          "sevennet0": 0.05115,
+          "mattersim": 0.05595
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 2,
+        "index": 288,
+        "job": "b_zro2_cubic_mace_mp0_T100_s2_n0288",
+        "n_atoms": 24,
+        "u_rms_A": 0.1014,
+        "min_dist_A": 2.068,
+        "pair_ratio": 0.91762,
+        "pair": "O-O",
+        "rms_f_pbe": 0.60517,
+        "total_mse": 0.00595,
+        "shared_mse": 0.00354,
+        "spread_var": 0.00241,
+        "spread": 0.04909,
+        "ens_mean_rmse": 0.05954,
+        "mean_model_rmse": 0.07683,
+        "shared_fraction": 0.59529,
+        "mean_pairwise_error_cosine": 0.50761,
+        "overlap": false,
+        "ratio_err_spread": 1.2128,
+        "per_model_rmse": {
+          "mace_mp0": 0.07827,
+          "chgnet": 0.07933,
+          "orb_v2": 0.08827,
+          "sevennet0": 0.06805,
+          "mattersim": 0.07022
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 3,
+        "index": 362,
+        "job": "b_zro2_cubic_mace_mp0_T100_s3_n0362",
+        "n_atoms": 24,
+        "u_rms_A": 0.10104,
+        "min_dist_A": 2.03196,
+        "pair_ratio": 0.91116,
+        "pair": "O-Zr",
+        "rms_f_pbe": 0.61386,
+        "total_mse": 0.00741,
+        "shared_mse": 0.00494,
+        "spread_var": 0.00247,
+        "spread": 0.0497,
+        "ens_mean_rmse": 0.07026,
+        "mean_model_rmse": 0.08543,
+        "shared_fraction": 0.66653,
+        "mean_pairwise_error_cosine": 0.60149,
+        "overlap": false,
+        "ratio_err_spread": 1.41378,
+        "per_model_rmse": {
+          "mace_mp0": 0.10344,
+          "chgnet": 0.08854,
+          "orb_v2": 0.08201,
+          "sevennet0": 0.07221,
+          "mattersim": 0.08097
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 0,
+        "index": 462,
+        "job": "b_zro2_cubic_mace_mp0_T100_s0_n0462",
+        "n_atoms": 24,
+        "u_rms_A": 0.07286,
+        "min_dist_A": 2.07572,
+        "pair_ratio": 0.93078,
+        "pair": "O-Zr",
+        "rms_f_pbe": 0.54639,
+        "total_mse": 0.00604,
+        "shared_mse": 0.00371,
+        "spread_var": 0.00233,
+        "spread": 0.0483,
+        "ens_mean_rmse": 0.0609,
+        "mean_model_rmse": 0.07672,
+        "shared_fraction": 0.61388,
+        "mean_pairwise_error_cosine": 0.53624,
+        "overlap": false,
+        "ratio_err_spread": 1.2609,
+        "per_model_rmse": {
+          "mace_mp0": 0.09545,
+          "chgnet": 0.08722,
+          "orb_v2": 0.07111,
+          "sevennet0": 0.06501,
+          "mattersim": 0.06484
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 1,
+        "index": 486,
+        "job": "b_zro2_cubic_mace_mp0_T100_s1_n0486",
+        "n_atoms": 24,
+        "u_rms_A": 0.09055,
+        "min_dist_A": 2.07822,
+        "pair_ratio": 0.93191,
+        "pair": "O-Zr",
+        "rms_f_pbe": 0.59918,
+        "total_mse": 0.00824,
+        "shared_mse": 0.00368,
+        "spread_var": 0.00456,
+        "spread": 0.06753,
+        "ens_mean_rmse": 0.06068,
+        "mean_model_rmse": 0.08631,
+        "shared_fraction": 0.44673,
+        "mean_pairwise_error_cosine": 0.33416,
+        "overlap": false,
+        "ratio_err_spread": 0.89857,
+        "per_model_rmse": {
+          "mace_mp0": 0.12096,
+          "chgnet": 0.11961,
+          "orb_v2": 0.05496,
+          "sevennet0": 0.06799,
+          "mattersim": 0.06801
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 2,
+        "index": 501,
+        "job": "b_zro2_cubic_mace_mp0_T100_s2_n0501",
+        "n_atoms": 24,
+        "u_rms_A": 0.0867,
+        "min_dist_A": 2.07627,
+        "pair_ratio": 0.91992,
+        "pair": "O-O",
+        "rms_f_pbe": 0.54098,
+        "total_mse": 0.00606,
+        "shared_mse": 0.0039,
+        "spread_var": 0.00216,
+        "spread": 0.04644,
+        "ens_mean_rmse": 0.06249,
+        "mean_model_rmse": 0.07729,
+        "shared_fraction": 0.64417,
+        "mean_pairwise_error_cosine": 0.57106,
+        "overlap": false,
+        "ratio_err_spread": 1.34548,
+        "per_model_rmse": {
+          "mace_mp0": 0.07983,
+          "chgnet": 0.07731,
+          "orb_v2": 0.06321,
+          "sevennet0": 0.07383,
+          "mattersim": 0.09227
+        }
+      },
+      {
+        "system": "zro2_cubic",
+        "owner_model": "mace_mp0",
+        "set": "sscha",
+        "T": 100.0,
+        "seed": 3,
+        "index": 471,
+        "job": "b_zro2_cubic_mace_mp0_T100_s3_n0471",
+        "n_atoms": 24,
+        "u_rms_A": 0.08591,
+        "min_dist_A": 2.09839,
+        "pair_ratio": 0.94055,
+        "pair": "O-O",
+        "rms_f_pbe": 0.51745,
+        "total_mse": 0.00514,
+        "shared_mse": 0.00273,
+        "spread_var": 0.00242,
+        "spread": 0.04917,
+        "ens_mean_rmse": 0.05221,
+        "mean_model_rmse": 0.07049,
+        "shared_fraction": 0.52997,
+        "mean_pairwise_error_cosine": 0.42999,
+        "overlap": false,
+        "ratio_err_spread": 1.06186,
+        "per_model_rmse": {
+          "mace_mp0": 0.08723,
+          "chgnet": 0.08571,
+          "orb_v2": 0.06027,
+          "sevennet0": 0.05606,
+          "mattersim": 0.06318
+        }
+      }
+    ]
+  },
+  "recon_comparison": [
+    {
+      "quantity": "config spread median, r >= 0.85",
+      "recon": 0.058,
+      "computed": 0.059,
+      "agrees_at_recon_precision": false
+    },
+    {
+      "quantity": "config spread median, 0.75 <= r < 0.85",
+      "recon": 0.063,
+      "computed": 0.0629,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "config spread median, 0.65 <= r < 0.75",
+      "recon": 0.105,
+      "computed": 0.1047,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "config spread median, 0.50 <= r < 0.65",
+      "recon": 0.29,
+      "computed": 0.2918,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "config spread median, r < 0.50",
+      "recon": 2.11,
+      "computed": 2.1075,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "config rho(spread, u_rms), overlap-free pooled",
+      "recon": -0.06,
+      "computed": -0.064,
+      "agrees_at_recon_precision": true,
+      "note": "n = 763 (recon 763); within-system median rho 0.867"
+    },
+    {
+      "quantity": "unit rho(S_5model, wrong), all",
+      "recon": 0.25,
+      "computed": 0.25,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "unit rho(S_5model, wrong), clean",
+      "recon": -0.19,
+      "computed": -0.187,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "unit rho(S_5model, wrong), overlap",
+      "recon": 0.55,
+      "computed": 0.553,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "unit AUC, clean",
+      "recon": 0.314,
+      "computed": 0.314,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "unit AUC, overlap",
+      "recon": 0.819,
+      "computed": 0.819,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "clean-set errors unanimous (all five models)",
+      "recon": 4,
+      "computed": 1,
+      "agrees_at_recon_precision": false,
+      "note": "recon said all four clean errors were unanimous; the per-model ledger calls give 1 of 4 (3 of 4 without ORB-v2)"
+    },
+    {
+      "quantity": "PBE shared fraction range, baseline, per-config median",
+      "recon": [
+        0.32,
+        0.47
+      ],
+      "computed": [
+        0.32,
+        0.47
+      ],
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "PBE shared fraction range, baseline, pooled",
+      "recon": [
+        0.32,
+        0.47
+      ],
+      "computed": [
+        0.32,
+        0.46
+      ],
+      "agrees_at_recon_precision": false
+    },
+    {
+      "quantity": "PBE shared fraction range, SSCHA except SrTiO3, per-config median",
+      "recon": [
+        0.49,
+        0.6
+      ],
+      "computed": [
+        0.49,
+        0.6
+      ],
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "PBE shared fraction range, SSCHA except SrTiO3, pooled",
+      "recon": [
+        0.49,
+        0.6
+      ],
+      "computed": [
+        0.45,
+        0.59
+      ],
+      "agrees_at_recon_precision": false
+    },
+    {
+      "quantity": "PBE shared fraction SrTiO3 600 K SSCHA, per-config median",
+      "recon": 0.88,
+      "computed": 0.8775,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "PBE shared fraction SrTiO3 600 K SSCHA, pooled",
+      "recon": 0.88,
+      "computed": 0.9411,
+      "agrees_at_recon_precision": false
+    },
+    {
+      "quantity": "PBE rho(spread, ens-mean error), pooled",
+      "recon": 0.918,
+      "computed": 0.918,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "PBE rho, pooled overlap-free",
+      "recon": 0.894,
+      "computed": 0.894,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "PBE rho within batio3_cubic, all 16 configs",
+      "recon": 0.23,
+      "computed": 0.674,
+      "agrees_at_recon_precision": false
+    },
+    {
+      "quantity": "PBE rho within batio3_cubic, 12 SSCHA configs only",
+      "recon": 0.23,
+      "computed": 0.231,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "PBE rho within srtio3_cubic, all 16 configs",
+      "recon": 0.87,
+      "computed": 0.947,
+      "agrees_at_recon_precision": false
+    },
+    {
+      "quantity": "PBE rho within srtio3_cubic, 12 SSCHA configs only",
+      "recon": 0.87,
+      "computed": 0.874,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "PBE rho within zr_bcc, all 16 configs",
+      "recon": 0.19,
+      "computed": 0.659,
+      "agrees_at_recon_precision": false
+    },
+    {
+      "quantity": "PBE rho within zr_bcc, 12 SSCHA configs only",
+      "recon": 0.19,
+      "computed": 0.189,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "PBE rho within zro2_cubic, all 16 configs",
+      "recon": 0.62,
+      "computed": 0.797,
+      "agrees_at_recon_precision": false
+    },
+    {
+      "quantity": "PBE rho within zro2_cubic, 12 SSCHA configs only",
+      "recon": 0.62,
+      "computed": 0.622,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "PBE error/spread, overlap_free, per-config median",
+      "recon": 0.99,
+      "computed": 0.99,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "PBE error/spread, overlap_free, pooled",
+      "recon": 0.99,
+      "computed": 1.41,
+      "agrees_at_recon_precision": false
+    },
+    {
+      "quantity": "PBE error/spread, overlap, per-config median",
+      "recon": 2.72,
+      "computed": 2.72,
+      "agrees_at_recon_precision": true
+    },
+    {
+      "quantity": "PBE error/spread, overlap, pooled",
+      "recon": 2.72,
+      "computed": 4.146,
+      "agrees_at_recon_precision": false
+    }
+  ],
+  "notes": [
+    "Configuration and unit levels use force_spread.py's configurations, drawn near the unrelaxed registry cell from the five-model mean FCs; the PBE set uses C3b's configurations (rattled baseline and owner-model SSCHA ensembles), so the two sets of configurations are not the same and the PBE set does not contain the wrong consensus units themselves.",
+    "Force RMS over all components is dominated by the stiff modes; a stability call depends on the soft-mode curvature and well depth, which C3a (PBE along the screen's own coordinates) addresses. The decomposition says what the spread can see of the force error, not of the call.",
+    "Spearman is the Pearson correlation of pandas average ranks (no scipy). Clustered intervals resample whole systems (stats._blocks, 10000 resamples, seed 0)."
+  ],
+  "inputs": [
+    {
+      "path": "results/revision/dft/c3b_configs.csv",
+      "git_blob": "886b26f83fbbbc8eac199443b75abd13cb75a1b3",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/geom_c3b/batio3_cubic_mace_mp0_ref.extxyz",
+      "git_blob": "a976917dad51d6b54f755761dbee6bc0c0b9bdde",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/geom_c3b/batio3_cubic_mace_mp0_T100.extxyz",
+      "git_blob": "23d2bb42d2948f8b07c4818bbd5c5feafd4badb8",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/geom_c3b/srtio3_cubic_mace_mp0_ref.extxyz",
+      "git_blob": "4b768070541380af35ceb35a3656eed70b009933",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/geom_c3b/srtio3_cubic_mace_mp0_T600.extxyz",
+      "git_blob": "63dd1b3891a24e496d892b5ec4c7b2786236026d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/geom_c3b/zr_bcc_mattersim_ref.extxyz",
+      "git_blob": "fdc55ac28d43e365db46561331cb14a3130ea791",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/geom_c3b/zr_bcc_mattersim_T50.extxyz",
+      "git_blob": "0b8adef01abaa3053d328a98cee34f2e0c348e72",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/geom_c3b/zro2_cubic_mace_mp0_ref.extxyz",
+      "git_blob": "b94d5a2f9530795848f1fc2516ad25621a0d5a83",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/geom_c3b/zro2_cubic_mace_mp0_T100.extxyz",
+      "git_blob": "f0781e0d961d26306cb56411af52240981f31c31",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/chgnet/geom_c3b/batio3_cubic_mace_mp0_ref.json",
+      "git_blob": "7b0482464adb70472e9ca343d7c0988704154830",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/chgnet/geom_c3b/batio3_cubic_mace_mp0_T100.json",
+      "git_blob": "a79e3dbb74ac2d53b4fbf60324fd8215e4b36264",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/chgnet/geom_c3b/srtio3_cubic_mace_mp0_ref.json",
+      "git_blob": "e6b9bf5516c0dc61ed581054d368b455755afd07",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/chgnet/geom_c3b/srtio3_cubic_mace_mp0_T600.json",
+      "git_blob": "a693866dcb388f45101695b626f85ba0ca13cfc3",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/chgnet/geom_c3b/zr_bcc_mattersim_ref.json",
+      "git_blob": "a106396fd3dff26e4c91cb95fac347b0047f4e3a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/chgnet/geom_c3b/zr_bcc_mattersim_T50.json",
+      "git_blob": "7b85837359825806e7d44329199616c56cb8a8fb",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/chgnet/geom_c3b/zro2_cubic_mace_mp0_ref.json",
+      "git_blob": "7952e43130fdfcf0de14efe178f280cfdcce7f1b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/chgnet/geom_c3b/zro2_cubic_mace_mp0_T100.json",
+      "git_blob": "17b71f4df9b133049713e563b5108c6fdc913f9b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mace_mp0/geom_c3b/batio3_cubic_mace_mp0_ref.json",
+      "git_blob": "47b8a4a5ba5f81fd318169ab9a99e8f79b8ccbc5",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mace_mp0/geom_c3b/batio3_cubic_mace_mp0_T100.json",
+      "git_blob": "228172cdc08676710aec48c782e4eb5c8d85e4ee",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mace_mp0/geom_c3b/srtio3_cubic_mace_mp0_ref.json",
+      "git_blob": "6540d6a1b58e98d07e5eed45819bef71d28a7359",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mace_mp0/geom_c3b/srtio3_cubic_mace_mp0_T600.json",
+      "git_blob": "78d589ea6d24ab19e1332e8bd9361a403c8626c4",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mace_mp0/geom_c3b/zr_bcc_mattersim_ref.json",
+      "git_blob": "033af3ec850f69a45443a967f3041fe9d39c4bb1",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mace_mp0/geom_c3b/zr_bcc_mattersim_T50.json",
+      "git_blob": "8f04204e33947135e66cf2e408e0692318c20f19",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mace_mp0/geom_c3b/zro2_cubic_mace_mp0_ref.json",
+      "git_blob": "e7988660a2037cff61d854e0cb994dc79f99dd3e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mace_mp0/geom_c3b/zro2_cubic_mace_mp0_T100.json",
+      "git_blob": "e55a55ae9b5d3b2b9ab478db04c6ab5f4a519200",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mattersim/geom_c3b/batio3_cubic_mace_mp0_ref.json",
+      "git_blob": "0ec278bfd252e616abd53aeaff272f215a5aec4b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mattersim/geom_c3b/batio3_cubic_mace_mp0_T100.json",
+      "git_blob": "477c12c90b438170104fe34fdb28fadf57a3c4ad",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mattersim/geom_c3b/srtio3_cubic_mace_mp0_ref.json",
+      "git_blob": "619c16425eeed485b42fa95da1a61b93c822d0da",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mattersim/geom_c3b/srtio3_cubic_mace_mp0_T600.json",
+      "git_blob": "2cd353e1af5cf8e812738e95aa4bde24c41c096e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mattersim/geom_c3b/zr_bcc_mattersim_ref.json",
+      "git_blob": "a7e898d1eabe606a7b7971d40c4aa2d068b9da75",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mattersim/geom_c3b/zr_bcc_mattersim_T50.json",
+      "git_blob": "2b838657e0c936815bf9f45be9ff3b5abcac7f2b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mattersim/geom_c3b/zro2_cubic_mace_mp0_ref.json",
+      "git_blob": "c05d9aaef0c2ecccd880a9774d81e8428b601de7",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/mattersim/geom_c3b/zro2_cubic_mace_mp0_T100.json",
+      "git_blob": "e12e29dc5e0aa7c6e5d301f889a3c82ed711779d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/orb_v2/geom_c3b/batio3_cubic_mace_mp0_ref.json",
+      "git_blob": "16843ecc7a9dc46c45eab06c530f3525dc128fa4",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/orb_v2/geom_c3b/batio3_cubic_mace_mp0_T100.json",
+      "git_blob": "0552a193a81b5fa74e42cfec7d294cf7f25e1b49",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/orb_v2/geom_c3b/srtio3_cubic_mace_mp0_ref.json",
+      "git_blob": "8d7bffc768d124f5b8c64d91a3a5d5788f4c50e9",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/orb_v2/geom_c3b/srtio3_cubic_mace_mp0_T600.json",
+      "git_blob": "929ef8319a8f8e5cbb4c32c53e7e92cde9f8f2e3",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/orb_v2/geom_c3b/zr_bcc_mattersim_ref.json",
+      "git_blob": "0879701be0070caade2bc05b9cdcfd1d1b03c5db",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/orb_v2/geom_c3b/zr_bcc_mattersim_T50.json",
+      "git_blob": "4be9c0ff3cbe207e1ffe6f9311d4d0a5ac456a19",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/orb_v2/geom_c3b/zro2_cubic_mace_mp0_ref.json",
+      "git_blob": "2784a13bea5e33cf72523eea535755c099e9c30f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/orb_v2/geom_c3b/zro2_cubic_mace_mp0_T100.json",
+      "git_blob": "65270b7dc19ea67174851d7bafe4f27a79156bd4",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/sevennet0/geom_c3b/batio3_cubic_mace_mp0_ref.json",
+      "git_blob": "23548a5e9a7cfc62ec8583d729b6a999f735bc17",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/sevennet0/geom_c3b/batio3_cubic_mace_mp0_T100.json",
+      "git_blob": "cc5d1dc033e7bef378f63ea3b6507d9ebaa75bc7",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/sevennet0/geom_c3b/srtio3_cubic_mace_mp0_ref.json",
+      "git_blob": "d0f3ddd4d17e21b55f78a5a54fb34a0b590bcd6d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/sevennet0/geom_c3b/srtio3_cubic_mace_mp0_T600.json",
+      "git_blob": "e54cf514a7855568257d43ebd77006bae127c76d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/sevennet0/geom_c3b/zr_bcc_mattersim_ref.json",
+      "git_blob": "9c1aed9245ee62d5724d70713fb1d6930881f82f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/sevennet0/geom_c3b/zr_bcc_mattersim_T50.json",
+      "git_blob": "5a92b54b87ad3dbb7c2ef54b021ffed8aebc9494",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/sevennet0/geom_c3b/zro2_cubic_mace_mp0_ref.json",
+      "git_blob": "2fd4a05fbb0228cb959a45e034c2efdce74a856a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/mlip/sevennet0/geom_c3b/zro2_cubic_mace_mp0_T100.json",
+      "git_blob": "49956df545b4c567c66881e8fdb68c77e5538a78",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base0/job.json",
+      "git_blob": "c6f82d9d09bb3677bbb91cf3fdced9ef936b3702",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base0/pw.in",
+      "git_blob": "26f6c7f22a5d9bea4c12e369bc0b5f80cb80c2dc",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base0/pw.in.ran",
+      "git_blob": "26f6c7f22a5d9bea4c12e369bc0b5f80cb80c2dc",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base0/pw.out",
+      "git_blob": "473fdd9aa32075a28dcf436d6f6d97d05fe9fd99",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base1/job.json",
+      "git_blob": "4d1daa632cf26bc76f1c04c237c3248c46d82e55",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base1/pw.in",
+      "git_blob": "bdfb976929516d464c09a1074c0650af7cf9cba6",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base1/pw.in.ran",
+      "git_blob": "bdfb976929516d464c09a1074c0650af7cf9cba6",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base1/pw.out",
+      "git_blob": "650fba7dcfcf5ed2fa5653ba55fa27ace5659b2f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base2/job.json",
+      "git_blob": "df1cd84fd8aa3cf33b9965d6067cc7461203368f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base2/pw.in",
+      "git_blob": "37964ceeeb7adbb7b11610d0b8ca0c07bb573b6d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base2/pw.in.ran",
+      "git_blob": "37964ceeeb7adbb7b11610d0b8ca0c07bb573b6d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base2/pw.out",
+      "git_blob": "fe126a34f38e1b6ee702e4a79fb1083e7420a31a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base3/job.json",
+      "git_blob": "5ef599142c4476780f7ce3b649b4236ce6e146f3",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base3/pw.in",
+      "git_blob": "b37b284bc6dcc06d252a7f170bebcd8c9517893b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base3/pw.in.ran",
+      "git_blob": "b37b284bc6dcc06d252a7f170bebcd8c9517893b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_base3/pw.out",
+      "git_blob": "56e0b3b92b7db1aa06d71111c4e6262f48da1465",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_ref/job.json",
+      "git_blob": "4b188c170f1ecd633fe38e2263b3537f216a33c8",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s0_n0000/job.json",
+      "git_blob": "38bffbc40bd7159edd3589310251a716304b567f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s0_n0000/pw.in",
+      "git_blob": "cd3ef68017d8572659cbec96bf6f87319d6dfa0c",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s0_n0000/pw.in.ran",
+      "git_blob": "cd3ef68017d8572659cbec96bf6f87319d6dfa0c",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s0_n0000/pw.out",
+      "git_blob": "fb893a2abac57a7b426a5ce7cd06b32dc23f7436",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s0_n0261/job.json",
+      "git_blob": "2e105ffb8f6bda295e9a88e0e53dcaa7662e8f06",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s0_n0261/pw.in",
+      "git_blob": "bab9f7f29832844ab2dec445668687e42d391fde",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s0_n0261/pw.in.ran",
+      "git_blob": "bab9f7f29832844ab2dec445668687e42d391fde",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s0_n0261/pw.out",
+      "git_blob": "c05025c225f7d031dd1046218e18e6fa67dadabb",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s0_n0462/job.json",
+      "git_blob": "85603a3a49c24aba43cc05ee25788bfcc07256e0",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s0_n0462/pw.in",
+      "git_blob": "33d47668fc73840fee121d9227f155dd13ddf1c2",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s0_n0462/pw.in.ran",
+      "git_blob": "33d47668fc73840fee121d9227f155dd13ddf1c2",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s0_n0462/pw.out",
+      "git_blob": "b6f86adb2b89c665d5cd1429d2560ece51d1b111",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s1_n0022/job.json",
+      "git_blob": "e43e4f25df1d42114ad03327d827d75f1f5d0aff",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s1_n0022/pw.in",
+      "git_blob": "844b2eed82d64ee47fa9f9f4616d95a4d489dc19",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s1_n0022/pw.in.ran",
+      "git_blob": "844b2eed82d64ee47fa9f9f4616d95a4d489dc19",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s1_n0022/pw.out",
+      "git_blob": "f7c09f1cdd6a4d6f60f0492ff66f1766f375b9d2",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s1_n0224/job.json",
+      "git_blob": "95538754c8ce9074aa1b1bf1a0d70fd92502dda2",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s1_n0224/pw.in",
+      "git_blob": "b38a0c8ce0255db6f0f631ac3308826cfe40e570",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s1_n0224/pw.in.ran",
+      "git_blob": "b38a0c8ce0255db6f0f631ac3308826cfe40e570",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s1_n0224/pw.out",
+      "git_blob": "03076b3c9f02fa8d34c089036a232196eadd54f7",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s1_n0486/job.json",
+      "git_blob": "a02b88f5cf9d8c1dfa9a76ced6387b209212119d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s1_n0486/pw.in",
+      "git_blob": "de3bb12439f11f8e6c9cccd86c6478472c015d9f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s1_n0486/pw.in.ran",
+      "git_blob": "de3bb12439f11f8e6c9cccd86c6478472c015d9f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s1_n0486/pw.out",
+      "git_blob": "3d98f778eaab81158fe258c609a5c9109ba3abe7",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s2_n0072/job.json",
+      "git_blob": "e8bf6f13b0644b32a1053866be724c34172e6884",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s2_n0072/pw.in",
+      "git_blob": "b414ec98c1949aae8b830ca7dcdc49a6b69ad17e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s2_n0072/pw.in.ran",
+      "git_blob": "b414ec98c1949aae8b830ca7dcdc49a6b69ad17e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s2_n0072/pw.out",
+      "git_blob": "44ffbd9da3255a350345b574758d327723d8d02e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s2_n0288/job.json",
+      "git_blob": "8540abbbad34a29c3ff3bb7303e6ea8c1ab735ad",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s2_n0288/pw.in",
+      "git_blob": "00af3c78cf91246b35813fcc4ea2b8e3b064560a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s2_n0288/pw.in.ran",
+      "git_blob": "00af3c78cf91246b35813fcc4ea2b8e3b064560a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s2_n0288/pw.out",
+      "git_blob": "5078d323885886e7a31ead0135fb3f3a5a5e8bda",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s2_n0501/job.json",
+      "git_blob": "051d56c511e45812ed9254f79dbf7669590d3ff8",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s2_n0501/pw.in",
+      "git_blob": "05165f779957db8075d55667fac777d342f99157",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s2_n0501/pw.in.ran",
+      "git_blob": "05165f779957db8075d55667fac777d342f99157",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s2_n0501/pw.out",
+      "git_blob": "c96c44fad5ad7c11f429d9520846fa55438474df",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s3_n0004/job.json",
+      "git_blob": "7b9268cfb9c58d0ab78661b4f8c6be40219601d7",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s3_n0004/pw.in",
+      "git_blob": "8ddd572d3f03ff3c7662a0f20b4a50af08b3ae22",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s3_n0004/pw.in.ran",
+      "git_blob": "8ddd572d3f03ff3c7662a0f20b4a50af08b3ae22",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s3_n0004/pw.out",
+      "git_blob": "c8685d45893c6c6c51e686dd333aa7804be60b16",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s3_n0362/job.json",
+      "git_blob": "e622213098d2d05a25860c6a0b7433659d2fcd5b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s3_n0362/pw.in",
+      "git_blob": "db7cfdff7eadaba60ad24b7b1e5b9678aeddd18c",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s3_n0362/pw.in.ran",
+      "git_blob": "db7cfdff7eadaba60ad24b7b1e5b9678aeddd18c",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s3_n0362/pw.out",
+      "git_blob": "6cccbe95077fe35c91d30f9b3c45b19badac228e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s3_n0471/job.json",
+      "git_blob": "4cf3baed6547a740459e15ecdf343c0832ef1eb7",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s3_n0471/pw.in",
+      "git_blob": "7c5310faa0d9ce1221e336d51af0e288e184815a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s3_n0471/pw.in.ran",
+      "git_blob": "7c5310faa0d9ce1221e336d51af0e288e184815a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_batio3_cubic_mace_mp0_T100_s3_n0471/pw.out",
+      "git_blob": "39b040f80bfc906e5ec47ee11f7727bd9d8d6f6e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base0/job.json",
+      "git_blob": "270501f65fcd6b61be5f2951d9ffcaa5d96c9977",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base0/pw.in",
+      "git_blob": "e1bb197660b785b339b0c1e0db0406f191939a84",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base0/pw.in.ran",
+      "git_blob": "e1bb197660b785b339b0c1e0db0406f191939a84",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base0/pw.out",
+      "git_blob": "9544245d09be344b6e2fa233c06e6d5e6aba0cba",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base1/job.json",
+      "git_blob": "af74e1312d6d48d4f81ced8ce1a4115a21a43845",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base1/pw.in",
+      "git_blob": "5a3241e66fa41c419a1ee2ee933c7d5f9267324d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base1/pw.in.ran",
+      "git_blob": "5a3241e66fa41c419a1ee2ee933c7d5f9267324d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base1/pw.out",
+      "git_blob": "136c8eb62e10759b3de4121ceed8dac8640ce1f4",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base2/job.json",
+      "git_blob": "e81f04b600e084b6a136aa20f1cb302b23adcd8f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base2/pw.in",
+      "git_blob": "646f868e7d9a407bd8514cea94cb4398fe7b8ab8",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base2/pw.in.ran",
+      "git_blob": "646f868e7d9a407bd8514cea94cb4398fe7b8ab8",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base2/pw.out",
+      "git_blob": "e3a5e03b365c4a4af8f5cf3ee37c8f07533812c6",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base3/job.json",
+      "git_blob": "9c9e330ce599229d88d0d3d0c12606721758cf2a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base3/pw.in",
+      "git_blob": "e2bb49cd8f5195d69f62ea6715f7f3e086c4c37e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base3/pw.in.ran",
+      "git_blob": "e2bb49cd8f5195d69f62ea6715f7f3e086c4c37e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_base3/pw.out",
+      "git_blob": "a6957695e5c4d32e7f5666c6c4b175013016cc3f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_ref/job.json",
+      "git_blob": "537dd67fdf27c7945330955ff220b33c70675175",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s0_n0000/job.json",
+      "git_blob": "b9c25e89a3610fd3b70f77bcb9d2b6e410b885d8",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s0_n0000/pw.in",
+      "git_blob": "016dd1c2e63868843b82f9dff5b97eebf7fedd00",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s0_n0000/pw.in.ran",
+      "git_blob": "016dd1c2e63868843b82f9dff5b97eebf7fedd00",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s0_n0000/pw.out",
+      "git_blob": "0e00a11d916dcdb5a1b2cb9f875663a7d2c0cc6a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s0_n0261/job.json",
+      "git_blob": "8d3c243b984f3ba2cfc59114b5cefa0e2535440f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s0_n0261/pw.in",
+      "git_blob": "92f160f17e850fbc659fdec166465b4fbdb12705",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s0_n0261/pw.in.ran",
+      "git_blob": "92f160f17e850fbc659fdec166465b4fbdb12705",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s0_n0261/pw.out",
+      "git_blob": "4fb38c0722048d39e451a6d4c6e86196d53dab51",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s0_n0462/job.json",
+      "git_blob": "39bbd2f794cc07d00574c75f4de6477c98d39b31",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s0_n0462/pw.in",
+      "git_blob": "c80ce0c86d2319b949c6f1d25c1b8c0743182edf",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s0_n0462/pw.in.ran",
+      "git_blob": "c80ce0c86d2319b949c6f1d25c1b8c0743182edf",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s0_n0462/pw.out",
+      "git_blob": "fcd012476bd80df12838c3f6ba1aff772577deb0",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s1_n0022/job.json",
+      "git_blob": "b8578cf4240a87be52be0d6da56ea008f205fa53",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s1_n0022/pw.in",
+      "git_blob": "62f9f6769eaf8472be5d0eb87e1cb442dd8bc37d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s1_n0022/pw.in.ran",
+      "git_blob": "62f9f6769eaf8472be5d0eb87e1cb442dd8bc37d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s1_n0022/pw.out",
+      "git_blob": "044208a80750fb8b5f05a624d36f7c549b2a3a85",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s1_n0224/job.json",
+      "git_blob": "43ebfdb70635717cb5452a7569de0c1171dabf8e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s1_n0224/pw.in",
+      "git_blob": "0620776da9c88f8b676d6a54e5b8dc7226e7695b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s1_n0224/pw.in.ran",
+      "git_blob": "0620776da9c88f8b676d6a54e5b8dc7226e7695b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s1_n0224/pw.out",
+      "git_blob": "5e3190a9b34edc1dcabbb90c5002dba861df76dd",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s1_n0486/job.json",
+      "git_blob": "1f9ff53121f3bd0f5d5aa70e346b880b201bfa7c",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s1_n0486/pw.in",
+      "git_blob": "e839e893b2cf7229777537f2a1886c11aaec4c08",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s1_n0486/pw.in.ran",
+      "git_blob": "e839e893b2cf7229777537f2a1886c11aaec4c08",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s1_n0486/pw.out",
+      "git_blob": "846099e6453cc0b9c5713f64ba72b8f77a01305b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s2_n0072/job.json",
+      "git_blob": "cb9281623b94af5854905cbfae3474ae6e3c8bce",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s2_n0072/pw.in",
+      "git_blob": "59f231fe162ab4f1461374e9618c145afcfdd00f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s2_n0072/pw.in.ran",
+      "git_blob": "59f231fe162ab4f1461374e9618c145afcfdd00f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s2_n0072/pw.out",
+      "git_blob": "d3974c72e8add3187855d43ae87a0a3a743f6ff7",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s2_n0288/job.json",
+      "git_blob": "0319fdd40be5edc8d3f8e7215cbb9ecde83bda54",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s2_n0288/pw.in",
+      "git_blob": "f6db9e2c08dd9b8c3b592e3798ea6efce4735032",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s2_n0288/pw.in.ran",
+      "git_blob": "f6db9e2c08dd9b8c3b592e3798ea6efce4735032",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s2_n0288/pw.out",
+      "git_blob": "0b017e7744bcec41f3f5813da359e63ffad02140",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s2_n0501/job.json",
+      "git_blob": "0d0a10e3a0a17a087a404ea40eb82b155fd4e520",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s2_n0501/pw.in",
+      "git_blob": "a09016f1a149cd907d6719e543def9eea5f00487",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s2_n0501/pw.in.ran",
+      "git_blob": "a09016f1a149cd907d6719e543def9eea5f00487",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s2_n0501/pw.out",
+      "git_blob": "5f43aeed9259751ad0fbc72f455aef2c9bca4beb",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s3_n0004/job.json",
+      "git_blob": "8fa678d590ccdbca3012da1dac6f6c3b10cc6b80",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s3_n0004/pw.in",
+      "git_blob": "f31e2642b583fca063413570b4d4a5e4db37695a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s3_n0004/pw.in.ran",
+      "git_blob": "f31e2642b583fca063413570b4d4a5e4db37695a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s3_n0004/pw.out",
+      "git_blob": "04fa8990eb02ca40fc6b790f2acbe7372d3e0467",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s3_n0362/job.json",
+      "git_blob": "c319df8763cd7b861da037692a7501e481735ba1",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s3_n0362/pw.in",
+      "git_blob": "18092f015ae0549ed745f844dbf978f7aa0b0648",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s3_n0362/pw.in.ran",
+      "git_blob": "18092f015ae0549ed745f844dbf978f7aa0b0648",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s3_n0362/pw.out",
+      "git_blob": "5efc72a60ea54219b4443be4e8291b810834be48",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s3_n0471/job.json",
+      "git_blob": "2d1ae996241b05a6bf2b74dfd5e55fb5e869394e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s3_n0471/pw.in",
+      "git_blob": "89d897d0cd6b9a2d0c538cd4651a57d0093e9a54",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s3_n0471/pw.in.ran",
+      "git_blob": "89d897d0cd6b9a2d0c538cd4651a57d0093e9a54",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_srtio3_cubic_mace_mp0_T600_s3_n0471/pw.out",
+      "git_blob": "f6cb61266a639469a93286e9d01a2bd63fd7bff9",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base0/job.json",
+      "git_blob": "2941e333913a5b470efa2dd46255cea08b3959b9",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base0/pw.in",
+      "git_blob": "fe21acbceea0a35b598b8b9e12799cfd98be9c7b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base0/pw.in.ran",
+      "git_blob": "fe21acbceea0a35b598b8b9e12799cfd98be9c7b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base0/pw.out",
+      "git_blob": "845d06d6c460fb26a34b7e7dc3a6d7d45db3b97d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base1/job.json",
+      "git_blob": "37b7b3b868386d266829497d50ccc66baebc01a1",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base1/pw.in",
+      "git_blob": "0aa0b8db60952c57ea1f9fa59f077fe5c3f4a5f3",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base1/pw.in.ran",
+      "git_blob": "0aa0b8db60952c57ea1f9fa59f077fe5c3f4a5f3",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base1/pw.out",
+      "git_blob": "7d87572d861e3e6d953a98a0af502f06aad4a7d8",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base2/job.json",
+      "git_blob": "2c8dd48cdd537a499fa3457d6144d8afaa236321",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base2/pw.in",
+      "git_blob": "08d3fe4fd7fa5c6c119787aec6a095777698d475",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base2/pw.in.ran",
+      "git_blob": "08d3fe4fd7fa5c6c119787aec6a095777698d475",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base2/pw.out",
+      "git_blob": "3da3a2db031a131687ca5d1e514207d599dce522",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base3/job.json",
+      "git_blob": "96c51343a4457b83d5612fb4bd5165eefd44e4ab",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base3/pw.in",
+      "git_blob": "2b0a8a2a902b66c1cd623ee2383ee28533d55f47",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base3/pw.in.ran",
+      "git_blob": "2b0a8a2a902b66c1cd623ee2383ee28533d55f47",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_base3/pw.out",
+      "git_blob": "6e6393e3502fedd0a8107634a05fabacbb111755",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_ref/job.json",
+      "git_blob": "e391e1644ce5b4871563e2806201a3bf06f7781d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s0_n0000/job.json",
+      "git_blob": "c72f3d91eb9573b6281c541c2a6cb14281b9c974",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s0_n0000/pw.in",
+      "git_blob": "c1515b96dacdf25aff8e3af65b4eab2e15018c6a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s0_n0000/pw.in.ran",
+      "git_blob": "c1515b96dacdf25aff8e3af65b4eab2e15018c6a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s0_n0000/pw.out",
+      "git_blob": "d784c0d27a1a619829354c23974c5a466afc6ec9",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s0_n0261/job.json",
+      "git_blob": "4daea6783f49cffa12eef4a71fdc41ec2511b7e3",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s0_n0261/pw.in",
+      "git_blob": "4a68106ef3dfbf21a39a092f6b1acd1b061b9284",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s0_n0261/pw.in.ran",
+      "git_blob": "4a68106ef3dfbf21a39a092f6b1acd1b061b9284",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s0_n0261/pw.out",
+      "git_blob": "7980baf8c431e3a980dbd73a574a8d5e4a39a490",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s0_n0462/job.json",
+      "git_blob": "4c4ca79da2f34f6613006b100d0400a3ec6fed8a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s0_n0462/pw.in",
+      "git_blob": "29bdebe713c8b57d7677a5a266a77fa4cfc06b07",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s0_n0462/pw.in.ran",
+      "git_blob": "29bdebe713c8b57d7677a5a266a77fa4cfc06b07",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s0_n0462/pw.out",
+      "git_blob": "898bcfa2a811411f952dbed8654342fd924f7618",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s1_n0022/job.json",
+      "git_blob": "3034ee92a8b06eb3503576886269385de0f0510c",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s1_n0022/pw.in",
+      "git_blob": "101e7279190f54a61bfe66e791053016415b766b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s1_n0022/pw.in.ran",
+      "git_blob": "101e7279190f54a61bfe66e791053016415b766b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s1_n0022/pw.out",
+      "git_blob": "7723ff261726baa3a2346713c448ac5b16cf54ff",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s1_n0224/job.json",
+      "git_blob": "4dc9c969c474daba60356fbad5ebf8fc8874af66",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s1_n0224/pw.in",
+      "git_blob": "219ce126079faf6776b40702c0655334d9c2c99f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s1_n0224/pw.in.ran",
+      "git_blob": "219ce126079faf6776b40702c0655334d9c2c99f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s1_n0224/pw.out",
+      "git_blob": "c32f5eaef1e23f58f82a6ce2e1c6d343367b43cb",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s1_n0486/job.json",
+      "git_blob": "a909319665b4b828fa2b878428c93b720d2bd41d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s1_n0486/pw.in",
+      "git_blob": "f3d42e9be1e6abb73d6d6896be688dc52607f634",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s1_n0486/pw.in.ran",
+      "git_blob": "f3d42e9be1e6abb73d6d6896be688dc52607f634",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s1_n0486/pw.out",
+      "git_blob": "ed0a79b181e8952fb0d941ff69b2bd381cb1b429",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s2_n0072/job.json",
+      "git_blob": "b1d3dd6f8a06ec534198cc6c7fb665b72ef7596d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s2_n0072/pw.in",
+      "git_blob": "97489c274e29de69937cc942ba16e553bdaf95c6",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s2_n0072/pw.in.ran",
+      "git_blob": "97489c274e29de69937cc942ba16e553bdaf95c6",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s2_n0072/pw.out",
+      "git_blob": "777d681f47c50ff5b9db45484d3c7ad17378d3f8",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s2_n0288/job.json",
+      "git_blob": "64c2b8ef85ea6903dd1a4ee43197aac48a93d7a2",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s2_n0288/pw.in",
+      "git_blob": "65ed09c45e33f9c0146019ad45c8992d14494e6e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s2_n0288/pw.in.ran",
+      "git_blob": "65ed09c45e33f9c0146019ad45c8992d14494e6e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s2_n0288/pw.out",
+      "git_blob": "579704a1cce9b2c2735a5442510adc9467682c3e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s2_n0501/job.json",
+      "git_blob": "a176aa1d7ceb0ad63ad8dedd0d84122b04d792ec",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s2_n0501/pw.in",
+      "git_blob": "e290f5bdaaf9f834c3ff5c4165b034238ae8d4e4",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s2_n0501/pw.in.ran",
+      "git_blob": "e290f5bdaaf9f834c3ff5c4165b034238ae8d4e4",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s2_n0501/pw.out",
+      "git_blob": "fa4c39136e60b08c570883c624c5293455ad7f8c",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s3_n0004/job.json",
+      "git_blob": "939f9c2327b849a22c54685a9b384cd9b17efefa",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s3_n0004/pw.in",
+      "git_blob": "998aa4d6fbf6cdc5e44ff8f4dd7bdb53b23f9371",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s3_n0004/pw.in.ran",
+      "git_blob": "998aa4d6fbf6cdc5e44ff8f4dd7bdb53b23f9371",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s3_n0004/pw.out",
+      "git_blob": "147f25af8d11985996efc88ddf4d2e57340eb44e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s3_n0362/job.json",
+      "git_blob": "4d098fe300dcffbfca84ab296518daf2182f0608",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s3_n0362/pw.in",
+      "git_blob": "160639488f112b2ef09381afc953fdbcbaaed76c",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s3_n0362/pw.in.ran",
+      "git_blob": "160639488f112b2ef09381afc953fdbcbaaed76c",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s3_n0362/pw.out",
+      "git_blob": "68aff318fb08d3851a57ef4b7229766a29a3facf",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s3_n0471/job.json",
+      "git_blob": "c84088107680900e79ce10711abe02c4d240c03c",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s3_n0471/pw.in",
+      "git_blob": "1c217f73085f0d07dcb595b701d0b3832f14f19a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s3_n0471/pw.in.ran",
+      "git_blob": "1c217f73085f0d07dcb595b701d0b3832f14f19a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zr_bcc_mattersim_T50_s3_n0471/pw.out",
+      "git_blob": "cc9239ec7a0067d81683bd011d4c75bdd03525fc",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base0/job.json",
+      "git_blob": "abf04dd0222b83950b27bc9f892ee47d34a3f767",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base0/pw.in",
+      "git_blob": "ee4b3bf383ef4fd227015cff4db479fe4af364a8",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base0/pw.in.ran",
+      "git_blob": "ee4b3bf383ef4fd227015cff4db479fe4af364a8",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base0/pw.out",
+      "git_blob": "47b8fb4ad336c9b1faea9383ccf700445c0a620f",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base1/job.json",
+      "git_blob": "2db3786837968324640e2414ffd9cd722f81a018",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base1/pw.in",
+      "git_blob": "6fc6fd22ad45c2094e991485395f324e37da1b1b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base1/pw.in.ran",
+      "git_blob": "6fc6fd22ad45c2094e991485395f324e37da1b1b",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base1/pw.out",
+      "git_blob": "f996652f593369729a0676e2bf55e019c04066f0",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base2/job.json",
+      "git_blob": "855997af21a161fbe8fd6d8dc1453ebed52e1754",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base2/pw.in",
+      "git_blob": "c16b277638b80f99fdb12e775762c35736269160",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base2/pw.in.ran",
+      "git_blob": "c16b277638b80f99fdb12e775762c35736269160",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base2/pw.out",
+      "git_blob": "24454e9bf02e5e8f35ad2ba6a56818b0b266f9f5",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base3/job.json",
+      "git_blob": "6bd54d09cc50d4e4fa2ac52cdb78704280ae25d0",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base3/pw.in",
+      "git_blob": "46a6dfa110bb8952cb2c50f3830315a6445bacfb",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base3/pw.in.ran",
+      "git_blob": "46a6dfa110bb8952cb2c50f3830315a6445bacfb",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_base3/pw.out",
+      "git_blob": "00dd8684795d5cb7e7cfd4ea4d9e58ae3f431aaa",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_ref/job.json",
+      "git_blob": "75d5fe24746f5c9c37e6f1ba61eeede55fa97ab5",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s0_n0000/job.json",
+      "git_blob": "7e543341a245d0d3a832ea30afc38c65589b44e8",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s0_n0000/pw.in",
+      "git_blob": "ecb455f4db23394d61b770024d018224c6438c2a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s0_n0000/pw.in.ran",
+      "git_blob": "ecb455f4db23394d61b770024d018224c6438c2a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s0_n0000/pw.out",
+      "git_blob": "8d210996c3900ab3a26d73b213728bbf5843ed67",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s0_n0261/job.json",
+      "git_blob": "d36f9c6a5a63123b5e0793c05e5542ddb5711a48",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s0_n0261/pw.in",
+      "git_blob": "1c786e5562bb9373f35624ad0ebd3d15ed4875e2",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s0_n0261/pw.in.ran",
+      "git_blob": "1c786e5562bb9373f35624ad0ebd3d15ed4875e2",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s0_n0261/pw.out",
+      "git_blob": "54d87c0a3306cf9ad0455d526d85e74ff19339dd",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s0_n0462/job.json",
+      "git_blob": "4280fb02ec3450ebad5235c23e0c50c4bb6b06df",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s0_n0462/pw.in",
+      "git_blob": "a6c7476edbc09d569a9c3729c3cd7966c9b6dc62",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s0_n0462/pw.in.ran",
+      "git_blob": "a6c7476edbc09d569a9c3729c3cd7966c9b6dc62",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s0_n0462/pw.out",
+      "git_blob": "4018b29ea27045e4c3c286c6b00e3171453cfa17",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s1_n0022/job.json",
+      "git_blob": "2e43421437458957f2b1bd8d8e7860fb3194f3e7",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s1_n0022/pw.in",
+      "git_blob": "232d68ef279d0ccc0c23bea352aed88a2bad9334",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s1_n0022/pw.in.ran",
+      "git_blob": "232d68ef279d0ccc0c23bea352aed88a2bad9334",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s1_n0022/pw.out",
+      "git_blob": "0a2f31cb3f16d532fbe6680f4be027d851c98588",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s1_n0224/job.json",
+      "git_blob": "e6dd4c6ffc792052d3446f30cbcccdeb86be9644",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s1_n0224/pw.in",
+      "git_blob": "6840b03bea1b8511b3bf8086c45c410677782496",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s1_n0224/pw.in.ran",
+      "git_blob": "6840b03bea1b8511b3bf8086c45c410677782496",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s1_n0224/pw.out",
+      "git_blob": "5d87f46c52bdd859ead49abe77dcf41a5212d773",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s1_n0486/job.json",
+      "git_blob": "2976a0e15d3123c0f14d894050aa00bf2d89c62e",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s1_n0486/pw.in",
+      "git_blob": "92b471f21e573659afe86f7d77ca8a4bbecca823",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s1_n0486/pw.in.ran",
+      "git_blob": "92b471f21e573659afe86f7d77ca8a4bbecca823",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s1_n0486/pw.out",
+      "git_blob": "b6cc15ffff16b03d153ac14bbb2d21826d75c5db",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s2_n0072/job.json",
+      "git_blob": "ce048d116238d461a4fbd08fb02e1feb508529a4",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s2_n0072/pw.in",
+      "git_blob": "bb36485fb349096512c2f93d73d4fa20e4e775df",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s2_n0072/pw.in.ran",
+      "git_blob": "bb36485fb349096512c2f93d73d4fa20e4e775df",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s2_n0072/pw.out",
+      "git_blob": "6b5be554a5e776d5616e383318784d0f81ced455",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s2_n0288/job.json",
+      "git_blob": "d4f0a03184ef5161c5096625e78b97b51ca9a255",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s2_n0288/pw.in",
+      "git_blob": "d625b349ac9eeb2530cb73a4d6031834fdd209b2",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s2_n0288/pw.in.ran",
+      "git_blob": "d625b349ac9eeb2530cb73a4d6031834fdd209b2",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s2_n0288/pw.out",
+      "git_blob": "fae71023bc9e0dc379e9340d3fc8323754ebb5bd",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s2_n0501/job.json",
+      "git_blob": "4f35a5e6d9b592189cd5f206d1f0e7e043bf17b4",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s2_n0501/pw.in",
+      "git_blob": "59de91d04ec70149cd3c2999f02b3686ef20ac24",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s2_n0501/pw.in.ran",
+      "git_blob": "59de91d04ec70149cd3c2999f02b3686ef20ac24",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s2_n0501/pw.out",
+      "git_blob": "d5f938d3077557174f40d594409a5d2de3d79c05",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s3_n0004/job.json",
+      "git_blob": "381acc1c3c89189d8c3a35feb24f8acdbe710ea4",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s3_n0004/pw.in",
+      "git_blob": "010445f69b27dfe7dc45799480002d81d3739844",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s3_n0004/pw.in.ran",
+      "git_blob": "010445f69b27dfe7dc45799480002d81d3739844",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s3_n0004/pw.out",
+      "git_blob": "88ab2e28da9b8d18f853df8052562a10c197dabf",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s3_n0362/job.json",
+      "git_blob": "54eccff9aeb2ba282a3f010f4a3905ced2e8a7f2",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s3_n0362/pw.in",
+      "git_blob": "f8c630abb202a0d238fc0141ac1f6b9ac2562841",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s3_n0362/pw.in.ran",
+      "git_blob": "f8c630abb202a0d238fc0141ac1f6b9ac2562841",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s3_n0362/pw.out",
+      "git_blob": "79b4128457887bf6d56f23fa615c6f0aa7b21a90",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s3_n0471/job.json",
+      "git_blob": "76eb109a8191a98fc0b0fa37a1d002c212f62148",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s3_n0471/pw.in",
+      "git_blob": "91bc194a209b210d0fc6c1deb9d56c77026bc805",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s3_n0471/pw.in.ran",
+      "git_blob": "91bc194a209b210d0fc6c1deb9d56c77026bc805",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/dft/qe/b_zro2_cubic_mace_mp0_T100_s3_n0471/pw.out",
+      "git_blob": "37f57bf52df5920be8c36280af02f6fa986c5cd7",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_batio3_cubic.npz",
+      "git_blob": "82e49f3db5a911adb0efc9567845ed76a69d8ef4",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_c_diamond.npz",
+      "git_blob": "63e06a8d4435edfba357e0713a02089d9e3e4dc1",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_ceo2_cubic.npz",
+      "git_blob": "20bb04745b011009af0f55c6a7625b7af2046fcb",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_cspbi3_cubic.npz",
+      "git_blob": "ed34c32bd10695628e8b6c30bf6a22bef4abbf22",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_cssnbr3_cubic.npz",
+      "git_blob": "70b9d13d0f620b3d922db18bcb990d36a827c7fe",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_cssni3_cubic.npz",
+      "git_blob": "c7dd3aa26dfc645e6c12192fea65b1a2f22a12dd",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_cu_fcc.npz",
+      "git_blob": "36c1f2ff046ba6dae4d5a4e77c2d783b43e4727a",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_hfo2_cubic.npz",
+      "git_blob": "9b242168fae55df0b0c0b9e26ba4650501fc526c",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_knbo3_cubic.npz",
+      "git_blob": "7c3dcdf45c7aaf8a0b06b17193b53e5ed4382a87",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_mgo_rocksalt.npz",
+      "git_blob": "3aea2358b5e5e49b5702e69f88526e97e794dde1",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_nacl_rocksalt.npz",
+      "git_blob": "06ef13f733b1916d174d95289f921fc67bba341d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_pbtio3_cubic.npz",
+      "git_blob": "425522434fbaa7be51f743e99c979de02667aedd",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_si_diamond.npz",
+      "git_blob": "81f47b221e90218771abb17c556c564c01354a22",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_srtio3_cubic.npz",
+      "git_blob": "9847c179e6f2e78d626b8b4dbd725b118c7c4170",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/configs/configs_zro2_cubic.npz",
+      "git_blob": "4b2f8d742509241299a1f821a22778609fb61991",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/forces/forces_chgnet.npz",
+      "git_blob": "2547e38024a92989ddfd1674438c28a2f27716f4",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/forces/forces_mace_mp0.npz",
+      "git_blob": "490c54e90dfe2e4bd49d801d19c7689ca1f5b3a3",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/forces/forces_mattersim.npz",
+      "git_blob": "78983fd9a7e5c6b5f0cb3049c02ace971b8d5784",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/forces/forces_orb_v2.npz",
+      "git_blob": "65275bceae4e819f542ee9047ebdf39bf465045d",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/forces/forces_sevennet0.npz",
+      "git_blob": "a7a26cd82273260f64c7af7d417c1096f3f320c9",
+      "crlf_normalised": false,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/summary.json",
+      "git_blob": "7e3e48bf6a17826449bb645477d4d195da91048c",
+      "crlf_normalised": true,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/units_consensus.csv",
+      "git_blob": "0f593e2d314ee4590efb5299e2874805c29f2ce9",
+      "crlf_normalised": true,
+      "matches_HEAD": true
+    },
+    {
+      "path": "results/revision/force_spread/units_per_model.csv",
+      "git_blob": "ed8144e5f4a2d7c5d89b484f38dfe138c1bb6d6b",
+      "crlf_normalised": true,
+      "matches_HEAD": true
+    }
+  ]
+}
