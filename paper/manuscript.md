@@ -343,7 +343,8 @@ shows that no seed met the threshold: the cumulative cap ended the first populat
 steps, so the final gradient sat 7 × 10² to 10⁴ times above the threshold and the free-energy
 Hessian was evaluated close to the positive-definite start. The gradient error python-sscha
 records is a constant placeholder (ESI Section S2.1), so the convergence test it feeds is not a
-stochastic one.
+stochastic one. Section 3.5 (Table 5) follows the minimiser population by population under both
+recipes and lists the checks that expose this kind of failure.
 We therefore re-ran SSCHA with a recipe that converges, on every unit a claim in Section 3.3 rests on:
 178 units, the non-bcc systems at 100–900 K in the 2×2×2 cell and Ti, Zr and Hf at 100, 300 and
 600 K in a 3×3×3 cell. The minimiser is capped at 400 steps within each population instead of
@@ -952,6 +953,68 @@ wrong, and 8 of 52 without ORB-v2. One reading, not tested here, is that disagre
 near the stability boundary, where the call is most uncertain.
 
 ### 3.5 Robustness: stochastic noise and finite size
+
+Validating the stochastic minimiser. The SSCHA lowers F[**Φ**] by gradient steps whose gradient is
+a Monte Carlo average over the N configurations of the current population. As **Φ** moves away
+from the matrix that generated them, the same configurations are reused with importance weights
+ρ_**Φ**/ρ_**Φ**₀, and the Kong–Liu ratio KL/N, the effective fraction of the sample left, falls
+until a floor calls for a new population. A relaxation can therefore stop for three reasons that
+are not convergence: a step cap, the Kong–Liu floor, or a threshold set against the wrong error.
+Table 5 follows one unit, BaTiO₃ with MACE-MP-0 at 100 K, population by population under both
+recipes (ESI Fig. S1 adds bcc Zr with MatterSim at 300 K in the 3×3×3 cell). In production the
+step cap decided everything. The first population took 20 steps and spent the cap, which
+python-sscha 1.6.1 counts over all populations; each later population took one step, which the
+library discards when a population ends unconverged, so populations 2–8 moved the auxiliary matrix
+by less than 10⁻¹⁴ (relative) and the gradient stayed at 0.34–0.36. The threshold it was tested
+against, 10⁻⁴ times the library's constant placeholder error (2.2 × 10⁻⁴), lies 70–110 times below
+the real stochastic error of this gradient even at 1,000 configurations (0.016–0.024), so on this
+unit no matrix, converged or not, could have met it: a failed test was the normal outcome, not a
+warning (on a nearly harmonic surface the gradient noise is small enough to pass it, ESI Section
+S2.1).
+The Hessian echoed the start (+2.878 against +2.881 THz). In the converged recipe, populations 1–3
+end at the Kong–Liu floor after 41–51 steps each, as the method intends, while the gradient falls
+from 15 to 2.4 times its real error. Population 4 runs to its 400-step cap and reports a gradient
+at 0.02 of its error, but at KL/N = 0.58, where the reweighted sample is too degenerate to estimate
+it; the guard refuses to declare convergence there. The fresh population 5, drawn at the same
+matrix, returns a first gradient of 0.047, 2.7 times its error and a hundred times what the
+reweighted sample reported; 57 steps later the gradient is 0.19 of its error at KL/N = 0.97, and
+the run stops converged. bcc Zr with MatterSim repeats the pattern: population 10 ends at 0.18 of
+its error at KL/N = 0.50 and is refused, and the fresh population 11 starts at 2.9 times its
+error (ESI Fig. S1). A fresh 2,000-configuration ensemble at BaTiO₃'s final matrix is consistent
+with a minimum (gradient 1.6 times its error), and the Hessian, +1.98 ± 0.06 THz, lies 0.9 THz
+below the start.
+
+**Table 5** The SSCHA minimiser population by population, BaTiO₃ with MACE-MP-0 at 100 K (2×2×2),
+production against converged recipe. *Gradient*, the norm of the free-energy gradient with respect
+to **Φ** at the end of the population; *threshold*, what the stopping test compares it with
+(production: 10⁻⁴ × the library's constant placeholder error; converged: 0.2 × the real serial
+error, honoured only at KL/N ≥ 0.7); *aux.*, the lowest non-acoustic frequency of the auxiliary
+matrix at the end of the population. Both recipes start from the same positive-definite matrix
+(+2.881 THz). `results/revision/r2/sscha_history.json` (`scripts/sscha_convergence_history.py`).
+
+| Recipe | Population | Steps (kept) | Ended by | Gradient | Threshold | KL/N | Aux. (THz) |
+|---|---|---|---|---|---|---|---|
+| production, 256 configs | 1 | 20 (19) | step cap, cumulative | 0.339 | 2.2 × 10⁻⁴ | 0.70 | +2.900 |
+| | 2–8 | 1 (0) each | step cap, cumulative | 0.338–0.360 | 2.2 × 10⁻⁴ | 0.48–0.73 | +2.900 (unchanged) |
+| | Hessian | | | | | | **+2.878** |
+| converged, 1,000 configs | 1 | 46 (45) | Kong–Liu floor | 0.293 | 3.9 × 10⁻³ | 0.49 | +2.904 |
+| | 2 | 51 (50) | Kong–Liu floor | 0.171 | 4.7 × 10⁻³ | 0.46 | +2.925 |
+| | 3 | 41 (40) | Kong–Liu floor | 0.054 | 4.5 × 10⁻³ | 0.47 | +2.940 |
+| | 4 | 400 (399) | step cap, per population; below threshold but refused (KL/N < 0.7) | 4.8 × 10⁻⁴ | 4.2 × 10⁻³ | 0.58 | +2.427 |
+| | 5 | 57 (57) | converged | 3.06 × 10⁻³ | 3.15 × 10⁻³ | 0.97 | +2.570 |
+| | Hessian | | | | | | **+1.98 ± 0.06** |
+
+The converged recipe's checks, and what each one catches in this study: a step cap per population
+rather than in total (production froze after its first population); a threshold set against the
+real error of the gradient (production's could not be met on BaTiO₃); convergence refused below KL/N = 0.7
+(the two false stops above); a fresh-ensemble gradient check at the final matrix (7 of 159
+converged units fail it, ESI Table S22); the distance of the final matrix and Hessian from the
+start (production's Hessian sat within 0.003 THz of it); a bootstrap standard deviation on the
+Hessian (BaTiO₃ with CHGNet at 100 K, +1.65 ± 1.50 THz, is a sign inside its noise); and a second
+start and seed (the eight unresolved units below). The first, second and fifth would each have
+exposed the production failure on its own. All of them are numbers the run already computes; an
+MLIP-driven pipeline that runs hundreds of units unattended has to test them per unit, because a
+relaxation that never converged returns a Hessian in the same form as one that did.
 
 Stochastic reproducibility. Four seeds of bcc Zr with MACE-MP-0 at 100 K agree to within
 0.003 THz (+1.797 to +1.800 THz), but MACE-MP-0 has no harmonic instability in bcc Zr, so that

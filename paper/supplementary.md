@@ -578,6 +578,16 @@ leaves the auxiliary matrix near its `ForcePositiveDefinite` start, in which ima
 modes have been made real, and a free-energy Hessian evaluated there is not evaluated at the SCHA
 minimum.
 
+Fig. S1 shows both recipes population by population on the two units main-text Table 5 and
+Section 3.5 discuss, from the step histories the runs recorded (`scripts/sscha_convergence_history.py`
+→ `results/revision/r2/sscha_history.json`). On both, the production gradient stays within 10 % of
+its first-population value for all eight populations while the converged one falls to its
+threshold, and on both the Kong–Liu guard refuses one point where the reweighted gradient had
+dropped below the threshold at KL/N ≈ 0.5–0.6; the next fresh population measures the gradient at
+2.7 (BaTiO₃) and 2.9 (bcc Zr) times its error.
+
+![**Fig. S1** The SSCHA minimiser population by population, production (squares, vermillion) against the converged recipe (circles, blue), for BaTiO₃ with MACE-MP-0 at 100 K (2×2×2; left) and bcc Zr with MatterSim at 300 K (3×3×3; right). (a, b) Norm of the free-energy gradient with respect to the auxiliary matrix at the end of each population, with each recipe's stopping threshold (dashed): production, 10⁻⁴ times the library's constant placeholder error; converged, 0.2 times the real serial error, honoured only where the Kong–Liu ratio KL/N ≥ 0.7. Ringed points fell below the threshold at KL/N < 0.7 and were refused. (c, d) Minimiser steps per population (log scale): production's `max_ka` = 20 counts over all populations, so after the first population each takes one step and discards it; the converged recipe caps each population at 400. (e, f) Lowest non-acoustic frequency of the auxiliary matrix at the end of each population and, at H, the free-energy Hessian (converged: bootstrap SD over 10 resamples).](../results/figures/fig_sscha_history.png)
+
 ### S2.2 Stage-by-stage diagnostic (cubic BaTiO₃, MACE-MP-0, 100 K)
 
 `scripts/sscha_v4_diag.py`. The numbers in Table S2 come from a single run in June 2026, in the

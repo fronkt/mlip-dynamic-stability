@@ -1380,6 +1380,49 @@ def main() -> int:
             f"{cb_['mean_thz']:.2f} THz, and {round(cb_['frac_unstable'] * cb_['B'])} of the {cb_['B']} "
             "resamples are unstable").replace("-0.", "−0.")
     check(frag in s33n, f"[text Section 3.3 audit M8] '{frag}'")
+    # R2 comment 3: the minimiser population by population (Section 3.5, Table 5, ESI Fig. S1)
+    hist = json.load(open("results/revision/r2/sscha_history.json", encoding="utf-8"))["units"]
+    hb, hz = hist["batio3_mace_100K"], hist["zr_mattersim_300K"]
+    hp, hc = hb["production"]["populations"], hb["converged"]["populations"]
+    s35n = " ".join(ms_txt.split("### 3.5", 1)[1].split("## 4.", 1)[0].split())
+    err_real = [p_["gc_err_real_last"] for p_ in hc]
+    thr_p = hb["production"]["stop_threshold"]
+    check([p_["n_steps"] for p_ in hp] == [20] + [1] * 7 and [p_["n_steps_kept"] for p_ in hp] == [19] + [0] * 7
+          and all(p_["rel_change_vs_prev_end"] < 1e-14 for p_ in hp[1:])
+          and round(min(p_["gc_last"] for p_ in hp[1:]), 2) == 0.34 and round(max(p_["gc_last"] for p_ in hp[1:]), 2) == 0.36
+          and round(thr_p, 5) == 0.00022 and 70 <= min(err_real) / thr_p and max(err_real) / thr_p <= 110
+          and round(min(err_real), 3) == 0.016 and round(max(err_real), 3) == 0.024,
+          "[3.5 Table 5] production: 20 (19) then 1 (0) x7 steps, matrix frozen <1e-14, gradient 0.34-0.36; "
+          "threshold 2.2e-4 is 70-110x below the real error 0.016-0.024")
+    check([p_["n_steps"] for p_ in hc] == [46, 51, 41, 400, 57]
+          and [p_["stop_reason"] for p_ in hc] == ["kong_liu"] * 3 + ["per_population_step_cap", "converged"]
+          and round(hc[0]["gc_over_err_real_last"]) == 15 and round(hc[2]["gc_over_err_real_last"], 1) == 2.4
+          and round(hc[3]["gc_over_err_real_last"], 2) == 0.02 and round(hc[3]["kl_ratio_last"], 2) == 0.58
+          and hc[3]["guarded_last"] and round(hc[4]["gc_over_err_real_last"], 2) == 0.19
+          and round(hc[4]["kl_ratio_last"], 2) == 0.97 and not hc[4]["guarded_last"],
+          "[3.5 Table 5] converged: 46/51/41 steps to the KL floor (15 -> 2.4 x error), pop 4 400-step cap at "
+          "0.02 x error, KL 0.58, refused; pop 5 converged at 0.19, KL 0.97")
+    st5 = [s_ for s_ in hb["converged"]["steps"] if s_["pop"] == 5][0]
+    st4 = [s_ for s_ in hb["converged"]["steps"] if s_["pop"] == 4][-1]
+    z10 = [p_ for p_ in hz["converged"]["populations"] if p_["pop"] == 10][0]
+    z11 = [s_ for s_ in hz["converged"]["steps"] if s_["pop"] == 11][0]
+    check(round(st5["gc"], 3) == 0.047 and round(st5["gc_over_err_real"], 1) == 2.7
+          and 95 <= st5["gc"] / st4["gc"] <= 105
+          and abs(hc[4]["aux_min_start_thz"] - hc[3]["aux_min_end_thz"]) < 1e-9
+          and round(z10["gc_over_err_real_last"], 2) == 0.18 and round(z10["kl_ratio_last"], 2) == 0.50
+          and z10["guarded_last"] and round(z11["gc_over_err_real"], 1) == 2.9,
+          "[3.5] fresh pop 5 at pop 4's matrix: first gradient 0.047 = 2.7 x error, ~100x the reweighted value; "
+          "bcc Zr pop 10 refused at 0.18 / KL 0.50, pop 11 starts at 2.9 x error")
+    fc = hb["converged"]["fresh_check"]
+    check(fc["consistent_with_minimum"] and round(fc["gc_over_err"], 1) == 1.6
+          and round(hb["production"]["start_min_thz"] - hb["production"]["hessian_min_thz"], 3) == 0.003
+          and round(hb["converged"]["start_min_thz"] - hb["converged"]["hessian_min_thz"], 1) == 0.9,
+          "[3.5] fresh check 1.6 x error, consistent; production Hessian 0.003 THz from start, converged 0.9 below")
+    for frag in ("lies 70–110 times below the real stochastic error of this gradient even at 1,000 configurations (0.016–0.024)",
+                 "returns a first gradient of 0.047, 2.7 times its error and a hundred times what the reweighted sample reported",
+                 "| | 4 | 400 (399) | step cap, per population; below threshold but refused (KL/N < 0.7) | 4.8 × 10⁻⁴ | 4.2 × 10⁻³ | 0.58 | +2.427 |",
+                 "| | 5 | 57 (57) | converged | 3.06 × 10⁻³ | 3.15 × 10⁻³ | 0.97 | +2.570 |"):
+        check(frag in s35n, f"[text Section 3.5 R2] '{frag[:70]}'")
     abs_txt = ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0]
     n_words = len(abs_txt.split())
     check(n_words <= 350, f"[abstract] {n_words} words (350: the RSC Advances portal limit, read 2026-10-10)")
