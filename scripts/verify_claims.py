@@ -1468,6 +1468,59 @@ def main() -> int:
                  "(Spearman 0.23 for BaTiO₃ and 0.19 for bcc Zr over twelve configurations each; 0.62"):
         check(frag in " ".join(ms_txt.split("### 3.4", 1)[1].split("### 3.5", 1)[0].split()),
               f"[text Section 3.4 R2] '{frag[:70]}'")
+    # R2 comment 2: why a fraction of a percent of lattice matters (Section 3.2)
+    ls_ = json.load(open("results/revision/r2/lattice_sensitivity.json", encoding="utf-8"))
+    ext = json.load(open("results/revision/r2/external_lattices.json", encoding="utf-8"))
+    pp_ = ls_["B_well_depth_sensitivity"]["pbe_pair"]["pairs"]
+    sens = {}
+    for s_ in ("batio3_cubic", "knbo3_cubic"):
+        p_ = pp_[s_]
+        dec, dl = p_["decomposition"], p_["dln_a"]
+        sens[s_] = {"k2": dec["two_ln_abs_kappa2_ratio"] / 2 / dl, "k4": -dec["minus_ln_kappa4_ratio"] / dl,
+                    "fit": p_["sensitivity"]["depth_fit_exact"]["dln_dlna"],
+                    "grid": p_["sensitivity"]["depth_grid"]["dln_dlna"]}
+    smb = ls_["B_well_depth_sensitivity"]["same_model"]["batio3_cubic"]["replicates"]
+    s_same = [r_["dln_depth_dlna"] for r_ in smb.values()]
+    check(round(sens["batio3_cubic"]["k2"]) == 46 and round(sens["knbo3_cubic"]["k2"]) == 59
+          and round(sens["batio3_cubic"]["k4"]) == -37
+          and round(sens["batio3_cubic"]["fit"]) == 130 and round(sens["knbo3_cubic"]["fit"]) == 115
+          and round(sens["batio3_cubic"]["grid"]) == 161 and round(sens["knbo3_cubic"]["grid"]) == 146
+          and round(min(s_same)) == 135 and round(max(s_same)) == 148
+          and all(r_["same_mode_star"] and r_["star_own"] == "M" for r_ in smb.values()),
+          "[3.2 R2] d ln|k2|/d ln a 46/59, d ln k4 -37 (BaTiO3), depth 130/115 fit, 161/146 grid; same-model 135-148")
+    import glob
+    mp_ = {s_: v_["a_A"] for s_, v_ in ext["materials_project_pbe"]["values_A"].items()}
+    lat = pd.read_csv("results/revision/dft_checks/pl_lattice.csv")
+    mlip_a = {s_: [] for s_ in mp_}
+    for f_ in sorted(glob.glob("results/revision/sscha_converged_grid/*_startA.json")):
+        r_ = json.load(open(f_, encoding="utf-8")).get("run") or {}
+        for s_ in mp_:
+            if os.path.basename(f_).startswith(s_) and r_.get("relaxed_cellpar"):
+                mlip_a[s_].append(r_["relaxed_cellpar"][0])
+    dev_mp = [100 * (a_ / mp_[s_] - 1) for s_ in mp_ for a_ in mlip_a[s_]]
+    pbe_qe = {s_: float(lat[(lat.system == s_) & lat.source.str.startswith("PBE")].a_A.iloc[0])
+              for s_ in ("batio3_cubic", "knbo3_cubic")}
+    sp_ = ls_["A_lattices"]["per_system"]
+    check(all(len(set(round(a_, 4) for a_ in mlip_a[s_])) <= 5 and mlip_a[s_] for s_ in mp_)
+          and max(abs(x_) for x_ in dev_mp) < 0.06
+          and round(100 * (mp_["batio3_cubic"] / ext["experiment"]["batio3_cubic"]["a_A"] - 1), 1) == 0.6
+          and round(100 * (mp_["srtio3_cubic"] / ext["experiment"]["srtio3_cubic"]["a_A"] - 1), 1) == 1.0
+          and round(100 * (1 - pbe_qe["batio3_cubic"] / mp_["batio3_cubic"]), 2) == 0.29
+          and round(100 * (1 - pbe_qe["knbo3_cubic"] / mp_["knbo3_cubic"]), 2) == 0.75
+          and ls_["A_lattices"]["bias_sign"]["n_positive"] == 15 == ls_["A_lattices"]["bias_sign"]["n_total"],
+          "[3.2 R2] MLIPs within 0.06 % of MP PBE (BaTiO3/KNbO3/SrTiO3); MP PBE +0.6 %/+1.0 % over experiment; "
+          "our QE PBE 0.29 %/0.75 % below MP; 15/15 model-PBE pairs positive")
+    ftb = ls_["C_finetune_drift"]["batio3_cubic"]["replicates"]
+    drift = [-r_["drift_vs_base_pct"] for r_ in ftb.values()]
+    pres = [r_["pressure_at_base_lattice_GPa"] for r_ in ftb.values()]
+    meas = [r_["measured_ratio_base_over_own"] for r_ in ftb.values()]
+    pred = [r_["predicted"]["pbe_pair_depth_fit_exact"]["predicted_ratio"] for r_ in ftb.values()]
+    check(round(min(drift), 2) == 0.47 and round(max(drift), 2) == 0.53
+          and round(min(pres), 1) == -2.8 and round(max(pres), 1) == -2.6
+          and round(min(meas), 1) == 1.9 and round(max(meas), 1) == 2.1
+          and round(min(pred), 1) == 1.8 and round(max(pred), 1) == 2.0,
+          "[3.2 R2] BaTiO3 fine-tunes 0.47-0.53 % below base, -2.6 to -2.8 GPa; sensitivity predicts 1.8-2.0x, "
+          "measured 1.9-2.1x deeper at base lattice")
     abs_txt = ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0]
     n_words = len(abs_txt.split())
     check(n_words <= 350, f"[abstract] {n_words} words (350: the RSC Advances portal limit, read 2026-10-10)")

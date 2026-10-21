@@ -599,7 +599,59 @@ profiled, so PBE's own 300 K call is stable on the modes tested, not established
 lattice and eigenvector together therefore flips the PBE call on the profiled modes at 300 K (the
 check does not separate the two), and the eight corrections hold only at the MLIPs' lattices:
 the MLIP wells are shallow relative to PBE at the same geometry, not relative to PBE at its own
-equilibrium. For CsSnBr₃ the
+equilibrium.
+
+Why a fraction of a percent matters. The polar instability of these perovskites is a near
+cancellation. The long-range dipole–dipole interaction, made large by the anomalous Born charges
+that B-site d–O 2p hybridisation produces, favours an off-centre displacement; the short-range
+repulsion between ion cores opposes it.^53–56^ The harmonic coefficient κ₂ of the soft mode
+(V = κ₂Q² + κ₄Q⁴ + …) is the small difference of these two terms. The repulsion falls off steeply
+with the B–O distance and the dipolar term only slowly, so a small expansion weakens the
+stabilising term far more than the destabilising one and |κ₂| grows: on PBE, d ln|κ₂|/d ln a = 46
+for BaTiO₃ and 59 for KNbO₃ (`scripts/lattice_sensitivity.py`). The depth of a double well is
+κ₂²/4κ₄, so the square doubles that sensitivity, and in BaTiO₃ the quartic coefficient also falls
+on expansion (d ln κ₄/d ln a = −37), which deepens the well further: d ln(depth)/d ln a = 130 from
+the fits (115 for KNbO₃) and 161 (146) from the sampled depths. The PBE pair changes the
+eigenvector with the lattice, but the fine-tuned MACE-MP-0 models of Section 4, evaluated at two
+lattices along their own eigenvectors of the same M-point mode, give 135–148 for BaTiO₃. A 0.1 %
+change in lattice parameter therefore changes the BaTiO₃ well depth by about 15 %, and the
+0.26–0.80 % differences above change it by a factor of 1.5 to 3. That the soft-mode surface of
+these perovskites is this sensitive to volume is long established: KNbO₃ is stable at the LDA
+lattice and unstable at the experimental one,^54^ effective-Hamiltonian studies of BaTiO₃ applied a
+negative pressure of −4.8 GPa to undo LDA's lattice underestimate,^22^ and hydrostatic pressure
+lowers BaTiO₃'s Curie temperature by 46–59 K GPa⁻¹.^57^
+
+The MLIP lattice is a systematic bias, shared by the five models and inherited from their data
+rather than from their architectures. All five relax BaTiO₃, KNbO₃, SrTiO₃ and cubic ZrO₂ to within
+0.03–0.06 % of one another, 5 to 14 times closer than they sit to our PBE lattice, and all fifteen
+model–system pairs with a PBE lattice lie above it. For the three perovskites the five models
+reproduce, to within 0.06 %, the Materials Project's own PBE lattices (4.0356, 4.0575 and
+3.9451 Å),^58^ the reference their training data share (Section 2.2); those lie 0.6 % (BaTiO₃,
+against 4.012 Å at 393 K^59^) and 1.0 % (SrTiO₃, at room temperature^60^) above experiment, the
+overestimate typical of PBE.^61^ The only architecture-specific departures are on the halides
+(CHGNet, +0.57 % on CsSnBr₃) and the bcc metals (inter-model spreads of 0.56–0.75 %). Our PBE
+lattice, from Quantum ESPRESSO with SSSP pseudopotentials, lies 0.29 % (BaTiO₃) and 0.75 % (KNbO₃)
+below the Materials Project's. <!-- PENDING-QE: cutoff / pseudopotential check of the vc-relax --> At a
+sensitivity near 150, that difference between two calculations of one functional is a factor of
+1.5 to 3 in well depth, enough to decide the 300 K calls of Fig. 3: for these two systems near
+room temperature, the call is not determined more finely than the reference lattice itself.
+
+Two consequences follow. Fine-tuning on energies and forces in one cell constrains nothing about
+the pressure, so the equilibrium volume is free to drift: the 30-epoch MACE-MP-0 fine-tunes of
+Section 4, trained without stresses, relax 0.47–0.53 % below the base model on BaTiO₃ (−2.6 to
+−2.8 GPa at the base lattice), and the measured sensitivity predicts their wells to shrink by a
+factor of 1.8–2.0, against 1.9–2.1 measured. Fine-tuning aimed at soft-mode physics needs stresses,
+or several volumes, in its data. And every screen and SSCHA calculation here is made at constant
+volume, in each model's static 0 K cell at zero pressure, without zero-point or thermal expansion.
+The quasi-harmonic approximation cannot supply that expansion for these phases, whose harmonic
+spectra are unstable; the self-consistent route is SSCHA at constant pressure, through its
+free-energy stress tensor,^62^ which we did not run. SrTiO₃'s thermal-expansion coefficient is
+3.2 × 10⁻⁵ K⁻¹ from 300 to 1800 K,^63^ at least 0.1 % in lattice parameter per 100 K, the same
+order as the differences that flip the calls above. Relative to each model's own finite-temperature
+cell, a constant-volume screen therefore leans towards stability, more so as T rises; relative to
+experiment, PBE's larger lattice pulls the other way, by a similar amount.
+
+For CsSnBr₃ the
 mis-calls persist on PBE: the MLIP curves follow PBE's to the edge of the scan (sampled depths
 within 20 % for three of the five models), every PBE curve along a deciding coordinate has its
 minimum at that edge, and at 300 K the label sits 8 K above the transition. They do not survive a
@@ -1489,3 +1541,14 @@ study, reviewed all code, results and text, and takes full responsibility for th
 50. M. Kulichenko, K. Barros, N. Lubbers, Y. W. Li, R. Messerly, S. Tretiak, J. S. Smith and B. Nebgen, *Nat. Comput. Sci.*, 2023, **3**, 230–239.
 51. L. Kahle and F. Zipoli, *Phys. Rev. E*, 2022, **105**, 015311.
 52. A. R. Tan, S. Urata, S. Goldman, J. C. B. Dietschreit and R. Gómez-Bombarelli, *npj Comput. Mater.*, 2023, **9**, 225.
+53. R. E. Cohen, *Nature*, 1992, **358**, 136–138.
+54. R. D. King-Smith and D. Vanderbilt, *Phys. Rev. B*, 1994, **49**, 5828–5844.
+55. Ph. Ghosez, X. Gonze and J.-P. Michenaud, *Europhys. Lett.*, 1996, **33**, 713–718.
+56. Ph. Ghosez, J.-P. Michenaud and X. Gonze, *Phys. Rev. B*, 1998, **58**, 6224–6240.
+57. G. A. Samara, *Phys. Rev.*, 1966, **151**, 378–386.
+58. A. Jain, S. P. Ong, G. Hautier, W. Chen, W. D. Richards, S. Dacek, S. Cholia, D. Gunter, D. Skinner, G. Ceder and K. A. Persson, *APL Mater.*, 2013, **1**, 011002.
+59. M. Barzilay, H. Elangovan and Y. Ivry, *ACS Appl. Electron. Mater.*, 2019, **1**, 2431–2436.
+60. R. H. Mitchell, A. R. Chakhmouradian and P. M. Woodward, *Phys. Chem. Miner.*, 2000, **27**, 583–589.
+61. Z. Wu and R. E. Cohen, *Phys. Rev. B*, 2006, **73**, 235116.
+62. L. Monacelli, I. Errea, M. Calandra and F. Mauri, *Phys. Rev. B*, 2018, **98**, 024106.
+63. D. de Ligny and P. Richet, *Phys. Rev. B*, 1996, **53**, 3013–3022.

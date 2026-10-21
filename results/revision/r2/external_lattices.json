@@ -1,0 +1,23 @@
+{
+ "purpose": "Outside lattice parameters used in Section 3.2 (R2 comment 2): the Materials Project PBE lattices the MLIPs' training data come from, and experimental cubic lattices. Values transcribed from the sources below on 2026-10-21; nothing here is computed in this repository.",
+ "materials_project_pbe": {
+  "source": "Materials Project public build bucket (s3://materialsproject-build), release 2025-09-25, materials collection, each material's entries.GGA.structure (PBE, VASP). The lattice shown on the MP website and OPTIMADE endpoint is the r2SCAN structure, not PBE.",
+  "reference": "A. Jain et al., APL Mater. 1, 011002 (2013), doi:10.1063/1.4812323",
+  "values_A": {
+   "batio3_cubic": {"mp_id": "mp-2998", "task_id": "mp-1782273", "a_A": 4.03558},
+   "knbo3_cubic": {"mp_id": "mp-935811", "task_id": "mp-1441144", "a_A": 4.05747, "note": "mp-7375 is R3m KNbO3, not cubic"},
+   "srtio3_cubic": {"mp_id": "mp-5229", "task_id": "mp-1440841", "a_A": 3.94513}
+  }
+ },
+ "experiment": {
+  "batio3_cubic": {"a_A": 4.0120, "T_K": 393, "source": "M. Barzilay, H. Elangovan and Y. Ivry, ACS Appl. Electron. Mater. 1, 2431 (2019), doi:10.1021/acsaelm.9b00580, Fig. 2a caption (XRD)"},
+  "srtio3_cubic": {"a_A": 3.90528, "T_K": "room temperature (not stated in the CIF)", "source": "R. H. Mitchell, A. R. Chakhmouradian and P. M. Woodward, Phys. Chem. Miner. 27, 583 (2000), doi:10.1007/s002690000103, COD 9006864"},
+  "knbo3_cubic": {"a_A": null, "note": "about 4.02 A above ~690 K is quoted only secondarily (Shirane et al. 1954 via arXiv cond-mat/9404083); no primary value seen, so not used"}
+ },
+ "thermal_expansion": {
+  "srtio3": {"coefficient_per_K": 3.23e-5, "range_K": [300, 1800], "source": "D. de Ligny and P. Richet, Phys. Rev. B 53, 3013 (1996), doi:10.1103/PhysRevB.53.3013, abstract", "note": "the abstract does not say volume or linear; read as a volume coefficient it is 1.08e-5 per K in lattice parameter, the lower of the two readings"}
+ },
+ "pressure": {
+  "batio3_dTc_dP_K_per_GPa": [-59, -46], "source": "G. A. Samara, Phys. Rev. 151, 378 (1966), doi:10.1103/PhysRev.151.378, abstract (-4.6 to -5.9 C/kbar)"
+ }
+}
