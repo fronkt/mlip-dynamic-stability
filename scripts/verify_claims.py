@@ -1423,6 +1423,51 @@ def main() -> int:
                  "| | 4 | 400 (399) | step cap, per population; below threshold but refused (KL/N < 0.7) | 4.8 × 10⁻⁴ | 4.2 × 10⁻³ | 0.58 | +2.427 |",
                  "| | 5 | 57 (57) | converged | 3.06 × 10⁻³ | 3.15 × 10⁻³ | 0.97 | +2.570 |"):
         check(frag in s35n, f"[text Section 3.5 R2] '{frag[:70]}'")
+    # R2 comment 4: why the force spread does not see the wrong calls (Section 3.4, Section 4)
+    sm = json.load(open("results/revision/r2/spread_mechanism.json", encoding="utf-8"))
+    bins = {b_["bin"]: b_["spread_eV_A"]["median"] for b_ in sm["config_level"]["spread_by_pair_ratio_bin"]}
+    rr = sm["config_level"]["rho_spread_vs_pair_ratio__all_configs_within_system"]
+    check(sm["config_level"]["n_configs"] == 960 and rr["n_systems_rho_negative"] == 15 == rr["n_systems"]
+          and round(rr["median_rho"], 2) == -0.92
+          and [round(bins[k_], 3) for k_ in ("r >= 0.85", "0.75 <= r < 0.85")] == [0.059, 0.063]
+          and round(bins["0.65 <= r < 0.75"], 2) == 0.10 and round(bins["0.50 <= r < 0.65"], 2) == 0.29
+          and round(bins["r < 0.50"], 1) == 2.1,
+          "[3.4 R2] spread vs contact ratio: negative in 15/15 systems (median -0.92); medians 0.059/0.063/0.10/0.29/2.1")
+    cl = sm["unit_level"]["subsets"]["clean"]
+    ce = cl["errors"]
+    agree = {(e_["system"], e_["T"]): e_["n_models_agreeing_with_consensus"] for e_ in ce}
+    check(cl["n_units"] == 43 and len(ce) == 4 and all(e_["kind"] == "false-stable" for e_ in ce)
+          and agree == {("batio3_cubic", 300.0): 4, ("knbo3_cubic", 300.0): 4, ("knbo3_cubic", 600.0): 5,
+                        ("pbtio3_cubic", 100.0): 3}
+          and all(e_["dissenting_models"] == ["orb_v2"] for e_ in ce if e_["T"] == 300.0)
+          and min(e_["S_5model_eV_A"] for e_ in ce) >= 0.041 and max(e_["S_5model_eV_A"] for e_ in ce) <= 0.0535
+          and all(e_["S_5model_eV_A"] < cl["median_spread_right"] for e_ in ce)
+          and round(min(e_["spread_percentile_in_subset"] for e_ in ce)) == 22
+          and round(max(e_["spread_percentile_in_subset"] for e_ in ce)) == 45,
+          "[3.4 R2] the 4 clean-set errors: oxide false-stables, 0.041-0.053 eV/A (22nd-45th pct), >=3/5 models "
+          "agree (KNbO3 600 K 5/5; 300 K units all but ORB-v2)")
+    pe = {(r_["system"], r_["set"]): r_ for r_ in sm["pbe_set"]["per_ensemble"]}
+    base = [pe[(s_, "baseline")]["shared_fraction_pooled"] for s_ in ("batio3_cubic", "srtio3_cubic", "zr_bcc", "zro2_cubic")]
+    ssc = [pe[(s_, "sscha")]["shared_fraction_pooled"] for s_ in ("batio3_cubic", "zr_bcc", "zro2_cubic")]
+    sto = pe[("srtio3_cubic", "sscha")]
+    eos = sm["pbe_set"]["error_over_spread"]
+    ws = sm["pbe_set"]["spearman_spread_vs_ens_mean_rmse"]["within_system"]
+    check(sm["pbe_set"]["n_configs"] == 64 and round(min(base), 2) == 0.32 and round(max(base), 2) == 0.46
+          and round(min(ssc), 2) == 0.45 and round(max(ssc), 2) == 0.59
+          and pe[("batio3_cubic", "sscha")]["T"] == 100.0 and pe[("zro2_cubic", "sscha")]["T"] == 100.0
+          and pe[("zr_bcc", "sscha")]["T"] == 50.0 and sto["T"] == 600.0
+          and round(sto["shared_fraction_pooled"], 2) == 0.94 and sto["n_overlap"] == 7 and sto["n_configs"] == 12
+          and round(sto["error_over_spread_pooled"]) == 4 and round(eos["overlap"]["per_config_median"], 1) == 2.7
+          and eos["overlap_free"]["n"] == 57 and round(eos["overlap_free"]["per_config_median"], 2) == 0.99
+          and [round(ws[s_]["sscha_only_ens_mean_rmse"], 2) for s_ in ("batio3_cubic", "zr_bcc", "zro2_cubic", "srtio3_cubic")]
+          == [0.23, 0.19, 0.62, 0.87],
+          "[3.4 R2] PBE set: shared 0.32-0.46 rattled, 0.45-0.59 SSCHA, 0.94 SrTiO3 600 K (7/12 short contacts, "
+          "error 4x spread; 2.7 v 0.99 per config); within-ensemble rho 0.23/0.19/0.62/0.87")
+    for frag in ("0.059 eV Å⁻¹ at contact ratios of 0.85 and above, 0.063 at 0.75–0.85, 0.10 at 0.65–0.75, 0.29 at",
+                 "it carries 0.94, and the error of the mean force is four times the spread",
+                 "(Spearman 0.23 for BaTiO₃ and 0.19 for bcc Zr over twelve configurations each; 0.62"):
+        check(frag in " ".join(ms_txt.split("### 3.4", 1)[1].split("### 3.5", 1)[0].split()),
+              f"[text Section 3.4 R2] '{frag[:70]}'")
     abs_txt = ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0]
     n_words = len(abs_txt.split())
     check(n_words <= 350, f"[abstract] {n_words} words (350: the RSC Advances portal limit, read 2026-10-10)")

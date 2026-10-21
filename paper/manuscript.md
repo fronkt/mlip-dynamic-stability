@@ -23,7 +23,7 @@ lower displaced minimum, which that local curvature cannot exclude, in 15 of the
 false-stables vanish. On ferroelectric perovskites at T ≤ 300 K the screen recovers 14/22 [0.43,
 0.80] against 4/22 [0.07, 0.39] for converged SSCHA (paired, system-clustered p = 0.5). Ensemble
 vote splits flag consensus errors (AUC 0.76 [0.59, 0.93]), not robustly (0.63 without ORB-v2);
-force-level spread does not.
+force-level spread does not, because most of the force error is common to all five models.
 
 ## 1. Introduction
 
@@ -112,10 +112,11 @@ convention, but the asymmetry is not
   significant once units are clustered by system, most of it sits in three systems the screen
   mis-calls for at least four of the five models, and the direction of any association is not
   resolved at this sample size. The pre-registered form is therefore left open.)
-- H3 (practical guardrail). Inter-model (ensemble) disagreement flags unreliable calls better than
+- H3 (ensemble disagreement). Inter-model (ensemble) disagreement flags unreliable calls better than
   any single model's self-reported energetics. (Section 3.4 tests the ensemble signal only; the
   single-model comparator was not run. The vote split is suggestive, AUC 0.76 [0.59, 0.93], but
-  falls to 0.63 [0.44, 0.84] without ORB-v2.)
+  falls to 0.63 [0.44, 0.84] without ORB-v2; the force-level spread tracks extrapolation into short
+  contacts, not the error the five models share.)
 
 Our contributions are a finite-temperature benchmark on the anharmonic regime spanning five
 independent MLIP architectures and four anharmonic chemistry families; a cheap free-energy screen
@@ -125,8 +126,9 @@ symmetric reference, answers a local question, so that even converged and replic
 27 of 77 label-unstable non-bcc units stable, all of them oxide perovskites (seven more are
 unresolved); the finding that the production SSCHA recipe did not converge, because its
 cumulative step cap ends the relaxation after about 19 steps, and that its fluorite
-false-stables and high-temperature false-unstables were that recipe's; and an
-ensemble-disagreement guardrail that is suggestive rather than robust (H3).
+false-stables and high-temperature false-unstables were that recipe's; and a test of ensemble
+disagreement as a reliability signal, in which the vote split is suggestive rather than robust and
+the force-level spread measures extrapolation rather than the error the models share (H3).
 
 ## 2. Methods
 
@@ -163,7 +165,12 @@ where the screen is on shaky physical ground; its call is reported but flagged (
 MACE-MP-0,^29^ CHGNet,^30^ ORB-v2,^31^ SevenNet-0,^32^ and MatterSim^33^ run through a
 backend-agnostic ASE-calculator harness, with one virtual environment per model. All five are
 the released checkpoints used as shipped, without fine-tuning, except in the pre-registered
-fine-tuning trial of Section 4 (Section 4 discusses that scope). Testing
+fine-tuning trial of Section 4 (Section 4 discusses that scope). Their training data overlap:
+CHGNet, MACE-MP-0 (medium checkpoint) and SevenNet-0 are fitted to the Materials Project relaxation
+trajectories (MPtrj; PBE and PBE+U, VASP), ORB-v2 to MPtrj together with Alexandria (also PBE and
+PBE+U, VASP), and MatterSim (v1.0.0-5M checkpoint) to its own actively learned PBE(+U) set computed
+with VASP at Materials Project settings. The five therefore share a reference functional and, four
+of them, most of their training configurations, which Sections 3.2 and 3.4 return to. Testing
 MatterSim directly probes PhononBench's own oracle. ORB-v2 is the only one of the five whose forces
 are predicted directly rather than as gradients of the energy (non-conservative forces). Precision
 does not single it out: as run, MACE-MP-0 evaluates in float64 and the other four models,
@@ -871,7 +878,7 @@ production grid has eight blow-ups (|f| > 50 THz) involving every model but MACE
 converged grid's four are all ORB-v2 units that did not converge, and no converged unit is a
 blow-up (ESI Section S2.3, Tables S17 and S22).
 
-### 3.4 Ensemble disagreement as a guardrail (H3)
+### 3.4 Ensemble disagreement: an extrapolation signal, not an error estimate (H3)
 
 Because no single model is reliable across the set, we test whether cross-model disagreement flags
 the units where the majority-vote consensus finite-temperature call is wrong. On the non-bcc,
@@ -900,7 +907,8 @@ different things: the permutation test asks whether the split ranks errors above
 relabelling of whole systems, and the bootstrap resamples only fifteen systems, so its interval
 is wide. With four models three units tie 2–2;
 the rule breaks a tie to "stable", and two of the three (PbTiO₃ at 100 and 300 K) are then wrong.
-The vote split is therefore a suggestive guardrail, not one that is robust to removing ORB-v2.
+The vote split is therefore suggestive and not robust to removing ORB-v2; it does not certify a
+call.
 
 For the continuous cross-model standard deviation of the screen's frequency no signal could be
 resolved (AUC 0.361, clustered p = 0.275, 95% interval [0.046, 0.625]; without ORB-v2, 0.299
@@ -938,7 +946,37 @@ rest largely on units in which the spread measures that extrapolation; the restr
 pre-registered for the primary only and was not applied to the secondary scores. With fifteen
 systems these data do not exclude a useful force-level signal, and they do not show one.
 
-![**Fig. 8** Ensemble-disagreement guardrail (Section 3.4), with all five models and without ORB-v2: the
+Why the force spread does not see these errors. The 960 configurations of that test show where the
+five models disagree (`scripts/spread_mechanism.py`). Within every system the spread grows with the
+displacement amplitude and, far more steeply, as the shortest interatomic contact closes (Spearman
+correlation with the contact ratio negative in all fifteen systems, median −0.92): its median is
+0.059 eV Å⁻¹ at contact ratios of 0.85 and above, 0.063 at 0.75–0.85, 0.10 at 0.65–0.75, 0.29 at
+0.50–0.65 and 2.1 eV Å⁻¹ below 0.50. Contacts that short are rare in training sets built from
+relaxation trajectories near equilibrium,^46^ so there each model extrapolates on its own terms and the five diverge;
+the spread measures that divergence. The calls this paper is about go wrong elsewhere. The four
+consensus errors left after the overlap restriction are oxide false-stables (BaTiO₃ and KNbO₃ at
+300 K, KNbO₃ at 600 K, PbTiO₃ at 100 K) at below-median spread (0.041–0.053 eV Å⁻¹, the 22nd to
+45th percentile of the 43 units), each called stable by at least three of the five models: KNbO₃ at
+600 K by all five, BaTiO₃ and KNbO₃ at 300 K by all but ORB-v2. Along the coordinates that decide
+these calls the models' wells are about half the PBE depth (Section 3.2), a softening common to
+the models that their agreement cannot reveal. PBE forces on the 64 configurations of ESI Table S20
+put a number on the common part. Each model's force error against PBE is the error of the
+five-model mean force plus that model's deviation from the mean; the first term is shared by all
+five and invisible to any spread. It carries 0.32–0.46 of the mean squared error on rattled
+near-equilibrium cells and 0.45–0.59 on the SSCHA-sampled configurations of BaTiO₃ and ZrO₂ at
+100 K and bcc Zr at 50 K. On SrTiO₃ at 600 K, where seven of the twelve sampled configurations bring
+a contact below 0.75 of its reference, it carries 0.94, and the error of the mean force is four
+times the spread (pooled over the ensemble; 2.7 in the median of the seven, against 0.99 for the
+other 57 configurations). Within the thermal ensembles themselves the spread barely ranks the
+force error (Spearman 0.23 for BaTiO₃ and 0.19 for bcc Zr over twelve configurations each; 0.62
+for ZrO₂ and 0.87 for SrTiO₃). A force error is in any case the wrong scale for these calls: its
+root mean square is dominated by stiff modes, whereas a call turns on a soft-mode well of tens of
+meV per cell, which Section 3.2 checks against PBE directly. Across these five foundation models,
+then, force disagreement detects extrapolation into short contacts; it does not estimate the
+error that decides a finite-temperature stability call, because most of that error is common to
+all five.
+
+![**Fig. 8** Ensemble disagreement as a predictor of consensus error (Section 3.4), with all five models and without ORB-v2: the
 majority-vote consensus finite-temperature error rate on units where the models split on the
 stable/unstable call and on units where they are unanimous (k/n with Wilson 95% intervals), and
 the AUC of the vote split and of the cross-model frequency spread as predictors of consensus error,
@@ -949,8 +987,7 @@ signal could be resolved in either set (0.361 [0.046, 0.625]; 0.299 [0.076, 0.51
 
 In practice a split vote among foundation MLIPs is worth flagging, but the signal depends on which
 models are in the ensemble, and a unanimous call is not clearance: 4 of the 46 unanimous units are
-wrong, and 8 of 52 without ORB-v2. One reading, not tested here, is that disagreement concentrates
-near the stability boundary, where the call is most uncertain.
+wrong, and 8 of 52 without ORB-v2. Section 4 states what a committee would need instead.
 
 ### 3.5 Robustness: stochastic noise and finite size
 
@@ -1198,6 +1235,24 @@ were not restricted to the configurations without overlapping atoms, on which th
 to 0.314 (Section 3.4).
 Model-reported uncertainty is also a property of models as shipped: fine-tuning that brings the
 architectures to comparable accuracy^48^ would remove much of the disagreement it relies on.
+Section 3.4 also shows why the force spread fails here. It rises steeply where atoms approach
+each other, where every model extrapolates, while the wrong calls are near-consensus false-stables
+at below-median spread, and 0.45–0.94 of the mean squared force error on thermally sampled
+configurations is common to all five models. Agreement among these models is weak evidence because they are not
+independent: they share a reference functional and most of their training configurations
+(Section 2.2), and with them the lattice (Section 3.2) and the softening^46^ of that data.
+Committee disagreement measures generalisation error within the members' training
+distribution^49^ and drives active learning there,^13,50^ but members fitted to the same data are
+often overconfident,^17,51^ and single-model uncertainty estimates have not done better than
+ensembles.^52^ A committee meant to guard finite-temperature stability calls would therefore need,
+first, members that differ in their training data, not only in architecture; second, training and
+active-learning configurations drawn from the target ensemble itself (SSCHA or molecular-dynamics
+samples at the temperature of interest, and frozen-mode paths along the soft coordinates at more
+than one lattice parameter) rather than near-equilibrium relaxations; third, uncertainty carried
+through to the quantity that decides the call, the well depth or the free-energy Hessian, rather
+than left on per-atom forces; and fourth, a standing check of the shared error against
+first-principles single points on the same configurations, as Section 3.2 and ESI Table S20 do,
+since no variance among members can expose a bias they share.
 
 Limitations. Reference transition temperatures are approximate and scoring is qualitative. The
 labels mark thermodynamic, often first-order, transitions, whereas the screen and SSCHA probe
@@ -1277,13 +1332,18 @@ high-temperature false-unstables were that recipe's, not the criterion's. Screen
 imaginary commensurate mode rather than the softest one also matters: in SrTiO₃, under the
 production convention, the deepest instability is not the one that condenses.
 
-Disagreement across an ensemble of independent architectures is a suggestive guardrail, not a
-robust one. The discrete vote split flags consensus errors (AUC 0.76 [0.59, 0.93]) but falls to
+Disagreement across these five architectures is a suggestive signal, not a robust one, and not
+an error estimate. The discrete vote split flags consensus errors (AUC 0.76 [0.59, 0.93]) but falls to
 0.63 [0.44, 0.84] without ORB-v2, and the continuous frequency spread could not be resolved
 as a predictor at this sample size. Nor did the pre-registered force-level spread show a signal:
 its primary AUC interval spans chance (0.68 [0.42, 0.91]), and its estimate falls to 0.31
 [0.15, 0.53] once the units whose
-configurations bring atoms into overlap are excluded.
+configurations bring atoms into overlap are excluded. The spread rises where atoms approach each
+other and every model extrapolates, whereas most of the force error on thermally sampled
+configurations is common to all five models, which share their reference functional and much of
+their training data; a committee for anharmonic stability calls would need members trained on
+different data, configurations drawn from the target finite-temperature ensemble, and uncertainty
+carried to the well depth or the free-energy Hessian (Section 4).
 
 We make no ranking of the five models at finite temperature. Their accuracies span three units on
 a denominator of thirty and every interval overlaps, so which model leads is not resolved by this
@@ -1425,3 +1485,7 @@ study, reviewed all code, results and text, and takes full responsibility for th
 46. B. Deng, Y. Choi, P. Zhong, J. Riebesell, S. Anand, Z. Li, K. Jun, K. A. Persson and G. Ceder, *npj Comput. Mater.*, 2025, **11**, 9.
 47. M. Radova, W. G. Stark, C. S. Allen, R. J. Maurer and A. P. Bartók, *npj Comput. Mater.*, 2025, **11**, 237.
 48. J. Hänseroth, A. Flötotto, M. N. Qaisrani and C. Dreßler, *J. Phys. Chem. Lett.*, 2026, **17**, 3152–3162.
+49. C. Schran, K. Brezina and O. Marsalek, *J. Chem. Phys.*, 2020, **153**, 104105.
+50. M. Kulichenko, K. Barros, N. Lubbers, Y. W. Li, R. Messerly, S. Tretiak, J. S. Smith and B. Nebgen, *Nat. Comput. Sci.*, 2023, **3**, 230–239.
+51. L. Kahle and F. Zipoli, *Phys. Rev. E*, 2022, **105**, 015311.
+52. A. R. Tan, S. Urata, S. Goldman, J. C. B. Dietschreit and R. Gómez-Bombarelli, *npj Comput. Mater.*, 2023, **9**, 225.

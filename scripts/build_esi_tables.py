@@ -237,7 +237,7 @@ def table_s7(df: pd.DataFrame) -> str:
             "yes" if r["consensus_correct"] else "**no**",
         ])
     return (
-        "**Table S8** The ensemble-disagreement guardrail set in full: every (system, "
+        "**Table S8** The H3 ensemble-disagreement set in full: every (system, "
         "temperature) unit behind the H3 analysis, with the cross-model frequency spread, the "
         "stable-vote fraction, and whether the majority consensus was correct. This is the "
         "n = 60 set. `analysis.h3_ensemble_guardrail(df, \"softmode\")`.\n\n"
@@ -250,7 +250,7 @@ def table_s8_composition(st: dict) -> str:
     g = st["h3_guardrail"]["composition"]
     h = st["h2_matched_set"]["100"]
     rows = [
-        ["n = 60 (H3 guardrail, Section 3.4)", g["n_units"], g["n_systems"],
+        ["n = 60 (H3 ensemble set, Section 3.4)", g["n_units"], g["n_systems"],
          "4 (100/300/600/900 K)", "collapsed into each unit",
          "yes" if g["balanced"] else "no"],
         ["n = 75 (H2 matched set, Section 3.2)", h["n_pairs"], h["n_systems"],
@@ -261,8 +261,8 @@ def table_s8_composition(st: dict) -> str:
     return (
         "**Table S7** Composition of the two analysis sets. Both rest on the **same 15 "
         "systems**, so they share their clustering "
-        "structure: the 60 guardrail units are 15 systems × 4 temperatures, and the 75 matched "
-        "pairs are 15 systems × 5 models. In the guardrail set the five model votes are already "
+        "structure: the 60 H3 units are 15 systems × 4 temperatures, and the 75 matched "
+        "pairs are 15 systems × 5 models. In the H3 set the five model votes are already "
         "collapsed into each unit, so the models are not an independent axis there and the "
         "clustering unit is the system. Systems whose identifier contains `bcc` are dropped, "
         "which also removes the superionic `agi_bcc` (Section 3.2), so each set has 15 systems "
@@ -376,10 +376,10 @@ def table_s9_orb(df: pd.DataFrame, st: dict, sens: dict) -> str:
         f"and it accounts for {pr['sscha_blowups']['orb_v2']} of the {pr['sscha_blowups']['all_models']} "
         f"SSCHA blow-ups and {n_orb_fail} of the {n_fail} failed SSCHA units "
         f"(all on {', '.join(orb_fail_sys)}). Per-model rates (Tables S4 and S5) cannot change when "
-        "another model is removed, so only pooled quantities are split here. The guardrail is "
+        "another model is removed, so only pooled quantities are split here. The ensemble analysis (H3) is "
         "where removing ORB-v2 changes the reading: without it the vote-split AUC falls from "
         f"{ga['auc']:.3f} to {gx['auc']:.3f} "
-        f"and its cluster-bootstrap interval spans 0.5, so the guardrail is suggestive and not "
+        f"and its cluster-bootstrap interval spans 0.5, so the vote split is suggestive and not "
         "robust to removing ORB-v2. The frequency spread is the cross-model standard deviation "
         "of the screen's effective frequency, a potential-energy-surface proxy that is only "
         "partly force-derived (the mode patterns come from force constants; E(Q) is energy-only); "
