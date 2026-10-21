@@ -1,0 +1,10 @@
+{
+ "job": "r2l_knbo3_cubic_e2.0",
+ "system": "knbo3_cubic",
+ "variant": "e2.0",
+ "spec": {
+  "ecut_scale": 2.0
+ },
+ "base_input": "results/revision/dft_checks/qe/pl_knbo3_cubic_vcrelax/pw.in",
+ "base_sha256": "e71596f942380daacb3fb7abdb3c75909f1900e4c1ede0786a0815311d7c166c"
+}

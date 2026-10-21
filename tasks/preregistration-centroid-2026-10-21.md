@@ -72,4 +72,35 @@ result is used.
 
 ## Deviations
 
-(none yet)
+All recorded 2026-10-21, while writing the runner (`scripts/sscha_centroid_scan.py`), before any arm
+has run.
+
+- **D1, the noise figure above is wrong by a factor of eight.** The grid's free-energy error
+  (1.8 × 10⁻⁵ Ry) is per 5-atom primitive cell (python-sscha divides F by the supercell size), not
+  per 40-atom cell. Per 40-atom cell it is about 1.45 × 10⁻⁴ Ry ≈ 2 meV, so σ for ΔF_M is about
+  2.8 meV and 2σ about 5.6 meV. The single-mode expectation (about −22 meV per 40-atom cell) is
+  still resolvable; the decision rule is unchanged.
+- **D2, force constants.** The displacement pattern is built from the screen's own force constants
+  (0.01 Å displacement), which reproduce the gate value (−5.404 THz); the SSCHA start matrix comes from
+  the grid recipe's 0.03 Å force constants, as in the grid. The 0.03 Å constants would not pass the
+  M-band gate (their Γ mode is −6.30 THz against the screen's −6.41).
+- **D3, stopping test on the fixed arms.** With the centroid held at a displaced position the
+  centroid gradient is non-zero by construction, so the fixed arms stop on the auxiliary-matrix
+  gradient alone (python-sscha `gradi_op = "gc"`); the converged stop is that gradient against its
+  real error, as registered. The free arm keeps the grid's test (`"all"`).
+- **D4, which free energy is primary.** F from the fresh n_hessian (2,000) ensemble drawn at the
+  final matrix (KL = 1, independent of the minimisation) is the primary observable; F from the last
+  population reweighted to the final matrix is reported beside it as a secondary verdict.
+- **D5, seeds.** Each arm has its own seed, so the two runs entering σ are independent, as the
+  quadrature sum assumes.
+- **D6, verdicts.** A fourth outcome, NOT_EVALUABLE, is reported when a gate fails or either arm of
+  the contrast does not converge (the rule above already excludes such arms; this names the
+  outcome). Unconverged scan points are left out and listed. "Within 3 SD of +1.98 THz" is read as
+  |H − 1.98| ≤ 3 × 0.055 THz.
+- **D7, two descriptive additions on the same box, outside the decision rule.** A cutoff and k-mesh
+  check of the PBE vc-relax for BaTiO₃ and KNbO₃ (`scripts/qe_lattice_check.py`: phase A's inputs
+  with the cutoffs ×1.5 and ×2, or an 11×11×11 mesh), and a five-model sweep of the soft-mode well
+  depth and screen call against the lattice parameter (`scripts/lattice_sweep.py`). Both answer the
+  referee's lattice comment and are reported as measured.
+- **D8, Γ amplitude.** Computed locally (mace-torch 0.3.15) as Q = 0.0765 Å; it is recomputed on the
+  box in the pinned environment, and the box value is the one used.
