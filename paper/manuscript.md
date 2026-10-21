@@ -330,7 +330,10 @@ at a **q** outside that set would be missed (approximation A2).
 
 The full stochastic SCHA (python-sscha + cellconstructor)^40^ uses the MLIP as its force engine.
 SSCHA here therefore inherits the MLIP potential-energy surface exactly as the screen does: it is
-a second approximation to the same surface, not an independent reference. The starting dynamical
+a second approximation to the same surface, not an independent reference. Both run at constant
+volume: the cell is each model's static 0 K cell relaxed at zero pressure, with no zero-point or
+thermal expansion, and SSCHA relaxes only the atomic positions and the auxiliary matrix, never the
+cell (Section 3.2 discusses what this leaves out). The starting dynamical
 matrix is built from phonopy full force constants at a 0.03 Å displacement in the SSCHA supercell
 (2×2×2 in the production grid), made positive-definite (`ForcePositiveDefinite`) and
 symmetrised. The auxiliary dynamical matrix is then relaxed stochastically at T in the root2
@@ -626,9 +629,9 @@ rather than from their architectures. All five relax BaTiO₃, KNbO₃, SrTiO₃
 0.03–0.06 % of one another, 5 to 14 times closer than they sit to our PBE lattice, and all fifteen
 model–system pairs with a PBE lattice lie above it. For the three perovskites the five models
 reproduce, to within 0.06 %, the Materials Project's own PBE lattices (4.0356, 4.0575 and
-3.9451 Å),^58^ the reference their training data share (Section 2.2); those lie 0.6 % (BaTiO₃,
-against 4.012 Å at 393 K^59^) and 1.0 % (SrTiO₃, at room temperature^60^) above experiment, the
-overestimate typical of PBE.^61^ The only architecture-specific departures are on the halides
+3.9451 Å),^58^ the reference their training data share (Section 2.2); those lie 0.6 % above the
+experimental BaTiO₃ lattice (4.012 Å at 393 K)^59^ and 1.0 % above SrTiO₃'s at room
+temperature,^60^ the overestimate typical of PBE.^61^ The only architecture-specific departures are on the halides
 (CHGNet, +0.57 % on CsSnBr₃) and the bcc metals (inter-model spreads of 0.56–0.75 %). Our PBE
 lattice, from Quantum ESPRESSO with SSSP pseudopotentials, lies 0.29 % (BaTiO₃) and 0.75 % (KNbO₃)
 below the Materials Project's. <!-- PENDING-QE: cutoff / pseudopotential check of the vc-relax --> At a
