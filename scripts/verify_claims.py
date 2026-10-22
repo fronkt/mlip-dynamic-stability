@@ -1521,6 +1521,47 @@ def main() -> int:
           and round(min(pred), 1) == 1.8 and round(max(pred), 1) == 2.0,
           "[3.2 R2] BaTiO3 fine-tunes 0.47-0.53 % below base, -2.6 to -2.8 GPa; sensitivity predicts 1.8-2.0x, "
           "measured 1.9-2.1x deeper at base lattice")
+    # R2 comment 2, from the 10-22 box: the QE cutoff / k-mesh check and the five-model lattice sweep
+    qe = json.load(open("results/revision/r2_qe_lattice/summary.json", encoding="utf-8"))["systems"]
+    qv = [v for s_ in qe.values() for v in s_["variants"].values()]
+    check(all(v["status"] == "ok" for v in qv) and len(qv) == 6
+          and max(abs(v["minus_production_pct"]) for v in qv) < 0.06
+          and all(abs(s_["variants"]["kfine"]["minus_production_pct"]) < 0.0005 for s_ in qe.values()),
+          "[3.2 R2] QE: cutoffs x1.5/x2 move the PBE lattice by < 0.06 %, 11^3 k-mesh by 0.000 %")
+    lat_m = ("mace_mp0", "chgnet", "orb_v2", "sevennet0", "mattersim")
+    sw = {m_: json.load(open(f"results/revision/r2_lattice/{m_}.json", encoding="utf-8"))["systems"] for m_ in lat_m}
+
+    def sens_own(rec):
+        pts = [p for p in rec["derived"]["depth_curve_reference"]
+               if abs(p["s_pct"]) <= 0.5 + 1e-9 and (p.get("own_depth_refined_meV") or 0) > 0]
+        return np.polyfit(np.log([p["a_A"] for p in pts]), np.log([p["own_depth_refined_meV"] for p in pts]), 1)[0]
+
+    so = {m_: sens_own(sw[m_]["batio3_cubic"]) for m_ in lat_m}
+    f100 = {m_: [f["pct_from_a0"] for f in sw[m_]["batio3_cubic"]["derived"]["call_flips"]["100"]["flips"]]
+            for m_ in lat_m}
+    f300 = {m_: [f["pct_from_a0"] for f in sw[m_]["batio3_cubic"]["derived"]["call_flips"]["300"]["flips"]]
+            for m_ in lat_m if m_ != "orb_v2"}
+    kn = [m_ for m_ in lat_m if not sw[m_]["knbo3_cubic"]["derived"]["call_flips"]["100"]["call_at_a0"]
+          and sw[m_]["knbo3_cubic"]["derived"]["call_flips"]["100"]["call_at_pbe"]]
+    four = [m_ for m_ in lat_m if m_ != "orb_v2"]
+    check(round(min(so[m_] for m_ in four)) == 109 and round(max(so[m_] for m_ in four)) == 147
+          and round(so["orb_v2"]) == 79
+          and all(len(f100[m_]) == 1 for m_ in lat_m)
+          and round(-max(f100[m_][0] for m_ in four), 2) == 0.33 and round(-min(f100[m_][0] for m_ in four), 2) == 0.59
+          and round(-f100["orb_v2"][0], 2) == 1.40
+          and all(len(f300[m_]) == 1 for m_ in f300)
+          and round(min(f300[m_][0] for m_ in f300), 2) == 0.15 and round(max(f300[m_][0] for m_ in f300), 2) == 0.34
+          and all(sw[m_]["batio3_cubic"]["derived"]["call_flips"]["300"]["call_at_a0"] for m_ in f300)
+          and sorted(kn) == ["chgnet", "mace_mp0", "mattersim"],
+          "[3.2 R2] sweep: BaTiO3 d ln depth/d ln a 109-147 (four), 79 ORB-v2; 100 K flips -0.33..-0.59 %, ORB-v2 -1.40 %; "
+          "300 K S->U at +0.15..+0.34 % (four); KNbO3 100 K U at a0, S at PBE for MACE/CHGNet/MatterSim")
+    s32b = " ".join(ms_txt.split("### 3.2", 1)[1].split("### 3.3", 1)[0].split())
+    for frag in ("moves our lattice by at most 0.06 %, and an 11×11×11 k-mesh in place of 7×7×7 leaves it unchanged",
+                 "d ln(depth)/d ln a = 109–147 for BaTiO₃ along each point's own eigenvector in four models (79 for ORB-v2",
+                 "turns stable 0.33–0.59 % below it (1.40 % for ORB-v2)",
+                 "on KNbO₃ at 100 K three of the five models call the cubic phase unstable at their own lattice and stable at ours",
+                 "four models turns unstable when their lattice is expanded by 0.15–0.34 %"):
+        check(frag in s32b, f"[text Section 3.2 R2 box] '{frag[:70]}'")
     abs_txt = ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0]
     n_words = len(abs_txt.split())
     check(n_words <= 350, f"[abstract] {n_words} words (350: the RSC Advances portal limit, read 2026-10-10)")

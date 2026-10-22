@@ -3,17 +3,18 @@
 *Supplementary information for* "Neither harmonic benchmarks nor a default SSCHA cross-check
 certifies a foundation machine-learning interatomic potential for finite-temperature dynamic
 stability", F. Cai, *RSC Advances*. Section numbers without an S (Sections 2.4, 3.3 and so on) and
-numbered references refer to the main article. Tables S4-S26 are generated from the
+numbered references refer to the main article. Tables S4-S28 are generated from the
 deposited ledger (`results/ledger.parquet`) and the deposited analysis outputs
 (`results/stats_hardening.json`, `results/screen_sensitivity.json`,
 `results/curvature_identity_check.json`, `results/scha_vs_exact.json`, `results/revision/force_spread/summary.json`,
 `results/revision/dft/`, `results/revision/dft_checks/`, `results/revision/sscha_seeds/`,
 `results/revision/sscha_converged_grid/`, `results/revision/grid_compare.json`,
-`results/revision/e3_replicates/`, `results/revision/finetune/`, `results/revision/finetune_mace30/`) by
+`results/revision/e3_replicates/`, `results/revision/finetune/`, `results/revision/finetune_mace30/`,
+`results/revision/r2_lattice/`, `results/revision/r2_centroid/`) by
 `scripts/build_esi_tables.py`; figures by `scripts/make_figures.py`.
 
 *Citation convention: **sections** of this document are cited as Sections S1–S6 and **tables** as
-Table S1-Table S26. The two sequences are independent; a cross-reference to "Table S1" means the
+Table S1-Table S28. The two sequences are independent; a cross-reference to "Table S1" means the
 table, not the section.*
 
 ## S1. Finite-T method development and discarded routes
@@ -939,6 +940,11 @@ table is printed in numerical order:
   the Section 3.3 counts with their unresolved units left out (Section S2.4).
 - Tables S25 and S26, the pre-registered fine-tuning trial: screen calls of every replicate, and
   the surface, the controls, converged SSCHA and the post hoc lattice check (Section S6).
+- Table S27, the screen against the lattice parameter for five models: depth sensitivity, calls at
+  each model's lattice and at our PBE lattice, and where they flip (Section 3.2).
+- Table S28, the pre-registered multi-mode SSCHA free energy along the condensing soft mode, the
+  fourth-order term at the converged matrix, and the SCHA split of each free-energy difference
+  (Section 3.3).
 
 <!-- BEGIN GENERATED TABLES -->
 
@@ -1873,6 +1879,37 @@ Calls that differ from production, with the old and new Hessian minimum: 82 of t
 | KNbO₃ | seed0 | 4.0360 | +0.23 | −2.64 | S, 32.2 | U, 57.4 |
 | KNbO₃ | seed1 | 4.0359 | +0.22 | −2.73 | S, 33.5 | U, 48.9 |
 | KNbO₃ | seed2 | 4.0366 | +0.24 | −2.65 | S, 32.3 | U, 53.1 |
+
+**Table S27** Lattice sweep of the soft-mode screen (Section 3.2; `scripts/lattice_sweep.py`, `results/revision/r2_lattice/`, run after the pre-registration of 2026-10-21 as its deviation D7, descriptive). Each model's cubic cell (a₀, relaxed at zero pressure) is scaled by s from −1.5 % to +1 % and to our PBE lattice; at each point the production screen is re-run. d ln(depth)/d ln a is the slope of the deepest condensing mode's well depth over |s| ≤ 0.5 %, along each point's own eigenvector and along the eigenvector fixed at s = 0. Calls (100, 300, 600 K): at a₀ / at our PBE lattice, an asterisk marking disagreement with the label; flips: lattice parameters (% from a₀) at which the call changes, located by bisection to ±0.008 %. At s = 0 the screen calls equal the production ledger's in every cell; the depths or frequencies differ by more than the check's tolerance (2 %, 0.02 THz) for CHGNet BaTiO₃, ORB-v2 BaTiO₃, MACE-MP-0 KNbO₃, ORB-v2 KNbO₃, MatterSim KNbO₃, CHGNet SrTiO₃, ORB-v2 SrTiO₃ (CHGNet depths by 10–45 %, ORB-v2 frequencies by up to 0.037 THz, and a different one of two near-degenerate modes deciding on KNbO₃), so those sensitivities carry that uncertainty. SrTiO₃ has no PBE lattice point.
+
+| System | Model | a₀ (Å) | PBE lattice (% from a₀) | d ln depth/d ln a, own | fixed | 100 K | 100 K flips (%) | 300 K | 300 K flips (%) | 600 K | 600 K flips (%) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| BaTiO₃ | MACE-MP-0 | 4.0340 | −0.26 | 130 | 153 | U / U | −0.49 | S* / S* | +0.15 | S / S | +0.79 |
+| BaTiO₃ | CHGNet | 4.0361 | −0.31 | 147 | 178 | U / U | −0.33 | S* / S* | +0.34 | S / S | none |
+| BaTiO₃ | ORB-v2 | 4.0358 | −0.30 | 79 | 76 | U / U | −1.40 | U / U | −0.52, +0.18, +0.26 | S / S | none |
+| BaTiO₃ | SevenNet-0 | 4.0355 | −0.29 | 111 | 142 | U / U | −0.54 | S* / S* | +0.21 | S / S | +0.95 |
+| BaTiO₃ | MatterSim | 4.0341 | −0.26 | 109 | 139 | U / U | −0.59 | S* / S* | +0.16 | S / S | +0.93 |
+| KNbO₃ | MACE-MP-0 | 4.0567 | −0.73 | 82 | 163 | U / S* | −0.67 | S* / S* | +0.43 | S* / S* | none |
+| KNbO₃ | CHGNet | 4.0574 | −0.75 | 86 | 84 | U / S* | −0.55 | S* / S* | +0.15, +0.48, +0.54 | S* / S* | none |
+| KNbO₃ | ORB-v2 | 4.0584 | −0.78 | 100 | 99 | U / U | none | U / S* | −0.40 | S* / S* | +0.29 |
+| KNbO₃ | SevenNet-0 | 4.0578 | −0.76 | 64 | 154 | U / U | −0.92 | S* / S* | +0.52 | S* / S* | none |
+| KNbO₃ | MatterSim | 4.0590 | −0.79 | 73 | 167 | U / S* | −0.78 | S* / S* | +0.55 | S* / S* | none |
+| SrTiO₃ | MACE-MP-0 | 3.9430 | -- | −87 | −87 | U / -- | +0.41 | S / -- | −0.93 | S / -- | none |
+| SrTiO₃ | CHGNet | 3.9440 | -- | −79 | −79 | S* / -- | −0.09 | S / -- | none | S / -- | none |
+| SrTiO₃ | ORB-v2 | 3.9436 | -- | 133 | 91 | S* / -- | none | S / -- | none | S / -- | none |
+| SrTiO₃ | SevenNet-0 | 3.9441 | -- | −76 | −76 | U / -- | +0.38 | S / -- | −1.23 | S / -- | none |
+| SrTiO₃ | MatterSim | 3.9437 | -- | −89 | −89 | U / -- | +0.09 | S / -- | −1.41 | S / -- | none |
+
+**Table S28** Multi-mode SSCHA free energy along the condensing soft mode, cubic BaTiO₃ / MACE-MP-0 / 100 K, 2×2×2 cell treated at Γ, the grid's converged recipe (pre-registered, `tasks/preregistration-centroid-2026-10-21.md`, deviations D1–D8; `scripts/sscha_centroid_scan.py`, `results/revision/r2_centroid/`). Q₀: centroid displacement along the screen's own M-point pattern (q = (½, 0, ½), max atomic component) or along the Γ T₁u pattern in [111] at its static minimum; the free arm started at the M pattern with Q₀ = 0.075 Å and ended at the given projection. ΔF: F − F(Q₀ = 0) from a fresh 2,000-configuration ensemble at the final matrix (deviation D4), meV per 40 atoms, ± the two runs' errors in quadrature. ΔE static: MACE-MP-0 energy of the displaced centroid with no fluctuation. The last two ΔF columns are the SCHA's split of ΔF into the harmonic free energy of the auxiliary matrix Φ and the averaged anharmonic remainder ⟨V − V_Φ⟩ (`scripts/centroid_decomposition.py`); the split depends on Φ. Hessian: lowest non-acoustic eigenvalue of ∂²F/∂R² at the centroid (bubble), which at a displaced fixed centroid is not a stationary-point test. Primary outcome (pre-registered rule): ΔF_M = +46.0 ± 2.2 meV, **NOT_SUPPORTED** (no displaced minimum along M); from the last population reweighted, +54.8 ± 3.3 meV, NOT_SUPPORTED. The Q₀ = 0.040 arm did not converge and is excluded by the rule. Fourth-order term at the converged Q₀ = 0 matrix (512-configuration subsample): lowest frequency +2.137 THz without Φ⁽⁴⁾ (bootstrap SD 0.139) and +2.152 THz with it, a shift of +0.015 THz; the sign is unchanged.
+
+| Centroid | Q₀ (Å) | Converged | Populations | KL/N at end | ΔF (meV) | ΔE static (meV) | ΔF, harmonic of Φ (meV) | ΔF, remainder (meV) | Hessian (THz) |
+|---|---|---|---|---|---|---|---|---|---|
+| M, fixed | 0 | yes | 4 | 0.73 | 0 | 0 | -- | -- | +2.10 |
+| M, fixed | 0.040 | no | 30 | 0.46 | +18.5 ± 3.0 | −40.0 | +10.3 | +8.2 | −6.02 |
+| M, fixed | 0.075 | yes | 6 | 0.78 | +46.0 ± 2.2 | −90.4 | +62.3 | −16.3 | +2.31 |
+| M, fixed | 0.100 | yes | 4 | 0.73 | +148.6 ± 2.6 | −57.1 | +113.5 | +35.1 | +2.80 |
+| Γ [111], fixed | 0.0765 | yes | 3 | 0.99 | +55.3 ± 2.2 | −225.8 | +154.0 | −98.8 | +2.92 |
+| M start, free | 0.075 → 0.002 | no | 30 | 0.46 | +3.6 ± 2.4 | -- | +11.5 | −7.9 | −13.39 |
 
 <!-- END GENERATED TABLES -->
 

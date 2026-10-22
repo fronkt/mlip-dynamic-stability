@@ -2493,6 +2493,127 @@ def _b_error_msg(tag: str) -> str:
     return str((json.loads(p.read_text(encoding="utf-8")).get("run") or {}).get("error") or "")
 
 
+R2LAT = REPO / "results" / "revision" / "r2_lattice"
+R2CEN = REPO / "results" / "revision" / "r2_centroid"
+LAT_MODELS = ("mace_mp0", "chgnet", "orb_v2", "sevennet0", "mattersim")
+
+
+def _fmt_signed(x: float, nd: int = 1) -> str:
+    return f"{x:+.{nd}f}".replace("-", MINUS)
+
+
+def table_s27_lattice_sweep(raw: pd.DataFrame) -> str:
+    """Second-round referee, comment 2: the five-model lattice sweep (scripts/lattice_sweep.py on the
+    10-22 GPU box, results/revision/r2_lattice/<model>.json). Depth sensitivity from the points within
+    0.5 % of each model's lattice; the screen call at that lattice, at our PBE lattice, and the lattice
+    parameters at which it flips (bisection, half-width <= 0.008 % of a0)."""
+    if not all((R2LAT / f"{m}.json").exists() for m in LAT_MODELS):
+        print("Table S27 skipped: lattice sweep missing", file=sys.stderr)
+        return ""
+    sm = raw[raw["method"] == "softmode"]
+    lab = {(r.system, int(r.temperature_K)): bool(r.gt_stable) for r in sm.itertuples()}
+    rows, n_fail = [], []
+    for sname in ("batio3_cubic", "knbo3_cubic", "srtio3_cubic"):
+        for m in LAT_MODELS:
+            s = json.loads((R2LAT / f"{m}.json").read_text(encoding="utf-8"))["systems"][sname]
+            dv = s["derived"]
+            pts = [p for p in dv["depth_curve_reference"]
+                   if abs(p["s_pct"]) <= 0.5 + 1e-9 and (p.get("own_depth_refined_meV") or 0) > 0]
+            x = np.log([p["a_A"] for p in pts])
+            own = (f"{np.polyfit(x, np.log([p['own_depth_refined_meV'] for p in pts]), 1)[0]:.0f}".replace("-", MINUS)
+                   if len(pts) >= 3 else "--")
+            fx = [p.get("fixed_depth_refined_meV") or 0 for p in pts]
+            fixed = (f"{np.polyfit(x, np.log(fx), 1)[0]:.0f}".replace("-", MINUS)
+                     if len(pts) >= 3 and min(fx) > 0 else "--")
+            if not s["ledger_check"]["pass"]:
+                n_fail.append(f"{PRETTY[m]} {SHORT[sname]}")
+            row = [SHORT[sname], PRETTY[m], f"{s['relax']['a0_A']:.4f}",
+                   _fmt_signed(s["s_pbe_pct"], 2) if s.get("s_pbe_pct") is not None else "--", own, fixed]
+            for T in ("100", "300", "600"):
+                fl = dv["call_flips"][T]
+                lb = lab.get((sname, int(T)))
+                c = lambda st: "--" if st is None else ("S" if st else "U") + ("" if lb is None or st == lb else "*")
+                flips = ", ".join(_fmt_signed(f["pct_from_a0"], 2) for f in fl["flips"]) or "none"
+                row += [f"{c(fl['call_at_a0'])} / {c(fl.get('call_at_pbe'))}", flips]
+            rows.append(row)
+    return (
+        "**Table S27** Lattice sweep of the soft-mode screen (Section 3.2; `scripts/lattice_sweep.py`, "
+        "`results/revision/r2_lattice/`, run after the pre-registration of 2026-10-21 as its deviation "
+        "D7, descriptive). Each model's cubic cell (a₀, relaxed at zero pressure) is scaled by s from "
+        "−1.5 % to +1 % and to our PBE lattice; at each point the production screen is re-run. d ln(depth)/"
+        "d ln a is the slope of the deepest condensing mode's well depth over |s| ≤ 0.5 %, along each "
+        "point's own eigenvector and along the eigenvector fixed at s = 0. Calls (100, 300, 600 K): at a₀ / "
+        "at our PBE lattice, an asterisk marking disagreement with the label; flips: lattice parameters "
+        "(% from a₀) at which the call changes, located by bisection to ±0.008 %. At s = 0 the screen "
+        "calls equal the production ledger's in every cell; the depths or frequencies differ by more than "
+        f"the check's tolerance (2 %, 0.02 THz) for {', '.join(n_fail)} (CHGNet depths by 10–45 %, ORB-v2 "
+        "frequencies by up to 0.037 THz, and a different one of two near-degenerate modes deciding on "
+        "KNbO₃), so those sensitivities carry that uncertainty. SrTiO₃ has no PBE lattice point.\n\n"
+        + md(rows, ["System", "Model", "a₀ (Å)", "PBE lattice (% from a₀)", "d ln depth/d ln a, own",
+                    "fixed", "100 K", "100 K flips (%)", "300 K", "300 K flips (%)", "600 K",
+                    "600 K flips (%)"])
+    )
+
+
+def table_s28_centroid_scan() -> str:
+    """Second-round referee, comment 1: the pre-registered multi-mode SSCHA centroid scan
+    (tasks/preregistration-centroid-2026-10-21.md; results/revision/r2_centroid/) with the SCHA split
+    of scripts/centroid_decomposition.py."""
+    if not (R2CEN / "summary.json").exists() or not (R2CEN / "decomposition.json").exists():
+        print("Table S28 skipped: centroid scan missing", file=sys.stderr)
+        return ""
+    sm = json.loads((R2CEN / "summary.json").read_text(encoding="utf-8"))
+    dec = json.loads((R2CEN / "decomposition.json").read_text(encoding="utf-8"))["arms"]
+    gate = json.loads((R2CEN / "gate" / "gate.json").read_text(encoding="utf-8"))
+    static = {round(r["Q_ang"], 3): r["dE_meV_per_40"] for r in gate["m_pattern"]["static_energy_mapped_order"]}
+    rows = []
+    labels = {"m_scan_Q0.0000": ("M, fixed", "0"), "m_scan_Q0.0400": ("M, fixed", "0.040"),
+              "m_scan_Q0.0750": ("M, fixed", "0.075"), "m_scan_Q0.1000": ("M, fixed", "0.100"),
+              "gamma": ("Γ [111], fixed", "0.0765"), "free_Q0.0750": ("M start, free", "0.075 → 0.002")}
+    for tag, (kind, q) in labels.items():
+        run = json.loads((R2CEN / f"{tag}.json").read_text(encoding="utf-8"))["run"]
+        rl, fe = run["relax"], run["free_energy"]
+        d = dec.get(tag, {})
+        if tag == "gamma":
+            st = gate["gamma_pattern"]["static_scan"]["dE_min_meV_per_40"]
+        elif tag.startswith("m_scan"):
+            st = static.get(round(run["q0_ang"], 3), 0.0)
+        else:
+            st = None
+        rows.append([kind, q, "yes" if rl["converged"] else "no", f"{rl['n_populations']}",
+                     f"{rl['kl_ratio_at_end']:.2f}",
+                     "0" if tag == "m_scan_Q0.0000" else f"{_fmt_signed(d['dF_meV'])} ± {d['dF_err_meV']:.1f}",
+                     "--" if st is None else ("0" if tag == "m_scan_Q0.0000" else _fmt_signed(st)),
+                     "--" if not d else _fmt_signed(d["dF_harm_aux_meV"]),
+                     "--" if not d else _fmt_signed(d["d_anharmonic_remainder_meV"]),
+                     f"{run['hessian']['min_nonac_thz']:+.2f}".replace("-", MINUS)])
+    p, s2, v4 = sm["primary"], sm["secondary_reweighted_last_population"], sm["v4"]
+    return (
+        "**Table S28** Multi-mode SSCHA free energy along the condensing soft mode, cubic BaTiO₃ / "
+        "MACE-MP-0 / 100 K, 2×2×2 cell treated at Γ, the grid's converged recipe (pre-registered, "
+        "`tasks/preregistration-centroid-2026-10-21.md`, deviations D1–D8; `scripts/sscha_centroid_scan.py`, "
+        "`results/revision/r2_centroid/`). Q₀: centroid displacement along the screen's own M-point pattern "
+        "(q = (½, 0, ½), max atomic component) or along the Γ T₁u pattern in [111] at its static minimum; "
+        "the free arm started at the M pattern with Q₀ = 0.075 Å and ended at the given projection. ΔF: "
+        "F − F(Q₀ = 0) from a fresh 2,000-configuration ensemble at the final matrix (deviation D4), meV "
+        "per 40 atoms, ± the two runs' errors in quadrature. ΔE static: MACE-MP-0 energy of the displaced "
+        "centroid with no fluctuation. The last two ΔF columns are the SCHA's split of ΔF into the harmonic "
+        "free energy of the auxiliary matrix Φ and the averaged anharmonic remainder ⟨V − V_Φ⟩ "
+        "(`scripts/centroid_decomposition.py`); the split depends on Φ. Hessian: lowest non-acoustic "
+        "eigenvalue of ∂²F/∂R² at the centroid (bubble), which at a displaced fixed centroid is not a "
+        "stationary-point test. Primary outcome (pre-registered rule): ΔF_M = "
+        f"{_fmt_signed(p['dF_meV'])} ± {p['sigma_meV']:.1f} meV, **{p['verdict']}** (no displaced minimum "
+        f"along M); from the last population reweighted, {_fmt_signed(s2['dF_meV'])} ± {s2['sigma_meV']:.1f} "
+        f"meV, {s2['verdict']}. The Q₀ = 0.040 arm did not converge and is excluded by the rule. Fourth-order "
+        f"term at the converged Q₀ = 0 matrix (512-configuration subsample): lowest frequency "
+        f"{v4['v2_subsample_min_thz']:+.3f} THz without Φ⁽⁴⁾ (bootstrap SD {v4['v2_subsample_boot_sd_thz']:.3f}) "
+        f"and {v4['v4_min_nonac_thz']:+.3f} THz with it, a shift of {_fmt_signed(v4['shift_thz'], 3)} THz; the sign "
+        "is unchanged.\n\n"
+        + md(rows, ["Centroid", "Q₀ (Å)", "Converged", "Populations", "KL/N at end", "ΔF (meV)",
+                    "ΔE static (meV)", "ΔF, harmonic of Φ (meV)", "ΔF, remainder (meV)", "Hessian (THz)"])
+    )
+
+
 def build() -> str:
     raw = pd.read_parquet(LEDGER)
     df = A.canonical(raw)
@@ -2526,6 +2647,8 @@ def build() -> str:
         table_s24_e3_replicates(),
         table_s25_finetune_calls(),
         table_s26_finetune_surface(),
+        table_s27_lattice_sweep(raw),
+        table_s28_centroid_scan(),
     ]
     blocks = [b for b in blocks if b]
     return "\n\n".join(blocks)

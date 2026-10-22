@@ -618,7 +618,11 @@ the fits (115 for KNbO₃) and 161 (146) from the sampled depths. The PBE pair c
 eigenvector with the lattice, but the fine-tuned MACE-MP-0 models of Section 4, evaluated at two
 lattices along their own eigenvectors of the same M-point mode, give 135–148 for BaTiO₃. A 0.1 %
 change in lattice parameter therefore changes the BaTiO₃ well depth by about 15 %, and the
-0.26–0.80 % differences above change it by a factor of 1.5 to 3. That the soft-mode surface of
+0.26–0.80 % differences above change it by a factor of 1.5 to 3. Sweeping each model's own lattice
+gives the same picture (ESI Table S27): d ln(depth)/d ln a = 109–147 for BaTiO₃ along each
+point's own eigenvector in four models (79 for ORB-v2, whose deciding mode lies at another q), and
+the screen's 100 K BaTiO₃ call, correct at each model's lattice, turns stable 0.33–0.59 % below
+it (1.40 % for ORB-v2). That the soft-mode surface of
 these perovskites is this sensitive to volume is long established: KNbO₃ is stable at the LDA
 lattice and unstable at the experimental one,^54^ effective-Hamiltonian studies of BaTiO₃ applied a
 negative pressure of −4.8 GPa to undo LDA's lattice underestimate,^22^ and hydrostatic pressure
@@ -634,10 +638,15 @@ experimental BaTiO₃ lattice (4.012 Å at 393 K)^59^ and 1.0 % above SrTiO₃'s
 temperature,^60^ the overestimate typical of PBE.^61^ The only architecture-specific departures are on the halides
 (CHGNet, +0.57 % on CsSnBr₃) and the bcc metals (inter-model spreads of 0.56–0.75 %). Our PBE
 lattice, from Quantum ESPRESSO with SSSP pseudopotentials, lies 0.29 % (BaTiO₃) and 0.75 % (KNbO₃)
-below the Materials Project's. <!-- PENDING-QE: cutoff / pseudopotential check of the vc-relax --> At a
-sensitivity near 150, that difference between two calculations of one functional is a factor of
-1.5 to 3 in well depth, enough to decide the 300 K calls of Fig. 3: for these two systems near
-room temperature, the call is not determined more finely than the reference lattice itself.
+below the Materials Project's. The difference is not numerical: raising both plane-wave cutoffs by
+factors of 1.5 and 2 moves our lattice by at most 0.06 %, and an 11×11×11 k-mesh in place of
+7×7×7 leaves it unchanged (`scripts/qe_lattice_check.py`), so it comes from the pseudopotentials
+and codes, SSSP in Quantum ESPRESSO against the projector-augmented-wave datasets of VASP behind
+the Materials Project.^58^ At a sensitivity near 150, that difference between two calculations of
+one functional is a factor of 1.5 to 3 in well depth, enough to decide the 300 K calls of Fig. 3,
+and on KNbO₃ at 100 K three of the five models call the cubic phase unstable at their own lattice
+and stable at ours (ESI Table S27): for these two systems the call is not determined more finely
+than the reference lattice itself.
 
 Two consequences follow. Fine-tuning on energies and forces in one cell constrains nothing about
 the pressure, so the equilibrium volume is free to drift: the 30-epoch MACE-MP-0 fine-tunes of
@@ -650,7 +659,8 @@ The quasi-harmonic approximation cannot supply that expansion for these phases, 
 spectra are unstable; the self-consistent route is SSCHA at constant pressure, through its
 free-energy stress tensor,^62^ which we did not run. SrTiO₃'s thermal-expansion coefficient is
 3.2 × 10⁻⁵ K⁻¹ from 300 to 1800 K,^63^ at least 0.1 % in lattice parameter per 100 K, the same
-order as the differences that flip the calls above. Relative to each model's own finite-temperature
+order as the differences that flip the calls above: the stable, and wrong, 300 K BaTiO₃ call of
+four models turns unstable when their lattice is expanded by 0.15–0.34 % (ESI Table S27). Relative to each model's own finite-temperature
 cell, a constant-volume screen therefore leans towards stability, more so as T rises; relative to
 experiment, PBE's larger lattice pulls the other way, by a similar amount.
 

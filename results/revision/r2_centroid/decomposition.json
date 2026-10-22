@@ -1,0 +1,74 @@
+{
+ "script": "scripts/centroid_decomposition.py",
+ "T_K": 100.0,
+ "units": "meV per 40-atom cell",
+ "split": "dF = dF_harm(Phi) + d<V - V_Phi>; the SCHA's own split, Phi-dependent",
+ "reference_arm": "m_scan_Q0.0000",
+ "arms": {
+  "m_scan_Q0.0400": {
+   "converged": false,
+   "dF_meV": 18.500851785328212,
+   "dF_err_meV": 3.0198867452884746,
+   "dF_harm_aux_meV": 10.27738993111571,
+   "d_anharmonic_remainder_meV": 8.223461854212502,
+   "n_optical_modes": 117,
+   "n_modes_stiffer": 63,
+   "mean_ln_freq_ratio": 0.007317538163454868,
+   "lowest_aux_thz": 2.27085843,
+   "lowest_aux_ref_thz": 2.73116532,
+   "dyn_sha256": "efc70d3297929c26149d06ee37da18f50e1635837d2710b825d05747d3fa97c8"
+  },
+  "m_scan_Q0.0750": {
+   "converged": true,
+   "dF_meV": 46.00193737019266,
+   "dF_err_meV": 2.213899171033994,
+   "dF_harm_aux_meV": 62.33199759633834,
+   "d_anharmonic_remainder_meV": -16.330060226145683,
+   "n_optical_modes": 117,
+   "n_modes_stiffer": 73,
+   "mean_ln_freq_ratio": 0.034969768154482404,
+   "lowest_aux_thz": 2.76300474,
+   "lowest_aux_ref_thz": 2.73116532,
+   "dyn_sha256": "d3194379cd15cd5fdd008dbbfcd911ba6466316ae7f412d9c3adc472d8f9510d"
+  },
+  "m_scan_Q0.1000": {
+   "converged": true,
+   "dF_meV": 148.64265094064447,
+   "dF_err_meV": 2.5628999067502987,
+   "dF_harm_aux_meV": 113.53133250162406,
+   "d_anharmonic_remainder_meV": 35.11131843902041,
+   "n_optical_modes": 117,
+   "n_modes_stiffer": 76,
+   "mean_ln_freq_ratio": 0.05766972173107907,
+   "lowest_aux_thz": 2.87297983,
+   "lowest_aux_ref_thz": 2.73116532,
+   "dyn_sha256": "39c70573d151db0a69cf812e04093aff483b2e1fd6ac411eca5baf8365c216fe"
+  },
+  "gamma": {
+   "converged": true,
+   "dF_meV": 55.26808125188054,
+   "dF_err_meV": 2.1644741510947667,
+   "dF_harm_aux_meV": 154.0219363454991,
+   "d_anharmonic_remainder_meV": -98.75385509361857,
+   "n_optical_modes": 117,
+   "n_modes_stiffer": 83,
+   "mean_ln_freq_ratio": 0.08576578269252402,
+   "lowest_aux_thz": 2.94681066,
+   "lowest_aux_ref_thz": 2.73116532,
+   "dyn_sha256": "9fa119ba446e9e32d392926e01bdd7feb4d4c30b4ac9ef1e41d6f463bfda5922"
+  },
+  "free_Q0.0750": {
+   "converged": false,
+   "dF_meV": 3.5660885676288805,
+   "dF_err_meV": 2.3818517753830117,
+   "dF_harm_aux_meV": 11.481219667484055,
+   "d_anharmonic_remainder_meV": -7.9151310998551745,
+   "n_optical_modes": 117,
+   "n_modes_stiffer": 74,
+   "mean_ln_freq_ratio": 0.008056016278051635,
+   "lowest_aux_thz": 2.433578,
+   "lowest_aux_ref_thz": 2.73116532,
+   "dyn_sha256": "f1e917bc1beeeddb003d486e9864c2acf2a6f6a4251b6f9f2412f9863156e011"
+  }
+ }
+}
