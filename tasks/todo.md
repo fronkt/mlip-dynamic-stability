@@ -30,13 +30,29 @@ workflow lesson + gradient-norm history across populations (BaTiO₃ or bcc-Zr);
 - [x] C2 text draft (82a8928, 3aeb371): §3.2 three paragraphs (refs 53-63), §2.5 constant volume.
       <!-- PENDING-QE in §3.2 until the box QE check lands -->
 - [x] Prereg + deviations D1-D8 (38bfe0d, c918c60) BEFORE any run.
-- [~] P2 BOX vast **57115732** (RTX 3090, Ryzen 5950X, 30.7-core quota, $0.249/h, `ssh -p 34104 root@ssh1.vast.ai`),
-      started 2026-10-21 21:50 UTC on cd555cb, tmux gpu + watchdog, hard cap 8 h (stops by ~05:50 UTC), expected
-      ~04:20 UTC. Runs: gate, smoke, 6 SSCHA arms, v4 (16 thr), lattice sweep x5 models, QE vc-relax x6.
-      Pull ONLY after /root/QUEUE_DONE (commands in the launcher header). Two RTX 5090s on the account
-      (57109225, 57110079) are ANOTHER session's — never touch. Credit $3.60 at launch is shared with them.
-- [ ] After pull: C1 text (§3.3 four-reason paragraph + centroid result + converged v4), C2 PENDING-QE +
-      lattice-sweep figure/table, verify_claims, renumber_refs (with --letter on the R2 letter), physics brief C1.
+- [x] P2 BOX vast 57115732: every job rc 0, QUEUE_DONE 00:38 UTC 10-22, self-stopped 01:38 unpulled (no pull
+      armed at launch: lesson #23 again); GPU re-rented -> relay 57154684 (GTX 1660S FR) + `vastai copy`; all
+      pulled, results commit 99b646c. Raw tarballs in mlip-rsc-revision-raw/ (r2_centroid_logs, r2_lattice,
+      r2_qe_lattice, r2x/ unpacked incl. work/ dyn files + Hessian ensembles). Both boxes STOPPED; destroy on
+      Frank's yes.
+      **Read-out.** Gates all pass (pattern: static E in the 40-atom cell = 2V_ledger within 0.24 meV).
+      PRIMARY **NOT_SUPPORTED**: multi-mode SSCHA dF_M = F(0.075) - F(0) = **+46.0 ± 2.2 meV/40 atoms**
+      (secondary reweighted +54.8 ± 3.3, same verdict); Q0 = 0.10: +148.6; 0.04 unconverged (+18.5, excluded).
+      Free arm (unconverged) went back to Q_M 0.002 A, dF +3.6 ± 1.7. Gamma [111] at the static minimum
+      (static -226 meV): dF +55.3 ± 1.3. v4 at the converged matrix: +0.015 THz (boot SD 0.14), same sign.
+      SCHA split (harmonic F of Phi vs rest): 0.075 -> +62.3 / -16.3 meV; Gamma -> +154 / -99: displacing
+      stiffens 73-83 of 117 aux modes. => the stable call is the multi-mode Gaussian theory's answer on this
+      surface, not an evaluation-point trap; screen/SSCHA differ by MODE COUPLING (screen freezes the others).
+      QE: PBE lattice converged (cutoff x1.5/x2 <= 0.06 %, 11^3 k 0.000 %) -> MP gap is pseudopotential/code.
+      Lattice sweep: 100 K BaTiO3 call flips at -0.33 (CHGNet) / -0.49 (MACE) / -0.54 (SevenNet) / -0.59
+      (MatterSim) / -1.40 % (ORB) from a0; still U at our PBE lattice in all five. KNbO3 100 K flips -0.55 to
+      -0.92 %; S at our PBE lattice for MACE, CHGNet, MatterSim. Ledger check: calls match everywhere; CHGNet
+      depths off 10-45 % (float32?), ORB freq off <= 0.037 THz, near-degenerate decide-mode swaps on KNbO3.
+- [ ] C1 REWRITE per the prereg NOT_SUPPORTED branch: §3.3 "why the default criterion misses" + §2.4 + abstract
+      + contributions + Discussion + Conclusions all carry the local-vs-global account -> replace with the
+      mode-coupling result (Frank to see first). Decide on an MD discriminant (potential vs Gaussian ansatz).
+- [ ] C2 PENDING-QE -> pseudopotential/code; lattice-sweep table; verify_claims; renumber_refs --letter;
+      physics brief C1.
 - [ ] P4 adversarial audit; docx + highlighted marked copies (vs the SUBMITTED R1 docx); release v2.2.0 + Zenodo;
       letter files list; Frank submits (~Nov 5).
 - AI-use statement: unchanged (author's submitted wording); manuscript.md must carry the submitted text before
