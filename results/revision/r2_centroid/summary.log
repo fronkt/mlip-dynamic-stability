@@ -1,0 +1,13 @@
+R2 centroid scan summary (results/revision/r2_centroid)
+  gates: {'m_band': True, 'q0_hessian': True, 'gate_plumbing': True, 'one_pattern_for_all_arms': True}
+      Q0  status  conv  dF meV/40    err 2V_ledger    hess
+   0.000      ok  True      +0.00   1.69      +0.0  +2.102
+   0.040      ok False     +18.50   2.50     -40.0  -6.022
+   0.075      ok  True     +46.00   1.42     -90.1  +2.309
+   0.100      ok  True    +148.64   1.92     -58.4  +2.800
+  PRIMARY: NOT_SUPPORTED  dF_M +46.00 meV, sigma 2.21 meV; reasons []
+  free arm: {'converged': False, 'dF_meV_per_40': 3.5660885676273075, 'err_meV': 1.6734606549204707, 'Q_M_start_ang': 0.0750000000000001, 'Q_M_final_ang': 0.0018516245805957655, 'residual_off_M_final_ang': 0.19068497112179356, 'Q_G111_final_ang': 0.019662572207632824, 'note': 'secondary; reported as measured (prereg)'}
+  gamma arm: {'converged': True, 'q_amplitude_ang': 0.07650000000000001, 'dF_meV_per_40': 55.268081251856174, 'err_meV': 1.3461801641793452, 'static_dE_min_meV_per_40': -225.83047766033815, 'note': 'secondary; reported as measured (prereg)'}
+  v4: {'status': 'finished', 'v2_subsample_min_thz': 2.1367660474801764, 'v2_subsample_boot_sd_thz': 0.13863971303263645, 'v4_min_nonac_thz': 2.1521374841877385, 'shift_thz': 0.015371436707562136, 'same_sign': True, 'same_stability_call': True, 'v4_false_roundtrip_ok': True, 'wall_s': 7499.115471839905, 'omp_threads': 16, 'timeout_s': 17100.0, 'rule': "does not change the sign: v4 and v2 lowest non-acoustic frequencies have the same sign; shift reported with the subsample's bootstrap SD"}
+  normalisation vs grid: {'grid_fe_per_5atom_Ry': -2.922369296374024, 'grid_fe_err_per_5atom_Ry': 1.810354084584003e-05, 'this_fe_per_40atom_Ry': -23.379301458952682, 'diff_meV_per_40': -4.722372277089998, 'sigma_meV': 3.3088737147354643, 'z': -1.4271841974686965, 'note': "F(Q0=0) Gamma-only vs 8 x the grid's q-space F of the same unit; the Gamma-only cell has fewer symmetry constraints, so a small negative difference is allowed; a factor-8 normalisation slip is ~20 Ry"}
+wrote results/revision/r2_centroid/summary.json
