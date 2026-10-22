@@ -39,6 +39,10 @@ def f_harm_ev(f_thz) -> float:
     return float(np.sum(e / 2 + KB_EV * T_K * np.log1p(-np.exp(-e / (KB_EV * T_K)))))
 
 
+def zpe_ev(f_thz) -> float:
+    return float(np.sum(H_EVS * f_thz[f_thz > ACOUSTIC_THZ] * 1e12 / 2))
+
+
 def main() -> int:
     rec = {a: json.loads((D / f"{a}.json").read_text(encoding="utf-8"))["run"] for a in ARMS}
     f0, _ = freqs_thz(ARMS[0])
@@ -57,7 +61,8 @@ def main() -> int:
         out["arms"][a] = {
             "converged": bool(rec[a]["relax"]["converged"]),
             "dF_meV": df, "dF_err_meV": float(np.hypot(fe["fe_err_Ry"], fe0["fe_err_Ry"]) * RY_EV * 1e3),
-            "dF_harm_aux_meV": dfh, "d_anharmonic_remainder_meV": df - dfh,
+            "dF_harm_aux_meV": dfh, "dF_harm_aux_zero_point_meV": (zpe_ev(f) - zpe_ev(f0)) * 1e3,
+            "d_anharmonic_remainder_meV": df - dfh,
             "n_optical_modes": int(len(pos)), "n_modes_stiffer": int(np.sum(ratio > 1)),
             "mean_ln_freq_ratio": float(np.mean(np.log(ratio))),
             "lowest_aux_thz": float(pos.min()), "lowest_aux_ref_thz": float(pos0.min()),
