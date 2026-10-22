@@ -50,9 +50,14 @@ workflow lesson + gradient-norm history across populations (BaTiO₃ or bcc-Zr);
       depths off 10-45 % (float32?), ORB freq off <= 0.037 THz, near-degenerate decide-mode swaps on KNbO3.
 - [ ] C1 REWRITE per the prereg NOT_SUPPORTED branch: §3.3 "why the default criterion misses" + §2.4 + abstract
       + contributions + Discussion + Conclusions all carry the local-vs-global account -> replace with the
-      mode-coupling result (Frank to see first). Decide on an MD discriminant (potential vs Gaussian ansatz).
-- [ ] C2 PENDING-QE -> pseudopotential/code; lattice-sweep table; verify_claims; renumber_refs --letter;
-      physics brief C1.
+      mode-coupling result (Frank to see first). Draft (local, raw dir R2_C1_rewrite_draft.md) incl. letter
+      C1 text: WITH FRANK 10-22. After OK: apply; ESI S7 + Tables S28/S29 (S29 = MD, new builder); verify_claims
+      for the C1 + MD numbers; renumber_refs --letter; physics brief C1.
+- [x] MD discriminant (exploratory, rule in tasks/md-order-check-2026-10-22.md, run locally 10-22, 9ef42c6):
+      INCONCLUSIVE. 20 K control orders (U 0.396); 100 K from cubic / from Gamma[111] agree, U 0.267 / 0.242
+      (between 0.10 and 0.30), A_G rms 0.12 A with wandering direction; Ti components bimodal at +-0.10 A
+      (kurtosis -1.35) = non-Gaussian local density. Does not separate potential from Gaussian/ZPE (needs PIMD).
+- [x] C2 PENDING-QE -> pseudopotential/code; lattice-sweep table S27; verify_claims; letter C2 PENDINGs filled.
 - [ ] P4 adversarial audit; docx + highlighted marked copies (vs the SUBMITTED R1 docx); release v2.2.0 + Zenodo;
       letter files list; Frank submits (~Nov 5).
 - AI-use statement: unchanged (author's submitted wording); manuscript.md must carry the submitted text before
