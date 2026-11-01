@@ -52,3 +52,10 @@ beside the SSCHA's own widths at the cubic centroid (0.0215 and 0.0184 Å).
 
 One model, one temperature, 40 atoms, fixed cubic cell (no strain coupling), classical, float32
 where the SSCHA used float64, 25 ps.
+
+## Note (2026-11-01, after the runs; the text above is unchanged)
+
+The "+55.3 ± 1.3 meV" in the opening paragraph is the Γ arm's single-run error
+(`summary.json` `gamma_arm.err_meV`). With the cubic arm's error in quadrature, as the
+pre-registration defines σ for every contrast and as Table S28 reports it, the Γ contrast is
++55.3 ± 2.2 meV.

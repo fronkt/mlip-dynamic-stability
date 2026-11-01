@@ -54,7 +54,17 @@ workflow lesson + gradient-norm history across populations (BaTiO₃ or bcc-Zr);
       Table S16 caption, S4 single-vs-multi-mode outcome, NEW S7 + Table S29 (MD builder); verify_claims pins
       every C1 + MD number (+ gw = 0 on all 54 perovskite MACE/MatterSim/SevenNet units); renumber_refs run
       with --letter R2 (C2 refs now 44–54, C4 60–63, R1's 44–48 now 55–59); letter C1 written (untracked).
-- [ ] Physics brief C1 section (local raw dir) rewritten for the mode-coupling result.
+- [x] Physics brief C1 section (local raw dir) rewritten for the mode-coupling result (+ audit notes).
+- [x] P4 adversarial audit 2026-11-01 (3 fresh-context agents: physics, numbers/consistency, coverage/prose).
+      Applied: free arm did NOT return to cubic (left M for a polar [010] drift, F +3.6 ± 2.4, unconverged)
+      -> described; Γ[111] tested at one amplitude -> scoped; screen condenses X+M, not Γ, on the tested unit
+      and Γ in only 5/16 FE unstable calls -> stated in 3.3/Discussion/Conclusions/abstract ("mostly through
+      zone-boundary modes"); classical-limit share of the harmonic cost (35/62, 86/154); Φ-dependence of the
+      split; MD kurtosis is uncentred -> bimodality claim reworded; symmetry (X/M/R only), Φ⁽⁴⁾ wording,
+      spinodal; old local-criterion sentences in §2.4/§4/ESI S1.3/S4 aligned; C2 constant-V direction scoped
+      to polar modes (SrTiO₃ opposite, −76..−89); C3 population-size sentence added (letter had promised it);
+      C4 letter reframed + all four Spearman values, "most" -> "about half or more"; letter Changes lists fixed.
+      verify_claims 322 PASS. R1-as-submitted snapshot = base for the marked copies.
 - [x] MD discriminant (exploratory, rule in tasks/md-order-check-2026-10-22.md, run locally 10-22, 9ef42c6):
       INCONCLUSIVE. 20 K control orders (U 0.396); 100 K from cubic / from Gamma[111] agree, U 0.267 / 0.242
       (between 0.10 and 0.30), A_G rms 0.12 A with wandering direction; Ti components bimodal at +-0.10 A

@@ -1555,6 +1555,9 @@ def main() -> int:
           and sorted(kn) == ["chgnet", "mace_mp0", "mattersim"],
           "[3.2 R2] sweep: BaTiO3 d ln depth/d ln a 109-147 (four), 79 ORB-v2; 100 K flips -0.33..-0.59 %, ORB-v2 -1.40 %; "
           "300 K S->U at +0.15..+0.34 % (four); KNbO3 100 K U at a0, S at PBE for MACE/CHGNet/MatterSim")
+    so_sto = {m_: sens_own(sw[m_]["srtio3_cubic"]) for m_ in four}
+    check(round(max(so_sto.values())) == -76 and round(min(so_sto.values())) == -89,
+          "[3.2 R2] SrTiO3 deepest well deepens on compression: d ln depth/d ln a -76..-89 (four models)")
     s32b = " ".join(ms_txt.split("### 3.2", 1)[1].split("### 3.3", 1)[0].split())
     for frag in ("moves our lattice by at most 0.06 %, and an 11×11×11 k-mesh in place of 7×7×7 leaves it unchanged",
                  "d ln(depth)/d ln a = 109–147 for BaTiO₃ along each point's own eigenvector in four models (79 for ORB-v2",
@@ -1628,19 +1631,60 @@ def main() -> int:
           "[3.3 R2 C1] MD: 20 K orders; 100 K U 0.27 / 0.24 (rule 0.30 / 0.10), dominant Gamma, rms 0.12 "
           "(static 0.165), Ti components bimodal near +-0.10, excess kurtosis -1.36 / -1.34")
     s33c = " ".join(ms_txt.split("### 3.3", 1)[1].split("### 3.4", 1)[0].split())
-    for frag in ("46.0 ± 2.2 meV per 40 atoms above the cubic point, although the static energy lies 90 meV below it",
-                 "at 0.10 Å it lies 149 meV above", "Along Γ [111] it lies 55.3 ± 2.2 meV above the cubic point, "
-                 "against a static energy 226 meV lower", "returned to within 0.002 Å of the cubic point along M",
+    # audit 2026-11-01: the free arm left M for a polar [010] displacement; classical-limit share of the
+    # harmonic cost; the screen's deciding modes on the tested unit and on the ferroelectrics; MD versions
+    fcf = json.load(open("results/revision/r2_centroid/free_Q0.0750.json", encoding="utf-8"))["run"]["centroid_final"]
+    sp_ = fcf["mean_disp_by_species_ang"]
+    kT100 = 8.617333262e-2 * 100.0
+    cl75 = kT100 * d75["n_optical_modes"] * d75["mean_ln_freq_ratio"]
+    clg = kT100 * dg["n_optical_modes"] * dg["mean_ln_freq_ratio"]
+    check(round(fcf["Q_M_ang"], 3) == 0.002 and round(fcf["residual_off_M_ang"], 2) == 0.19
+          and round(sp_["Ti"][1], 3) == 0.031 and round(sp_["O"][1], 3) == -0.033 and abs(sp_["Ba"][1]) < 1e-3
+          and max(abs(sp_["Ti"][0]), abs(sp_["Ti"][2])) < 0.005 and round(fa["dF_meV_per_40"], 1) == 3.6
+          and round(dec["free_Q0.0750"]["dF_err_meV"], 1) == 2.4
+          and round(cl75) == 35 and round(clg) == 86,
+          "[3.3 R2 C1] free arm: 0.002 along M, 0.19 off M, polar [010] (Ti +0.031, O -0.033, Ba ~0), dF +3.6 +/- 2.4; "
+          "classical-limit harmonic cost 35 (M 0.075) and 86 (Gamma) meV")
+    fe_ = A.canonical(led_)
+    fe_ = fe_[(fe_.method == "softmode") & fe_.system.isin(FE_OXIDE) & (fe_.temperature_K <= 300)
+              & ~fe_.gt_stable.astype(bool) & ~fe_.pred_stable.astype(bool)]
+
+    def g_cond(r_):
+        return any(q_ == "0.000,0.000,0.000" and float(x_) > 0
+                   for q_, x_ in zip(str(r_.ft_modes_q).split(";"), str(r_.ft_modes_Q0_ang).split(";")))
+    n_g = int(sum(g_cond(r_) for r_ in fe_.itertuples()))
+    qs_ = lu_["ft_modes_q"].split(";")
+    q0_ = [float(x_) for x_ in lu_["ft_modes_Q0_ang"].split(";")]
+    unit_modes = dict(zip(qs_, q0_))
+    check(len(fe_) == 16 and n_g == 5 and unit_modes["0.000,0.000,0.000"] == 0.0
+          and unit_modes["0.500,0.000,0.000"] == 0.065 and unit_modes["0.500,0.000,0.500"] == 0.075,
+          f"[3.3 R2 C1] screen: Gamma condenses in {n_g} of {len(fe_)} unstable FE calls at T <= 300 K; "
+          "BaTiO3/MACE 100 K condenses X 0.065 and M 0.075, not Gamma")
+    gate_ = json.load(open("results/revision/r2_centroid/gate/gate.json", encoding="utf-8"))
+    check(rc["meta"]["mace_torch"] == "0.3.15" and rc["meta"]["dtype"] == "float32"
+          and gate_["provenance"]["packages"]["mace-torch"] == "0.3.16",
+          "[3.3 R2 C1] MD mace-torch 0.3.15 float32; SSCHA scan mace-torch 0.3.16")
+    for frag in ("46.0 ± 2.2 meV per 40 atoms above the cubic point (+54.8 ± 3.3 meV from the reweighted last population), "
+                 "although the static energy lies 90 meV below it", "at 0.10 Å it lies 149 meV above",
+                 "At the static [111] minimum the free energy lies 55.3 ± 2.2 meV above the cubic point, "
+                 "against a static energy 226 meV lower",
+                 "it ended 0.002 Å along M but displaced along the polar Γ mode in [010] (on average Ti +0.031 Å "
+                 "and O −0.033 Å, Ba at rest), at a free energy 3.6 ± 2.4 meV above the cubic point",
                  "from +2.137 to +2.152 THz (bootstrap standard deviation 0.14 THz, 512-configuration subsample)",
                  "rise by 3.6 % on geometric average (73 of the 117 optical modes stiffen)",
-                 "62 meV per 40 atoms, 52 meV of it zero-point energy", "falls by only 16 meV",
-                 "the split is +154 meV (130 meV zero-point) against −99 meV",
-                 "0.27 and 0.24, falls between the values fixed in advance for order (0.30 or more) and disorder (0.10 or less)",
-                 "root-mean-square size of 0.12 Å (0.165 Å at the static minimum)",
-                 "peaked near ±0.10 Å (excess kurtosis −1.36 and −1.34",
+                 "62 meV per 40 atoms (52 meV of it zero-point energy; the same stiffening would cost 35 meV in "
+                 "the classical limit), while the remainder falls by 16 meV",
+                 "the split is +154 meV (130 meV zero-point, 86 meV classically) against −99 meV",
+                 "0.27 and 0.24, between the thresholds fixed in advance (order ≥ 0.30, disorder ≤ 0.10)",
+                 "keeps an rms size of 0.12 Å (0.165 Å at the static minimum)",
+                 "(M components at most 0.04 Å rms)", "peaked near ±0.10 Å, a density that a Gaussian centred",
+                 "the polar Γ mode condenses in 5 of its 16 unstable calls",
+                 "condenses the M mode and an X-point mode (Q₀ = 0.075 and 0.065 Å), not the polar Γ mode",
+                 "single precision (mace-torch 0.3.15) where the SSCHA used double precision (0.3.16)",
+                 "recorded as exactly zero on all 54 perovskite units",
                  "about 22 meV per 40 atoms below the cubic point"):
         check(frag in s33c, f"[text Section 3.3 R2 C1] '{frag[:70]}'")
-    check("the free energy at the screen's minimum lying 46 ± 2 meV per 40 atoms above the cubic point"
+    check("screen's minimum, a zone-boundary M-point displacement, 46 ± 2 meV per 40 atoms above the cubic point"
           in " ".join(ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0].split()),
           "[abstract R2 C1] 46 ± 2 meV")
     abs_txt = ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0]

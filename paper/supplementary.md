@@ -14,7 +14,7 @@ deposited ledger (`results/ledger.parquet`) and the deposited analysis outputs
 `scripts/build_esi_tables.py`; figures by `scripts/make_figures.py`.
 
 *Citation convention: **sections** of this document are cited as Sections S1–S7 and **tables** as
-Table S1-Table S29. The two sequences are independent; a cross-reference to "Table S1" means the
+Table S1–Table S29. The two sequences are independent; a cross-reference to "Table S1" means the
 table, not the section.*
 
 ## S1. Finite-T method development and discarded routes
@@ -434,8 +434,9 @@ screen or the label.
 
 The multi-mode SSCHA retains the couplings, but here it cannot bound their effect on the call,
 for three reasons. It runs on the same MLIP potential, so any PES error is common to both
-methods. On the displacive systems its default criterion is local (Section 3.3, Table S16), so it
-answers a different question from the screen's free-energy comparison. And on bcc, where both
+methods. On the displacive systems its default criterion is the curvature at the symmetric reference
+(Section 3.3, Table S16), which asks a different question from the screen's free-energy
+comparison. And on bcc, where both
 apply, the agreement is weaker than a bound would need: the stability calls agree in 31/45
 (0.69 [0.54, 0.80]; 25/36 without ORB-v2). Twelve of the agreeing units are CHGNet and
 MACE-MP-0 on Zr and Hf, which have no harmonic instability to stabilise; without them the calls
@@ -622,13 +623,13 @@ The account the rest of the paper uses does not rest on this table. Section 3.3 
 free-energy Hessian at the high-symmetry reference cannot by itself exclude a lower displaced
 minimum, and Section S7 asks that question directly for this unit: with the centroid held at the
 screen's own displaced minimum, the multi-mode SSCHA free energy lies 46.0 ± 2.2 meV per 40 atoms
-above the cubic point (Table S28), so here the stable call is the multi-mode theory's own answer
-for this surface, not an artefact of where the curvature is read. On the same MLIP energies the
+above the cubic point (Table S28), so on this unit the minimum the screen condenses is not a
+minimum of the multi-mode free energy. On the same MLIP energies the
 screen's free-energy comparison finds a displaced minimum below the symmetric point on 15 of the 27
 non-bcc units converged SSCHA false-stabilises in every finished replicate (Tables S16, S22 and
 S24), including this one (17 of 34 from the first start alone; 46 of 57 with the production
-recipe); on this unit that minimum is a single-mode result, which the multi-mode free energy does
-not reproduce (Section S7). The screen's own symmetric-point curvature cannot add to that, because
+recipe); on this unit it is a zone-boundary minimum of the single-mode problem, which the
+multi-mode free energy does not reproduce (Section S7). The screen's own symmetric-point curvature cannot add to that, because
 for a single mode it is positive by construction (Section S1.3). Whether SSCHA's positive Hessian
 comes from a relaxation that stopped near its start (Section S2.1) the converged recipe settles for
 this unit, which stays stable at +1.98 THz after a converged relaxation (Table S22). The
@@ -1336,7 +1337,7 @@ Leave-one-system-out: with all five models, dropping any single system never bri
 
 The frequency magnitudes are given descriptively only, because the pairs cluster by system and model and no test is attached: Spearman ρ = +0.113 (n = 45), −0.003 without ORB-v2 (n = 36).
 
-Lower part: on every non-bcc unit where SSCHA calls the phase stable against an unstable label, the screen's call on the same MLIP energies. Where the screen calls the phase unstable, its free energy has a displaced minimum below the symmetric point, while the symmetric point of the single-mode problem keeps a positive curvature, so a criterion read at the symmetric reference would report stable. That shows the local and the global question have different answers for the single-mode problem on these energies. It does not show that SSCHA's positive Hessian has the same origin, and on the one unit tested directly (BaTiO₃, MACE-MP-0, 100 K; Section S7, Table S28) it does not: the multi-mode free energy has no displaced minimum along the two patterns tested. The converged recipe of Table S22 keeps the false-stables on BaTiO₃ and KNbO₃ and removes those on the fluorites (Section 3.3).
+Lower part: on every non-bcc unit where SSCHA calls the phase stable against an unstable label, the screen's call on the same MLIP energies. Where the screen calls the phase unstable, its free energy has a displaced minimum below the symmetric point, while the symmetric point of the single-mode problem keeps a positive curvature, so a criterion read at the symmetric reference would report stable. That shows the local and the global question have different answers for the single-mode problem on these energies. It does not show that SSCHA's positive Hessian has the same origin, and on the one unit tested directly (BaTiO₃, MACE-MP-0, 100 K; Section S7, Table S28) it does not: the multi-mode free energy at the screen's M-point minimum lies above the cubic one. The converged recipe of Table S22 keeps the false-stables on BaTiO₃ and KNbO₃ and removes those on the fluorites (Section 3.3).
 
 | Quantity | All five models | Excluding ORB-v2 |
 |---|---|---|
@@ -1901,7 +1902,7 @@ Calls that differ from production, with the old and new Hessian minimum: 82 of t
 | SrTiO₃ | SevenNet-0 | 3.9441 | -- | −76 | −76 | U / -- | +0.38 | S / -- | −1.23 | S / -- | none |
 | SrTiO₃ | MatterSim | 3.9437 | -- | −89 | −89 | U / -- | +0.09 | S / -- | −1.41 | S / -- | none |
 
-**Table S28** Multi-mode SSCHA free energy along the condensing soft mode, cubic BaTiO₃ / MACE-MP-0 / 100 K, 2×2×2 cell treated at Γ, the grid's converged recipe (pre-registered, `tasks/preregistration-centroid-2026-10-21.md`, deviations D1–D8; `scripts/sscha_centroid_scan.py`, `results/revision/r2_centroid/`). Q₀: centroid displacement along the screen's own M-point pattern (q = (½, 0, ½), max atomic component) or along the Γ T₁u pattern in [111] at its static minimum; the free arm started at the M pattern with Q₀ = 0.075 Å and ended at the given projection. ΔF: F − F(Q₀ = 0) from a fresh 2,000-configuration ensemble at the final matrix (deviation D4), meV per 40 atoms, ± the two runs' errors in quadrature. ΔE static: MACE-MP-0 energy of the displaced centroid with no fluctuation. The last two ΔF columns are the SCHA's split of ΔF into the harmonic free energy of the auxiliary matrix Φ and the averaged anharmonic remainder ⟨V − V_Φ⟩ (`scripts/centroid_decomposition.py`); the split depends on Φ. Hessian: lowest non-acoustic eigenvalue of ∂²F/∂R² at the centroid (bubble), which at a displaced fixed centroid is not a stationary-point test. Primary outcome (pre-registered rule): ΔF_M = +46.0 ± 2.2 meV, **NOT_SUPPORTED** (no displaced minimum along M); from the last population reweighted, +54.8 ± 3.3 meV, NOT_SUPPORTED. The Q₀ = 0.040 arm did not converge and is excluded by the rule. Fourth-order term at the converged Q₀ = 0 matrix (512-configuration subsample): lowest frequency +2.137 THz without Φ⁽⁴⁾ (bootstrap SD 0.139) and +2.152 THz with it, a shift of +0.015 THz; the sign is unchanged.
+**Table S28** Multi-mode SSCHA free energy along the condensing soft mode, cubic BaTiO₃ / MACE-MP-0 / 100 K, 2×2×2 cell treated at Γ, the grid's converged recipe (pre-registered, `tasks/preregistration-centroid-2026-10-21.md`, deviations D1–D8; `scripts/sscha_centroid_scan.py`, `results/revision/r2_centroid/`). Q₀: centroid displacement along the screen's own M-point pattern (q = (½, 0, ½), max atomic component) or along the Γ T₁u pattern in [111] at its static minimum; the free arm started at the M pattern with Q₀ = 0.075 Å and ended at the given projection on it, 0.19 Å off it in all, mostly in a polar displacement along [010] (Section S7.2); it did not converge. ΔF: F − F(Q₀ = 0) from a fresh 2,000-configuration ensemble at the final matrix (deviation D4), meV per 40 atoms, ± the two runs' errors in quadrature. ΔE static: MACE-MP-0 energy of the displaced centroid with no fluctuation. The last two ΔF columns are the SCHA's split of ΔF into the harmonic free energy of the auxiliary matrix Φ and the averaged anharmonic remainder ⟨V − V_Φ⟩ (`scripts/centroid_decomposition.py`); the split depends on Φ. Hessian: lowest non-acoustic eigenvalue of ∂²F/∂R² at the centroid (bubble), which at a displaced fixed centroid is not a stationary-point test. Primary outcome (pre-registered rule): ΔF_M = +46.0 ± 2.2 meV, **NOT_SUPPORTED** (no displaced minimum along M); from the last population reweighted, +54.8 ± 3.3 meV, NOT_SUPPORTED. The Q₀ = 0.040 arm did not converge and is excluded by the rule. Fourth-order term at the converged Q₀ = 0 matrix (512-configuration subsample): lowest frequency +2.137 THz without Φ⁽⁴⁾ (bootstrap SD 0.139) and +2.152 THz with it, a shift of +0.015 THz; the sign is unchanged.
 
 | Centroid | Q₀ (Å) | Converged | Populations | KL/N at end | ΔF (meV) | ΔE static (meV) | ΔF, harmonic of Φ (meV) | ΔF, remainder (meV) | Hessian (THz) |
 |---|---|---|---|---|---|---|---|---|---|
@@ -1910,9 +1911,9 @@ Calls that differ from production, with the old and new Hessian minimum: 82 of t
 | M, fixed | 0.075 | yes | 6 | 0.78 | +46.0 ± 2.2 | −90.4 | +62.3 | −16.3 | +2.31 |
 | M, fixed | 0.100 | yes | 4 | 0.73 | +148.6 ± 2.6 | −57.1 | +113.5 | +35.1 | +2.80 |
 | Γ [111], fixed | 0.0765 | yes | 3 | 0.99 | +55.3 ± 2.2 | −225.8 | +154.0 | −98.8 | +2.92 |
-| M start, free | 0.075 → 0.002 | no | 30 | 0.46 | +3.6 ± 2.4 | -- | +11.5 | −7.9 | −13.39 |
+| M start, free | 0.075 → 0.002 along M (0.19 off M) | no | 30 | 0.46 | +3.6 ± 2.4 | -- | +11.5 | −7.9 | −13.39 |
 
-**Table S29** Exploratory classical molecular-dynamics check on MACE-MP-0's own surface (Section 3.3, Section S7; **not pre-registered**: the reading rule, `tasks/md-order-check-2026-10-22.md`, was written after the Table S28 result and before any run; `scripts/md_order_check.py`, `results/revision/r2_md/`). Cubic BaTiO₃ in the SSCHA's own 40-atom 2×2×2 cell at the MACE-MP-0 lattice, cell held fixed; Langevin NVT, 2 fs step, friction 0.01 fs⁻¹, MACE-MP-0 medium (mace-torch 0.3.15, float32, CPU). Per Ti, u_i is its position minus the centroid of its six O neighbours, and A_q = (1/8) Σ_i u_i cos(2π q·n_i) over the eight q of the cell; U is the Binder cumulant of the 3-vector A_q with the largest ⟨|A_q|²⟩, U = 1 − (3/5)⟨|A|⁴⟩/⟨|A|²⟩², 0 for a Gaussian centred at zero and 2/5 for a fixed magnitude. Rule: ordered if U ≥ 0.30, disordered if U ≤ 0.10, otherwise inconclusive, read on the whole production run and on each half; the 20 K control (C) must read ordered. The mean Ti off-centring is the mean size of u_i; the excess kurtosis is that of the pooled Cartesian components of u_i (0 for a Gaussian; in A and B the components are bimodal, peaked near ±0.10 Å); the SSCHA widths are the SSCHA's own rms along each pattern at the cubic centroid. Static Γ [111] minimum: A_Γ of size 0.165 Å. Overall verdict under the rule: INCONCLUSIVE. Classical dynamics has no zero-point motion, so these runs do not separate the potential from the SSCHA's Gaussian, zero-point treatment.
+**Table S29** Exploratory classical molecular-dynamics check on MACE-MP-0's own surface (Section 3.3, Section S7; **not pre-registered**: the reading rule, `tasks/md-order-check-2026-10-22.md`, was written after the Table S28 result and before any run; `scripts/md_order_check.py`, `results/revision/r2_md/`). Cubic BaTiO₃ in the SSCHA's own 40-atom 2×2×2 cell at the MACE-MP-0 lattice, cell held fixed; Langevin NVT, 2 fs step, friction 0.01 fs⁻¹, MACE-MP-0 medium (mace-torch 0.3.15, float32, CPU). Per Ti, u_i is its position minus the centroid of its six O neighbours, and A_q = (1/8) Σ_i u_i cos(2π q·n_i) over the eight q of the cell; U is the Binder cumulant of the 3-vector A_q with the largest ⟨|A_q|²⟩, U = 1 − (3/5)⟨|A|⁴⟩/⟨|A|²⟩², 0 for a Gaussian centred at zero and 2/5 for a fixed magnitude. Rule: ordered if U ≥ 0.30, disordered if U ≤ 0.10, otherwise inconclusive, read on the whole production run and on each half; the 20 K control (C) must read ordered. The mean Ti off-centring is the mean size of u_i; the excess kurtosis is that of the Cartesian components of u_i pooled over Ti and frames, taken about zero (0 for a Gaussian centred at zero; in A and B the components are bimodal, peaked near ±0.10 Å, and the ordered control gives a similar value, so it does not separate local disorder from a reorienting polarisation); U depends only on the size of A_q, not its direction; the SSCHA widths are the SSCHA's own rms along each pattern at the cubic centroid. Static Γ [111] minimum: A_Γ of size 0.165 Å. Overall verdict under the rule: INCONCLUSIVE. Classical dynamics has no zero-point motion, so these runs do not separate the potential from the SSCHA's Gaussian, zero-point treatment.
 
 | Quantity | A | B | C (control) |
 |---|---|---|---|
@@ -1956,8 +1957,8 @@ Calls that differ from production, with the old and new Hessian minimum: 82 of t
   energy at the symmetric reference, a local test that cannot by itself see condensation into a
   deeper displaced minimum, which the screen's free-energy comparison does see; but where the
   global question was asked in the full theory (BaTiO₃, MACE-MP-0, 100 K; Section S7), the
-  multi-mode free energy had no displaced minimum along the two patterns tested, and there the
-  disagreement is the mode coupling the single-mode screen leaves out. On the same MLIP energies that comparison finds a displaced minimum below
+  multi-mode free energy at the screen's M-point minimum lay above the cubic one, and there the
+disagreement is the mode coupling the single-mode screen leaves out. On the same MLIP energies that comparison finds a displaced minimum below
   the symmetric point on 15/27 of the units converged SSCHA false-stabilises in every finished
   replicate (Tables S16, S22 and S24; Section 3.3; 17/34 from the first start alone, 46/57 with the
   production recipe). Outcome of the converged runs: the false-stables survive on BaTiO₃ and KNbO₃
@@ -1998,7 +1999,7 @@ Calls that differ from production, with the old and new Hessian minimum: 82 of t
   first-order, transitions, and the control labels come from published harmonic phonon
   stability, whereas the screen and SSCHA probe dynamic stability. The two coincide for a
   continuous soft-mode transition and can differ for a deep double well, which is where the
-  local SSCHA criterion and the labels part company (Section 3.3).
+  SSCHA's calls and the labels part company (Section 3.3).
 
 ## S5. First-principles reference along the soft-mode coordinates and on SSCHA samples
 
@@ -2198,13 +2199,14 @@ itself (Section 3.3). It reports one unit, cubic BaTiO₃ with MACE-MP-0 at 100 
 The scan was registered on 2026-10-21, before any unit was run
 (`tasks/preregistration-centroid-2026-10-21.md`; runner `scripts/sscha_centroid_scan.py`). Every arm
 uses cubic BaTiO₃, MACE-MP-0 medium in the pinned environment, 100 K, the 40-atom 2×2×2 cell
-treated as a Γ-only cell, and the converged recipe of the grid (Section S2.4: 1,000 configurations
+treated as a Γ-only cell, and the converged recipe of the grid (main-text Section 2.5 and Table S22: 1,000 configurations
 per population, at most 30 populations and 400 steps per population, the real serial gradient
 error, the Kong–Liu guard), started from start A. The displacement pattern is the screen's own: the
 softest band at **q** = (½, 0, ½), phonopy modulation with the largest atomic component set to 1, so
-that Q₀ is in the screen's units. On the same energies the screen's single-mode free energy along
-that mode has its minimum at Q₀ = 0.075 Å, about 22 meV per 40 atoms below the cubic point, with a
-positive curvature (+2.03 THz) at Q₀ = 0. The arms were:
+that Q₀ is in the screen's units. On the same energies the screen's single-mode free energy along that mode has its minimum at
+Q₀ = 0.075 Å, about 22 meV per 40 atoms below the cubic point (the 2×1×2 minimal-cell value,
+doubled), with a positive curvature (+2.03 THz) at Q₀ = 0. On this unit the screen also condenses
+an X-point mode (Q₀ = 0.065 Å), which was not tested, and does not condense the polar Γ mode. The arms were:
 
 1. M scan, centroid held fixed: Q₀ = 0, 0.04, 0.075 and 0.10 Å.
 2. Free centroid: started at the M pattern with Q₀ = 0.075 Å; the final centroid's projection on
@@ -2244,10 +2246,15 @@ mode the multi-mode free energy has no displaced minimum, although the static en
 Q₀ = 0.075 Å lies 90 meV below the cubic point. At Q₀ = 0.10 Å the free energy is +148.6 ± 2.6 meV;
 the Q₀ = 0.04 Å arm stopped at the population cap unconverged (+18.5 ± 3.0 meV) and is excluded by
 the rule. The Γ [111] arm converged at +55.3 ± 2.2 meV, against a static energy 225.8 meV below the
-cubic point. The free arm did not converge in 30 populations; its centroid ended within 0.002 Å of
-the cubic point along M (and 0.020 Å along Γ [111]), at a free energy 3.6 ± 2.4 meV above
-F(Q₀ = 0), and its Hessian, which an unconverged relaxation does not make interpretable, is not
-used. The fourth-order term at the converged Q₀ = 0 matrix moves the lowest frequency from +2.137
+cubic point. The free arm did not converge in 30 populations (KL/N 0.46 at the end, one symmetry operation
+found). Its centroid left the M pattern, ending 0.002 Å along it, and moved off it by 0.19 Å in
+all, mostly into a polar displacement along [010] (on average Ti +0.031 Å, O −0.033 Å, Ba at rest;
+0.020 Å along the Γ [111] pattern; largest move from the start 0.11 Å). Its free energy there is
+3.6 ± 2.4 meV above F(Q₀ = 0), indistinguishable from it, so the arm locates no lower minimum and
+does not exclude a shallow polar one; its Hessian (−13.4 THz, bootstrap standard deviation 3.4 THz),
+which an unconverged relaxation does not make interpretable, is not used. A held-centroid free
+energy is an upper bound on the lowest free energy at the same projection with the other centroid
+coordinates free. The fourth-order term at the converged Q₀ = 0 matrix moves the lowest frequency from +2.137
 to +2.152 THz (bootstrap standard deviation of the subsample, 0.139 THz): it does not change the
 sign. The Hessian column of Table S28 at a held displaced centroid is not a stationary-point test,
 because the centroid gradient there is not zero.
@@ -2258,12 +2265,15 @@ The SCHA writes each free energy as the harmonic free energy of its auxiliary ma
 averaged anharmonic remainder ⟨V − V_Φ⟩ (`scripts/centroid_decomposition.py`; the split depends on
 **Φ**, so it is a description within the theory, not a unique decomposition). At Q₀ = 0.075 Å along
 M, 73 of the 117 optical auxiliary modes stiffen and their frequencies rise by 3.6 % on geometric
-average; their harmonic free energy rises by 62.3 meV per 40 atoms, 52.0 meV of it zero-point
-energy, while the remainder, which contains the potential energy, falls by 16.3 meV, against the
-90 meV the displacement gains statically. Along Γ [111], 83 of the 117 stiffen, and the split is
-+154.0 meV (130.2 meV zero-point) against −98.8 meV. The screen, which displaces one mode and holds
+average; their harmonic free energy rises by 62.3 meV per 40 atoms, 52.0 meV of it zero-point energy (in
+the classical limit, kT Σ Δln ω, the same stiffening would cost 35.3 meV), while the remainder falls
+by 16.3 meV, against the 90 meV the displacement gains statically. Along Γ [111], 83 of the 117
+stiffen, and the split is +154.0 meV (130.2 meV zero-point; 86.5 meV classically) against
+−98.8 meV. The screen, which displaces one mode and holds
 every other mode at its static position, has no such term; that is the mode coupling of Table 1,
-approximation A1, and on this unit it removes the displaced minimum the screen finds.
+approximation A1, and on this unit it removes the displaced minimum the screen finds. The screen's
+minimal-cell normalisation (approximation A7) acts the other way, favouring the zone-boundary modes,
+whose minimal cells hold two (X) and four (M) formula units against one for Γ.
 
 ### S7.4 Exploratory classical molecular dynamics (not pre-registered)
 
@@ -2278,11 +2288,14 @@ interpreted. At 100 K the runs from the cubic structure and from the Γ [111] mi
 other (U = 0.267 and 0.242, each half of each run between the thresholds), so the verdict under the
 rule is inconclusive: the cell's mean Ti off-centring keeps a root-mean-square size of 0.12 Å, against
 0.165 Å at the static minimum, while its direction wanders over the 25 ps. The dominant
-Fourier component is Γ in all three runs; the M components stay at or below 0.04 Å rms. Outside the
-rule, the pooled Cartesian components of the single-Ti off-centring are bimodal, peaked near
-±0.10 Å, with excess kurtosis −1.36 and −1.34 (0 for a Gaussian): an order–disorder local density
-that a single Gaussian cannot represent. Because classical dynamics omits the zero-point energy
-that makes up most of the SSCHA's cost in Section S7.3, these runs do not apportion the stable call
+Fourier component is Γ in all three runs; the M components stay at or below 0.04 Å rms. Outside the rule, the pooled Cartesian components of the single-Ti off-centring are bimodal,
+peaked near ±0.10 Å, which a Gaussian centred on the cubic site, the SSCHA's converged state,
+cannot reproduce. The statistic (an excess kurtosis computed about zero and pooled over frames;
+−1.36 and −1.34, against −1.89 for the ordered control) does not say whether the bimodality is
+local order–disorder or a coherent polarisation that reorients; and the intermediate Binder
+cumulant reflects fluctuations in the size of the mean off-centring, since U is blind to its
+direction. Because classical dynamics omits the zero-point energy
+that makes up much of the SSCHA's cost in Section S7.3, these runs do not apportion the stable call
 between the potential, the zero-point motion and the Gaussian form; that would need path-integral
 simulations.
 
@@ -2292,5 +2305,7 @@ One unit (BaTiO₃, MACE-MP-0), one temperature (100 K), one seed per arm, two d
 (the screen's M mode and Γ [111]) and a fixed cubic cell: no other false-stable unit was tested,
 and no claim is made for the other 26. The fixed cell also removes the strain that accompanies the
 ferroelectric distortion and deepens it, in the screen, the SSCHA and the MD alike (Table 1,
-approximation A5). The MD is classical, in single precision, over 25 ps and in 40 atoms, so the
+approximation A5). The X-point mode the screen also condenses on this unit was not tested, and the free arm did not
+converge. The MD is classical, in single precision under mace-torch 0.3.15 (the SSCHA ran in double
+precision under 0.3.16), over 25 ps and in 40 atoms, so the
 inconclusive reading may reflect the cell size and run length as well as the surface.

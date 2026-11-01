@@ -19,14 +19,14 @@ smaller lattice errs alike on the modes profiled, and pre-registered fine-tuning
 corrected neither. Converged, replicated stochastic SCHA (SSCHA), by its default symmetric-point
 Hessian, calls 27 of 77 label-unstable non-bcc units stable (seven unresolved), all oxide
 perovskites (23/73 without four size-untested SrTiO₃ units); on the same energies the screen, which
-moves one mode with the rest frozen, finds a lower displaced minimum in 15 of them. A pre-registered
-multi-mode SSCHA scan of one (BaTiO₃, MACE-MP-0, 100 K) finds no lower minimum along the screen's
-mode or the polar [111] direction, the free energy at the screen's minimum lying 46 ± 2 meV per 40
-atoms above the cubic point: there the two methods differ through mode coupling, not through where
-the curvature is read. Fluorite false-stables vanish. On ferroelectric perovskites at T ≤ 300 K the screen recovers 14/22 [0.43,
-0.80] against 4/22 [0.07, 0.39] for converged SSCHA (paired, system-clustered p = 0.5). Ensemble
+moves one mode with the rest frozen, finds a lower displaced minimum in 15 of them. A pre-registered multi-mode SSCHA test of one (BaTiO₃, MACE-MP-0, 100 K) puts the free energy at the
+screen's minimum, a zone-boundary M-point displacement, 46 ± 2 meV per 40 atoms above the cubic
+point: there the two methods differ through mode coupling, not through where the curvature is read. Fluorite false-stables vanish. On ferroelectric perovskites at T ≤ 300 K the screen recovers 14/22 [0.43,
+0.80], mostly through zone-boundary modes, against 4/22 [0.07, 0.39] for converged SSCHA (paired,
+system-clustered p = 0.5). Ensemble
 vote splits flag consensus errors (AUC 0.76 [0.59, 0.93]), not robustly (0.63 without ORB-v2);
-force-level spread does not, because most of the force error is common to all five models.
+force-level spread does not, because about half or more of the force error on thermally sampled
+configurations is common to all five models.
 
 ## 1. Introduction
 
@@ -126,8 +126,8 @@ independent MLIP architectures and four anharmonic chemistry families; a cheap f
 whose criterion is the phase rather than a single mode, reported with its sensitivity to its own
 conventions; the observation that the default SSCHA cross-check, even converged and replicated,
 calls 27 of 77 label-unstable non-bcc units stable, all of them oxide perovskites (seven more are
-unresolved), with a pre-registered test showing that on the unit tested this is the multi-mode
-theory's own answer, not a consequence of reading the curvature at the symmetric point; the finding that the production SSCHA recipe did not converge, because its
+unresolved), with a pre-registered test showing that on the unit tested the screen's competing minimum, a
+zone-boundary displacement, is not a minimum of the multi-mode free energy; the finding that the production SSCHA recipe did not converge, because its
 cumulative step cap ends the relaxation after about 19 steps, and that its fluorite
 false-stables and high-temperature false-unstables were that recipe's; and a test of ensemble
 disagreement as a reliability signal, in which the vote split is suggestive rather than robust and
@@ -255,9 +255,9 @@ evaluations) come from the width solver's grid fallback at a point of the finite
 stencil and from two fit-artefact modes, not from the physics. The call and the curvature
 therefore disagree wherever a mode condenses: for a deep double well the variational transition
 is first-order-like, so 𝓕(0) remains a *local* minimum (positive curvature) while a displaced
-minimum drops below it. A curvature criterion is blind to that condensation by construction, and
-so is any free-energy Hessian evaluated at a fixed high-symmetry reference when the reference is a
-local minimum; we record every such mode (`n_curv_blind` in the ledger) rather than folding it into
+minimum drops below it. A curvature criterion is blind to that condensation by construction, and so, in general, is any
+free-energy Hessian evaluated at a fixed high-symmetry reference when the reference is a local
+minimum (Section 3.3 tests whether that is why SSCHA calls BaTiO₃ stable); we record every such mode (`n_curv_blind` in the ledger) rather than folding it into
 either number.
 
 Screening only a single mode — even the globally softest — conflates physically distinct
@@ -278,10 +278,10 @@ bias, and where the consequence is visible in our own data.
 
 | # | Approximation | What it excludes | Expected bias | Where it shows |
 |---|---|---|---|---|
-| A1 | One mode at a time | Mode–mode coupling and cooperative condensation | Either sign; absolute T* unreliable | PbTiO₃ T* ordering failure; mis-calls shared by four or five models (Section 3.2); on BaTiO₃ at 100 K the multi-mode SSCHA has no displaced minimum where the screen finds one (Section 3.3) |
+| A1 | One mode at a time | Mode–mode coupling and cooperative condensation | Either sign; absolute T* unreliable | PbTiO₃ T* ordering failure; mis-calls shared by four or five models (Section 3.2); on BaTiO₃ with MACE-MP-0 at 100 K the multi-mode free energy at the screen's M-point minimum lies above the cubic one (Section 3.3; with A7) |
 | A2 | Commensurate **q** only | Instabilities at incommensurate or finer-grid **q** | False-stable if the true soft mode is missed | R point needs even cells (Section 3.5); bcc ω needs 6×6×6 FCs |
 | A3 | Sextic fit on a well+barrier window, sampled to Q = 0.45 Å | Steep-wall anharmonicity beyond Q⁶; wells beyond the sampled range | Barrier-shape error at large Q | No unit flip over the fit windows, ≤ 1 at T ≤ 300 K over sampling ranges (ESI Table S14) |
-| A4 | Gaussian (SCHA) trial state | Tunnelling, non-Gaussian density; renders deep-well transitions first-order-like | Curvature misses condensation | `n_curv_blind` rows; Section 3.3 mechanism |
+| A4 | Gaussian (SCHA) trial state | Tunnelling, non-Gaussian density; renders deep-well transitions first-order-like | Curvature misses condensation | `n_curv_blind` rows; Section 3.3 (what a symmetric-point Hessian cannot exclude) |
 | A5 | Static E(Q) in a clamped cell | Thermal expansion and strain coupling | Under-stabilises martensitic systems | bcc excluded from scoring (Section 3.2) and compared with SSCHA only (Section 3.3) |
 | A6 | Mode cap (24) | Modes beyond the 24 most imaginary | Could only create false-stables | Binds on 20/400 units, all already unstable (Section 2.4) |
 | A7 | Energy and mass summed over the minimal commensurate cell | Any other frozen-cell normalisation | Larger cells condense more readily | Recall and T* depend on it (Section 2.4; ESI Table S14) |
@@ -294,7 +294,8 @@ stable at 300 K, bracketing the experimental transition at 105 K. The gate also 
 criterion/observable distinction above: at 100 K the condensing tilt still has a *positive*
 symmetric-point curvature (+0.92 THz, hardening to +1.43 THz at 300 K), so this is a
 first-order-like condensation that the free energy's argmin detects and its curvature does not,
-the situation that any criterion read at the symmetric reference misses (Section 3.3). The gate is
+the situation that a criterion read at the symmetric reference cannot by itself exclude
+(Section 3.3). The gate is
 coarse: on a 100/300 K ladder it passes for any transition between 100 and 300 K, so it brackets
 the 105 K transition without locating it. Three of the five models (MACE-MP-0, MatterSim, SevenNet-0) reproduce the R-tilt
 condensation; CHGNet never condenses the tilt and ORB-v2 does not select the R point at all.
@@ -373,9 +374,8 @@ as the record of what the unconverged recipe returned. A pre-registered replicat
 units, from a second starting matrix and with a second seed (Section 3.5; ESI Table S24), decides which
 of their calls Section 3.3 counts as unresolved.
 Because this Hessian is evaluated at the fixed high-symmetry reference, its sign answers a local
-question: whether the symmetric phase is a local minimum of the free energy. Section 3.3 sets out
-what that criterion can and cannot see on deep double wells, and asks the global question
-directly on one unit. Unlike the free-energy screen, which treats each imaginary mode
+question: whether the symmetric phase is a local minimum of the free energy. Section 3.3 sets out what that criterion can and cannot see on deep double wells, and compares
+free energies at displaced centroids on one unit. Unlike the free-energy screen, which treats each imaginary mode
 independently, SSCHA captures the coupled multi-mode phonon entropy, which matters most for the
 entropy-stabilised martensitic transitions of the bcc metals.
 ### 2.6 First-principles reference (PBE)
@@ -664,9 +664,13 @@ spectra are unstable; the self-consistent route is SSCHA at constant pressure, t
 free-energy stress tensor,^53^ which we did not run. SrTiO₃'s thermal-expansion coefficient is
 3.2 × 10⁻⁵ K⁻¹ from 300 to 1800 K,^54^ at least 0.1 % in lattice parameter per 100 K, the same
 order as the differences that flip the calls above: the stable, and wrong, 300 K BaTiO₃ call of
-four models turns unstable when their lattice is expanded by 0.15–0.34 % (ESI Table S27). Relative to each model's own finite-temperature
-cell, a constant-volume screen therefore leans towards stability, more so as T rises; relative to
-experiment, PBE's larger lattice pulls the other way, by a similar amount.
+four models turns unstable when their lattice is expanded by 0.15–0.34 % (ESI Table S27). For the
+polar modes of BaTiO₃ and KNbO₃, whose wells deepen on expansion, a constant-volume screen
+therefore leans towards stability relative to each model's own finite-temperature cell, more so as
+T rises; relative to experiment, PBE's larger lattice pulls the other way, by a similar amount.
+SrTiO₃ behaves the other way: its deepest soft-mode well deepens on compression
+(d ln(depth)/d ln a = −76 to −89 in four models, ESI Table S27), so for it constant volume leans
+towards instability.
 
 For CsSnBr₃ the
 mis-calls persist on PBE: the MLIP curves follow PBE's to the edge of the scan (sampled depths
@@ -738,8 +742,8 @@ unless they are labelled production values, which are given beside them as the r
 default recipe returned (ESI Tables S3, S10, S16 and S17). SSCHA here runs on the same MLIP energies as the screen, so agreement
 between the two is a consistency check, and a disagreement shows that the two criteria differ, not
 which of them matches first principles. Nothing below is a claim that the SSCHA formalism is
-wrong: where the two disagree on the ferroelectric perovskites, a direct test on one unit (below)
-finds the SSCHA's stable call to be the multi-mode theory's own answer for that surface.
+wrong: where the two disagree on the ferroelectric perovskites, a direct test on one unit (below) finds no minimum of the multi-mode free energy at the
+displacement the screen condenses.
 
 bcc metals: agreement that depends on the cell and the recipe. In the production 2×2×2 grid
 every bcc unit was positive from 50 K (0.06–2.10 THz; Fig. 4; ESI Table S3), but MACE-MP-0 and
@@ -856,8 +860,10 @@ were already false-stable with the production recipe; the other 9 (PbTiO₃ 4, S
 are new under convergence. That the symmetric point stays a local minimum is not
 itself evidence: for a single mode the screen's symmetric-point curvature equals its
 self-consistent trial stiffness and is positive by construction (Section 2.4). Cubic BaTiO₃ with
-MACE-MP-0 at 100 K is a typical case: screen call unstable, converged SSCHA +1.98 ± 0.06 THz (production
-+2.87 THz).
+MACE-MP-0 at 100 K is a typical case: screen call unstable, converged SSCHA +1.98 ± 0.06 THz
+(production +2.87 THz). The screen's unstable calls on the three ferroelectrics rest mostly on
+zone-boundary modes: at T ≤ 300 K the polar Γ mode condenses in 5 of its 16 unstable calls, and on
+this unit the X- and M-point modes condense while Γ does not.
 The converged recipe separates the false-stable calls from early stopping unit by unit. A Hessian evaluated
 after a relaxation that stopped near its positive-definite starting matrix is not evaluated at
 the SCHA minimum and can read stable for that reason alone (Section 2.5; ESI Section S2.1), and that is what
@@ -882,79 +888,96 @@ possibility (below).
 
 ![**Fig. 7** Converged SSCHA's default criterion on every unit of the grid (Sections 2.5 and 3.3; ESI Tables S22 and S24), one cell per system, model and temperature, from the first start. Non-bcc units (2×2×2 cell) are scored against the label: grey correct, vermillion false-stable and blue false-unstable. bcc units (3×3×3 cell), whose labels are not dynamic-stability labels, are compared with the screen's call instead, with light tints where the two disagree. Hatched units are left unresolved by the pre-registered replicates (Section 3.5) and are not counted, rather than resolved by majority; open circles did not converge and crosses failed, so neither has a call; white cells were not run. Of the 77 label-unstable non-bcc units with a resolved call, converged SSCHA calls 27 stable (27/77 = 0.35 [0.25, 0.46]; 23/67 without ORB-v2; seven more are unresolved), all of them oxide perovskites; every converged fluorite unit is called unstable; the remaining false-unstables are CsSnI₃ at 600 and 900 K; and on the bcc metals the calls agree with the screen's in 33/40.](../results/figures/fig_sscha_map.png)
 
-Why a symmetric-point Hessian cannot by itself exclude a lower minimum. Four properties of the
-method combine. First, the auxiliary matrix **Φ** is positive definite by construction, since a
-normalisable Gaussian trial state requires it, so its eigenvalues cannot signal an
-instability.^38,55^ The object that can is the free-energy Hessian,
-∂²F/∂**R**∂**R** = **Φ** + **Φ**⁽³⁾**Λ**[**1** − **Φ**⁽⁴⁾**Λ**]⁻¹**Φ**⁽³⁾, derived to detect
-second-order displacive transitions from a fixed high-symmetry reference and demonstrated on SnTe
-and GeTe.^38^ Every correction to **Φ** carries the third-order tensor **Φ**⁽³⁾ on both sides, and
-at bubble level, where **Λ** is negative definite, it can only lower the curvature. Second, at the
-high-symmetry reference that term vanishes for the soft mode on its own: a mode's coupling to
-itself, Φ⁽³⁾_sss, is forbidden by inversion for a polar Γ mode and by translation for a
-zone-boundary one, so for a single mode F″(0) = MΩ² > 0 at every truncation order, with or without
-**Φ**⁽⁴⁾ (the screen's identity of Section 2.4). What can turn the Hessian negative are the
-couplings of the soft mode to pairs of other modes, summed over the spectrum. Its sign therefore
-measures how far the other modes' fluctuations soften the soft mode at the reference: it detects a
-second-order transition, but not a lower minimum at a finite displacement, which is what a
-first-order one is. The bubble approximation, the `python-sscha` default, drops **Φ**⁽⁴⁾; it breaks
+Why a symmetric-point Hessian cannot by itself exclude a lower minimum. First, the auxiliary
+matrix **Φ** is positive definite by construction, since a normalisable Gaussian trial state
+requires it, so its eigenvalues cannot signal an instability.^38,55^ The object that can is the
+free-energy Hessian, ∂²F/∂**R**∂**R** = **Φ** + **Φ**⁽³⁾**Λ**[**1** − **Φ**⁽⁴⁾**Λ**]⁻¹**Φ**⁽³⁾,
+derived to detect displacive transitions from a fixed high-symmetry reference and demonstrated on
+SnTe and GeTe.^38^ Every correction to **Φ** carries the third-order tensor **Φ**⁽³⁾ on both sides,
+and at bubble level, where **Λ** is negative definite, it can only lower the curvature. Second, at
+the high-symmetry reference that term vanishes for the soft mode on its own: a mode's coupling to
+itself, Φ⁽³⁾_sss, is forbidden by inversion for a polar Γ mode and by translation for the X, M and
+R modes of the cubic perovskite, for which 3**q** is not a reciprocal-lattice vector, so along that
+mode alone F″(0) = MΩ² > 0 whether **Φ**⁽⁴⁾ is kept or dropped (the screen's identity of
+Section 2.4). What can turn the Hessian negative are the couplings of the soft mode to pairs of
+other modes, among them the other two arms of the M star, which sum with it to a
+reciprocal-lattice vector. That term measures how far the other modes relax, through their cubic
+couplings, when the soft mode is displaced, and the sign of the Hessian marks where the symmetric
+phase stops being a local minimum of the free energy. For a second-order transition that limit is
+the transition; for a first-order one, a lower minimum at a finite displacement can coexist with a
+positive Hessian. The bubble approximation, the `python-sscha` default, drops **Φ**⁽⁴⁾; it breaks
 down for the cubic phases of metal halide perovskites, where **Φ**⁽⁴⁾ matters around the transition
 and the full resummation is needed.^55^ Third, the centroid gradient vanishes by symmetry at the
-reference, and it is recorded as exactly zero in every perovskite unit of the converged grid for
-MACE-MP-0, MatterSim and SevenNet-0, so a relaxation that starts there with the centroid free, as
-the converged recipe does, never leaves it. Fourth, a Gaussian has one centroid: it can represent
+reference (`python-sscha` symmetrises it, and it is recorded as exactly zero on all 54 perovskite
+units of the converged grid with MACE-MP-0, MatterSim and SevenNet-0, while CHGNet on BaTiO₃ and
+ORB-v2 record small non-zero values), so a relaxation that starts there with the centroid free, as
+the converged recipe does, does not leave it. Fourth, a Gaussian has one centroid: it can represent
 the symmetric phase or one displaced variant, not a density spread over several. A positive Hessian
 at the cubic point therefore establishes that the cubic centroid is a local minimum of the Gaussian
 free energy; whether a displaced centroid lies lower has to be asked separately, by comparing free
 energies at displaced centroids, and the default workflow does not ask it.
 
-We asked it for one unit, in the full theory and before running it (pre-registered; ESI Section
-S7, Table S28). Cubic BaTiO₃ with MACE-MP-0 at 100 K was run with the converged recipe and the
-centroid held at the screen's own displacement pattern, the M-point mode (**q** = (½, 0, ½)) in
-which the screen finds its minimum, at Q₀ = 0, 0.04, 0.075 and 0.10 Å; with the centroid held at
-the static minimum along the Γ polar mode in [111], the experimental low-temperature direction; and
-with the centroid free, started at Q₀ = 0.075 Å. The screen places that mode's free-energy minimum
-at 0.075 Å, about 22 meV per 40 atoms below the cubic point. In the multi-mode SSCHA the free
-energy there lies 46.0 ± 2.2 meV per 40 atoms above the cubic point, although the static energy
-lies 90 meV below it, and at 0.10 Å it lies 149 meV above (the 0.04 Å run did not converge and is
-excluded by the rule); the pre-registered verdict is that the multi-mode free energy has no
-displaced minimum along M. Along Γ [111] it lies 55.3 ± 2.2 meV above the cubic point, against a
-static energy 226 meV lower, and the free centroid returned to within 0.002 Å of the cubic point
-along M, though without meeting the convergence test in 30 populations. The fourth-order term, now
-evaluated at the converged matrix, moves the lowest Hessian frequency from +2.137 to +2.152 THz
-(bootstrap standard deviation 0.14 THz, 512-configuration subsample): it does not change the sign.
-On this unit, then, and along the two patterns tested, the stable call is what the multi-mode
-Gaussian theory predicts for this surface, not an artefact of where its curvature is read.
+We asked it for one unit in the full multi-mode theory, under a protocol registered before any run
+(ESI Section S7, Table S28). Cubic BaTiO₃ with MACE-MP-0 at 100 K, in the 40-atom 2×2×2 cell, was
+run with the converged recipe and the centroid held along the screen's own M-point mode
+(**q** = (½, 0, ½)) at Q₀ = 0, 0.04, 0.075 and 0.10 Å; held at the static energy minimum along the
+polar Γ mode in [111], the experimental low-temperature direction; and left free, started at
+Q₀ = 0.075 Å along M. On this unit the screen condenses the M mode and an X-point mode
+(Q₀ = 0.075 and 0.065 Å), not the polar Γ mode; the X mode was not tested. The screen places its
+M-mode free-energy minimum at 0.075 Å, about 22 meV per 40 atoms below the cubic point (its
+minimal-cell value, doubled). In the multi-mode SSCHA the free energy there lies 46.0 ± 2.2 meV per
+40 atoms above the cubic point (+54.8 ± 3.3 meV from the reweighted last population), although the
+static energy lies 90 meV below it, and at 0.10 Å it lies 149 meV above; the 0.04 Å run did not
+converge and is excluded by the rule, under which the multi-mode free energy has no displaced
+minimum along M. At the static [111] minimum the free energy lies 55.3 ± 2.2 meV above the cubic
+point, against a static energy 226 meV lower. A held-centroid free energy is an upper bound on the
+lowest free energy with the same projection and the other centroid coordinates free. The free arm
+explored those: it did not converge in 30 populations, and it ended 0.002 Å along M but displaced
+along the polar Γ mode in [010] (on average Ti +0.031 Å and O −0.033 Å, Ba at rest), at a free
+energy 3.6 ± 2.4 meV above the cubic point. It therefore found no lower minimum, nor does it
+exclude a shallow polar one. The fourth-order term, now evaluated at the converged matrix, moves
+the lowest Hessian frequency from +2.137 to +2.152 THz (bootstrap standard deviation 0.14 THz,
+512-configuration subsample): it does not change the sign. On this unit, then, the minimum the
+screen condenses is not a minimum of the multi-mode free energy, and along the polar direction
+neither method finds one at 100 K.
 
 The screen and the SSCHA differ in how many modes respond. The screen displaces one mode and
 leaves every other mode of the cell at its static position, so the displacement costs nothing
-beyond its own energy. In the multi-mode theory the displacement stiffens the other modes.
-Splitting each free-energy difference, as the SCHA does, into the harmonic free energy of **Φ** and
-an averaged anharmonic remainder (ESI Table S28): at Q₀ = 0.075 Å the auxiliary frequencies rise by
-3.6 % on geometric average (73 of the 117 optical modes stiffen), which raises their free energy by
-62 meV per 40 atoms, 52 meV of it zero-point energy, while the remainder, which contains the
-potential energy, falls by only 16 meV, against the 90 meV the displacement gains statically. Along
-Γ [111] the split is +154 meV (130 meV zero-point) against −99 meV. This is the mode coupling a
-single-mode treatment leaves out (Table 1, A1), and here it opposes condensation. On this unit the
-screen's displaced minimum is therefore a single-mode result: the screen agrees with the label, but
-the multi-mode theory on the same surface does not support the minimum it finds.
+beyond its own single-mode free energy. In the multi-mode theory the displacement stiffens the
+other modes. The SCHA splits each free-energy difference into the harmonic free energy of **Φ**
+and an averaged anharmonic remainder ⟨V − V_Φ⟩ (ESI Table S28); the split depends on **Φ**, so it
+describes the cost within the theory rather than decomposing it uniquely. At Q₀ = 0.075 Å the
+auxiliary frequencies rise by 3.6 % on geometric average (73 of the 117 optical modes stiffen),
+which raises their harmonic free energy by 62 meV per 40 atoms (52 meV of it zero-point energy;
+the same stiffening would cost 35 meV in the classical limit), while the remainder falls by 16 meV;
+statically the displacement gains 90 meV. Along Γ [111] the split is +154 meV (130 meV zero-point,
+86 meV classically) against −99 meV. This is the mode coupling a single-mode treatment leaves out
+(Table 1, A1), and here it opposes condensation; the screen's minimal-cell normalisation, under
+which larger cells condense more readily (A7), favours the zone-boundary modes, whose minimal
+cells hold two and four formula units against one for Γ. On this unit the screen therefore agrees
+with the label through a zone-boundary minimum that the multi-mode theory on the same surface does
+not support, while the polar mode that orders real BaTiO₃ condenses in neither treatment.
 
-Which treatment is right for the MLIP's surface is a separate question from which matches the
-label, which describes real BaTiO₃. An exploratory classical molecular-dynamics check on the same
-surface and in the same fixed 40-atom cell, with its reading rule written before the runs (ESI
-Section S7, Table S29), does not settle it. The cell orders at 20 K. At 100 K, runs started from
-the cubic structure and from the static Γ [111] minimum agree with each other, and the Binder
-cumulant of the cell's mean Ti off-centring, 0.27 and 0.24, falls between the values fixed in
-advance for order (0.30 or more) and disorder (0.10 or less): over 25 ps the mean off-centring
-keeps a root-mean-square size of 0.12 Å (0.165 Å at the static minimum) while its direction
-wanders. Locally the classical density is far from Gaussian: each Cartesian component of the Ti
-off-centring is bimodal, peaked near ±0.10 Å (excess kurtosis −1.36 and −1.34, against 0 for a Gaussian),
-which a single Gaussian cannot represent. Classical dynamics omits the zero-point energy that makes
-up most of the SSCHA's penalty, so these runs do not apportion the stable call between the
-potential, the zero-point motion and the Gaussian form; that would need path-integral simulations.
-The cubic cell is also held fixed, so the strain that accompanies the ferroelectric distortion,
-and deepens it, is absent from all three treatments (Section 3.2; Table 1, A5). We tested one unit
-at one temperature; the other 26 were not tested, and we do not claim the same outcome for them.
+Which treatment is right for the MLIP's surface is a separate question from which one matches the
+label, since the label describes real BaTiO₃. An exploratory classical molecular-dynamics check on
+the same potential and in the same fixed 40-atom cell, its reading rule written after the SSCHA
+result and before the runs (ESI Section S7, Table S29), does not settle it. The 20 K control
+orders. At 100 K the reading is inconclusive under the rule: runs from the cubic structure and
+from the static Γ [111] minimum agree, with Binder cumulants of the cell's mean Ti off-centring of
+0.27 and 0.24, between the thresholds fixed in advance (order ≥ 0.30, disorder ≤ 0.10). The mean
+off-centring keeps an rms size of 0.12 Å (0.165 Å at the static minimum), its size fluctuates and
+its direction wanders over the 25 ps, and its dominant Fourier component is Γ, not the screen's M
+(M components at most 0.04 Å rms). Pooled over the run, each Cartesian component of the Ti
+off-centring is bimodal, peaked near ±0.10 Å, a density that a Gaussian centred on the cubic site,
+the SSCHA's converged state, cannot reproduce; the statistic does not say whether the bimodality is
+local disorder or a coherent polarisation that reorients. Classical dynamics omits zero-point
+motion, so these runs do not apportion the stable call between the potential, the zero-point
+motion and the Gaussian form; that would need path-integral simulations. The MD also ran the
+potential in single precision (mace-torch 0.3.15) where the SSCHA used double precision (0.3.16).
+The cubic cell is held fixed, so the strain that accompanies the ferroelectric distortion, and
+deepens it, is absent from all three treatments (Section 3.2; Table 1, A5). We tested one unit, at
+one temperature, in one cell size (no supercell-convergence claim is made for BaTiO₃, Section 3.5); the other 26 were not
+tested, and we do not claim the same outcome for them.
 
 The stage-by-stage diagnostic of ESI Table S2 (BaTiO₃, MACE-MP-0, 100 K) is a single run that was
 not repeated in the pinned environments; its fourth-order test, on the unconverged production
@@ -1093,8 +1116,8 @@ for ZrO₂ and 0.87 for SrTiO₃). A force error is in any case the wrong scale 
 root mean square is dominated by stiff modes, whereas a call turns on a soft-mode well of tens of
 meV per cell, which Section 3.2 checks against PBE directly. Across these five foundation models,
 then, force disagreement detects extrapolation into short contacts; it does not estimate the
-error that decides a finite-temperature stability call, because most of that error is common to
-all five.
+error that decides a finite-temperature stability call, because about half or more of that error
+(0.45–0.94 of the squared error on the thermal ensembles) is common to all five.
 
 ![**Fig. 8** Ensemble disagreement as a predictor of consensus error (Section 3.4), with all five models and without ORB-v2: the
 majority-vote consensus finite-temperature error rate on units where the models split on the
@@ -1115,7 +1138,11 @@ Validating the stochastic minimiser. The SSCHA lowers F[**Φ**] by gradient step
 a Monte Carlo average over the N configurations of the current population. As **Φ** moves away
 from the matrix that generated them, the same configurations are reused with importance weights
 ρ_**Φ**/ρ_**Φ**₀, and the Kong–Liu ratio KL/N, the effective fraction of the sample left, falls
-until a floor calls for a new population. A relaxation can therefore stop for three reasons that
+until a floor calls for a new population. The population size N sets the statistical error of the
+gradient, which falls as N^−½, and so the smallest gradient a stopping test can resolve: 256
+configurations per population in the production recipe, 1,000 in the converged one (Section 2.5).
+Because the Kong–Liu floor is a fraction of N, a larger population does not let the matrix move
+further before a new one is drawn; it makes each estimate along the way less noisy. A relaxation can therefore stop for three reasons that
 are not convergence: a step cap, the Kong–Liu floor, or a threshold set against the wrong error.
 Table 5 follows one unit, BaTiO₃ with MACE-MP-0 at 100 K, population by population under both
 recipes (ESI Fig. S1 adds bcc Zr with MatterSim at 300 K in the 3×3×3 cell). In production the
@@ -1267,15 +1294,16 @@ does not separate the models at finite temperature, so we make no ranking claim.
 
 The usual escalation, "if in doubt, run SSCHA", does not settle the displacive cases either.
 Converged SSCHA calls the ferroelectric perovskites stable where the labels and the screen call
-them unstable (Section 3.3, Fig. 7). On the one unit where we asked the global question in the full
-theory, by comparing free energies at displaced centroids, the stable call held: along the two
-patterns tested the multi-mode free energy has no lower displaced minimum, and the screen's minimum
-comes from freezing the other modes. So the two methods disagree through mode coupling, and the
-screen's agreement with the label on that unit does not come from a minimum the multi-mode theory
-supports. Classical molecular dynamics on the same surface does not decide whether the surface
-itself orders at 100 K, but it shows the Ti sitting in off-centre wells, a local density no single
-Gaussian represents, so the potential and the SSCHA's Gaussian, zero-point treatment are not yet
-separated. A positive Hessian at the symmetric structure still answers only the local question, and
+them unstable (Section 3.3, Fig. 7). On the one unit where we compared free energies at displaced centroids in the full theory,
+the stable call held: the screen's M-point minimum is not a minimum of the multi-mode free energy,
+which lies 46 meV per 40 atoms above the cubic point there, and neither the static polar minimum
+nor the free centroid gave a lower free energy. So the two methods disagree there through mode
+coupling. Because the screen's unstable calls on the ferroelectrics rest mostly on zone-boundary
+modes, its higher recall is not evidence that it better approximates the MLIP's own free energy:
+on the unit tested, the cruder treatment is the one that matches the label. Classical molecular
+dynamics on the same surface does not decide whether the surface itself orders at 100 K, but its
+Ti off-centring is bimodal, which the SSCHA's Gaussian, centred on the cubic site, cannot
+reproduce, so the potential and the SSCHA's Gaussian, zero-point treatment are not yet separated. A positive Hessian at the symmetric structure still answers only the local question, and
 the global one has to be asked unit by unit, as we did once; on the displacive systems at T ≤ 300 K the screen is right where
 converged SSCHA is wrong on 12 units against 2 (system-clustered p = 0.5). The relaxation also
 matters: the production recipe stopped near its starting matrix, and its settings, chiefly the
@@ -1333,10 +1361,8 @@ its own lattice it calls both stable at 300 K. A fine-tune faithful to PBE there
 PBE's own 300 K errors at the PBE lattice, and the trial does not show that fine-tuning cannot
 fix these calls, only that fine-tuning toward PBE on one lattice without stresses does not.
 Fine-tuning could change which units fall in the deep-well regime of Section 3.3, since that depends on
-the well depth, but not the locality of the criterion: a curvature read at the symmetric reference
-reports stable on any surface whose double well is deep enough, fine-tuned or not, and converged
-SSCHA on a fine-tuned MACE-MP-0 still calls BaTiO₃ stable at 100 K (+1.73 THz), as the trial
-predicted, although at that model's own, contracted lattice. Nor could it
+the well depth; converged SSCHA on a fine-tuned MACE-MP-0 still calls BaTiO₃ stable at 100 K
+(+1.73 THz), as the trial predicted, although at that model's own, contracted lattice. Nor could it
 change the screen's
 dependence on its frozen-cell convention (Section 2.4). And fine-tuning moves a model toward its reference
 functional, not toward experiment, so whatever that functional gets wrong about a transition
@@ -1381,7 +1407,7 @@ since no variance among members can expose a bias they share.
 Limitations. Reference transition temperatures are approximate and scoring is qualitative. The
 labels mark thermodynamic, often first-order, transitions, whereas the screen and SSCHA probe
 dynamic stability; the two coincide for a continuous soft-mode transition and can differ for a deep
-double well, which is where the local SSCHA criterion and the labels part company (Section 3.3). The
+double well, which is where the SSCHA's calls and the labels part company (Section 3.3). The
 screen's T* and its ferroelectric recall depend on the frozen-cell convention (recall 5/30 to 28/30
 across the conventions of Section 2.4), and accuracy on these labels cannot choose among the conventions.
 The screen treats each mode on its own, and we have no quantitative bound on mode–mode coupling;
@@ -1391,8 +1417,8 @@ temperature fails to order PbTiO₃ (Section 3.2), and a likely source of the mi
 models. Both methods run on the same MLIP
 potential-energy surface, so their agreement is a consistency check and SSCHA is not an independent
 reference. What does not depend on the surface is the experimental labels, including the SrTiO₃
-transition the gate is scored against (three of the five models pass it), and the argument of
-Section 3.3, which concerns the criterion rather than the surface. First-principles energies along the deciding
+transition the gate is scored against (three of the five models pass it), and the argument of Section 3.3 on what a symmetric-point Hessian can exclude, which concerns the
+criterion rather than the surface; its test on one unit runs on that unit's surface. First-principles energies along the deciding
 coordinates and forces on SSCHA-sampled configurations separate those errors from the
 approximations of the two methods (Sections 2.6 and 3.2; ESI Section S5): with PBE energies the
 screen agrees with the labels in 101 of 120 units against 81 with the MLIPs along the same
@@ -1446,11 +1472,11 @@ perovskites (27 of their 31 resolved label-unstable units in every finished repl
 them already false-stable in the first recipe, and 7 more unresolved; 23 without the four SrTiO₃
 units at 100 K, whose 2×2×2 cell has no size test) and disappear on the fluorites; on the displacive systems at T ≤ 300 K the
 screen is right where converged SSCHA is wrong on 12 units against 2, the net difference all on
-BaTiO₃ and KNbO₃ (system-clustered p = 0.5), under the screen's production frozen-cell convention. On
-BaTiO₃ at 100 K a pre-registered multi-mode scan finds no displaced free-energy minimum along the
-screen's mode or the polar [111] direction: there the stable call is the multi-mode theory's answer
-for the surface, the screen's displaced minimum comes from freezing the other modes, and the
-fourth-order term does not change the sign. On a fine-tuned MACE-MP-0, converged SSCHA still calls
+BaTiO₃ and KNbO₃ (system-clustered p = 0.5), under the screen's production frozen-cell convention. On BaTiO₃ with MACE-MP-0 at 100 K, a pre-registered multi-mode test puts the free energy at the
+screen's zone-boundary minimum 46 meV per 40 atoms above the cubic point and finds no lower free
+energy at the static polar minimum: the screen's minimum there comes from freezing the other modes,
+its unstable calls on the ferroelectrics rest mostly on zone-boundary modes, and the fourth-order
+term does not change the sign of the Hessian. On a fine-tuned MACE-MP-0, converged SSCHA still calls
 BaTiO₃ stable at 100 K. The default recipe as first run did not converge on any of the 16 seeds on which
 convergence was recorded, because of its cumulative step cap, and its fluorite false-stables and
 high-temperature false-unstables were that recipe's, not the criterion's. Screening every
@@ -1464,7 +1490,7 @@ as a predictor at this sample size. Nor did the pre-registered force-level sprea
 its primary AUC interval spans chance (0.68 [0.42, 0.91]), and its estimate falls to 0.31
 [0.15, 0.53] once the units whose
 configurations bring atoms into overlap are excluded. The spread rises where atoms approach each
-other and every model extrapolates, whereas most of the force error on thermally sampled
+other and every model extrapolates, whereas about half or more of the force error on thermally sampled
 configurations is common to all five models, which share their reference functional and much of
 their training data; a committee for anharmonic stability calls would need members trained on
 different data, configurations drawn from the target finite-temperature ensemble, and uncertainty

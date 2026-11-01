@@ -1023,7 +1023,7 @@ def table_s16_bcc_agreement(st: dict) -> str:
         "and the global question have different answers for the single-mode problem on these "
         "energies. It does not show that SSCHA's positive Hessian has the same origin, and on the "
         "one unit tested directly (BaTiO₃, MACE-MP-0, 100 K; Section S7, Table S28) it does not: "
-        "the multi-mode free energy has no displaced minimum along the two patterns tested. The "
+        "the multi-mode free energy at the screen's M-point minimum lies above the cubic one. The "
         "converged recipe of Table S22 keeps the false-stables on BaTiO₃ and KNbO₃ and removes those "
         "on the fluorites (Section 3.3).\n\n"
         + md(crows, ["Quantity", "All five models", "Excluding ORB-v2"])
@@ -2572,7 +2572,8 @@ def table_s28_centroid_scan() -> str:
     rows = []
     labels = {"m_scan_Q0.0000": ("M, fixed", "0"), "m_scan_Q0.0400": ("M, fixed", "0.040"),
               "m_scan_Q0.0750": ("M, fixed", "0.075"), "m_scan_Q0.1000": ("M, fixed", "0.100"),
-              "gamma": ("Γ [111], fixed", "0.0765"), "free_Q0.0750": ("M start, free", "0.075 → 0.002")}
+              "gamma": ("Γ [111], fixed", "0.0765"),
+              "free_Q0.0750": ("M start, free", "0.075 → 0.002 along M (0.19 off M)")}
     for tag, (kind, q) in labels.items():
         run = json.loads((R2CEN / f"{tag}.json").read_text(encoding="utf-8"))["run"]
         rl, fe = run["relax"], run["free_energy"]
@@ -2597,7 +2598,9 @@ def table_s28_centroid_scan() -> str:
         "`tasks/preregistration-centroid-2026-10-21.md`, deviations D1–D8; `scripts/sscha_centroid_scan.py`, "
         "`results/revision/r2_centroid/`). Q₀: centroid displacement along the screen's own M-point pattern "
         "(q = (½, 0, ½), max atomic component) or along the Γ T₁u pattern in [111] at its static minimum; "
-        "the free arm started at the M pattern with Q₀ = 0.075 Å and ended at the given projection. ΔF: "
+        "the free arm started at the M pattern with Q₀ = 0.075 Å and ended at the given projection on it, "
+        "0.19 Å off it in all, mostly in a polar displacement along [010] (Section S7.2); it did not "
+        "converge. ΔF: "
         "F − F(Q₀ = 0) from a fresh 2,000-configuration ensemble at the final matrix (deviation D4), meV "
         "per 40 atoms, ± the two runs' errors in quadrature. ΔE static: MACE-MP-0 energy of the displaced "
         "centroid with no fluctuation. The last two ΔF columns are the SCHA's split of ΔF into the harmonic "
@@ -2668,8 +2671,10 @@ def table_s29_md_check() -> str:
         f"U ≥ {rule['U_ordered_min']:.2f}, disordered if U ≤ {rule['U_disordered_max']:.2f}, otherwise "
         "inconclusive, read on the whole production run and on each half; the 20 K control (C) must read "
         "ordered. The mean Ti off-centring is the mean size of u_i; the excess kurtosis is that of the "
-        "pooled Cartesian components of u_i (0 for a Gaussian; in A and B the components are bimodal, "
-        "peaked near ±0.10 Å); the SSCHA widths are the SSCHA's own rms along each pattern at the cubic "
+        "Cartesian components of u_i pooled over Ti and frames, taken about zero (0 for a Gaussian centred "
+        "at zero; in A and B the components are bimodal, peaked near ±0.10 Å, and the ordered control "
+        "gives a similar value, so it does not separate local disorder from a reorienting polarisation); "
+        "U depends only on the size of A_q, not its direction; the SSCHA widths are the SSCHA's own rms along each pattern at the cubic "
         f"centroid. Static Γ [111] minimum: A_Γ of size {sm['static_gamma111_minimum']['A_G_norm_ang']:.3f} Å. "
         f"Overall verdict under the rule: {sm['verdict']}. Classical dynamics has no zero-point motion, so "
         "these runs do not separate the potential from the SSCHA's Gaussian, zero-point treatment.\n\n"
