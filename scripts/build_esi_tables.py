@@ -1020,9 +1020,12 @@ def table_s16_bcc_agreement(st: dict) -> str:
         "phase unstable, its free energy has a displaced minimum below the symmetric point, "
         "while the symmetric point of the single-mode problem keeps a positive curvature, so a "
         "criterion read at the symmetric reference would report stable. That shows the local "
-        "and the global question have different answers on these energies. It does not show "
-        "that SSCHA's positive Hessian has the same origin; the converged recipe of Table S22 "
-        "keeps the false-stables on BaTiO₃ and KNbO₃ and removes those on the fluorites (Section 3.3).\n\n"
+        "and the global question have different answers for the single-mode problem on these "
+        "energies. It does not show that SSCHA's positive Hessian has the same origin, and on the "
+        "one unit tested directly (BaTiO₃, MACE-MP-0, 100 K; Section S7, Table S28) it does not: "
+        "the multi-mode free energy has no displaced minimum along the two patterns tested. The "
+        "converged recipe of Table S22 keeps the false-stables on BaTiO₃ and KNbO₃ and removes those "
+        "on the fluorites (Section 3.3).\n\n"
         + md(crows, ["Quantity", "All five models", "Excluding ORB-v2"])
     )
 
@@ -2614,6 +2617,63 @@ def table_s28_centroid_scan() -> str:
     )
 
 
+R2MD = REPO / "results" / "revision" / "r2_md"
+
+
+def table_s29_md_check() -> str:
+    """Second-round referee, comment 1: the exploratory classical MD check on MACE-MP-0's own surface
+    (reading rule tasks/md-order-check-2026-10-22.md, written before the runs; results/revision/r2_md/)."""
+    if not (R2MD / "summary.json").exists():
+        print("Table S29 skipped: MD check missing", file=sys.stderr)
+        return ""
+    sm = json.loads((R2MD / "summary.json").read_text(encoding="utf-8"))
+    rule, runs = sm["rule"], sm["runs"]
+    start = {"cubic": "cubic", "gamma111": "static Γ [111] minimum"}
+    rows = []
+    for r in ("A", "B", "C"):
+        x = runs[r]
+        sp, g = x["spec"], x["per_q"]["G"]
+        m_rms = max(v["rms_ang"] for k, v in x["per_q"].items() if k.startswith("M"))
+        pj = x["projections"]
+        rows.append([
+            r, start[sp["start"]], f"{sp['T']:.0f} / {x['T_mean_prod_K']:.1f}", f"{sp['prod_ps']:.0f}",
+            x["dominant_q"].replace("G", "Γ"),
+            f"{x['binder_dominant']:.3f} ({g['binder_halves'][0]:.3f}, {g['binder_halves'][1]:.3f})",
+            f"{x['class']} ({', '.join(x['class_halves'])})",
+            f"{g['rms_ang']:.3f}", f"{float(np.linalg.norm(g['time_avg_vec_ang'])):.3f}", f"{m_rms:.3f}",
+            f"{x['Ti_off_centring_mean_abs_ang']:.3f}",
+            f"{x['Ti_component_excess_kurtosis']:+.2f}".replace("-", MINUS),
+            f"{pj['M']['rms_ang']:.4f} / {pj['G111']['rms_ang']:.4f}",
+        ])
+    w = runs["A"]["projections"]
+    meta = runs["A"]["meta"]
+    return (
+        "**Table S29** Exploratory classical molecular-dynamics check on MACE-MP-0's own surface "
+        "(Section 3.3, Section S7; **not pre-registered**: the reading rule, "
+        "`tasks/md-order-check-2026-10-22.md`, was written after the Table S28 result and before any run; "
+        "`scripts/md_order_check.py`, `results/revision/r2_md/`). Cubic BaTiO₃ in the SSCHA's own 40-atom "
+        "2×2×2 cell at the MACE-MP-0 lattice, cell held fixed; Langevin NVT, "
+        f"{meta['dt_fs']:.0f} fs step, friction {meta['friction_per_fs']} fs⁻¹, MACE-MP-0 medium "
+        f"(mace-torch {meta['mace_torch']}, {meta['dtype']}, CPU). Per Ti, u_i is its position minus the "
+        "centroid of its six O neighbours, and A_q = (1/8) Σ_i u_i cos(2π q·n_i) over the eight q of the cell; "
+        "U is the Binder cumulant of the 3-vector A_q with the largest ⟨|A_q|²⟩, U = 1 − (3/5)⟨|A|⁴⟩/⟨|A|²⟩², "
+        "0 for a Gaussian centred at zero and 2/5 for a fixed magnitude. Rule: ordered if "
+        f"U ≥ {rule['U_ordered_min']:.2f}, disordered if U ≤ {rule['U_disordered_max']:.2f}, otherwise "
+        "inconclusive, read on the whole production run and on each half; the 20 K control (C) must read "
+        "ordered. Columns: rms and |time average| of A_Γ; largest rms of "
+        "the three M components; mean size of u_Ti; excess kurtosis of the pooled Cartesian components of u_Ti "
+        "(0 for a Gaussian; the components are bimodal, peaked near ±0.10 Å, in A and B); rms of the "
+        "projections on the SSCHA's M and Γ [111] patterns, whose SSCHA widths at the cubic centroid are "
+        f"{w['M']['sscha_rms_at_cubic_ang']:.4f} and {w['G111']['sscha_rms_at_cubic_ang']:.4f} Å. Static "
+        f"Γ [111] minimum: A_Γ of size {sm['static_gamma111_minimum']['A_G_norm_ang']:.3f} Å; overall verdict under "
+        f"the rule: {sm['verdict']}. Classical dynamics has no zero-point motion, so these runs "
+        "do not separate the potential from the SSCHA's Gaussian, zero-point treatment.\n\n"
+        + md(rows, ["Run", "Start", "T target / mean (K)", "Production (ps)", "Dominant q",
+                    "U, whole (halves)", "Reading (halves)", "rms A_Γ (Å)", "Time-averaged A_Γ, size (Å)",
+                    "max rms A_M (Å)", "Mean Ti off-centring (Å)", "Excess kurtosis", "rms on M / Γ [111] (Å)"])
+    )
+
+
 def build() -> str:
     raw = pd.read_parquet(LEDGER)
     df = A.canonical(raw)
@@ -2649,6 +2709,7 @@ def build() -> str:
         table_s26_finetune_surface(),
         table_s27_lattice_sweep(raw),
         table_s28_centroid_scan(),
+        table_s29_md_check(),
     ]
     blocks = [b for b in blocks if b]
     return "\n\n".join(blocks)

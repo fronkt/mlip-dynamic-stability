@@ -181,7 +181,7 @@ def text_vs_data(ms_txt: str) -> None:
         f"{wil(k_ns, n_ns)}, all on the three ferroelectrics")
     ks = int((fs.scr == False).sum())  # noqa: E712
     ksA = int((fsA.scr == False).sum())  # noqa: E712
-    has(abst, "abstract screen on FS", f"cannot exclude, in {ks} of them")
+    has(abst, "abstract screen on FS", f"finds a lower displaced minimum in {ks} of them")
     has(s33, "3.3 screen on FS", f"{ks}/{k} = {ks / k:.2f} {wil(ks, k)}")
     has(s33, "3.3 screen on FS ex-ORB",
         f"{int(((fs.scr == False) & (fs.model != 'orb_v2')).sum())}/{kx} = "  # noqa: E712
@@ -1562,6 +1562,87 @@ def main() -> int:
                  "on KNbO₃ at 100 K three of the five models call the cubic phase unstable at their own lattice and stable at ours",
                  "four models turns unstable when their lattice is expanded by 0.15–0.34 %"):
         check(frag in s32b, f"[text Section 3.2 R2 box] '{frag[:70]}'")
+    # R2 comment 1: the pre-registered centroid scan (Table S28), the SCHA split and the MD check (Table S29)
+    cen = json.load(open("results/revision/r2_centroid/summary.json", encoding="utf-8"))
+    dec = json.load(open("results/revision/r2_centroid/decomposition.json", encoding="utf-8"))["arms"]
+    mdc = json.load(open("results/revision/r2_md/summary.json", encoding="utf-8"))
+    pr, ga, fa, v4c = cen["primary"], cen["gamma_arm"], cen["free_arm"], cen["v4"]
+    sig_g = float(np.hypot(ga["err_meV"], cen["m_scan_table"][0]["err_meV"]))
+    m75 = next(r_ for r_ in cen["m_scan_table"] if abs(r_["q0_ang"] - 0.075) < 1e-9)
+    check(all(cen["gates"]["values"].values()) and pr["verdict"] == "NOT_SUPPORTED"
+          and round(pr["dF_meV"], 1) == 46.0 and round(pr["sigma_meV"], 1) == 2.2
+          and round(-m75["static_2V_ledger_meV"]) == 90 and round(pr["scan_points"][0]["dF_meV"]) == 149
+          and pr["scan_points_excluded"] == [0.04]
+          and round(ga["dF_meV_per_40"], 1) == 55.3 and round(sig_g, 1) == 2.2
+          and round(-ga["static_dE_min_meV_per_40"]) == 226
+          and not fa["converged"] and round(fa["Q_M_final_ang"], 3) == 0.002
+          and v4c["same_sign"] and round(v4c["v2_subsample_min_thz"], 3) == 2.137
+          and round(v4c["v4_min_nonac_thz"], 3) == 2.152 and round(v4c["v2_subsample_boot_sd_thz"], 2) == 0.14,
+          "[3.3 R2 C1] centroid scan: gates pass; dF_M +46.0 +/- 2.2 (static -90), 0.10 A +149, 0.04 excluded; "
+          "Gamma[111] +55.3 +/- 2.2 (static -226); free arm unconverged at Q_M 0.002; v4 2.137 -> 2.152, SD 0.14")
+    # the screen's own minimum on this unit (ledger, softmode v4): M mode at Q0 = 0.075 A, curvature +2.03 THz
+    # at Q0 = 0; the ~22 meV per 40 atoms depth is the registered value (prereg "What is already known")
+    led_ = pd.read_parquet("results/ledger.parquet")
+    lu_ = led_[(led_.system == "batio3_cubic") & (led_.model == "mace_mp0") & (led_.method == "softmode")
+               & (led_.temperature_K == 100)].iloc[-1]
+    mq_ = lu_["ft_modes_q"].split(";").index("0.500,0.000,0.500")
+    check(float(lu_["ft_modes_Q0_ang"].split(";")[mq_]) == 0.075 and float(lu_["ft_modes_curv_thz"].split(";")[mq_]) == 2.031
+          and "about −22 meV per 40-atom 2×2×2 cell" in open("tasks/preregistration-centroid-2026-10-21.md", encoding="utf-8").read().replace("about -22", "about −22"),
+          "[3.3 R2 C1] screen's M minimum at Q0 0.075 A (curvature +2.03 THz at 0), ~22 meV/40 atoms (prereg)")
+    d75, dg = dec["m_scan_Q0.0750"], dec["gamma"]
+    check(round(100 * float(np.expm1(d75["mean_ln_freq_ratio"])), 1) == 3.6
+          and (d75["n_modes_stiffer"], d75["n_optical_modes"]) == (73, 117)
+          and round(d75["dF_harm_aux_meV"]) == 62 and round(d75["dF_harm_aux_zero_point_meV"]) == 52
+          and round(-d75["d_anharmonic_remainder_meV"]) == 16
+          and round(dg["dF_harm_aux_meV"]) == 154 and round(dg["dF_harm_aux_zero_point_meV"]) == 130
+          and round(dg["d_anharmonic_remainder_meV"]) == -99,
+          "[3.3 R2 C1] SCHA split: Q0 0.075 aux freqs +3.6 % (73/117 stiffer), +62 (52 ZPE) vs -16; "
+          "Gamma +154 (130 ZPE) vs -99")
+    gw_units = 0
+    for f_ in sorted(glob.glob("results/revision/sscha_converged_grid/*_startA.json")):
+        tag_ = os.path.basename(f_)
+        if not tag_.startswith(("batio3", "knbo3", "pbtio3", "srtio3", "cssni3")) \
+                or not any(m_ in tag_ for m_ in ("mace_mp0", "mattersim", "sevennet0")):
+            continue
+        st_ = (json.load(open(f_, encoding="utf-8")).get("run") or {}).get("relax", {}).get("steps", [])
+        gws = [s_["gw"] for s_ in st_ if s_.get("gw") is not None]
+        if gws:
+            gw_units += 1
+            check(max(abs(x_) for x_ in gws) == 0.0, f"[3.3 R2 C1] centroid gradient exactly zero: {tag_}")
+    check(gw_units == 54, f"[3.3 R2 C1] {gw_units} perovskite units (MACE/MatterSim/SevenNet) with a recorded gradient")
+    ra, rb, rc = (mdc["runs"][k_] for k_ in "ABC")
+
+    def peaks(h):
+        h = np.asarray(h)
+        c_ = -0.2 + (np.arange(len(h)) + 0.5) * 0.4 / len(h)
+        return round(float(c_[:len(h) // 2][h[:len(h) // 2].argmax()]), 2), round(float(c_[len(h) // 2 + 1:][h[len(h) // 2 + 1:].argmax()]), 2)
+
+    check(mdc["verdict"] == "INCONCLUSIVE" and rc["class"] == "ordered"
+          and (mdc["rule"]["U_ordered_min"], mdc["rule"]["U_disordered_max"]) == (0.3, 0.1)
+          and (round(ra["binder_dominant"], 2), round(rb["binder_dominant"], 2)) == (0.27, 0.24)
+          and all(x_["dominant_q"] == "G" for x_ in (ra, rb, rc))
+          and round(ra["per_q"]["G"]["rms_ang"], 2) == 0.12 == round(rb["per_q"]["G"]["rms_ang"], 2)
+          and round(mdc["static_gamma111_minimum"]["A_G_norm_ang"], 3) == 0.165
+          and (round(ra["Ti_component_excess_kurtosis"], 2), round(rb["Ti_component_excess_kurtosis"], 2)) == (-1.36, -1.34)
+          and peaks(ra["Ti_component_hist"]) == (-0.1, 0.11) and peaks(rb["Ti_component_hist"])[0] in (-0.1, -0.11),
+          "[3.3 R2 C1] MD: 20 K orders; 100 K U 0.27 / 0.24 (rule 0.30 / 0.10), dominant Gamma, rms 0.12 "
+          "(static 0.165), Ti components bimodal near +-0.10, excess kurtosis -1.36 / -1.34")
+    s33c = " ".join(ms_txt.split("### 3.3", 1)[1].split("### 3.4", 1)[0].split())
+    for frag in ("46.0 ± 2.2 meV per 40 atoms above the cubic point, although the static energy lies 90 meV below it",
+                 "at 0.10 Å it lies 149 meV above", "Along Γ [111] it lies 55.3 ± 2.2 meV above the cubic point, "
+                 "against a static energy 226 meV lower", "returned to within 0.002 Å of the cubic point along M",
+                 "from +2.137 to +2.152 THz (bootstrap standard deviation 0.14 THz, 512-configuration subsample)",
+                 "rise by 3.6 % on geometric average (73 of the 117 optical modes stiffen)",
+                 "62 meV per 40 atoms, 52 meV of it zero-point energy", "falls by only 16 meV",
+                 "the split is +154 meV (130 meV zero-point) against −99 meV",
+                 "0.27 and 0.24, falls between the values fixed in advance for order (0.30 or more) and disorder (0.10 or less)",
+                 "root-mean-square size of 0.12 Å (0.165 Å at the static minimum)",
+                 "peaked near ±0.10 Å (excess kurtosis −1.36 and −1.34",
+                 "about 22 meV per 40 atoms below the cubic point"):
+        check(frag in s33c, f"[text Section 3.3 R2 C1] '{frag[:70]}'")
+    check("the free energy at the screen's minimum lying 46 ± 2 meV per 40 atoms above the cubic point"
+          in " ".join(ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0].split()),
+          "[abstract R2 C1] 46 ± 2 meV")
     abs_txt = ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0]
     n_words = len(abs_txt.split())
     check(n_words <= 350, f"[abstract] {n_words} words (350: the RSC Advances portal limit, read 2026-10-10)")

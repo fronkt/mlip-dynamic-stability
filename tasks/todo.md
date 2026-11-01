@@ -48,11 +48,13 @@ workflow lesson + gradient-norm history across populations (BaTiO₃ or bcc-Zr);
       (MatterSim) / -1.40 % (ORB) from a0; still U at our PBE lattice in all five. KNbO3 100 K flips -0.55 to
       -0.92 %; S at our PBE lattice for MACE, CHGNet, MatterSim. Ledger check: calls match everywhere; CHGNet
       depths off 10-45 % (float32?), ORB freq off <= 0.037 THz, near-degenerate decide-mode swaps on KNbO3.
-- [ ] C1 REWRITE per the prereg NOT_SUPPORTED branch: §3.3 "why the default criterion misses" + §2.4 + abstract
-      + contributions + Discussion + Conclusions all carry the local-vs-global account -> replace with the
-      mode-coupling result (Frank to see first). Draft (local, raw dir R2_C1_rewrite_draft.md) incl. letter
-      C1 text: WITH FRANK 10-22. After OK: apply; ESI S7 + Tables S28/S29 (S29 = MD, new builder); verify_claims
-      for the C1 + MD numbers; renumber_refs --letter; physics brief C1.
+- [x] C1 REWRITE per the prereg NOT_SUPPORTED branch. Frank OK'd the draft 2026-11-01 with one fix: every "no
+      displaced minimum" claim scoped to the two patterns tested (M, Γ[111]). Applied: abstract, contributions,
+      Table 1 A1, §2.5 one sentence, §3.3 (retitled; 4 new paragraphs), Discussion, Conclusions; ESI S2.2, S2.3,
+      Table S16 caption, S4 single-vs-multi-mode outcome, NEW S7 + Table S29 (MD builder); verify_claims pins
+      every C1 + MD number (+ gw = 0 on all 54 perovskite MACE/MatterSim/SevenNet units); renumber_refs run
+      with --letter R2 (C2 refs now 44–54, C4 60–63, R1's 44–48 now 55–59); letter C1 written (untracked).
+- [ ] Physics brief C1 section (local raw dir) rewritten for the mode-coupling result.
 - [x] MD discriminant (exploratory, rule in tasks/md-order-check-2026-10-22.md, run locally 10-22, 9ef42c6):
       INCONCLUSIVE. 20 K control orders (U 0.396); 100 K from cubic / from Gamma[111] agree, U 0.267 / 0.242
       (between 0.10 and 0.30), A_G rms 0.12 A with wandering direction; Ti components bimodal at +-0.10 A
