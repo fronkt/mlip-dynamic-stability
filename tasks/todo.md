@@ -70,8 +70,14 @@ workflow lesson + gradient-norm history across populations (BaTiO₃ or bcc-Zr);
       (between 0.10 and 0.30), A_G rms 0.12 A with wandering direction; Ti components bimodal at +-0.10 A
       (kurtosis -1.35) = non-Gaussian local density. Does not separate potential from Gaussian/ZPE (needs PIMD).
 - [x] C2 PENDING-QE -> pseudopotential/code; lattice-sweep table S27; verify_claims; letter C2 PENDINGs filled.
-- [ ] P4 adversarial audit; docx + highlighted marked copies (vs the SUBMITTED R1 docx); release v2.2.0 + Zenodo;
-      letter files list; Frank submits (~Nov 5).
+- [x] P4 release (Frank's go 2026-11-01): merged to main 1344faf, tag v2.2.0, Zenodo 10.5281/zenodo.23855585
+      (md5 verified, DOI resolves); PENDING-P5 filled f882cc5; TOC graphic panel (b) redrawn from the C1 data.
+      Upload package: C:\Users\frank\mlip-rsc-revision-raw\R2_upload_2026-11-01\ (clean docx+pdf 57/95 pp,
+      highlighted docx+pdf vs the R1-as-submitted snapshot [Word Compare clean-vs-highlighted: only the
+      figure-paragraph placeholders differ; images byte-identical; no tracked markup], letter + cover note
+      docx, Figs 1-8 TIFF, TOC tiff/png + blurb 244 chars, DAS docx). Archive zip moved to the raw dir.
+- [ ] Frank submits in ScholarOne (~Nov 5): highlighted (NOT tracked) marked copies; paste the letter into the
+      response box (transparent review); cover note into Comments to the Editor. Then commit the R2 letter.
 - AI-use statement: unchanged (author's submitted wording); manuscript.md must carry the submitted text before
   the docx build.
 
