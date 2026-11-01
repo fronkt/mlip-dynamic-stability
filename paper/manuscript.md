@@ -1552,13 +1552,13 @@ Materials Project. Computational resources were provided by commercial cloud GPU
 research received no specific grant from any funding agency in the public, commercial, or
 not-for-profit sectors.
 
-<!-- AI-use statement: the submitted .docx carries the author's own AI-use wording (2026-10-10), which supersedes the Option A text below in this markdown. -->
+<!-- AI-use statement: the author's own wording exactly as submitted in the first-revision .docx (2026-10-10); unchanged in the second revision (author's decision, 2026-10-21). -->
 *Use of AI tools.* The author used a large language model (Claude, Anthropic), through the Claude
-Code agentic coding tool, throughout this work: to write and run analysis and simulation code under
-the author's direction, to carry out and cross-check the statistical analyses and internal audits
-described in the ESI, and to draft and edit text. All code, data and results are deposited (see
-Data availability) so that every number can be regenerated independently. The author designed the
-study, reviewed all code, results and text, and takes full responsibility for the content.
+Fable 5.1 and Opus 5.5, under the author’s direction, to cross-check the statistical analyses and
+internal audits described in the ESI, and to edit and review text. All code, data and results are
+deposited (see Data availability) so that every number can be regenerated independently. The author
+designed the study, reviewed all code, results and text, and takes full responsibility for the
+content.
 
 ## References
 

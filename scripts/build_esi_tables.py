@@ -2629,23 +2629,30 @@ def table_s29_md_check() -> str:
     sm = json.loads((R2MD / "summary.json").read_text(encoding="utf-8"))
     rule, runs = sm["rule"], sm["runs"]
     start = {"cubic": "cubic", "gamma111": "static Γ [111] minimum"}
-    rows = []
+    w = runs["A"]["projections"]
+    cols = []  # one column per run, transposed so the table fits the page
     for r in ("A", "B", "C"):
         x = runs[r]
         sp, g = x["spec"], x["per_q"]["G"]
         m_rms = max(v["rms_ang"] for k, v in x["per_q"].items() if k.startswith("M"))
         pj = x["projections"]
-        rows.append([
-            r, start[sp["start"]], f"{sp['T']:.0f} / {x['T_mean_prod_K']:.1f}", f"{sp['prod_ps']:.0f}",
+        cols.append([
+            start[sp["start"]], f"{sp['T']:.0f} / {x['T_mean_prod_K']:.1f}", f"{sp['prod_ps']:.0f}",
             x["dominant_q"].replace("G", "Γ"),
-            f"{x['binder_dominant']:.3f} ({g['binder_halves'][0]:.3f}, {g['binder_halves'][1]:.3f})",
-            f"{x['class']} ({', '.join(x['class_halves'])})",
+            f"{x['binder_dominant']:.3f}", f"{g['binder_halves'][0]:.3f}, {g['binder_halves'][1]:.3f}",
+            x["class"], ", ".join(x["class_halves"]),
             f"{g['rms_ang']:.3f}", f"{float(np.linalg.norm(g['time_avg_vec_ang'])):.3f}", f"{m_rms:.3f}",
             f"{x['Ti_off_centring_mean_abs_ang']:.3f}",
             f"{x['Ti_component_excess_kurtosis']:+.2f}".replace("-", MINUS),
-            f"{pj['M']['rms_ang']:.4f} / {pj['G111']['rms_ang']:.4f}",
+            f"{pj['M']['rms_ang']:.4f}", f"{pj['G111']['rms_ang']:.4f}",
         ])
-    w = runs["A"]["projections"]
+    labels = ["Start", "T, target / mean (K)", "Production (ps)", "Dominant q", "U, whole run",
+              "U, first and second half", "Reading, whole run", "Reading, halves", "rms A_Γ (Å)",
+              "Time-averaged A_Γ, size (Å)", "Largest rms of an M component (Å)", "Mean Ti off-centring (Å)",
+              "Excess kurtosis of the Ti components",
+              f"rms on the SSCHA's M pattern (Å; SSCHA width {w['M']['sscha_rms_at_cubic_ang']:.4f})",
+              f"rms on the SSCHA's Γ [111] pattern (Å; SSCHA width {w['G111']['sscha_rms_at_cubic_ang']:.4f})"]
+    rows = [[lab] + [c[i] for c in cols] for i, lab in enumerate(labels)]
     meta = runs["A"]["meta"]
     return (
         "**Table S29** Exploratory classical molecular-dynamics check on MACE-MP-0's own surface "
@@ -2660,17 +2667,13 @@ def table_s29_md_check() -> str:
         "0 for a Gaussian centred at zero and 2/5 for a fixed magnitude. Rule: ordered if "
         f"U ≥ {rule['U_ordered_min']:.2f}, disordered if U ≤ {rule['U_disordered_max']:.2f}, otherwise "
         "inconclusive, read on the whole production run and on each half; the 20 K control (C) must read "
-        "ordered. Columns: rms and |time average| of A_Γ; largest rms of "
-        "the three M components; mean size of u_Ti; excess kurtosis of the pooled Cartesian components of u_Ti "
-        "(0 for a Gaussian; the components are bimodal, peaked near ±0.10 Å, in A and B); rms of the "
-        "projections on the SSCHA's M and Γ [111] patterns, whose SSCHA widths at the cubic centroid are "
-        f"{w['M']['sscha_rms_at_cubic_ang']:.4f} and {w['G111']['sscha_rms_at_cubic_ang']:.4f} Å. Static "
-        f"Γ [111] minimum: A_Γ of size {sm['static_gamma111_minimum']['A_G_norm_ang']:.3f} Å; overall verdict under "
-        f"the rule: {sm['verdict']}. Classical dynamics has no zero-point motion, so these runs "
-        "do not separate the potential from the SSCHA's Gaussian, zero-point treatment.\n\n"
-        + md(rows, ["Run", "Start", "T target / mean (K)", "Production (ps)", "Dominant q",
-                    "U, whole (halves)", "Reading (halves)", "rms A_Γ (Å)", "Time-averaged A_Γ, size (Å)",
-                    "max rms A_M (Å)", "Mean Ti off-centring (Å)", "Excess kurtosis", "rms on M / Γ [111] (Å)"])
+        "ordered. The mean Ti off-centring is the mean size of u_i; the excess kurtosis is that of the "
+        "pooled Cartesian components of u_i (0 for a Gaussian; in A and B the components are bimodal, "
+        "peaked near ±0.10 Å); the SSCHA widths are the SSCHA's own rms along each pattern at the cubic "
+        f"centroid. Static Γ [111] minimum: A_Γ of size {sm['static_gamma111_minimum']['A_G_norm_ang']:.3f} Å. "
+        f"Overall verdict under the rule: {sm['verdict']}. Classical dynamics has no zero-point motion, so "
+        "these runs do not separate the potential from the SSCHA's Gaussian, zero-point treatment.\n\n"
+        + md(rows, ["Quantity", "A", "B", "C (control)"])
     )
 
 

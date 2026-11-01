@@ -1912,13 +1912,25 @@ Calls that differ from production, with the old and new Hessian minimum: 82 of t
 | Γ [111], fixed | 0.0765 | yes | 3 | 0.99 | +55.3 ± 2.2 | −225.8 | +154.0 | −98.8 | +2.92 |
 | M start, free | 0.075 → 0.002 | no | 30 | 0.46 | +3.6 ± 2.4 | -- | +11.5 | −7.9 | −13.39 |
 
-**Table S29** Exploratory classical molecular-dynamics check on MACE-MP-0's own surface (Section 3.3, Section S7; **not pre-registered**: the reading rule, `tasks/md-order-check-2026-10-22.md`, was written after the Table S28 result and before any run; `scripts/md_order_check.py`, `results/revision/r2_md/`). Cubic BaTiO₃ in the SSCHA's own 40-atom 2×2×2 cell at the MACE-MP-0 lattice, cell held fixed; Langevin NVT, 2 fs step, friction 0.01 fs⁻¹, MACE-MP-0 medium (mace-torch 0.3.15, float32, CPU). Per Ti, u_i is its position minus the centroid of its six O neighbours, and A_q = (1/8) Σ_i u_i cos(2π q·n_i) over the eight q of the cell; U is the Binder cumulant of the 3-vector A_q with the largest ⟨|A_q|²⟩, U = 1 − (3/5)⟨|A|⁴⟩/⟨|A|²⟩², 0 for a Gaussian centred at zero and 2/5 for a fixed magnitude. Rule: ordered if U ≥ 0.30, disordered if U ≤ 0.10, otherwise inconclusive, read on the whole production run and on each half; the 20 K control (C) must read ordered. Columns: rms and |time average| of A_Γ; largest rms of the three M components; mean size of u_Ti; excess kurtosis of the pooled Cartesian components of u_Ti (0 for a Gaussian; the components are bimodal, peaked near ±0.10 Å, in A and B); rms of the projections on the SSCHA's M and Γ [111] patterns, whose SSCHA widths at the cubic centroid are 0.0215 and 0.0184 Å. Static Γ [111] minimum: A_Γ of size 0.165 Å; overall verdict under the rule: INCONCLUSIVE. Classical dynamics has no zero-point motion, so these runs do not separate the potential from the SSCHA's Gaussian, zero-point treatment.
+**Table S29** Exploratory classical molecular-dynamics check on MACE-MP-0's own surface (Section 3.3, Section S7; **not pre-registered**: the reading rule, `tasks/md-order-check-2026-10-22.md`, was written after the Table S28 result and before any run; `scripts/md_order_check.py`, `results/revision/r2_md/`). Cubic BaTiO₃ in the SSCHA's own 40-atom 2×2×2 cell at the MACE-MP-0 lattice, cell held fixed; Langevin NVT, 2 fs step, friction 0.01 fs⁻¹, MACE-MP-0 medium (mace-torch 0.3.15, float32, CPU). Per Ti, u_i is its position minus the centroid of its six O neighbours, and A_q = (1/8) Σ_i u_i cos(2π q·n_i) over the eight q of the cell; U is the Binder cumulant of the 3-vector A_q with the largest ⟨|A_q|²⟩, U = 1 − (3/5)⟨|A|⁴⟩/⟨|A|²⟩², 0 for a Gaussian centred at zero and 2/5 for a fixed magnitude. Rule: ordered if U ≥ 0.30, disordered if U ≤ 0.10, otherwise inconclusive, read on the whole production run and on each half; the 20 K control (C) must read ordered. The mean Ti off-centring is the mean size of u_i; the excess kurtosis is that of the pooled Cartesian components of u_i (0 for a Gaussian; in A and B the components are bimodal, peaked near ±0.10 Å); the SSCHA widths are the SSCHA's own rms along each pattern at the cubic centroid. Static Γ [111] minimum: A_Γ of size 0.165 Å. Overall verdict under the rule: INCONCLUSIVE. Classical dynamics has no zero-point motion, so these runs do not separate the potential from the SSCHA's Gaussian, zero-point treatment.
 
-| Run | Start | T target / mean (K) | Production (ps) | Dominant q | U, whole (halves) | Reading (halves) | rms A_Γ (Å) | Time-averaged A_Γ, size (Å) | max rms A_M (Å) | Mean Ti off-centring (Å) | Excess kurtosis | rms on M / Γ [111] (Å) |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| A | cubic | 100 / 102.4 | 25 | Γ | 0.267 (0.277, 0.257) | inconclusive (inconclusive, inconclusive) | 0.125 | 0.025 | 0.039 | 0.163 | −1.36 | 0.0235 / 0.0223 |
-| B | static Γ [111] minimum | 100 / 102.6 | 25 | Γ | 0.242 (0.261, 0.223) | inconclusive (inconclusive, inconclusive) | 0.121 | 0.018 | 0.039 | 0.162 | −1.34 | 0.0246 / 0.0221 |
-| C | static Γ [111] minimum | 20 / 20.4 | 10 | Γ | 0.396 (0.396, 0.396) | ordered (ordered, ordered) | 0.179 | 0.178 | 0.010 | 0.181 | −1.89 | 0.0052 / 0.0026 |
+| Quantity | A | B | C (control) |
+|---|---|---|---|
+| Start | cubic | static Γ [111] minimum | static Γ [111] minimum |
+| T, target / mean (K) | 100 / 102.4 | 100 / 102.6 | 20 / 20.4 |
+| Production (ps) | 25 | 25 | 10 |
+| Dominant q | Γ | Γ | Γ |
+| U, whole run | 0.267 | 0.242 | 0.396 |
+| U, first and second half | 0.277, 0.257 | 0.261, 0.223 | 0.396, 0.396 |
+| Reading, whole run | inconclusive | inconclusive | ordered |
+| Reading, halves | inconclusive, inconclusive | inconclusive, inconclusive | ordered, ordered |
+| rms A_Γ (Å) | 0.125 | 0.121 | 0.179 |
+| Time-averaged A_Γ, size (Å) | 0.025 | 0.018 | 0.178 |
+| Largest rms of an M component (Å) | 0.039 | 0.039 | 0.010 |
+| Mean Ti off-centring (Å) | 0.163 | 0.162 | 0.181 |
+| Excess kurtosis of the Ti components | −1.36 | −1.34 | −1.89 |
+| rms on the SSCHA's M pattern (Å; SSCHA width 0.0215) | 0.0235 | 0.0246 | 0.0052 |
+| rms on the SSCHA's Γ [111] pattern (Å; SSCHA width 0.0184) | 0.0223 | 0.0221 | 0.0026 |
 
 <!-- END GENERATED TABLES -->
 
