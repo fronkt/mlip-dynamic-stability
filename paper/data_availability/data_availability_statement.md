@@ -4,13 +4,13 @@
 
 **Author:** Frank Cai, Purdue University
 
-<!-- Verbatim copy of the manuscript's "Data availability" section (release v2.1.0, Zenodo 10.5281/zenodo.23286095), 2026-10-10. Rebuild: pandoc data_availability_statement.md -o data_availability_statement.docx -->
+<!-- Verbatim copy of the manuscript's "Data availability" section (release v2.2.0, Zenodo 10.5281/zenodo.23855585), 2026-11-01. Rebuild: pandoc data_availability_statement.md -o data_availability_statement.docx -->
 
 The code supporting this article, together with the per-unit results ledger, is openly available
 in the repository at https://github.com/fronkt/mlip-dynamic-stability. The version that produced
-the numbers in this article is release v2.1.0 (commit 0343264) on the repository's default branch,
-archived at Zenodo as https://doi.org/10.5281/zenodo.23286095, a version under the concept DOI
-https://doi.org/10.5281/zenodo.20805799, which resolves to the latest version.
+the numbers in this article is release v2.2.0 (commit 1344faf) on the repository's default branch,
+archived at Zenodo as https://doi.org/10.5281/zenodo.23855585, a version under the concept DOI https://doi.org/10.5281/zenodo.20805799, which resolves to the
+latest version.
 
 All production results regenerate from `results/ledger.parquet` (per-unit hashed, append-only,
 resumable) through `mlip_dynstab.analysis.canonical`, which selects the current generation of each
@@ -39,7 +39,14 @@ value of that observable, are checked by `scripts/curvature_identity_check.py` (
 `scripts/h2_by_convention.py` (into `results/h2_by_convention.json`); both re-solve the cached
 maps and need no GPU. The pre-registered fine-tuning trial (`scripts/finetune_trial.py`), the replicates
 of the converged grid and the 4×4×4 attempt (runners in `scripts/box/as_run/`) also write under
-`results/revision/`, and their pre-registrations are in `tasks/`.
+`results/revision/`, and their pre-registrations are in `tasks/`. The second revision's analyses,
+the multi-mode SSCHA centroid scan (`scripts/sscha_centroid_scan.py`, split by
+`scripts/centroid_decomposition.py`), the classical MD check (`scripts/md_order_check.py`), the
+lattice sweep (`scripts/lattice_sweep.py`) and the PBE lattice check (`scripts/qe_lattice_check.py`),
+the minimiser histories (`scripts/sscha_convergence_history.py`), the lattice sensitivity
+(`scripts/lattice_sensitivity.py`) and the force-spread mechanism (`scripts/spread_mechanism.py`),
+write under `results/revision/r2*/`, with the scan's pre-registration and the MD check's reading
+rule in `tasks/`.
 
 The ledger is append-only and keeps each superseded generation beside the current one, so every
 correction is auditable. The screen results reported here are the multi-mode grid of Section 2.4

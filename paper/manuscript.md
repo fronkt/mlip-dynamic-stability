@@ -896,7 +896,7 @@ derived to detect displacive transitions from a fixed high-symmetry reference an
 SnTe and GeTe.^38^ Every correction to **Φ** carries the third-order tensor **Φ**⁽³⁾ on both sides,
 and at bubble level, where **Λ** is negative definite, it can only lower the curvature. Second, at
 the high-symmetry reference that term vanishes for the soft mode on its own: a mode's coupling to
-itself, Φ⁽³⁾_sss, is forbidden by inversion for a polar Γ mode and by translation for the X, M and
+itself, Φ⁽³⁾~sss~, is forbidden by inversion for a polar Γ mode and by translation for the X, M and
 R modes of the cubic perovskite, for which 3**q** is not a reciprocal-lattice vector, so along that
 mode alone F″(0) = MΩ² > 0 whether **Φ**⁽⁴⁾ is kept or dropped (the screen's identity of
 Section 2.4). What can turn the Hessian negative are the couplings of the soft mode to pairs of
@@ -945,7 +945,7 @@ The screen and the SSCHA differ in how many modes respond. The screen displaces 
 leaves every other mode of the cell at its static position, so the displacement costs nothing
 beyond its own single-mode free energy. In the multi-mode theory the displacement stiffens the
 other modes. The SCHA splits each free-energy difference into the harmonic free energy of **Φ**
-and an averaged anharmonic remainder ⟨V − V_Φ⟩ (ESI Table S28); the split depends on **Φ**, so it
+and an averaged anharmonic remainder ⟨V − V~Φ~⟩ (ESI Table S28); the split depends on **Φ**, so it
 describes the cost within the theory rather than decomposing it uniquely. At Q₀ = 0.075 Å the
 auxiliary frequencies rise by 3.6 % on geometric average (73 of the 117 optical modes stiffen),
 which raises their harmonic free energy by 62 meV per 40 atoms (52 meV of it zero-point energy;
@@ -1139,7 +1139,7 @@ a Monte Carlo average over the N configurations of the current population. As **
 from the matrix that generated them, the same configurations are reused with importance weights
 ρ_**Φ**/ρ_**Φ**₀, and the Kong–Liu ratio KL/N, the effective fraction of the sample left, falls
 until a floor calls for a new population. The population size N sets the statistical error of the
-gradient, which falls as N^−½, and so the smallest gradient a stopping test can resolve: 256
+gradient, which falls as 1/√N, and so the smallest gradient a stopping test can resolve: 256
 configurations per population in the production recipe, 1,000 in the converged one (Section 2.5).
 Because the Kong–Liu floor is a fraction of N, a larger population does not let the matrix move
 further before a new one is drawn; it makes each estimate along the way less noisy. A relaxation can therefore stop for three reasons that
@@ -1505,8 +1505,8 @@ leaderboard.
 
 The code supporting this article, together with the per-unit results ledger, is openly available
 in the repository at https://github.com/fronkt/mlip-dynamic-stability. The version that produced
-the numbers in this article is release v2.2.0 <!-- PENDING-P5: (commit <hash>) ... archived at Zenodo as https://doi.org/<version DOI>, --> on the repository's default branch,
-a version under the concept DOI https://doi.org/10.5281/zenodo.20805799, which resolves to the
+the numbers in this article is release v2.2.0 (commit 1344faf) on the repository's default branch,
+archived at Zenodo as https://doi.org/10.5281/zenodo.23855585, a version under the concept DOI https://doi.org/10.5281/zenodo.20805799, which resolves to the
 latest version.
 
 All production results regenerate from `results/ledger.parquet` (per-unit hashed, append-only,

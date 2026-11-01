@@ -9,12 +9,13 @@ in here: both panels read results/ledger.parquet through mlip_dynstab.analysis.
       (analysis.h2_paired_summary, 'harm_ok_ft_bad'). The panel says "screen's" call because
       most of these sit in three systems the screen mis-calls for >= 4 of 5 models, so they
       measure the screen as much as the models; the existence claim is all the panel carries.
-  (b) Neither does a default SSCHA cross-check. Its free-energy Hessian is evaluated at the
-      symmetric reference, a local test: a double well that keeps a local minimum at Q = 0 but
-      has deeper displaced minima reads as 'stable'. The curve is a schematic (no data). The
-      script prints the measured count behind it for the record: the non-bcc units SSCHA calls
-      stable against an unstable label on which the screen's own curvature at Q = 0 is also
-      positive on the same MLIP energies (as in stats_hardening.criterion_blindness).
+  (b) Neither does a default SSCHA cross-check, and the second revision's direct test shows why
+      the two finite-temperature methods disagree (Section 3.3, ESI Table S28). Along the screen's
+      own M-point mode of cubic BaTiO3 / MACE-MP-0 at 100 K: the static energy (gate.json), the
+      screen's single-mode free energy (the registered values in
+      tasks/preregistration-centroid-2026-10-21.md, per 2x1x2 cell, doubled) and the multi-mode
+      SSCHA free energy at held centroids (summary.json, converged arms only). The screen's
+      minimum is gone once every mode responds.
 
 Writes toc_graphic.png and toc_graphic.tiff next to this file, both 600 dpi and flattened to RGB
 (the TIFF LZW-compressed). Run from the repository root:
@@ -39,7 +40,7 @@ from mlip_dynstab import analysis as A
 
 DPI = 600
 CM = 1 / 2.54
-C_BAR, C_LOCAL, C_GLOBAL = "#0072B2", "#0072B2", "#D55E00"
+C_BAR, C_GLOBAL = "#0072B2", "#D55E00"
 KEY = ["system", "model", "temperature_K"]
 
 df = A.canonical(pd.read_parquet(os.path.join(REPO, "results", "ledger.parquet")))
@@ -53,21 +54,23 @@ n_harm_ok = {h2[t]["concordance"]["harm_ok_ft_ok"] + h2[t]["concordance"]["harm_
 assert len(n_harm_ok) == 1, "harmonic-correct count should not depend on T"
 n_harm_ok = n_harm_ok.pop()
 
-# ---- panel (b) data: SSCHA false-stables whose screen curvature at Q = 0 is also positive
-sm = df[df["method"] == "softmode"][KEY + ["min_eff_freq_thz", "gt_stable"]]
-ss = df[df["method"] == "sscha"][KEY + ["pred_stable"]]
-m = sm.merge(ss, on=KEY)
-m = m[~m["system"].str.contains("bcc")]
-fs = m[m["pred_stable"].astype(bool) & ~m["gt_stable"].astype(bool)]
-n_fs, n_curv_pos = len(fs), int((fs["min_eff_freq_thz"] > 0).sum())
-print(f"(a) harmonic-correct units mis-called at finite T: "
-      + ", ".join(f"{int(t)} K {k}/{n_harm_ok}" for t, k in zip(temps, mis)))
-print(f"(b) SSCHA false-stables with positive screen curvature at Q = 0: {n_curv_pos}/{n_fs}")
+# ---- panel (b) data: the R2 centroid scan along the screen's M mode (meV per 40 atoms)
+import json
+import re
+R2 = os.path.join(REPO, "results", "revision", "r2_centroid")
+gate = json.load(open(os.path.join(R2, "gate", "gate.json"), encoding="utf-8"))
+cen = json.load(open(os.path.join(R2, "summary.json"), encoding="utf-8"))
+st = [(0.0, 0.0)] + [(r["Q_ang"], r["dE_meV_per_40"]) for r in gate["m_pattern"]["static_energy_mapped_order"]]
+mm = [(r["q0_ang"], r["dF_meV_per_40"]) for r in cen["m_scan_table"] if r["converged"]]
+pre = open(os.path.join(REPO, "tasks", "preregistration-centroid-2026-10-21.md"), encoding="utf-8").read()
+m_ = re.search(r"\+([0-9.]+) meV at Q₀ = 0\.025 Å and −([0-9.]+) meV at 0\.075 Å", pre)
+sc = [(0.0, 0.0), (0.025, 2 * float(m_.group(1))), (0.075, -2 * float(m_.group(2)))]
+print("(b) static", [(q, round(e, 1)) for q, e in st], "screen", sc, "multi-mode", [(q, round(f, 1)) for q, f in mm])
 
 plt.rcParams.update({"font.size": 6, "axes.linewidth": 0.5,
                      "xtick.major.width": 0.5, "xtick.major.size": 2})
 fig = plt.figure(figsize=(8 * CM, 4 * CM))
-gs = fig.add_gridspec(1, 2, width_ratios=[1.0, 1.0], wspace=0.28,
+gs = fig.add_gridspec(1, 2, width_ratios=[1.0, 1.0], wspace=0.42,
                       left=0.04, right=0.98, top=0.78, bottom=0.17)
 
 # ---- (a)
@@ -86,29 +89,27 @@ for sp in ("top", "right", "left"):
 ax0.set_title("Harmonic check right, screen's\nfinite-T call wrong (of %d units)" % n_harm_ok,
               fontsize=6.2, pad=2, loc="center")
 
-# ---- (b): illustrative double well F(Q) = Q^2 - 2.5 Q^4 + Q^6
+# ---- (b): free energy along the screen's M mode, three treatments of the same surface
 ax1 = fig.add_subplot(gs[1])
-q = np.linspace(-1.45, 1.45, 400)
-F = q ** 2 - 2.5 * q ** 4 + q ** 6
-ax1.plot(q, F, color="k", lw=0.9)
-qq = np.linspace(-0.32, 0.32, 50)
-ax1.plot(qq, qq ** 2, color=C_LOCAL, lw=1.6)             # curvature at Q = 0
-qmin = np.sqrt((5 + np.sqrt(13)) / 6)
-Fmin = qmin ** 2 - 2.5 * qmin ** 4 + qmin ** 6
-ax1.plot([qmin, -qmin], [Fmin, Fmin], "o", color=C_GLOBAL, ms=2.6)
-ax1.annotate("positive Hessian at Q = 0:\nSSCHA reads 'stable'", xy=(0, 0.02), xytext=(0, 0.62),
-             ha="center", va="bottom", fontsize=5.3, color=C_LOCAL,
-             arrowprops=dict(arrowstyle="-", color=C_LOCAL, lw=0.5))
-ax1.text(0, Fmin + 0.02, "lower minima:\nphase condenses", ha="center", va="bottom",
-         fontsize=5.3, color=C_GLOBAL, linespacing=0.95)
-ax1.set_xlim(-1.5, 1.5)
-ax1.set_ylim(Fmin - 0.25, 1.25)
-ax1.set_xticks([])
-ax1.set_yticks([])
-for sp in ("top", "right", "left"):
+C_ST, C_SC, C_MM = "0.55", C_BAR, C_GLOBAL
+for pts, c, mk, lab in ((st, C_ST, "s", "static energy"), (sc, C_SC, "o", "screen (one mode)"),
+                        (mm, C_MM, "D", "SSCHA (all modes)")):
+    qx, ey = zip(*sorted(pts))
+    ax1.plot(qx, ey, "-", marker=mk, color=c, lw=0.9, ms=2.2, label=lab)
+ax1.axhline(0, color="k", lw=0.4)
+ax1.set_xlim(-0.004, 0.106)
+ax1.set_xticks([0, 0.05, 0.1])
+ax1.set_xticklabels(["0", "0.05", "0.10"], fontsize=5.3)
+ax1.tick_params(axis="y", labelsize=5.3, width=0.5, length=2, pad=1)
+ax1.set_yticks([-100, 0, 100])
+for sp in ("top", "right"):
     ax1.spines[sp].set_visible(False)
-ax1.set_xlabel("order parameter Q", fontsize=5.5, labelpad=1)
-ax1.set_title("Default SSCHA check\nis a local test", fontsize=6.2, pad=2)
+ax1.set_xlabel("displacement along M (Å)", fontsize=5.5, labelpad=1)
+ax1.set_ylabel("meV / 40 atoms", fontsize=5.3, labelpad=0)
+ax1.legend(loc="upper left", fontsize=4.8, frameon=False, handlelength=1.2, borderaxespad=0.1,
+           labelspacing=0.2)
+ax1.text(0.104, 6, "BaTiO₃, 100 K", ha="right", va="bottom", fontsize=5.0)
+ax1.set_title("Screen's minimum vanishes\nwhen all modes respond", fontsize=6.2, pad=2)
 
 buf = BytesIO()
 fig.savefig(buf, format="png", dpi=DPI, facecolor="white")
