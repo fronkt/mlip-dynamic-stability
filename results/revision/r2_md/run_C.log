@@ -1,0 +1,16 @@
+cuequivariance or cuequivariance_torch is not available. Cuequivariance acceleration will be disabled.
+Using Materials Project MACE for MACECalculator with C:\Users\frank\.cache\mace/20231203mace128L1_epoch199model
+Using float32 for MACECalculator, which is faster but less accurate. Recommended for MD. Use float64 for geometry optimization.
+[C] step 500/6000  T   20.6 K  1.110 s/step  eta 102 min
+[C] step 1000/6000  T   21.6 K  1.037 s/step  eta 86 min
+[C] step 1500/6000  T   20.5 K  1.007 s/step  eta 76 min
+[C] step 2000/6000  T   19.9 K  1.041 s/step  eta 69 min
+[C] step 2500/6000  T   20.7 K  1.030 s/step  eta 60 min
+[C] step 3000/6000  T   19.9 K  1.084 s/step  eta 54 min
+[C] step 3500/6000  T   21.1 K  1.337 s/step  eta 56 min
+[C] step 4000/6000  T   21.2 K  1.345 s/step  eta 45 min
+[C] step 4500/6000  T   21.8 K  1.327 s/step  eta 33 min
+[C] step 5000/6000  T   19.7 K  1.332 s/step  eta 22 min
+[C] step 5500/6000  T   20.2 K  1.341 s/step  eta 11 min
+[C] step 6000/6000  T   19.3 K  1.455 s/step  eta 0 min
+[C] DONE 2026-10-22T02:49:43

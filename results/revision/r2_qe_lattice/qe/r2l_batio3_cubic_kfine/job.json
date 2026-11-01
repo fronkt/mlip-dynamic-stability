@@ -1,0 +1,14 @@
+{
+ "job": "r2l_batio3_cubic_kfine",
+ "system": "batio3_cubic",
+ "variant": "kfine",
+ "spec": {
+  "kmesh": [
+   11,
+   11,
+   11
+  ]
+ },
+ "base_input": "results/revision/dft_checks/qe/pl_batio3_cubic_vcrelax/pw.in",
+ "base_sha256": "8bfc0e2531a130ace728b82c0344ac25cf5690bb89913d69b01477f8864c813f"
+}

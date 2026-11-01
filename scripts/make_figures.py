@@ -898,7 +898,92 @@ def fig_lattice_flip():
                                  ("S" if cell(s, T, key)[0] else "U") for T in Ts) for lab, key in rows))
 
 
+def fig_sscha_history():
+    """ESI Fig. S1. The production and the converged SSCHA recipes, population by population, on
+    BaTiO3/MACE-MP-0/100 K (2x2x2) and bcc-Zr/MatterSim/300 K (3x3x3), from
+    results/revision/r2/sscha_history.json (scripts/sscha_convergence_history.py). Rows: the
+    free-energy gradient norm at the end of each population with each recipe's stopping
+    threshold (production: 1e-4 x the library's constant placeholder error; converged: 0.2 x the
+    real serial error, honoured only where KL/N >= 0.7); minimiser steps per population
+    (production's max_ka = 20 is cumulative, so after population 1 each population takes one
+    step and discards it; the converged recipe caps each population at 400); the lowest
+    non-acoustic auxiliary frequency at each population end, with the final free-energy Hessian
+    (bootstrap SD) at the right."""
+    import json
+    path = "results/revision/r2/sscha_history.json"
+    if not os.path.exists(path):
+        return
+    units = json.load(open(path, encoding="utf-8"))["units"]
+    cols = [("batio3_mace_100K", "BaTiO₃, MACE-MP-0, 100 K (2×2×2)"),
+            ("zr_mattersim_300K", "bcc Zr, MatterSim, 300 K (3×3×3)")]
+    rec = (("production", C_B, "s", -0.18), ("converged", C_A, "o", 0.18))
+    with plt.rc_context({"font.size": 7.5, "axes.titlesize": 8, "axes.labelsize": 7.5,
+                         "xtick.labelsize": 7, "ytick.labelsize": 7}):
+        fig, axes = plt.subplots(3, 2, figsize=(6.7, 6.0), sharex="col")
+        for j, (key, title) in enumerate(cols):
+            u = units[key]
+            npop = max(u["production"]["n_populations"], u["converged"]["n_populations"])
+            for name, col, mk, dx in rec:
+                R = u[name]
+                pops = R["populations"]
+                x = np.array([p["pop"] for p in pops], float)
+                gc = np.array([p["gc_last"] for p in pops], float)
+                steps = np.array([p["n_steps"] for p in pops], float)
+                aux = np.array([p["aux_min_end_thz"] for p in pops], float)
+                axes[0, j].plot(x, gc, "-", color=col, marker=mk, ms=3.5, lw=0.9, label=name)
+                axes[1, j].bar(x + dx, steps, width=0.34, color=col, label=name)
+                axes[2, j].plot(x, aux, "-", color=col, marker=mk, ms=3.5, lw=0.9)
+                if name == "converged":
+                    thr = np.array([p["gc_err_real_last"] * 0.2 for p in pops])
+                    axes[0, j].plot(x, thr, "--", color=col, lw=0.7, marker="_", ms=6,
+                                    label="stop: 0.2 × real error")
+                    ref = np.array([p["guarded_last"] and p["gc_last"] < 0.2 * p["gc_err_real_last"]
+                                    for p in pops])
+                    axes[0, j].plot(x[ref], gc[ref], "o", mfc="none", mec="k", ms=7, mew=0.8,
+                                    label="below it at KL/N < 0.7: refused")
+                    for xi, p in zip(x[ref], [p for p, r in zip(pops, ref) if r]):
+                        axes[0, j].annotate(f"KL/N {p['kl_ratio_last']:.2f}", (xi, p["gc_last"]),
+                                            xytext=(6, -2), textcoords="offset points",
+                                            fontsize=5.8, color="0.25")
+                    axes[2, j].errorbar([npop + 1], [R["hessian_min_thz"]],
+                                        yerr=[R["hessian_boot_sd_thz"]], fmt=mk, color=col,
+                                        ms=4, capsize=2, lw=0.8)
+                else:
+                    axes[0, j].axhline(R["stop_threshold"], color=col, lw=0.7, ls="--",
+                                       label="stop: 10⁻⁴ × placeholder error")
+                    axes[2, j].plot([npop + 1], [R["hessian_min_thz"]], mk, color=col, ms=4)
+            axes[1, j].axhline(400, color=C_A, lw=0.6, ls=":")
+            axes[1, j].text(0.98, 0.93, "converged: ≤ 400 steps per population", fontsize=5.8,
+                            color=C_A, ha="right", va="top", transform=axes[1, j].transAxes)
+            axes[1, j].text(0.98, 0.80, "production: max_ka = 20 over all populations",
+                            fontsize=5.8, color=C_B, ha="right", va="top",
+                            transform=axes[1, j].transAxes)
+            axes[1, j].set_yscale("log")
+            axes[1, j].set_ylim(0.7, 900)
+            axes[2, j].axhline(0.0, color="0.6", lw=0.5)
+            axes[2, j].axvline(npop + 0.5, color="0.7", lw=0.5)
+            axes[0, j].set_yscale("log")
+            axes[0, j].set_title(title)
+            ticks = list(range(1, npop + 1))
+            axes[2, j].set_xticks(ticks + [npop + 1])
+            axes[2, j].set_xticklabels([str(t) for t in ticks] + ["H"])
+            axes[2, j].set_xlabel("population")
+        axes[0, 0].set_ylabel("gradient norm at population end")
+        axes[1, 0].set_ylabel("minimiser steps")
+        axes[2, 0].set_ylabel("lowest frequency (THz)\nH: free-energy Hessian")
+        h, lab_ = axes[0, 0].get_legend_handles_labels()
+        fig.legend(h, lab_, loc="lower center", ncol=3, fontsize=6.3, frameon=False,
+                   bbox_to_anchor=(0.5, 0.0), columnspacing=1.2)
+        for a, lab in zip(axes.flat, "abcdef"):
+            a.text(-0.14, 1.03, f"({lab})", transform=a.transAxes, fontsize=8, fontweight="bold")
+        fig.tight_layout(rect=(0, 0.06, 1, 1))
+        _save(fig, "fig_sscha_history")
+
+
 if __name__ == "__main__":
+    fig_sscha_history()
+    if os.environ.get("ONLY") == "fig_sscha_history":
+        raise SystemExit(0)
     _check_numbering()
     fig_tolerance_sweep()
     fig_harmonic_heat()

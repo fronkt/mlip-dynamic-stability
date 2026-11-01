@@ -1,0 +1,907 @@
+{
+  "_generated_by": "scripts/curv_blind_summary.py",
+  "_purpose": "referee answer: share of the single-mode screen's instability calls that are curvature-blind (global minimum of F(Q0) displaced, F''(0) > 0)",
+  "source": {
+    "ledger": {
+      "path": "results/ledger.parquet",
+      "bytes_hashed": 171521,
+      "crlf_to_lf": false,
+      "sha256": "e09895896194820ed8703deceeccc1dbeaadb6386ddae39d0418a774627fcaac",
+      "git_blob_sha1": "fe4a234972733293c6efee3494dbcf97e3bc09b8",
+      "matches_git_index_blob": true,
+      "matches_results_manifest_sha256": true
+    },
+    "registry": {
+      "path": "configs/curated_systems.yaml",
+      "bytes_hashed": 8739,
+      "crlf_to_lf": true,
+      "sha256": "ea98bf23d89748a1031d973eca75f477e2c55a239af182ae6838b15cf0f84116",
+      "git_blob_sha1": "2286274a47dbf7cc5b1a6b4c99ae7ec15278fbfb",
+      "matches_git_index_blob": true,
+      "matches_results_manifest_sha256": null
+    },
+    "curvature_identity_check": {
+      "path": "results/curvature_identity_check.json",
+      "bytes_hashed": 2840,
+      "crlf_to_lf": true,
+      "sha256": "3cbb66f11e152c3b88028c9b411459193da8ba93bee8ee9f8130c7987c7fef90",
+      "git_blob_sha1": "e6fd34bd18cf9761a62d8de4a9dfecc2d89508d8",
+      "matches_git_index_blob": true,
+      "matches_results_manifest_sha256": true
+    },
+    "screen_code": {
+      "path": "mlip_dynstab/finite_t.py",
+      "bytes_hashed": 54579,
+      "crlf_to_lf": true,
+      "sha256": "ed801a9506a74f50158681956da2e7cf52dca493058734cf228f987e5b795e08",
+      "git_blob_sha1": "7a66261f2dd964c10261f36b2d9da860faa2c64b",
+      "matches_git_index_blob": true,
+      "matches_results_manifest_sha256": null
+    }
+  },
+  "screen": {
+    "method": "softmode",
+    "method_version": 4,
+    "eqmap_cache_version": 3,
+    "generation_filter": {
+      "selector": "mlip_dynstab.analysis.load_canonical() / canonical(): per method, keep the highest method_version present",
+      "softmode_rows_in_raw_ledger": 1200,
+      "softmode_rows_canonical": 400,
+      "superseded_softmode_rows_dropped": 800,
+      "one_row_per_unit_asserted": true
+    },
+    "condensation_call": {
+      "q_box_ang": 0.6,
+      "nq": 121,
+      "grid_step_ang": 0.005,
+      "q_thresh_ang": 0.0075,
+      "rule": "finite_t._solve_scha: mode condenses iff argmin_Q0 F(Q0) > q_thresh"
+    },
+    "unit_call": "unstable iff ANY screened mode condenses (ft_n_condensed > 0)",
+    "curvature": "finite_t._sym_curvature_freq: sign(F''(0)) sqrt(|F''(0)|/M_eff)/2pi"
+  },
+  "definitions": {
+    "unit": "one (system, model, T) row of the canonical softmode ledger",
+    "mode_eval": "one screened imaginary commensurate mode of one unit at that unit's T (one entry of ft_modes_*); placeholder rows of units with no imaginary mode are excluded",
+    "curv_blind_mode_eval": "condensed AND curvature > 0 (finite_t n_curv_blind)",
+    "negative_curvature_mode_eval": "condensed AND curvature <= 0; see negative_curvature_attribution",
+    "unit_curv_blind": "unstable unit with ft_n_curv_blind >= 1",
+    "scope": "all 400 units: borderline-labelled systems are included and labels are not used; this is a property of the screen, not an accuracy"
+  },
+  "n_units": 400,
+  "n_units_unstable": 147,
+  "n_units_unstable_curv_blind": 142,
+  "frac_unstable_units_curv_blind": 0.966,
+  "n_screened_mode_evals": 1512,
+  "n_condensed_mode_evals": 702,
+  "n_curv_blind_mode_evals": 607,
+  "n_negative_curvature_mode_evals": 95,
+  "frac_condensed_mode_evals_curv_blind": 0.8647,
+  "n_units_unstable_with_a_negative_curvature_condensed_mode": 40,
+  "unstable_units_not_curv_blind": [
+    {
+      "system": "cspbi3_cubic",
+      "model": "mace_mp0",
+      "T_K": 100.0,
+      "family": "perovskite",
+      "n_condensed": 2,
+      "condensed_modes": [
+        {
+          "q": "0.500,0.500,0.500",
+          "argmin_Q0_ang": 0.575,
+          "curvature_thz": -0.785
+        },
+        {
+          "q": "0.000,0.500,0.500",
+          "argmin_Q0_ang": 0.575,
+          "curvature_thz": -0.582
+        }
+      ]
+    },
+    {
+      "system": "cspbi3_cubic",
+      "model": "sevennet0",
+      "T_K": 100.0,
+      "family": "perovskite",
+      "n_condensed": 2,
+      "condensed_modes": [
+        {
+          "q": "0.500,0.500,0.500",
+          "argmin_Q0_ang": 0.59,
+          "curvature_thz": -0.647
+        },
+        {
+          "q": "0.000,0.500,0.500",
+          "argmin_Q0_ang": 0.465,
+          "curvature_thz": -0.257
+        }
+      ]
+    },
+    {
+      "system": "hfo2_cubic",
+      "model": "mattersim",
+      "T_K": 100.0,
+      "family": "fluorite",
+      "n_condensed": 1,
+      "condensed_modes": [
+        {
+          "q": "0.500,0.000,0.500",
+          "argmin_Q0_ang": 0.25,
+          "curvature_thz": -7.134
+        }
+      ]
+    },
+    {
+      "system": "hfo2_cubic",
+      "model": "orb_v2",
+      "T_K": 100.0,
+      "family": "fluorite",
+      "n_condensed": 3,
+      "condensed_modes": [
+        {
+          "q": "0.500,0.500,0.500",
+          "argmin_Q0_ang": 0.235,
+          "curvature_thz": -2.384
+        },
+        {
+          "q": "0.000,0.000,0.500",
+          "argmin_Q0_ang": 0.23,
+          "curvature_thz": -2.055
+        },
+        {
+          "q": "0.500,0.500,0.000",
+          "argmin_Q0_ang": 0.24,
+          "curvature_thz": -3.754
+        }
+      ]
+    },
+    {
+      "system": "hfo2_cubic",
+      "model": "sevennet0",
+      "T_K": 100.0,
+      "family": "fluorite",
+      "n_condensed": 1,
+      "condensed_modes": [
+        {
+          "q": "0.000,0.500,0.500",
+          "argmin_Q0_ang": 0.23,
+          "curvature_thz": -2.049
+        }
+      ]
+    }
+  ],
+  "n_units_stable_with_curv_blind": 0,
+  "by_temperature": {
+    "100": {
+      "n_units": 100,
+      "n_units_unstable": 49,
+      "n_units_unstable_curv_blind": 44,
+      "frac_unstable_units_curv_blind": 0.898,
+      "n_screened_mode_evals": 378,
+      "n_condensed_mode_evals": 262,
+      "n_curv_blind_mode_evals": 192,
+      "n_negative_curvature_mode_evals": 70,
+      "frac_condensed_mode_evals_curv_blind": 0.7328
+    },
+    "300": {
+      "n_units": 100,
+      "n_units_unstable": 38,
+      "n_units_unstable_curv_blind": 38,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 378,
+      "n_condensed_mode_evals": 184,
+      "n_curv_blind_mode_evals": 165,
+      "n_negative_curvature_mode_evals": 19,
+      "frac_condensed_mode_evals_curv_blind": 0.8967
+    },
+    "600": {
+      "n_units": 100,
+      "n_units_unstable": 32,
+      "n_units_unstable_curv_blind": 32,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 378,
+      "n_condensed_mode_evals": 145,
+      "n_curv_blind_mode_evals": 142,
+      "n_negative_curvature_mode_evals": 3,
+      "frac_condensed_mode_evals_curv_blind": 0.9793
+    },
+    "900": {
+      "n_units": 100,
+      "n_units_unstable": 28,
+      "n_units_unstable_curv_blind": 28,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 378,
+      "n_condensed_mode_evals": 111,
+      "n_curv_blind_mode_evals": 108,
+      "n_negative_curvature_mode_evals": 3,
+      "frac_condensed_mode_evals_curv_blind": 0.973
+    }
+  },
+  "by_family": {
+    "bcc-metal": {
+      "n_units": 60,
+      "n_units_unstable": 18,
+      "n_units_unstable_curv_blind": 18,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 440,
+      "n_condensed_mode_evals": 282,
+      "n_curv_blind_mode_evals": 252,
+      "n_negative_curvature_mode_evals": 30,
+      "frac_condensed_mode_evals_curv_blind": 0.8936
+    },
+    "control": {
+      "n_units": 120,
+      "n_units_unstable": 0,
+      "n_units_unstable_curv_blind": 0,
+      "frac_unstable_units_curv_blind": null,
+      "n_screened_mode_evals": 0,
+      "n_condensed_mode_evals": 0,
+      "n_curv_blind_mode_evals": 0,
+      "n_negative_curvature_mode_evals": 0,
+      "frac_condensed_mode_evals_curv_blind": null
+    },
+    "fluorite": {
+      "n_units": 40,
+      "n_units_unstable": 38,
+      "n_units_unstable_curv_blind": 35,
+      "frac_unstable_units_curv_blind": 0.9211,
+      "n_screened_mode_evals": 56,
+      "n_condensed_mode_evals": 52,
+      "n_curv_blind_mode_evals": 45,
+      "n_negative_curvature_mode_evals": 7,
+      "frac_condensed_mode_evals_curv_blind": 0.8654
+    },
+    "perovskite": {
+      "n_units": 160,
+      "n_units_unstable": 71,
+      "n_units_unstable_curv_blind": 69,
+      "frac_unstable_units_curv_blind": 0.9718,
+      "n_screened_mode_evals": 852,
+      "n_condensed_mode_evals": 227,
+      "n_curv_blind_mode_evals": 204,
+      "n_negative_curvature_mode_evals": 23,
+      "frac_condensed_mode_evals_curv_blind": 0.8987
+    },
+    "superionic": {
+      "n_units": 20,
+      "n_units_unstable": 20,
+      "n_units_unstable_curv_blind": 20,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 164,
+      "n_condensed_mode_evals": 141,
+      "n_curv_blind_mode_evals": 106,
+      "n_negative_curvature_mode_evals": 35,
+      "frac_condensed_mode_evals_curv_blind": 0.7518
+    }
+  },
+  "by_model": {
+    "chgnet": {
+      "n_units": 80,
+      "n_units_unstable": 31,
+      "n_units_unstable_curv_blind": 31,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 368,
+      "n_condensed_mode_evals": 132,
+      "n_curv_blind_mode_evals": 117,
+      "n_negative_curvature_mode_evals": 15,
+      "frac_condensed_mode_evals_curv_blind": 0.8864
+    },
+    "mace_mp0": {
+      "n_units": 80,
+      "n_units_unstable": 24,
+      "n_units_unstable_curv_blind": 23,
+      "frac_unstable_units_curv_blind": 0.9583,
+      "n_screened_mode_evals": 152,
+      "n_condensed_mode_evals": 53,
+      "n_curv_blind_mode_evals": 46,
+      "n_negative_curvature_mode_evals": 7,
+      "frac_condensed_mode_evals_curv_blind": 0.8679
+    },
+    "mattersim": {
+      "n_units": 80,
+      "n_units_unstable": 37,
+      "n_units_unstable_curv_blind": 36,
+      "frac_unstable_units_curv_blind": 0.973,
+      "n_screened_mode_evals": 492,
+      "n_condensed_mode_evals": 283,
+      "n_curv_blind_mode_evals": 244,
+      "n_negative_curvature_mode_evals": 39,
+      "frac_condensed_mode_evals_curv_blind": 0.8622
+    },
+    "orb_v2": {
+      "n_units": 80,
+      "n_units_unstable": 26,
+      "n_units_unstable_curv_blind": 25,
+      "frac_unstable_units_curv_blind": 0.9615,
+      "n_screened_mode_evals": 352,
+      "n_condensed_mode_evals": 177,
+      "n_curv_blind_mode_evals": 156,
+      "n_negative_curvature_mode_evals": 21,
+      "frac_condensed_mode_evals_curv_blind": 0.8814
+    },
+    "sevennet0": {
+      "n_units": 80,
+      "n_units_unstable": 29,
+      "n_units_unstable_curv_blind": 27,
+      "frac_unstable_units_curv_blind": 0.931,
+      "n_screened_mode_evals": 148,
+      "n_condensed_mode_evals": 57,
+      "n_curv_blind_mode_evals": 44,
+      "n_negative_curvature_mode_evals": 13,
+      "frac_condensed_mode_evals_curv_blind": 0.7719
+    }
+  },
+  "by_system": {
+    "agi_bcc": {
+      "family": "superionic",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 20,
+      "n_units_unstable_curv_blind": 20,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 164,
+      "n_condensed_mode_evals": 141,
+      "n_curv_blind_mode_evals": 106,
+      "n_negative_curvature_mode_evals": 35,
+      "frac_condensed_mode_evals_curv_blind": 0.7518
+    },
+    "batio3_cubic": {
+      "family": "perovskite",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 6,
+      "n_units_unstable_curv_blind": 6,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 116,
+      "n_condensed_mode_evals": 25,
+      "n_curv_blind_mode_evals": 25,
+      "n_negative_curvature_mode_evals": 0,
+      "frac_condensed_mode_evals_curv_blind": 1.0
+    },
+    "c_diamond": {
+      "family": "control",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 0,
+      "n_units_unstable_curv_blind": 0,
+      "frac_unstable_units_curv_blind": null,
+      "n_screened_mode_evals": 0,
+      "n_condensed_mode_evals": 0,
+      "n_curv_blind_mode_evals": 0,
+      "n_negative_curvature_mode_evals": 0,
+      "frac_condensed_mode_evals_curv_blind": null
+    },
+    "ceo2_cubic": {
+      "family": "control",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 0,
+      "n_units_unstable_curv_blind": 0,
+      "frac_unstable_units_curv_blind": null,
+      "n_screened_mode_evals": 0,
+      "n_condensed_mode_evals": 0,
+      "n_curv_blind_mode_evals": 0,
+      "n_negative_curvature_mode_evals": 0,
+      "frac_condensed_mode_evals_curv_blind": null
+    },
+    "cspbi3_cubic": {
+      "family": "perovskite",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 20,
+      "n_units_unstable_curv_blind": 18,
+      "frac_unstable_units_curv_blind": 0.9,
+      "n_screened_mode_evals": 144,
+      "n_condensed_mode_evals": 78,
+      "n_curv_blind_mode_evals": 60,
+      "n_negative_curvature_mode_evals": 18,
+      "frac_condensed_mode_evals_curv_blind": 0.7692
+    },
+    "cssnbr3_cubic": {
+      "family": "perovskite",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 16,
+      "n_units_unstable_curv_blind": 16,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 164,
+      "n_condensed_mode_evals": 50,
+      "n_curv_blind_mode_evals": 48,
+      "n_negative_curvature_mode_evals": 2,
+      "frac_condensed_mode_evals_curv_blind": 0.96
+    },
+    "cssni3_cubic": {
+      "family": "perovskite",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 15,
+      "n_units_unstable_curv_blind": 15,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 132,
+      "n_condensed_mode_evals": 44,
+      "n_curv_blind_mode_evals": 41,
+      "n_negative_curvature_mode_evals": 3,
+      "frac_condensed_mode_evals_curv_blind": 0.9318
+    },
+    "cu_fcc": {
+      "family": "control",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 0,
+      "n_units_unstable_curv_blind": 0,
+      "frac_unstable_units_curv_blind": null,
+      "n_screened_mode_evals": 0,
+      "n_condensed_mode_evals": 0,
+      "n_curv_blind_mode_evals": 0,
+      "n_negative_curvature_mode_evals": 0,
+      "frac_condensed_mode_evals_curv_blind": null
+    },
+    "hf_bcc": {
+      "family": "bcc-metal",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 4,
+      "n_units_unstable_curv_blind": 4,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 96,
+      "n_condensed_mode_evals": 90,
+      "n_curv_blind_mode_evals": 79,
+      "n_negative_curvature_mode_evals": 11,
+      "frac_condensed_mode_evals_curv_blind": 0.8778
+    },
+    "hfo2_cubic": {
+      "family": "fluorite",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 18,
+      "n_units_unstable_curv_blind": 15,
+      "frac_unstable_units_curv_blind": 0.8333,
+      "n_screened_mode_evals": 28,
+      "n_condensed_mode_evals": 25,
+      "n_curv_blind_mode_evals": 20,
+      "n_negative_curvature_mode_evals": 5,
+      "frac_condensed_mode_evals_curv_blind": 0.8
+    },
+    "knbo3_cubic": {
+      "family": "perovskite",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 6,
+      "n_units_unstable_curv_blind": 6,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 88,
+      "n_condensed_mode_evals": 16,
+      "n_curv_blind_mode_evals": 16,
+      "n_negative_curvature_mode_evals": 0,
+      "frac_condensed_mode_evals_curv_blind": 1.0
+    },
+    "ktao3_cubic": {
+      "family": "perovskite",
+      "borderline_label": true,
+      "n_units": 20,
+      "n_units_unstable": 0,
+      "n_units_unstable_curv_blind": 0,
+      "frac_unstable_units_curv_blind": null,
+      "n_screened_mode_evals": 20,
+      "n_condensed_mode_evals": 0,
+      "n_curv_blind_mode_evals": 0,
+      "n_negative_curvature_mode_evals": 0,
+      "frac_condensed_mode_evals_curv_blind": null
+    },
+    "mgo_rocksalt": {
+      "family": "control",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 0,
+      "n_units_unstable_curv_blind": 0,
+      "frac_unstable_units_curv_blind": null,
+      "n_screened_mode_evals": 0,
+      "n_condensed_mode_evals": 0,
+      "n_curv_blind_mode_evals": 0,
+      "n_negative_curvature_mode_evals": 0,
+      "frac_condensed_mode_evals_curv_blind": null
+    },
+    "nacl_rocksalt": {
+      "family": "control",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 0,
+      "n_units_unstable_curv_blind": 0,
+      "frac_unstable_units_curv_blind": null,
+      "n_screened_mode_evals": 0,
+      "n_condensed_mode_evals": 0,
+      "n_curv_blind_mode_evals": 0,
+      "n_negative_curvature_mode_evals": 0,
+      "frac_condensed_mode_evals_curv_blind": null
+    },
+    "pbtio3_cubic": {
+      "family": "perovskite",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 5,
+      "n_units_unstable_curv_blind": 5,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 144,
+      "n_condensed_mode_evals": 11,
+      "n_curv_blind_mode_evals": 11,
+      "n_negative_curvature_mode_evals": 0,
+      "frac_condensed_mode_evals_curv_blind": 1.0
+    },
+    "si_diamond": {
+      "family": "control",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 0,
+      "n_units_unstable_curv_blind": 0,
+      "frac_unstable_units_curv_blind": null,
+      "n_screened_mode_evals": 0,
+      "n_condensed_mode_evals": 0,
+      "n_curv_blind_mode_evals": 0,
+      "n_negative_curvature_mode_evals": 0,
+      "frac_condensed_mode_evals_curv_blind": null
+    },
+    "srtio3_cubic": {
+      "family": "perovskite",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 3,
+      "n_units_unstable_curv_blind": 3,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 44,
+      "n_condensed_mode_evals": 3,
+      "n_curv_blind_mode_evals": 3,
+      "n_negative_curvature_mode_evals": 0,
+      "frac_condensed_mode_evals_curv_blind": 1.0
+    },
+    "ti_bcc": {
+      "family": "bcc-metal",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 10,
+      "n_units_unstable_curv_blind": 10,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 248,
+      "n_condensed_mode_evals": 115,
+      "n_curv_blind_mode_evals": 108,
+      "n_negative_curvature_mode_evals": 7,
+      "frac_condensed_mode_evals_curv_blind": 0.9391
+    },
+    "zr_bcc": {
+      "family": "bcc-metal",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 4,
+      "n_units_unstable_curv_blind": 4,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 96,
+      "n_condensed_mode_evals": 77,
+      "n_curv_blind_mode_evals": 65,
+      "n_negative_curvature_mode_evals": 12,
+      "frac_condensed_mode_evals_curv_blind": 0.8442
+    },
+    "zro2_cubic": {
+      "family": "fluorite",
+      "borderline_label": false,
+      "n_units": 20,
+      "n_units_unstable": 20,
+      "n_units_unstable_curv_blind": 20,
+      "frac_unstable_units_curv_blind": 1.0,
+      "n_screened_mode_evals": 28,
+      "n_condensed_mode_evals": 27,
+      "n_curv_blind_mode_evals": 25,
+      "n_negative_curvature_mode_evals": 2,
+      "frac_condensed_mode_evals_curv_blind": 0.9259
+    }
+  },
+  "illustrative_units": [
+    {
+      "system": "batio3_cubic",
+      "model": "mace_mp0",
+      "T_K": 100.0,
+      "label_stable": false,
+      "transition_T_K": 393.0,
+      "screen_call_stable": false,
+      "n_screened_modes": 3,
+      "n_condensed": 2,
+      "n_curv_blind": 2,
+      "unit_argmin_Q0_ang": 0.075,
+      "ledger_min_eff_freq_thz": 2.031,
+      "condensed_modes": [
+        {
+          "q": "0.500,0.000,0.000",
+          "harm_thz": -5.778,
+          "argmin_Q0_ang": 0.065,
+          "curvature_thz": 2.486,
+          "curv_blind": true
+        },
+        {
+          "q": "0.500,0.000,0.500",
+          "harm_thz": -5.404,
+          "argmin_Q0_ang": 0.075,
+          "curvature_thz": 2.031,
+          "curv_blind": true
+        }
+      ],
+      "all_screened_modes": [
+        {
+          "q": "0.000,0.000,0.000",
+          "harm_thz": -6.411,
+          "argmin_Q0_ang": 0.0,
+          "curvature_thz": 3.4,
+          "condensed": false
+        },
+        {
+          "q": "0.500,0.000,0.000",
+          "harm_thz": -5.778,
+          "argmin_Q0_ang": 0.065,
+          "curvature_thz": 2.486,
+          "condensed": true
+        },
+        {
+          "q": "0.500,0.000,0.500",
+          "harm_thz": -5.404,
+          "argmin_Q0_ang": 0.075,
+          "curvature_thz": 2.031,
+          "condensed": true
+        }
+      ],
+      "same_system_model_by_T": {
+        "100": {
+          "label_stable": false,
+          "screen_call_stable": false,
+          "n_condensed": 2,
+          "n_curv_blind": 2
+        },
+        "300": {
+          "label_stable": false,
+          "screen_call_stable": true,
+          "n_condensed": 0,
+          "n_curv_blind": 0
+        },
+        "600": {
+          "label_stable": true,
+          "screen_call_stable": true,
+          "n_condensed": 0,
+          "n_curv_blind": 0
+        },
+        "900": {
+          "label_stable": true,
+          "screen_call_stable": true,
+          "n_condensed": 0,
+          "n_curv_blind": 0
+        }
+      }
+    },
+    {
+      "system": "knbo3_cubic",
+      "model": "mace_mp0",
+      "T_K": 300.0,
+      "label_stable": false,
+      "transition_T_K": 708.0,
+      "screen_call_stable": true,
+      "n_screened_modes": 3,
+      "n_condensed": 0,
+      "n_curv_blind": 0,
+      "unit_argmin_Q0_ang": 0.0,
+      "ledger_min_eff_freq_thz": 2.76,
+      "condensed_modes": [],
+      "all_screened_modes": [
+        {
+          "q": "0.000,0.000,0.000",
+          "harm_thz": -6.236,
+          "argmin_Q0_ang": 0.0,
+          "curvature_thz": 5.313,
+          "condensed": false
+        },
+        {
+          "q": "0.000,0.000,0.500",
+          "harm_thz": -5.123,
+          "argmin_Q0_ang": 0.0,
+          "curvature_thz": 4.298,
+          "condensed": false
+        },
+        {
+          "q": "0.000,0.500,0.500",
+          "harm_thz": -4.226,
+          "argmin_Q0_ang": 0.0,
+          "curvature_thz": 2.76,
+          "condensed": false
+        }
+      ],
+      "same_system_model_by_T": {
+        "100": {
+          "label_stable": false,
+          "screen_call_stable": false,
+          "n_condensed": 1,
+          "n_curv_blind": 1
+        },
+        "300": {
+          "label_stable": false,
+          "screen_call_stable": true,
+          "n_condensed": 0,
+          "n_curv_blind": 0
+        },
+        "600": {
+          "label_stable": false,
+          "screen_call_stable": true,
+          "n_condensed": 0,
+          "n_curv_blind": 0
+        },
+        "900": {
+          "label_stable": true,
+          "screen_call_stable": true,
+          "n_condensed": 0,
+          "n_curv_blind": 0
+        }
+      },
+      "note": "no mode condenses at this T: the screen calls the unit stable, so there is no condensed-mode curvature to report; the label is unstable (a screen false-stable)"
+    },
+    {
+      "system": "srtio3_cubic",
+      "model": "mace_mp0",
+      "T_K": 100.0,
+      "label_stable": false,
+      "transition_T_K": 105.0,
+      "screen_call_stable": false,
+      "n_screened_modes": 3,
+      "n_condensed": 1,
+      "n_curv_blind": 1,
+      "unit_argmin_Q0_ang": 0.135,
+      "ledger_min_eff_freq_thz": 0.918,
+      "condensed_modes": [
+        {
+          "q": "0.500,0.500,0.500",
+          "harm_thz": -2.089,
+          "argmin_Q0_ang": 0.135,
+          "curvature_thz": 0.918,
+          "curv_blind": true
+        }
+      ],
+      "all_screened_modes": [
+        {
+          "q": "0.000,0.000,0.000",
+          "harm_thz": -2.365,
+          "argmin_Q0_ang": 0.0,
+          "curvature_thz": 3.804,
+          "condensed": false
+        },
+        {
+          "q": "0.500,0.500,0.500",
+          "harm_thz": -2.089,
+          "argmin_Q0_ang": 0.135,
+          "curvature_thz": 0.918,
+          "condensed": true
+        },
+        {
+          "q": "0.000,0.500,0.500",
+          "harm_thz": -0.817,
+          "argmin_Q0_ang": 0.0,
+          "curvature_thz": 1.62,
+          "condensed": false
+        }
+      ],
+      "same_system_model_by_T": {
+        "100": {
+          "label_stable": false,
+          "screen_call_stable": false,
+          "n_condensed": 1,
+          "n_curv_blind": 1
+        },
+        "300": {
+          "label_stable": true,
+          "screen_call_stable": true,
+          "n_condensed": 0,
+          "n_curv_blind": 0
+        },
+        "600": {
+          "label_stable": true,
+          "screen_call_stable": true,
+          "n_condensed": 0,
+          "n_curv_blind": 0
+        },
+        "900": {
+          "label_stable": true,
+          "screen_call_stable": true,
+          "n_condensed": 0,
+          "n_curv_blind": 0
+        }
+      }
+    }
+  ],
+  "condensed_mode_stats": {
+    "condensed_argmin_Q0_ang": {
+      "min": 0.035,
+      "median": 0.265,
+      "max": 0.6,
+      "min_in_grid_steps": 7.0,
+      "n_at_scan_box_edge": 59,
+      "n_curv_blind_at_scan_box_edge": 34
+    },
+    "curv_blind_curvature_thz": {
+      "min": 0.087,
+      "median": 0.505,
+      "max": 31.727
+    },
+    "note": "ft_modes_* fields are stored rounded (Q0 to 4 dp, curvature and harmonic frequency to 3 dp); the per-unit blind count parsed from them is asserted equal to the ledger's ft_n_curv_blind, which used unrounded curvatures"
+  },
+  "negative_curvature_attribution": {
+    "n_condensed_curvature_le_0": 95,
+    "n_exactly_zero": 0,
+    "n_negative_screened_mode_evals_any_call": 95,
+    "n_negative_screened_mode_evals_not_condensed": 0,
+    "placeholder_rows_note": "8 further evaluations with curvature <= 0 are the placeholder rows of harmonically stable (system, model) pairs (ft_n_imag_total = 0), where finite_t records the softest commensurate harmonic frequency in place of a curvature; they are never condensed and are excluded from every mode count here",
+    "by_family": {
+      "bcc-metal": 30,
+      "fluorite": 7,
+      "perovskite": 23,
+      "superionic": 35
+    },
+    "by_system_model": {
+      "agi_bcc/chgnet": 5,
+      "agi_bcc/mace_mp0": 3,
+      "agi_bcc/mattersim": 9,
+      "agi_bcc/orb_v2": 10,
+      "agi_bcc/sevennet0": 8,
+      "cspbi3_cubic/chgnet": 7,
+      "cspbi3_cubic/mace_mp0": 3,
+      "cspbi3_cubic/mattersim": 1,
+      "cspbi3_cubic/orb_v2": 4,
+      "cspbi3_cubic/sevennet0": 3,
+      "cssnbr3_cubic/chgnet": 2,
+      "cssni3_cubic/chgnet": 1,
+      "cssni3_cubic/mace_mp0": 1,
+      "cssni3_cubic/sevennet0": 1,
+      "hf_bcc/mattersim": 11,
+      "hfo2_cubic/mattersim": 1,
+      "hfo2_cubic/orb_v2": 3,
+      "hfo2_cubic/sevennet0": 1,
+      "ti_bcc/mattersim": 5,
+      "ti_bcc/orb_v2": 2,
+      "zr_bcc/mattersim": 12,
+      "zro2_cubic/orb_v2": 2
+    },
+    "identity_check_counts": {
+      "n_mode_T_evaluations": 1512,
+      "n_negative_omega_eff": 95,
+      "n_negative_with_width_fallback_at_a_stencil_point": 93,
+      "n_negative_with_root_at_every_stencil_point": 2
+    },
+    "counts_consistent_with_identity_check": true,
+    "attribution": {
+      "width_solver_fallback_at_a_stencil_point": 93,
+      "root_at_every_stencil_point": 2,
+      "root_at_every_stencil_point_units": [
+        {
+          "system": "ti_bcc",
+          "model": "orb_v2",
+          "T_K": 900.0,
+          "q": "0.167,0.833,0.500",
+          "harm_thz": -0.154,
+          "curvature_thz": -8.887,
+          "fit_a_b_c": [
+            1713.1073640676414,
+            -2702903.413977933,
+            836173562.340351
+          ]
+        },
+        {
+          "system": "ti_bcc",
+          "model": "orb_v2",
+          "T_K": 100.0,
+          "q": "0.500,0.333,0.667",
+          "harm_thz": -0.123,
+          "curvature_thz": -6.205,
+          "fit_a_b_c": [
+            464.9730526117116,
+            -766470.4767080303,
+            242323849.92158833
+          ]
+        }
+      ],
+      "how_attributed": "scripts/curvature_identity_check.py recomputes _sym_curvature_freq on the cached E(Q) maps of every non-placeholder mode at the four ladder temperatures (the same evaluations counted here) and classifies each negative value: either _scha_branch's width solver found no downward sign change of its residual at one of the three stencil points (0, dQ, 2 dQ; dQ = 0.005 Ang) and returned its grid-nearest fallback width, or a self-consistent root existed at all three. Its totals equal the counts here and its two listed root-at-every-point cases match two of these condensed modes by (unit, T, harmonic frequency, curvature), so the remainder is the fallback class by count; that file does not list the fallback cases individually. Every negative curvature on a screened mode belongs to a condensed mode.",
+      "what_the_code_says": "finite_t._sym_curvature_freq returns None when no bound Gaussian exists at Q0 = 0 ('not observed on the production set'); compute_finite_t_softmode then substitutes the signed effective frequency, which is negative for a condensed mode. The identity check skips None, so the equal totals mean no such substitution is among these values. scripts/curvature_identity_check.py's docstring states F''(0) = <V''>_{0,sigma} = M Omega^2 for a single even mode, i.e. the curvature is positive whenever a bound self-consistent Gaussian exists at Q0 = 0. For the root-at-every-point class it lists the fitted a, b, c 'so a fit artefact can be recognised: a > 0 means no small-Q instability'.",
+      "root_cases_all_have_a_gt_0": true
+    }
+  },
+  "family_note": "family = registry klass (configs/curated_systems.yaml); 'perovskite' pools the oxide perovskites, KTaO3 and the Cs halides -- by_system separates them"
+}

@@ -9,6 +9,92 @@ each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ..
 **Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
 false.
 
+## ▶ 2026-10-21 — R2: decision on R1 = major revision (one referee, the original R1), "publishable after second revision"
+
+Plan: ~/.claude/plans/woolly-tumbling-eich.md (local). Verbatim report stays in Gmail (repo is public); the R2
+letter draft stays UNTRACKED until Frank submits. Target: submit ~Nov 5 (Purdue RSC OA deal ends 12-31, applies
+at acceptance). Comments (paraphrased): C1 why the bubble SSCHA Hessian at the symmetric point misses deep
+wells (positive-definite Φ, no centroid search, Φ⁽⁴⁾ vs geometry); C2 physical mechanism for the sub-%
+lattice sensitivity, systematic volume bias per model, constant V vs constant P; C3 the step-cap flaw as a
+workflow lesson + gradient-norm history across populations (BaTiO₃ or bcc-Zr); C4 tone down the ensemble
+"guardrail", explain why force spread fails, recommend AL/committee design for anharmonic regions.
+**Frank 10-21:** box run APPROVED; AI-use statement unchanged (author's submitted wording).
+- [x] P0 "+2.03" pointer fixed (e257a47): grid +1.98 ± 0.06 where Table S22 is cited; six-unit study -> S2.4.
+- [x] P1 curv_blind_summary (3b988ec): 142/147, 607/702 — NOTE positive by construction (F''(0)=MΩ²), so it
+      is "every screen instability comes from the global search", NOT evidence about multi-mode SSCHA.
+- [x] P1 lattice_sensitivity + spread_mechanism (830ca00); external_lattices.json (MP PBE: mp-2998 4.03558,
+      mp-935811 4.05747 [mp-7375 is R3m], mp-5229 3.94513; MLIPs within 0.06 % of MP; our QE 0.29/0.75 % below).
+- [x] C3 text (39628f3): §3.5 opens with the minimiser mechanics + Table 5 + checks; ESI Fig. S1; §2.5 pointer.
+- [x] C4 text (85b962d): §3.4 retitled, guardrail removed everywhere, spread-mechanism paragraph, training sets
+      in §2.2, committee recommendation in Discussion (refs 49-52).
+- [x] C2 text draft (82a8928, 3aeb371): §3.2 three paragraphs (refs 53-63), §2.5 constant volume.
+      <!-- PENDING-QE in §3.2 until the box QE check lands -->
+- [x] Prereg + deviations D1-D8 (38bfe0d, c918c60) BEFORE any run.
+- [x] P2 BOX vast 57115732: every job rc 0, QUEUE_DONE 00:38 UTC 10-22, self-stopped 01:38 unpulled (no pull
+      armed at launch: lesson #23 again); GPU re-rented -> relay 57154684 (GTX 1660S FR) + `vastai copy`; all
+      pulled, results commit 99b646c. Raw tarballs in mlip-rsc-revision-raw/ (r2_centroid_logs, r2_lattice,
+      r2_qe_lattice, r2x/ unpacked incl. work/ dyn files + Hessian ensembles). Both boxes STOPPED; destroy on
+      Frank's yes.
+      **Read-out.** Gates all pass (pattern: static E in the 40-atom cell = 2V_ledger within 0.24 meV).
+      PRIMARY **NOT_SUPPORTED**: multi-mode SSCHA dF_M = F(0.075) - F(0) = **+46.0 ± 2.2 meV/40 atoms**
+      (secondary reweighted +54.8 ± 3.3, same verdict); Q0 = 0.10: +148.6; 0.04 unconverged (+18.5, excluded).
+      Free arm (unconverged) went back to Q_M 0.002 A, dF +3.6 ± 1.7. Gamma [111] at the static minimum
+      (static -226 meV): dF +55.3 ± 1.3. v4 at the converged matrix: +0.015 THz (boot SD 0.14), same sign.
+      SCHA split (harmonic F of Phi vs rest): 0.075 -> +62.3 / -16.3 meV; Gamma -> +154 / -99: displacing
+      stiffens 73-83 of 117 aux modes. => the stable call is the multi-mode Gaussian theory's answer on this
+      surface, not an evaluation-point trap; screen/SSCHA differ by MODE COUPLING (screen freezes the others).
+      QE: PBE lattice converged (cutoff x1.5/x2 <= 0.06 %, 11^3 k 0.000 %) -> MP gap is pseudopotential/code.
+      Lattice sweep: 100 K BaTiO3 call flips at -0.33 (CHGNet) / -0.49 (MACE) / -0.54 (SevenNet) / -0.59
+      (MatterSim) / -1.40 % (ORB) from a0; still U at our PBE lattice in all five. KNbO3 100 K flips -0.55 to
+      -0.92 %; S at our PBE lattice for MACE, CHGNet, MatterSim. Ledger check: calls match everywhere; CHGNet
+      depths off 10-45 % (float32?), ORB freq off <= 0.037 THz, near-degenerate decide-mode swaps on KNbO3.
+- [x] C1 REWRITE per the prereg NOT_SUPPORTED branch. Frank OK'd the draft 2026-11-01 with one fix: every "no
+      displaced minimum" claim scoped to the two patterns tested (M, Γ[111]). Applied: abstract, contributions,
+      Table 1 A1, §2.5 one sentence, §3.3 (retitled; 4 new paragraphs), Discussion, Conclusions; ESI S2.2, S2.3,
+      Table S16 caption, S4 single-vs-multi-mode outcome, NEW S7 + Table S29 (MD builder); verify_claims pins
+      every C1 + MD number (+ gw = 0 on all 54 perovskite MACE/MatterSim/SevenNet units); renumber_refs run
+      with --letter R2 (C2 refs now 44–54, C4 60–63, R1's 44–48 now 55–59); letter C1 written (untracked).
+- [x] Physics brief C1 section (local raw dir) rewritten for the mode-coupling result (+ audit notes).
+- [x] P4 adversarial audit 2026-11-01 (3 fresh-context agents: physics, numbers/consistency, coverage/prose).
+      Applied: free arm did NOT return to cubic (left M for a polar [010] drift, F +3.6 ± 2.4, unconverged)
+      -> described; Γ[111] tested at one amplitude -> scoped; screen condenses X+M, not Γ, on the tested unit
+      and Γ in only 5/16 FE unstable calls -> stated in 3.3/Discussion/Conclusions/abstract ("mostly through
+      zone-boundary modes"); classical-limit share of the harmonic cost (35/62, 86/154); Φ-dependence of the
+      split; MD kurtosis is uncentred -> bimodality claim reworded; symmetry (X/M/R only), Φ⁽⁴⁾ wording,
+      spinodal; old local-criterion sentences in §2.4/§4/ESI S1.3/S4 aligned; C2 constant-V direction scoped
+      to polar modes (SrTiO₃ opposite, −76..−89); C3 population-size sentence added (letter had promised it);
+      C4 letter reframed + all four Spearman values, "most" -> "about half or more"; letter Changes lists fixed.
+      verify_claims 322 PASS. R1-as-submitted snapshot = base for the marked copies.
+- [x] MD discriminant (exploratory, rule in tasks/md-order-check-2026-10-22.md, run locally 10-22, 9ef42c6):
+      INCONCLUSIVE. 20 K control orders (U 0.396); 100 K from cubic / from Gamma[111] agree, U 0.267 / 0.242
+      (between 0.10 and 0.30), A_G rms 0.12 A with wandering direction; Ti components bimodal at +-0.10 A
+      (kurtosis -1.35) = non-Gaussian local density. Does not separate potential from Gaussian/ZPE (needs PIMD).
+- [x] C2 PENDING-QE -> pseudopotential/code; lattice-sweep table S27; verify_claims; letter C2 PENDINGs filled.
+- [ ] P4 adversarial audit; docx + highlighted marked copies (vs the SUBMITTED R1 docx); release v2.2.0 + Zenodo;
+      letter files list; Frank submits (~Nov 5).
+- AI-use statement: unchanged (author's submitted wording); manuscript.md must carry the submitted text before
+  the docx build.
+
+## ▶ 2026-10-14 — RSC returned the Highlighted Manuscript: "without track changes, showing only the highlighted edits"
+
+Publishing Assistant (email to cai485@purdue.edu, 14 Oct) asked for the Highlighted Manuscript without
+tracked changes. `scripts/tracked_to_highlighted.py` converts the UPLOADED tracked files (not a rebuild):
+insertions / moved-to / inserted cells -> yellow highlight, then accept all; deletions leave no mark.
+Check: Word Compare (formatting ignored) vs the uploaded clean file = 0 differences for both; negative
+control (release build without Frank's AI-use wording) = 9 differences, so the check bites.
+- [x] manuscript: 507 revisions -> 285 highlighted spans, 48 pp, 0 tracked markup left, 0 comments.
+- [x] SI: 111 revisions -> 67 highlighted spans, 85 pp (same objection would hit the SI marked file).
+- [ ] Frank: swap both files in ScholarOne (or reply with them attached if it was not sent back). Files in
+      session b7c99df0 scratchpad `upload/` as `*_highlighted_changes.docx` (+ .pdf previews).
+
+## ▶ 2026-10-10 — R1 SUBMITTED by Frank (awaiting editor)
+
+Revision of RA-ART-07-2026-006452 submitted in ScholarOne by Frank on 2026-10-10. Package: Main Article
+(Frank's docx with his AI-use wording), Figs 1-8 .tif, SI + SI marked changes, TOC graphic + blurb, DAS,
+Highlighted Manuscript (Word Compare, 507 revisions), Response to Referees (6,034 words; full text also in
+the Step 1 box), cover letter (also pasted into Comments to the Editor). Release v2.1.0 (0343264), Zenodo
+10.5281/zenodo.23286095. ORCID linked, transparent peer review chosen. Nothing open until the decision.
+
 ## ▶ 2026-10-09 (late) — two new figures + length trim (Frank: "both figures plus the trim, but the revisions must stay fully emphasized")
 
 Why: body ~20.6k words / 53 Word pp, 6 figures, ~25 tables; the revision's three new results (PBE-lattice,

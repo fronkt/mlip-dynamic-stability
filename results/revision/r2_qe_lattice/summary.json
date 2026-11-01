@@ -1,0 +1,86 @@
+{
+ "script": "scripts/qe_lattice_check.py",
+ "variants": {
+  "e1.5": {
+   "ecut_scale": 1.5
+  },
+  "e2.0": {
+   "ecut_scale": 2.0
+  },
+  "kfine": {
+   "kmesh": [
+    11,
+    11,
+    11
+   ]
+  }
+ },
+ "systems": {
+  "batio3_cubic": {
+   "production": {
+    "a_A": 4.023747279350013,
+    "pressure_kbar": 0.02,
+    "bfgs_converged": true
+   },
+   "materials_project_pbe_a_A": 4.03558,
+   "variants": {
+    "e1.5": {
+     "status": "ok",
+     "a_A": 4.022248521387667,
+     "pressure_kbar": 0.16,
+     "minus_production_pct": -0.03724781548875011,
+     "minus_mp_pct": -0.3303485152650554
+    },
+    "e2.0": {
+     "status": "ok",
+     "a_A": 4.023654630535463,
+     "pressure_kbar": -0.04,
+     "minus_production_pct": -0.002302550536048553,
+     "minus_mp_pct": -0.2955057132936978
+    },
+    "kfine": {
+     "status": "ok",
+     "a_A": 4.023748514638717,
+     "pressure_kbar": 0.01,
+     "minus_production_pct": 3.069995748727905e-05,
+     "minus_mp_pct": -0.2931793041219266
+    }
+   },
+   "production_minus_mp_pct": -0.29320991406409647,
+   "max_abs_change_vs_production_pct": 0.03724781548875011
+  },
+  "knbo3_cubic": {
+   "production": {
+    "a_A": 4.026883497940705,
+    "pressure_kbar": -0.02,
+    "bfgs_converged": true
+   },
+   "materials_project_pbe_a_A": 4.05747,
+   "variants": {
+    "e1.5": {
+     "status": "ok",
+     "a_A": 4.029210952457587,
+     "pressure_kbar": 0.01,
+     "minus_production_pct": 0.057797910420620546,
+     "minus_mp_pct": -0.6964696607100751
+    },
+    "e2.0": {
+     "status": "ok",
+     "a_A": 4.029071943628325,
+     "pressure_kbar": 0.01,
+     "minus_production_pct": 0.05434589028310288,
+     "minus_mp_pct": -0.699895658419547
+    },
+    "kfine": {
+     "status": "ok",
+     "a_A": 4.026886170231275,
+     "pressure_kbar": -0.02,
+     "minus_production_pct": 6.636125853276553e-05,
+     "minus_mp_pct": -0.7537660110543243
+    }
+   },
+   "production_minus_mp_pct": -0.7538318720605508,
+   "max_abs_change_vs_production_pct": 0.057797910420620546
+  }
+ }
+}

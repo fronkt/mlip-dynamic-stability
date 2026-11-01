@@ -181,7 +181,7 @@ def text_vs_data(ms_txt: str) -> None:
         f"{wil(k_ns, n_ns)}, all on the three ferroelectrics")
     ks = int((fs.scr == False).sum())  # noqa: E712
     ksA = int((fsA.scr == False).sum())  # noqa: E712
-    has(abst, "abstract screen on FS", f"cannot exclude, in {ks} of them")
+    has(abst, "abstract screen on FS", f"finds a lower displaced minimum in {ks} of them")
     has(s33, "3.3 screen on FS", f"{ks}/{k} = {ks / k:.2f} {wil(ks, k)}")
     has(s33, "3.3 screen on FS ex-ORB",
         f"{int(((fs.scr == False) & (fs.model != 'orb_v2')).sum())}/{kx} = "  # noqa: E712
@@ -1135,6 +1135,11 @@ def main() -> int:
                    ab("zr_bcc_mattersim_300K_sc333"))
     st6 = ab("srtio3_cubic_mace_mp0_600K_sc222")
     r2 = lambda x: round(x, 2)  # noqa: E731
+    gba = json.load(open("results/revision/sscha_converged_grid/batio3_cubic_mace_mp0_100K_sc222_startA.json",
+                         encoding="utf-8"))["run"]
+    check(gba["relax"]["steps"][-1]["stop_converged"] and r2(gba["hessian"]["min_nonac_thz"]) == 1.98
+          and r2(gba["bootstrap"]["std_thz"]) == 0.06,
+          "[3.3/S2.2] grid BaTiO3/MACE 100 K start A (Table S22): +1.98 +/- 0.06 THz, converged")
     check(r2(ba["A"]["hessian_min_thz"]) == 2.03 and ba["B"]["status"] == "failed"
           and ba1["B"]["converged"] and r2(ba1["B"]["hessian_min_thz"]) == 1.85
           and abs(ba1["B"]["start_min_thz"] - 1.0) < 1e-6,
@@ -1375,6 +1380,313 @@ def main() -> int:
             f"{cb_['mean_thz']:.2f} THz, and {round(cb_['frac_unstable'] * cb_['B'])} of the {cb_['B']} "
             "resamples are unstable").replace("-0.", "−0.")
     check(frag in s33n, f"[text Section 3.3 audit M8] '{frag}'")
+    # R2 comment 3: the minimiser population by population (Section 3.5, Table 5, ESI Fig. S1)
+    hist = json.load(open("results/revision/r2/sscha_history.json", encoding="utf-8"))["units"]
+    hb, hz = hist["batio3_mace_100K"], hist["zr_mattersim_300K"]
+    hp, hc = hb["production"]["populations"], hb["converged"]["populations"]
+    s35n = " ".join(ms_txt.split("### 3.5", 1)[1].split("## 4.", 1)[0].split())
+    err_real = [p_["gc_err_real_last"] for p_ in hc]
+    thr_p = hb["production"]["stop_threshold"]
+    check([p_["n_steps"] for p_ in hp] == [20] + [1] * 7 and [p_["n_steps_kept"] for p_ in hp] == [19] + [0] * 7
+          and all(p_["rel_change_vs_prev_end"] < 1e-14 for p_ in hp[1:])
+          and round(min(p_["gc_last"] for p_ in hp[1:]), 2) == 0.34 and round(max(p_["gc_last"] for p_ in hp[1:]), 2) == 0.36
+          and round(thr_p, 5) == 0.00022 and 70 <= min(err_real) / thr_p and max(err_real) / thr_p <= 110
+          and round(min(err_real), 3) == 0.016 and round(max(err_real), 3) == 0.024,
+          "[3.5 Table 5] production: 20 (19) then 1 (0) x7 steps, matrix frozen <1e-14, gradient 0.34-0.36; "
+          "threshold 2.2e-4 is 70-110x below the real error 0.016-0.024")
+    check([p_["n_steps"] for p_ in hc] == [46, 51, 41, 400, 57]
+          and [p_["stop_reason"] for p_ in hc] == ["kong_liu"] * 3 + ["per_population_step_cap", "converged"]
+          and round(hc[0]["gc_over_err_real_last"]) == 15 and round(hc[2]["gc_over_err_real_last"], 1) == 2.4
+          and round(hc[3]["gc_over_err_real_last"], 2) == 0.02 and round(hc[3]["kl_ratio_last"], 2) == 0.58
+          and hc[3]["guarded_last"] and round(hc[4]["gc_over_err_real_last"], 2) == 0.19
+          and round(hc[4]["kl_ratio_last"], 2) == 0.97 and not hc[4]["guarded_last"],
+          "[3.5 Table 5] converged: 46/51/41 steps to the KL floor (15 -> 2.4 x error), pop 4 400-step cap at "
+          "0.02 x error, KL 0.58, refused; pop 5 converged at 0.19, KL 0.97")
+    st5 = [s_ for s_ in hb["converged"]["steps"] if s_["pop"] == 5][0]
+    st4 = [s_ for s_ in hb["converged"]["steps"] if s_["pop"] == 4][-1]
+    z10 = [p_ for p_ in hz["converged"]["populations"] if p_["pop"] == 10][0]
+    z11 = [s_ for s_ in hz["converged"]["steps"] if s_["pop"] == 11][0]
+    check(round(st5["gc"], 3) == 0.047 and round(st5["gc_over_err_real"], 1) == 2.7
+          and 95 <= st5["gc"] / st4["gc"] <= 105
+          and abs(hc[4]["aux_min_start_thz"] - hc[3]["aux_min_end_thz"]) < 1e-9
+          and round(z10["gc_over_err_real_last"], 2) == 0.18 and round(z10["kl_ratio_last"], 2) == 0.50
+          and z10["guarded_last"] and round(z11["gc_over_err_real"], 1) == 2.9,
+          "[3.5] fresh pop 5 at pop 4's matrix: first gradient 0.047 = 2.7 x error, ~100x the reweighted value; "
+          "bcc Zr pop 10 refused at 0.18 / KL 0.50, pop 11 starts at 2.9 x error")
+    fc = hb["converged"]["fresh_check"]
+    check(fc["consistent_with_minimum"] and round(fc["gc_over_err"], 1) == 1.6
+          and round(hb["production"]["start_min_thz"] - hb["production"]["hessian_min_thz"], 3) == 0.003
+          and round(hb["converged"]["start_min_thz"] - hb["converged"]["hessian_min_thz"], 1) == 0.9,
+          "[3.5] fresh check 1.6 x error, consistent; production Hessian 0.003 THz from start, converged 0.9 below")
+    for frag in ("lies 70–110 times below the real stochastic error of this gradient even at 1,000 configurations (0.016–0.024)",
+                 "returns a first gradient of 0.047, 2.7 times its error and a hundred times what the reweighted sample reported",
+                 "| | 4 | 400 (399) | step cap, per population; below threshold but refused (KL/N < 0.7) | 4.8 × 10⁻⁴ | 4.2 × 10⁻³ | 0.58 | +2.427 |",
+                 "| | 5 | 57 (57) | converged | 3.06 × 10⁻³ | 3.15 × 10⁻³ | 0.97 | +2.570 |"):
+        check(frag in s35n, f"[text Section 3.5 R2] '{frag[:70]}'")
+    # R2 comment 4: why the force spread does not see the wrong calls (Section 3.4, Section 4)
+    sm = json.load(open("results/revision/r2/spread_mechanism.json", encoding="utf-8"))
+    bins = {b_["bin"]: b_["spread_eV_A"]["median"] for b_ in sm["config_level"]["spread_by_pair_ratio_bin"]}
+    rr = sm["config_level"]["rho_spread_vs_pair_ratio__all_configs_within_system"]
+    check(sm["config_level"]["n_configs"] == 960 and rr["n_systems_rho_negative"] == 15 == rr["n_systems"]
+          and round(rr["median_rho"], 2) == -0.92
+          and [round(bins[k_], 3) for k_ in ("r >= 0.85", "0.75 <= r < 0.85")] == [0.059, 0.063]
+          and round(bins["0.65 <= r < 0.75"], 2) == 0.10 and round(bins["0.50 <= r < 0.65"], 2) == 0.29
+          and round(bins["r < 0.50"], 1) == 2.1,
+          "[3.4 R2] spread vs contact ratio: negative in 15/15 systems (median -0.92); medians 0.059/0.063/0.10/0.29/2.1")
+    cl = sm["unit_level"]["subsets"]["clean"]
+    ce = cl["errors"]
+    agree = {(e_["system"], e_["T"]): e_["n_models_agreeing_with_consensus"] for e_ in ce}
+    check(cl["n_units"] == 43 and len(ce) == 4 and all(e_["kind"] == "false-stable" for e_ in ce)
+          and agree == {("batio3_cubic", 300.0): 4, ("knbo3_cubic", 300.0): 4, ("knbo3_cubic", 600.0): 5,
+                        ("pbtio3_cubic", 100.0): 3}
+          and all(e_["dissenting_models"] == ["orb_v2"] for e_ in ce if e_["T"] == 300.0)
+          and min(e_["S_5model_eV_A"] for e_ in ce) >= 0.041 and max(e_["S_5model_eV_A"] for e_ in ce) <= 0.0535
+          and all(e_["S_5model_eV_A"] < cl["median_spread_right"] for e_ in ce)
+          and round(min(e_["spread_percentile_in_subset"] for e_ in ce)) == 22
+          and round(max(e_["spread_percentile_in_subset"] for e_ in ce)) == 45,
+          "[3.4 R2] the 4 clean-set errors: oxide false-stables, 0.041-0.053 eV/A (22nd-45th pct), >=3/5 models "
+          "agree (KNbO3 600 K 5/5; 300 K units all but ORB-v2)")
+    pe = {(r_["system"], r_["set"]): r_ for r_ in sm["pbe_set"]["per_ensemble"]}
+    base = [pe[(s_, "baseline")]["shared_fraction_pooled"] for s_ in ("batio3_cubic", "srtio3_cubic", "zr_bcc", "zro2_cubic")]
+    ssc = [pe[(s_, "sscha")]["shared_fraction_pooled"] for s_ in ("batio3_cubic", "zr_bcc", "zro2_cubic")]
+    sto = pe[("srtio3_cubic", "sscha")]
+    eos = sm["pbe_set"]["error_over_spread"]
+    ws = sm["pbe_set"]["spearman_spread_vs_ens_mean_rmse"]["within_system"]
+    check(sm["pbe_set"]["n_configs"] == 64 and round(min(base), 2) == 0.32 and round(max(base), 2) == 0.46
+          and round(min(ssc), 2) == 0.45 and round(max(ssc), 2) == 0.59
+          and pe[("batio3_cubic", "sscha")]["T"] == 100.0 and pe[("zro2_cubic", "sscha")]["T"] == 100.0
+          and pe[("zr_bcc", "sscha")]["T"] == 50.0 and sto["T"] == 600.0
+          and round(sto["shared_fraction_pooled"], 2) == 0.94 and sto["n_overlap"] == 7 and sto["n_configs"] == 12
+          and round(sto["error_over_spread_pooled"]) == 4 and round(eos["overlap"]["per_config_median"], 1) == 2.7
+          and eos["overlap_free"]["n"] == 57 and round(eos["overlap_free"]["per_config_median"], 2) == 0.99
+          and [round(ws[s_]["sscha_only_ens_mean_rmse"], 2) for s_ in ("batio3_cubic", "zr_bcc", "zro2_cubic", "srtio3_cubic")]
+          == [0.23, 0.19, 0.62, 0.87],
+          "[3.4 R2] PBE set: shared 0.32-0.46 rattled, 0.45-0.59 SSCHA, 0.94 SrTiO3 600 K (7/12 short contacts, "
+          "error 4x spread; 2.7 v 0.99 per config); within-ensemble rho 0.23/0.19/0.62/0.87")
+    for frag in ("0.059 eV Å⁻¹ at contact ratios of 0.85 and above, 0.063 at 0.75–0.85, 0.10 at 0.65–0.75, 0.29 at",
+                 "it carries 0.94, and the error of the mean force is four times the spread",
+                 "(Spearman 0.23 for BaTiO₃ and 0.19 for bcc Zr over twelve configurations each; 0.62"):
+        check(frag in " ".join(ms_txt.split("### 3.4", 1)[1].split("### 3.5", 1)[0].split()),
+              f"[text Section 3.4 R2] '{frag[:70]}'")
+    # R2 comment 2: why a fraction of a percent of lattice matters (Section 3.2)
+    ls_ = json.load(open("results/revision/r2/lattice_sensitivity.json", encoding="utf-8"))
+    ext = json.load(open("results/revision/r2/external_lattices.json", encoding="utf-8"))
+    pp_ = ls_["B_well_depth_sensitivity"]["pbe_pair"]["pairs"]
+    sens = {}
+    for s_ in ("batio3_cubic", "knbo3_cubic"):
+        p_ = pp_[s_]
+        dec, dl = p_["decomposition"], p_["dln_a"]
+        sens[s_] = {"k2": dec["two_ln_abs_kappa2_ratio"] / 2 / dl, "k4": -dec["minus_ln_kappa4_ratio"] / dl,
+                    "fit": p_["sensitivity"]["depth_fit_exact"]["dln_dlna"],
+                    "grid": p_["sensitivity"]["depth_grid"]["dln_dlna"]}
+    smb = ls_["B_well_depth_sensitivity"]["same_model"]["batio3_cubic"]["replicates"]
+    s_same = [r_["dln_depth_dlna"] for r_ in smb.values()]
+    check(round(sens["batio3_cubic"]["k2"]) == 46 and round(sens["knbo3_cubic"]["k2"]) == 59
+          and round(sens["batio3_cubic"]["k4"]) == -37
+          and round(sens["batio3_cubic"]["fit"]) == 130 and round(sens["knbo3_cubic"]["fit"]) == 115
+          and round(sens["batio3_cubic"]["grid"]) == 161 and round(sens["knbo3_cubic"]["grid"]) == 146
+          and round(min(s_same)) == 135 and round(max(s_same)) == 148
+          and all(r_["same_mode_star"] and r_["star_own"] == "M" for r_ in smb.values()),
+          "[3.2 R2] d ln|k2|/d ln a 46/59, d ln k4 -37 (BaTiO3), depth 130/115 fit, 161/146 grid; same-model 135-148")
+    import glob
+    mp_ = {s_: v_["a_A"] for s_, v_ in ext["materials_project_pbe"]["values_A"].items()}
+    lat = pd.read_csv("results/revision/dft_checks/pl_lattice.csv")
+    mlip_a = {s_: [] for s_ in mp_}
+    for f_ in sorted(glob.glob("results/revision/sscha_converged_grid/*_startA.json")):
+        r_ = json.load(open(f_, encoding="utf-8")).get("run") or {}
+        for s_ in mp_:
+            if os.path.basename(f_).startswith(s_) and r_.get("relaxed_cellpar"):
+                mlip_a[s_].append(r_["relaxed_cellpar"][0])
+    dev_mp = [100 * (a_ / mp_[s_] - 1) for s_ in mp_ for a_ in mlip_a[s_]]
+    pbe_qe = {s_: float(lat[(lat.system == s_) & lat.source.str.startswith("PBE")].a_A.iloc[0])
+              for s_ in ("batio3_cubic", "knbo3_cubic")}
+    sp_ = ls_["A_lattices"]["per_system"]
+    check(all(len(set(round(a_, 4) for a_ in mlip_a[s_])) <= 5 and mlip_a[s_] for s_ in mp_)
+          and max(abs(x_) for x_ in dev_mp) < 0.06
+          and round(100 * (mp_["batio3_cubic"] / ext["experiment"]["batio3_cubic"]["a_A"] - 1), 1) == 0.6
+          and round(100 * (mp_["srtio3_cubic"] / ext["experiment"]["srtio3_cubic"]["a_A"] - 1), 1) == 1.0
+          and round(100 * (1 - pbe_qe["batio3_cubic"] / mp_["batio3_cubic"]), 2) == 0.29
+          and round(100 * (1 - pbe_qe["knbo3_cubic"] / mp_["knbo3_cubic"]), 2) == 0.75
+          and ls_["A_lattices"]["bias_sign"]["n_positive"] == 15 == ls_["A_lattices"]["bias_sign"]["n_total"],
+          "[3.2 R2] MLIPs within 0.06 % of MP PBE (BaTiO3/KNbO3/SrTiO3); MP PBE +0.6 %/+1.0 % over experiment; "
+          "our QE PBE 0.29 %/0.75 % below MP; 15/15 model-PBE pairs positive")
+    ftb = ls_["C_finetune_drift"]["batio3_cubic"]["replicates"]
+    drift = [-r_["drift_vs_base_pct"] for r_ in ftb.values()]
+    pres = [r_["pressure_at_base_lattice_GPa"] for r_ in ftb.values()]
+    meas = [r_["measured_ratio_base_over_own"] for r_ in ftb.values()]
+    pred = [r_["predicted"]["pbe_pair_depth_fit_exact"]["predicted_ratio"] for r_ in ftb.values()]
+    check(round(min(drift), 2) == 0.47 and round(max(drift), 2) == 0.53
+          and round(min(pres), 1) == -2.8 and round(max(pres), 1) == -2.6
+          and round(min(meas), 1) == 1.9 and round(max(meas), 1) == 2.1
+          and round(min(pred), 1) == 1.8 and round(max(pred), 1) == 2.0,
+          "[3.2 R2] BaTiO3 fine-tunes 0.47-0.53 % below base, -2.6 to -2.8 GPa; sensitivity predicts 1.8-2.0x, "
+          "measured 1.9-2.1x deeper at base lattice")
+    # R2 comment 2, from the 10-22 box: the QE cutoff / k-mesh check and the five-model lattice sweep
+    qe = json.load(open("results/revision/r2_qe_lattice/summary.json", encoding="utf-8"))["systems"]
+    qv = [v for s_ in qe.values() for v in s_["variants"].values()]
+    check(all(v["status"] == "ok" for v in qv) and len(qv) == 6
+          and max(abs(v["minus_production_pct"]) for v in qv) < 0.06
+          and all(abs(s_["variants"]["kfine"]["minus_production_pct"]) < 0.0005 for s_ in qe.values()),
+          "[3.2 R2] QE: cutoffs x1.5/x2 move the PBE lattice by < 0.06 %, 11^3 k-mesh by 0.000 %")
+    lat_m = ("mace_mp0", "chgnet", "orb_v2", "sevennet0", "mattersim")
+    sw = {m_: json.load(open(f"results/revision/r2_lattice/{m_}.json", encoding="utf-8"))["systems"] for m_ in lat_m}
+
+    def sens_own(rec):
+        pts = [p for p in rec["derived"]["depth_curve_reference"]
+               if abs(p["s_pct"]) <= 0.5 + 1e-9 and (p.get("own_depth_refined_meV") or 0) > 0]
+        return np.polyfit(np.log([p["a_A"] for p in pts]), np.log([p["own_depth_refined_meV"] for p in pts]), 1)[0]
+
+    so = {m_: sens_own(sw[m_]["batio3_cubic"]) for m_ in lat_m}
+    f100 = {m_: [f["pct_from_a0"] for f in sw[m_]["batio3_cubic"]["derived"]["call_flips"]["100"]["flips"]]
+            for m_ in lat_m}
+    f300 = {m_: [f["pct_from_a0"] for f in sw[m_]["batio3_cubic"]["derived"]["call_flips"]["300"]["flips"]]
+            for m_ in lat_m if m_ != "orb_v2"}
+    kn = [m_ for m_ in lat_m if not sw[m_]["knbo3_cubic"]["derived"]["call_flips"]["100"]["call_at_a0"]
+          and sw[m_]["knbo3_cubic"]["derived"]["call_flips"]["100"]["call_at_pbe"]]
+    four = [m_ for m_ in lat_m if m_ != "orb_v2"]
+    check(round(min(so[m_] for m_ in four)) == 109 and round(max(so[m_] for m_ in four)) == 147
+          and round(so["orb_v2"]) == 79
+          and all(len(f100[m_]) == 1 for m_ in lat_m)
+          and round(-max(f100[m_][0] for m_ in four), 2) == 0.33 and round(-min(f100[m_][0] for m_ in four), 2) == 0.59
+          and round(-f100["orb_v2"][0], 2) == 1.40
+          and all(len(f300[m_]) == 1 for m_ in f300)
+          and round(min(f300[m_][0] for m_ in f300), 2) == 0.15 and round(max(f300[m_][0] for m_ in f300), 2) == 0.34
+          and all(sw[m_]["batio3_cubic"]["derived"]["call_flips"]["300"]["call_at_a0"] for m_ in f300)
+          and sorted(kn) == ["chgnet", "mace_mp0", "mattersim"],
+          "[3.2 R2] sweep: BaTiO3 d ln depth/d ln a 109-147 (four), 79 ORB-v2; 100 K flips -0.33..-0.59 %, ORB-v2 -1.40 %; "
+          "300 K S->U at +0.15..+0.34 % (four); KNbO3 100 K U at a0, S at PBE for MACE/CHGNet/MatterSim")
+    so_sto = {m_: sens_own(sw[m_]["srtio3_cubic"]) for m_ in four}
+    check(round(max(so_sto.values())) == -76 and round(min(so_sto.values())) == -89,
+          "[3.2 R2] SrTiO3 deepest well deepens on compression: d ln depth/d ln a -76..-89 (four models)")
+    s32b = " ".join(ms_txt.split("### 3.2", 1)[1].split("### 3.3", 1)[0].split())
+    for frag in ("moves our lattice by at most 0.06 %, and an 11×11×11 k-mesh in place of 7×7×7 leaves it unchanged",
+                 "d ln(depth)/d ln a = 109–147 for BaTiO₃ along each point's own eigenvector in four models (79 for ORB-v2",
+                 "turns stable 0.33–0.59 % below it (1.40 % for ORB-v2)",
+                 "on KNbO₃ at 100 K three of the five models call the cubic phase unstable at their own lattice and stable at ours",
+                 "four models turns unstable when their lattice is expanded by 0.15–0.34 %"):
+        check(frag in s32b, f"[text Section 3.2 R2 box] '{frag[:70]}'")
+    # R2 comment 1: the pre-registered centroid scan (Table S28), the SCHA split and the MD check (Table S29)
+    cen = json.load(open("results/revision/r2_centroid/summary.json", encoding="utf-8"))
+    dec = json.load(open("results/revision/r2_centroid/decomposition.json", encoding="utf-8"))["arms"]
+    mdc = json.load(open("results/revision/r2_md/summary.json", encoding="utf-8"))
+    pr, ga, fa, v4c = cen["primary"], cen["gamma_arm"], cen["free_arm"], cen["v4"]
+    sig_g = float(np.hypot(ga["err_meV"], cen["m_scan_table"][0]["err_meV"]))
+    m75 = next(r_ for r_ in cen["m_scan_table"] if abs(r_["q0_ang"] - 0.075) < 1e-9)
+    check(all(cen["gates"]["values"].values()) and pr["verdict"] == "NOT_SUPPORTED"
+          and round(pr["dF_meV"], 1) == 46.0 and round(pr["sigma_meV"], 1) == 2.2
+          and round(-m75["static_2V_ledger_meV"]) == 90 and round(pr["scan_points"][0]["dF_meV"]) == 149
+          and pr["scan_points_excluded"] == [0.04]
+          and round(ga["dF_meV_per_40"], 1) == 55.3 and round(sig_g, 1) == 2.2
+          and round(-ga["static_dE_min_meV_per_40"]) == 226
+          and not fa["converged"] and round(fa["Q_M_final_ang"], 3) == 0.002
+          and v4c["same_sign"] and round(v4c["v2_subsample_min_thz"], 3) == 2.137
+          and round(v4c["v4_min_nonac_thz"], 3) == 2.152 and round(v4c["v2_subsample_boot_sd_thz"], 2) == 0.14,
+          "[3.3 R2 C1] centroid scan: gates pass; dF_M +46.0 +/- 2.2 (static -90), 0.10 A +149, 0.04 excluded; "
+          "Gamma[111] +55.3 +/- 2.2 (static -226); free arm unconverged at Q_M 0.002; v4 2.137 -> 2.152, SD 0.14")
+    # the screen's own minimum on this unit (ledger, softmode v4): M mode at Q0 = 0.075 A, curvature +2.03 THz
+    # at Q0 = 0; the ~22 meV per 40 atoms depth is the registered value (prereg "What is already known")
+    led_ = pd.read_parquet("results/ledger.parquet")
+    lu_ = led_[(led_.system == "batio3_cubic") & (led_.model == "mace_mp0") & (led_.method == "softmode")
+               & (led_.temperature_K == 100)].iloc[-1]
+    mq_ = lu_["ft_modes_q"].split(";").index("0.500,0.000,0.500")
+    check(float(lu_["ft_modes_Q0_ang"].split(";")[mq_]) == 0.075 and float(lu_["ft_modes_curv_thz"].split(";")[mq_]) == 2.031
+          and "about −22 meV per 40-atom 2×2×2 cell" in open("tasks/preregistration-centroid-2026-10-21.md", encoding="utf-8").read().replace("about -22", "about −22"),
+          "[3.3 R2 C1] screen's M minimum at Q0 0.075 A (curvature +2.03 THz at 0), ~22 meV/40 atoms (prereg)")
+    d75, dg = dec["m_scan_Q0.0750"], dec["gamma"]
+    check(round(100 * float(np.expm1(d75["mean_ln_freq_ratio"])), 1) == 3.6
+          and (d75["n_modes_stiffer"], d75["n_optical_modes"]) == (73, 117)
+          and round(d75["dF_harm_aux_meV"]) == 62 and round(d75["dF_harm_aux_zero_point_meV"]) == 52
+          and round(-d75["d_anharmonic_remainder_meV"]) == 16
+          and round(dg["dF_harm_aux_meV"]) == 154 and round(dg["dF_harm_aux_zero_point_meV"]) == 130
+          and round(dg["d_anharmonic_remainder_meV"]) == -99,
+          "[3.3 R2 C1] SCHA split: Q0 0.075 aux freqs +3.6 % (73/117 stiffer), +62 (52 ZPE) vs -16; "
+          "Gamma +154 (130 ZPE) vs -99")
+    gw_units = 0
+    for f_ in sorted(glob.glob("results/revision/sscha_converged_grid/*_startA.json")):
+        tag_ = os.path.basename(f_)
+        if not tag_.startswith(("batio3", "knbo3", "pbtio3", "srtio3", "cssni3")) \
+                or not any(m_ in tag_ for m_ in ("mace_mp0", "mattersim", "sevennet0")):
+            continue
+        st_ = (json.load(open(f_, encoding="utf-8")).get("run") or {}).get("relax", {}).get("steps", [])
+        gws = [s_["gw"] for s_ in st_ if s_.get("gw") is not None]
+        if gws:
+            gw_units += 1
+            check(max(abs(x_) for x_ in gws) == 0.0, f"[3.3 R2 C1] centroid gradient exactly zero: {tag_}")
+    check(gw_units == 54, f"[3.3 R2 C1] {gw_units} perovskite units (MACE/MatterSim/SevenNet) with a recorded gradient")
+    ra, rb, rc = (mdc["runs"][k_] for k_ in "ABC")
+
+    def peaks(h):
+        h = np.asarray(h)
+        c_ = -0.2 + (np.arange(len(h)) + 0.5) * 0.4 / len(h)
+        return round(float(c_[:len(h) // 2][h[:len(h) // 2].argmax()]), 2), round(float(c_[len(h) // 2 + 1:][h[len(h) // 2 + 1:].argmax()]), 2)
+
+    check(mdc["verdict"] == "INCONCLUSIVE" and rc["class"] == "ordered"
+          and (mdc["rule"]["U_ordered_min"], mdc["rule"]["U_disordered_max"]) == (0.3, 0.1)
+          and (round(ra["binder_dominant"], 2), round(rb["binder_dominant"], 2)) == (0.27, 0.24)
+          and all(x_["dominant_q"] == "G" for x_ in (ra, rb, rc))
+          and round(ra["per_q"]["G"]["rms_ang"], 2) == 0.12 == round(rb["per_q"]["G"]["rms_ang"], 2)
+          and round(mdc["static_gamma111_minimum"]["A_G_norm_ang"], 3) == 0.165
+          and (round(ra["Ti_component_excess_kurtosis"], 2), round(rb["Ti_component_excess_kurtosis"], 2)) == (-1.36, -1.34)
+          and peaks(ra["Ti_component_hist"]) == (-0.1, 0.11) and peaks(rb["Ti_component_hist"])[0] in (-0.1, -0.11),
+          "[3.3 R2 C1] MD: 20 K orders; 100 K U 0.27 / 0.24 (rule 0.30 / 0.10), dominant Gamma, rms 0.12 "
+          "(static 0.165), Ti components bimodal near +-0.10, excess kurtosis -1.36 / -1.34")
+    s33c = " ".join(ms_txt.split("### 3.3", 1)[1].split("### 3.4", 1)[0].split())
+    # audit 2026-11-01: the free arm left M for a polar [010] displacement; classical-limit share of the
+    # harmonic cost; the screen's deciding modes on the tested unit and on the ferroelectrics; MD versions
+    fcf = json.load(open("results/revision/r2_centroid/free_Q0.0750.json", encoding="utf-8"))["run"]["centroid_final"]
+    sp_ = fcf["mean_disp_by_species_ang"]
+    kT100 = 8.617333262e-2 * 100.0
+    cl75 = kT100 * d75["n_optical_modes"] * d75["mean_ln_freq_ratio"]
+    clg = kT100 * dg["n_optical_modes"] * dg["mean_ln_freq_ratio"]
+    check(round(fcf["Q_M_ang"], 3) == 0.002 and round(fcf["residual_off_M_ang"], 2) == 0.19
+          and round(sp_["Ti"][1], 3) == 0.031 and round(sp_["O"][1], 3) == -0.033 and abs(sp_["Ba"][1]) < 1e-3
+          and max(abs(sp_["Ti"][0]), abs(sp_["Ti"][2])) < 0.005 and round(fa["dF_meV_per_40"], 1) == 3.6
+          and round(dec["free_Q0.0750"]["dF_err_meV"], 1) == 2.4
+          and round(cl75) == 35 and round(clg) == 86,
+          "[3.3 R2 C1] free arm: 0.002 along M, 0.19 off M, polar [010] (Ti +0.031, O -0.033, Ba ~0), dF +3.6 +/- 2.4; "
+          "classical-limit harmonic cost 35 (M 0.075) and 86 (Gamma) meV")
+    fe_ = A.canonical(led_)
+    fe_ = fe_[(fe_.method == "softmode") & fe_.system.isin(FE_OXIDE) & (fe_.temperature_K <= 300)
+              & ~fe_.gt_stable.astype(bool) & ~fe_.pred_stable.astype(bool)]
+
+    def g_cond(r_):
+        return any(q_ == "0.000,0.000,0.000" and float(x_) > 0
+                   for q_, x_ in zip(str(r_.ft_modes_q).split(";"), str(r_.ft_modes_Q0_ang).split(";")))
+    n_g = int(sum(g_cond(r_) for r_ in fe_.itertuples()))
+    qs_ = lu_["ft_modes_q"].split(";")
+    q0_ = [float(x_) for x_ in lu_["ft_modes_Q0_ang"].split(";")]
+    unit_modes = dict(zip(qs_, q0_))
+    check(len(fe_) == 16 and n_g == 5 and unit_modes["0.000,0.000,0.000"] == 0.0
+          and unit_modes["0.500,0.000,0.000"] == 0.065 and unit_modes["0.500,0.000,0.500"] == 0.075,
+          f"[3.3 R2 C1] screen: Gamma condenses in {n_g} of {len(fe_)} unstable FE calls at T <= 300 K; "
+          "BaTiO3/MACE 100 K condenses X 0.065 and M 0.075, not Gamma")
+    gate_ = json.load(open("results/revision/r2_centroid/gate/gate.json", encoding="utf-8"))
+    check(rc["meta"]["mace_torch"] == "0.3.15" and rc["meta"]["dtype"] == "float32"
+          and gate_["provenance"]["packages"]["mace-torch"] == "0.3.16",
+          "[3.3 R2 C1] MD mace-torch 0.3.15 float32; SSCHA scan mace-torch 0.3.16")
+    for frag in ("46.0 ± 2.2 meV per 40 atoms above the cubic point (+54.8 ± 3.3 meV from the reweighted last population), "
+                 "although the static energy lies 90 meV below it", "at 0.10 Å it lies 149 meV above",
+                 "At the static [111] minimum the free energy lies 55.3 ± 2.2 meV above the cubic point, "
+                 "against a static energy 226 meV lower",
+                 "it ended 0.002 Å along M but displaced along the polar Γ mode in [010] (on average Ti +0.031 Å "
+                 "and O −0.033 Å, Ba at rest), at a free energy 3.6 ± 2.4 meV above the cubic point",
+                 "from +2.137 to +2.152 THz (bootstrap standard deviation 0.14 THz, 512-configuration subsample)",
+                 "rise by 3.6 % on geometric average (73 of the 117 optical modes stiffen)",
+                 "62 meV per 40 atoms (52 meV of it zero-point energy; the same stiffening would cost 35 meV in "
+                 "the classical limit), while the remainder falls by 16 meV",
+                 "the split is +154 meV (130 meV zero-point, 86 meV classically) against −99 meV",
+                 "0.27 and 0.24, between the thresholds fixed in advance (order ≥ 0.30, disorder ≤ 0.10)",
+                 "keeps an rms size of 0.12 Å (0.165 Å at the static minimum)",
+                 "(M components at most 0.04 Å rms)", "peaked near ±0.10 Å, a density that a Gaussian centred",
+                 "the polar Γ mode condenses in 5 of its 16 unstable calls",
+                 "condenses the M mode and an X-point mode (Q₀ = 0.075 and 0.065 Å), not the polar Γ mode",
+                 "single precision (mace-torch 0.3.15) where the SSCHA used double precision (0.3.16)",
+                 "recorded as exactly zero on all 54 perovskite units",
+                 "about 22 meV per 40 atoms below the cubic point"):
+        check(frag in s33c, f"[text Section 3.3 R2 C1] '{frag[:70]}'")
+    check("screen's minimum, a zone-boundary M-point displacement, 46 ± 2 meV per 40 atoms above the cubic point"
+          in " ".join(ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0].split()),
+          "[abstract R2 C1] 46 ± 2 meV")
     abs_txt = ms_txt.split("## Abstract", 1)[1].split("## 1.", 1)[0]
     n_words = len(abs_txt.split())
     check(n_words <= 350, f"[abstract] {n_words} words (350: the RSC Advances portal limit, read 2026-10-10)")
