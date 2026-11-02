@@ -5,7 +5,7 @@ of foundation machine-learning interatomic potentials (MLIPs).
 
 **Paper:** F. Cai, *Neither harmonic benchmarks nor a default SSCHA cross-check certifies a
 foundation machine-learning interatomic potential for finite-temperature dynamic stability*
-(manuscript under review).
+(accepted for publication in *RSC Advances*, 2 November 2026).
 **Archive:** Zenodo, https://doi.org/10.5281/zenodo.20805799 (concept DOI; resolves to the
 latest version).
 

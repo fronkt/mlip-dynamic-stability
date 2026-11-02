@@ -9,6 +9,18 @@ each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ..
 **Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
 false.
 
+## ▶ 2026-11-02 — ACCEPTED in its current form (RA-ART-07-2026-006452.R2)
+
+Decision 02-Nov-2026, Dr Lydia Rhyman. Referee 1: all comments addressed satisfactorily; recommended for
+publication as it stands. Email went to the Purdue mailbox. README status line updated.
+- [ ] Licence to publish: RSC sends a separate email. Frank signs it himself.
+- [ ] APC: the Purdue RSC open-access agreement applies at acceptance (accepted 11-02, agreement ends 12-31) and
+      its conditions are met (Purdue corresponding author, cai485@purdue.edu, Purdue affiliation). Confirm RSC
+      applies it; do not pay an APC invoice without checking against the agreement first.
+- [ ] Proofs: Frank checks and returns them when RSC sends them.
+- [ ] On publication: article DOI into README + .zenodo.json, and a Zenodo related identifier (v2.2.0 record
+      "is supplement to" the article). SIMBIOCHEM II camera-ready can cite the accepted RSC Advances paper.
+
 ## ▶ 2026-10-21 — R2: decision on R1 = major revision (one referee, the original R1), "publishable after second revision"
 
 Plan: ~/.claude/plans/woolly-tumbling-eich.md (local). Verbatim report stays in Gmail (repo is public); the R2
@@ -76,8 +88,9 @@ workflow lesson + gradient-norm history across populations (BaTiO₃ or bcc-Zr);
       highlighted docx+pdf vs the R1-as-submitted snapshot [Word Compare clean-vs-highlighted: only the
       figure-paragraph placeholders differ; images byte-identical; no tracked markup], letter + cover note
       docx, Figs 1-8 TIFF, TOC tiff/png + blurb 244 chars, DAS docx). Archive zip moved to the raw dir.
-- [ ] Frank submits in ScholarOne (~Nov 5): highlighted (NOT tracked) marked copies; paste the letter into the
-      response box (transparent review); cover note into Comments to the Editor. Then commit the R2 letter.
+- [x] Submitted in ScholarOne as RA-ART-07-2026-006452.R2: highlighted (NOT tracked) marked copies; letter in the
+      Step 1 response box without salutation/editor name (transparent review); R2 abstract in Step 2; cover note
+      in Comments to the Editor; 17 files. R2 letter + cover note committed after acceptance.
 - AI-use statement: unchanged (author's submitted wording); manuscript.md must carry the submitted text before
   the docx build.
 
