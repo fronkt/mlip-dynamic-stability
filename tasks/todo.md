@@ -9,16 +9,27 @@ each finding adversarially verified). Item IDs below (R1.1, PKG-c, RESIDUE-12 ..
 **Predecessor plan:** `tasks/todo-archive-2026-09-26.md`. Its [x] marks for E4, G1, I2 and F1 were
 false.
 
+## ▶ 2026-11-25 — PUBLISHED as an Advance Article, RSC Advances, 2026, DOI 10.1039/D6RA06452C
+
+Final form, no further changes possible (RSC email). On 11-25 doi.org and Crossref did not resolve the DOI
+yet (normal lag).
+- [x] README paper line and .zenodo.json (description + "isSupplementTo" related identifier) carry the DOI.
+- [ ] Zenodo v2.2.0 record (10.5281/zenodo.23855585): add the "is supplement to" related identifier through a
+      metadata edit (no new version). Frank's OK first; do it once the DOI resolves.
+- [ ] Check the Advance Article PDF against `mlip-rsc-revision-raw\proof_2026-11-22\proof_corrections.md`
+      (6 meaning fixes, 8 subscripts, 3 locked-edit comments). If any did not land, the remedy is an RSC
+      correction notice, not a proof edit.
+
 ## ▶ 2026-11-02 — ACCEPTED in its current form (RA-ART-07-2026-006452.R2)
 
 Decision 02-Nov-2026, Dr Lydia Rhyman. Referee 1: all comments addressed satisfactorily; recommended for
 publication as it stands. Email went to the Purdue mailbox. README status line updated.
-- [ ] Licence to publish: RSC sends a separate email. Frank signs it himself.
-- [ ] APC: the Purdue RSC open-access agreement applies at acceptance (accepted 11-02, agreement ends 12-31) and
+- [x] Licence to publish: RSC sends a separate email. Frank signs it himself.
+- [x] APC (Purdue coverage confirmed 11-09): the Purdue RSC open-access agreement applies at acceptance (accepted 11-02, agreement ends 12-31) and
       its conditions are met (Purdue corresponding author, cai485@purdue.edu, Purdue affiliation). Confirm RSC
       applies it; do not pay an APC invoice without checking against the agreement first.
-- [ ] Proofs: Frank checks and returns them when RSC sends them.
-- [ ] On publication: article DOI into README + .zenodo.json, and a Zenodo related identifier (v2.2.0 record
+- [x] Proofs: Frank checks and returns them when RSC sends them. (Corrections entered 11-23; published 11-25.)
+- [x] On publication: article DOI into README + .zenodo.json (done 11-25; the Zenodo record edit is in the 11-25 block), and a Zenodo related identifier (v2.2.0 record
       "is supplement to" the article). SIMBIOCHEM II camera-ready can cite the accepted RSC Advances paper.
 
 ## ▶ 2026-10-21 — R2: decision on R1 = major revision (one referee, the original R1), "publishable after second revision"
