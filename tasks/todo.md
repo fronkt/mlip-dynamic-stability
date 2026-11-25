@@ -14,8 +14,10 @@ false.
 Final form, no further changes possible (RSC email). On 11-25 doi.org and Crossref did not resolve the DOI
 yet (normal lag).
 - [x] README paper line and .zenodo.json (description + "isSupplementTo" related identifier) carry the DOI.
-- [ ] Zenodo v2.2.0 record (10.5281/zenodo.23855585): add the "is supplement to" related identifier through a
-      metadata edit (no new version). Frank's OK first; do it once the DOI resolves.
+- [x] Zenodo v2.2.0 record (10.5281/zenodo.23855585): "is supplement to" 10.1039/D6RA06452C added 11-25 as a
+      metadata-only edit (Frank's OK; same DOI/version; title, description, creators unchanged).
+- [x] Google Scholar: RSC Advances entry added manually 11-25 (citation_for_view eQ-xHIoAAAAJ:zYLM7Y9cAGgC); the
+      ChemRxiv preprint entry (old title) stays separate.
 - [ ] Check the Advance Article PDF against `mlip-rsc-revision-raw\proof_2026-11-22\proof_corrections.md`
       (6 meaning fixes, 8 subscripts, 3 locked-edit comments). If any did not land, the remedy is an RSC
       correction notice, not a proof edit.
